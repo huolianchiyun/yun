@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangbin.yun.yunrights.modules.dao.mapper.GroupRoleMapper">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role (group_id, role_id)
+    values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role (group_id, role_id)
+    values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role (group_id, role_id)
+    values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role (group_id, role_id)
+    values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role (group_id, role_id)
+    values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role (group_id, role_id)
+    values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.GroupRole">
+    insert into t_sys_group_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>
