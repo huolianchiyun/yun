@@ -1,20 +1,326 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.yunrights.modules.dao.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.User">
+<mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="u_gender" jdbcType="INTEGER" property="gender" />
+    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
+    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
+    <result column="u_enabled" jdbcType="BIT" property="enabled" />
+    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_gender, 
+      u_pwd, u_phone, u_dept_id, 
+      u_enabled, u_creator, u_updater, 
+      u_create_time, u_update_time, u_pwd_reset_time
+      )
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, 
+      #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{deptId,jdbcType=BIGINT}, 
+      #{enabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        u_user_name,
+      </if>
+      <if test="loginName != null">
+        u_login_name,
+      </if>
+      <if test="gender != null">
+        u_gender,
+      </if>
+      <if test="pwd != null">
+        u_pwd,
+      </if>
+      <if test="phone != null">
+        u_phone,
+      </if>
+      <if test="deptId != null">
+        u_dept_id,
+      </if>
+      <if test="enabled != null">
+        u_enabled,
+      </if>
+      <if test="creator != null">
+        u_creator,
+      </if>
+      <if test="updater != null">
+        u_updater,
+      </if>
+      <if test="createTime != null">
+        u_create_time,
+      </if>
+      <if test="updateTime != null">
+        u_update_time,
+      </if>
+      <if test="pwdResetTime != null">
+        u_pwd_reset_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pwdResetTime != null">
+        #{pwdResetTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="u_gender" jdbcType="INTEGER" property="gender" />
+    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
+    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
+    <result column="u_enabled" jdbcType="BIT" property="enabled" />
+    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_gender, 
+      u_pwd, u_phone, u_dept_id, 
+      u_enabled, u_creator, u_updater, 
+      u_create_time, u_update_time, u_pwd_reset_time
+      )
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, 
+      #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{deptId,jdbcType=BIGINT}, 
+      #{enabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        u_user_name,
+      </if>
+      <if test="loginName != null">
+        u_login_name,
+      </if>
+      <if test="gender != null">
+        u_gender,
+      </if>
+      <if test="pwd != null">
+        u_pwd,
+      </if>
+      <if test="phone != null">
+        u_phone,
+      </if>
+      <if test="deptId != null">
+        u_dept_id,
+      </if>
+      <if test="enabled != null">
+        u_enabled,
+      </if>
+      <if test="creator != null">
+        u_creator,
+      </if>
+      <if test="updater != null">
+        u_updater,
+      </if>
+      <if test="createTime != null">
+        u_create_time,
+      </if>
+      <if test="updateTime != null">
+        u_update_time,
+      </if>
+      <if test="pwdResetTime != null">
+        u_pwd_reset_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pwdResetTime != null">
+        #{pwdResetTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="u_gender" jdbcType="INTEGER" property="gender" />
+    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
+    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
+    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_gender, 
+      u_pwd, u_phone, u_dept_id, 
+      u_creator, u_updater, u_create_time, 
+      u_update_time, u_pwd_reset_time)
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, 
+      #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{deptId,jdbcType=BIGINT}, 
+      #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        u_user_name,
+      </if>
+      <if test="loginName != null">
+        u_login_name,
+      </if>
+      <if test="gender != null">
+        u_gender,
+      </if>
+      <if test="pwd != null">
+        u_pwd,
+      </if>
+      <if test="phone != null">
+        u_phone,
+      </if>
+      <if test="deptId != null">
+        u_dept_id,
+      </if>
+      <if test="creator != null">
+        u_creator,
+      </if>
+      <if test="updater != null">
+        u_updater,
+      </if>
+      <if test="createTime != null">
+        u_create_time,
+      </if>
+      <if test="updateTime != null">
+        u_update_time,
+      </if>
+      <if test="pwdResetTime != null">
+        u_pwd_reset_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pwdResetTime != null">
+        #{pwdResetTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
     <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
     <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
-    insert into t_sys_user (u_user_name, u_login_name, u_pwd, 
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_pwd,
       u_create_time, u_update_time)
-    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
     insert into t_sys_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userName != null">
@@ -51,20 +357,20 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
     <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
     <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
-    insert into t_sys_user (u_user_name, u_login_name, u_pwd, 
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_pwd,
       u_create_time, u_update_time)
-    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
     insert into t_sys_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userName != null">
@@ -101,20 +407,20 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
     <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
     <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
-    insert into t_sys_user (u_user_name, u_login_name, u_pwd, 
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_pwd,
       u_create_time, u_update_time)
-    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
     insert into t_sys_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userName != null">
@@ -151,20 +457,20 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
     <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
     <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
-    insert into t_sys_user (u_user_name, u_login_name, u_pwd, 
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_pwd,
       u_create_time, u_update_time)
-    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
     insert into t_sys_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userName != null">
@@ -201,20 +507,20 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
     <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
     <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
-    insert into t_sys_user (u_user_name, u_login_name, u_pwd, 
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_pwd,
       u_create_time, u_update_time)
-    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
     insert into t_sys_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userName != null">
@@ -251,20 +557,20 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.User">
     <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
     <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
-    insert into t_sys_user (u_user_name, u_login_name, u_pwd, 
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
+    insert into t_sys_user (u_user_name, u_login_name, u_pwd,
       u_create_time, u_update_time)
-    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.model.entity.User">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.User">
     insert into t_sys_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userName != null">
