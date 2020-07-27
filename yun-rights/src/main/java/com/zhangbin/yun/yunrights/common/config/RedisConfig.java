@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.config;
+package com.zhangbin.yun.yunrights.common.config;
 
 import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson.JSON;

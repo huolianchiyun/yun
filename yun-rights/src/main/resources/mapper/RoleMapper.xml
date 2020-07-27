@@ -1,7 +1,385 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    <id column="r_id" jdbcType="BIGINT" property="id" />
+    <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="r_level" jdbcType="INTEGER" property="level" />
+    <result column="r_description" jdbcType="VARCHAR" property="description" />
+    <result column="r_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="r_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="r_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="r_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    r_id, r_role_name, r_level, r_description, r_creator, r_updater, r_create_time, r_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_role
+    where r_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_role
+    where r_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_role (r_id, r_role_name, r_level, 
+      r_description, r_creator, r_updater, 
+      r_create_time, r_update_time)
+    values (#{id,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      r_id,
+      <if test="roleName != null">
+        r_role_name,
+      </if>
+      <if test="level != null">
+        r_level,
+      </if>
+      <if test="description != null">
+        r_description,
+      </if>
+      <if test="creator != null">
+        r_creator,
+      </if>
+      <if test="updater != null">
+        r_updater,
+      </if>
+      <if test="createTime != null">
+        r_create_time,
+      </if>
+      <if test="updateTime != null">
+        r_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    update t_sys_role
+    <set>
+      <if test="roleName != null">
+        r_role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        r_level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        r_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        r_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        r_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        r_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        r_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where r_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    update t_sys_role
+    set r_role_name = #{roleName,jdbcType=VARCHAR},
+      r_level = #{level,jdbcType=INTEGER},
+      r_description = #{description,jdbcType=VARCHAR},
+      r_creator = #{creator,jdbcType=VARCHAR},
+      r_updater = #{updater,jdbcType=VARCHAR},
+      r_create_time = #{createTime,jdbcType=TIMESTAMP},
+      r_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where r_id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    <id column="r_id" jdbcType="BIGINT" property="id" />
+    <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="r_level" jdbcType="INTEGER" property="level" />
+    <result column="r_description" jdbcType="VARCHAR" property="description" />
+    <result column="r_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="r_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="r_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="r_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    r_id, r_role_name, r_level, r_description, r_creator, r_updater, r_create_time, r_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_role
+    where r_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_role
+    where r_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_role (r_id, r_role_name, r_level, 
+      r_description, r_creator, r_updater, 
+      r_create_time, r_update_time)
+    values (#{id,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      r_id,
+      <if test="roleName != null">
+        r_role_name,
+      </if>
+      <if test="level != null">
+        r_level,
+      </if>
+      <if test="description != null">
+        r_description,
+      </if>
+      <if test="creator != null">
+        r_creator,
+      </if>
+      <if test="updater != null">
+        r_updater,
+      </if>
+      <if test="createTime != null">
+        r_create_time,
+      </if>
+      <if test="updateTime != null">
+        r_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    update t_sys_role
+    <set>
+      <if test="roleName != null">
+        r_role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        r_level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        r_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        r_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        r_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        r_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        r_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where r_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
+    update t_sys_role
+    set r_role_name = #{roleName,jdbcType=VARCHAR},
+      r_level = #{level,jdbcType=INTEGER},
+      r_description = #{description,jdbcType=VARCHAR},
+      r_creator = #{creator,jdbcType=VARCHAR},
+      r_updater = #{updater,jdbcType=VARCHAR},
+      r_create_time = #{createTime,jdbcType=TIMESTAMP},
+      r_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where r_id = #{id,jdbcType=BIGINT}
+  </update>
   <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+    <id column="r_id" jdbcType="BIGINT" property="id" />
+    <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="r_level" jdbcType="INTEGER" property="level" />
+    <result column="r_description" jdbcType="VARCHAR" property="description" />
+    <result column="r_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="r_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="r_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="r_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    r_id, r_role_name, r_level, r_description, r_creator, r_updater, r_create_time, r_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_role
+    where r_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_role
+    where r_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_role (r_id, r_role_name, r_level, 
+      r_description, r_creator, r_updater, 
+      r_create_time, r_update_time)
+    values (#{id,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      r_id,
+      <if test="roleName != null">
+        r_role_name,
+      </if>
+      <if test="level != null">
+        r_level,
+      </if>
+      <if test="description != null">
+        r_description,
+      </if>
+      <if test="creator != null">
+        r_creator,
+      </if>
+      <if test="updater != null">
+        r_updater,
+      </if>
+      <if test="createTime != null">
+        r_create_time,
+      </if>
+      <if test="updateTime != null">
+        r_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+    update t_sys_role
+    <set>
+      <if test="roleName != null">
+        r_role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        r_level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        r_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        r_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        r_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        r_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        r_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where r_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+    update t_sys_role
+    set r_role_name = #{roleName,jdbcType=VARCHAR},
+      r_level = #{level,jdbcType=INTEGER},
+      r_description = #{description,jdbcType=VARCHAR},
+      r_creator = #{creator,jdbcType=VARCHAR},
+      r_updater = #{updater,jdbcType=VARCHAR},
+      r_create_time = #{createTime,jdbcType=TIMESTAMP},
+      r_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where r_id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -24,7 +402,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -35,7 +413,7 @@
       #{level,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -89,7 +467,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -116,7 +494,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -127,7 +505,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -150,7 +528,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -161,7 +539,7 @@
       #{level,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -215,7 +593,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -242,7 +620,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -253,7 +631,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -276,7 +654,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -287,7 +665,7 @@
       #{level,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -341,7 +719,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -368,7 +746,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -379,7 +757,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -400,7 +778,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -411,7 +789,7 @@
       #{level,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -453,7 +831,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -474,7 +852,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -483,7 +861,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -504,7 +882,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -515,7 +893,7 @@
       #{level,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -557,7 +935,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -578,7 +956,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -587,7 +965,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -608,7 +986,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -619,7 +997,7 @@
       #{level,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -661,7 +1039,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -682,7 +1060,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -691,7 +1069,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -712,7 +1090,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -723,7 +1101,7 @@
       #{level,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -765,7 +1143,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -786,7 +1164,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -795,7 +1173,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -816,7 +1194,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -827,7 +1205,7 @@
       #{level,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -869,7 +1247,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -890,7 +1268,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},
@@ -899,7 +1277,7 @@
       r_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <id column="r_id" jdbcType="BIGINT" property="id" />
     <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="r_description" jdbcType="VARCHAR" property="description" />
@@ -920,7 +1298,7 @@
     delete from t_sys_role
     where r_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -931,7 +1309,7 @@
       #{level,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -973,7 +1351,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     <set>
       <if test="roleName != null">
@@ -994,7 +1372,7 @@
     </set>
     where r_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Role">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Role">
     update t_sys_role
     set r_role_name = #{roleName,jdbcType=VARCHAR},
       r_description = #{description,jdbcType=VARCHAR},

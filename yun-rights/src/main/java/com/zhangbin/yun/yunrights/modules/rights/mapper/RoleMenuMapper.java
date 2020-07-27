@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.RoleMenu;
+import com.zhangbin.yun.yunrights.modules.rights.model.entity.RoleMenu;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

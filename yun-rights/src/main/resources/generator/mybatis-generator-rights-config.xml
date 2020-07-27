@@ -33,7 +33,7 @@
         </javaTypeResolver>
 
         <!--生成的model 包路径 -->
-        <javaModelGenerator targetPackage="com.zhangbin.yun.yunrights.modules.rights.model"
+        <javaModelGenerator targetPackage="com.zhangbin.yun.yunrights.modules.rights.model.entity"
                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="false"/>
@@ -53,26 +53,26 @@
         <!--对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 -->
         <table tableName="t_sys_user" domainObjectName="User" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
             <generatedKey column="u_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="u_" replaceString=""/> <!--移除字段前缀-->
-            <ignoreColumn column="u_id"/>
+            <!--<ignoreColumn column="u_id"/>-->
         </table>
         <table tableName="t_sys_role" domainObjectName="Role" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
             <generatedKey column="r_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="r_" replaceString=""/>
         </table>
         <table tableName="t_sys_group" domainObjectName="Group" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
             <generatedKey column="g_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="g_" replaceString=""/>
         </table>
         <table tableName="t_sys_menu" domainObjectName="Menu" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
             <generatedKey column="m_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="m_" replaceString=""/>
         </table>

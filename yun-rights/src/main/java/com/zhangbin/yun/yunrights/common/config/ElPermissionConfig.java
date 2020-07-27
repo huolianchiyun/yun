@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.config;
+package com.zhangbin.yun.yunrights.common.config;
 
 import com.zhangbin.yun.yunrights.common.utils.SecurityUtils;
 import org.springframework.security.core.GrantedAuthority;

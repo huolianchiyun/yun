@@ -17,22 +17,37 @@ import java.util.List;
  * http://mybatis.org/generator/running/runningWithJava.html
  */
 public class MybatisGenerator {
-    public static void main(String[] args) throws InvalidConfigurationException, InterruptedException, SQLException, IOException, XMLParserException {
+    public static void main(String[] args) {
+        generate("generator/mybatis-generator-rights-config.xml");
+        generate("generator/mybatis-generator-email-config.xml");
+    }
+
+    private static void generate(String generatorConfigXml)  {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
         ClassLoader classLoader = MybatisGenerator.class.getClassLoader();
-        Configuration config = cp.parseConfiguration(classLoader.getResourceAsStream("generator/mybatis-generator-rights-config.xml"));
-
-        // 解决IDEA下运行，多个模块路径冲突问题
-        String cpath = classLoader.getResource("generator/mybatis-generator-rights-config.xml").toString();
-        cpath = cpath.substring(0, cpath.indexOf("target")).replace("file:/", "");
-        Context context = config.getContexts().get(0);
-        context.getJavaModelGeneratorConfiguration().setTargetProject(cpath + context.getJavaModelGeneratorConfiguration().getTargetProject());
-        context.getSqlMapGeneratorConfiguration().setTargetProject(cpath + context.getSqlMapGeneratorConfiguration().getTargetProject());
-        context.getJavaClientGeneratorConfiguration().setTargetProject(cpath + context.getJavaClientGeneratorConfiguration().getTargetProject());
-
-        DefaultShellCallback callback = new DefaultShellCallback(true);
-        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
-        myBatisGenerator.generate(null);
+        try {
+            Configuration config = cp.parseConfiguration(classLoader.getResourceAsStream(generatorConfigXml));
+            // 解决IDEA下运行，多个模块路径冲突问题
+            String cpath = classLoader.getResource(generatorConfigXml).toString();
+            cpath = cpath.substring(0, cpath.indexOf("target")).replace("file:/", "");
+            Context context = config.getContexts().get(0);
+            context.getJavaModelGeneratorConfiguration().setTargetProject(cpath + context.getJavaModelGeneratorConfiguration().getTargetProject());
+            context.getSqlMapGeneratorConfiguration().setTargetProject(cpath + context.getSqlMapGeneratorConfiguration().getTargetProject());
+            context.getJavaClientGeneratorConfiguration().setTargetProject(cpath + context.getJavaClientGeneratorConfiguration().getTargetProject());
+            DefaultShellCallback callback = new DefaultShellCallback(true);
+            MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+            myBatisGenerator.generate(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XMLParserException e) {
+            e.printStackTrace();
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

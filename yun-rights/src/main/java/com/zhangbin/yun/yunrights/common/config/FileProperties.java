@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.config;
+package com.zhangbin.yun.yunrights.common.config;
 
 import com.zhangbin.yun.yunrights.common.utils.ElAdminConstant;
 import lombok.Data;

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper">
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
-    <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
+    <result column="g_group_type" jdbcType="INTEGER" property="groupType" />
+    <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_description" jdbcType="VARCHAR" property="description" />
     <result column="g_creator" jdbcType="VARCHAR" property="creator" />
     <result column="g_updater" jdbcType="VARCHAR" property="updater" />
@@ -12,7 +13,288 @@
     <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    g_id, g_group_name, g_pid, g_description, g_creator, g_updater, g_create_time, g_update_time
+    g_id, g_pid, g_group_type, g_group_name, g_description, g_creator, g_updater, g_create_time, 
+    g_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_group
+    where g_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_group
+    where g_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_group (g_id, g_pid, g_group_type, 
+      g_group_name, g_description, g_creator, 
+      g_updater, g_create_time, g_update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER}, 
+      #{groupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      g_id,
+      <if test="pid != null">
+        g_pid,
+      </if>
+      <if test="groupType != null">
+        g_group_type,
+      </if>
+      <if test="groupName != null">
+        g_group_name,
+      </if>
+      <if test="description != null">
+        g_description,
+      </if>
+      <if test="creator != null">
+        g_creator,
+      </if>
+      <if test="updater != null">
+        g_updater,
+      </if>
+      <if test="createTime != null">
+        g_create_time,
+      </if>
+      <if test="updateTime != null">
+        g_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="groupType != null">
+        #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    update t_sys_group
+    <set>
+      <if test="pid != null">
+        g_pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="groupType != null">
+        g_group_type = #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        g_group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        g_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        g_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        g_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        g_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        g_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where g_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    update t_sys_group
+    set g_pid = #{pid,jdbcType=BIGINT},
+      g_group_type = #{groupType,jdbcType=INTEGER},
+      g_group_name = #{groupName,jdbcType=VARCHAR},
+      g_description = #{description,jdbcType=VARCHAR},
+      g_creator = #{creator,jdbcType=VARCHAR},
+      g_updater = #{updater,jdbcType=VARCHAR},
+      g_create_time = #{createTime,jdbcType=TIMESTAMP},
+      g_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where g_id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    <id column="g_id" jdbcType="BIGINT" property="id" />
+    <result column="g_pid" jdbcType="BIGINT" property="pid" />
+    <result column="g_group_type" jdbcType="INTEGER" property="groupType" />
+    <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="g_description" jdbcType="VARCHAR" property="description" />
+    <result column="g_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="g_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    g_id, g_pid, g_group_type, g_group_name, g_description, g_creator, g_updater, g_create_time, 
+    g_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_group
+    where g_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_group
+    where g_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_group (g_id, g_pid, g_group_type, 
+      g_group_name, g_description, g_creator, 
+      g_updater, g_create_time, g_update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER}, 
+      #{groupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      g_id,
+      <if test="pid != null">
+        g_pid,
+      </if>
+      <if test="groupType != null">
+        g_group_type,
+      </if>
+      <if test="groupName != null">
+        g_group_name,
+      </if>
+      <if test="description != null">
+        g_description,
+      </if>
+      <if test="creator != null">
+        g_creator,
+      </if>
+      <if test="updater != null">
+        g_updater,
+      </if>
+      <if test="createTime != null">
+        g_create_time,
+      </if>
+      <if test="updateTime != null">
+        g_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="groupType != null">
+        #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    update t_sys_group
+    <set>
+      <if test="pid != null">
+        g_pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="groupType != null">
+        g_group_type = #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        g_group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        g_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        g_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        g_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        g_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        g_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where g_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    update t_sys_group
+    set g_pid = #{pid,jdbcType=BIGINT},
+      g_group_type = #{groupType,jdbcType=INTEGER},
+      g_group_name = #{groupName,jdbcType=VARCHAR},
+      g_description = #{description,jdbcType=VARCHAR},
+      g_creator = #{creator,jdbcType=VARCHAR},
+      g_updater = #{updater,jdbcType=VARCHAR},
+      g_create_time = #{createTime,jdbcType=TIMESTAMP},
+      g_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where g_id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+    <id column="g_id" jdbcType="BIGINT" property="id" />
+    <result column="g_pid" jdbcType="BIGINT" property="pid" />
+    <result column="g_group_type" jdbcType="INTEGER" property="groupType" />
+    <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="g_description" jdbcType="VARCHAR" property="description" />
+    <result column="g_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="g_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    g_id, g_pid, g_group_type, g_group_name, g_description, g_creator, g_updater, g_create_time, 
+    g_update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -28,14 +310,152 @@
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_sys_group (g_id, g_group_name, g_pid, 
-      g_description, g_creator, g_updater, 
-      g_create_time, g_update_time)
-    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, 
-      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into t_sys_group (g_id, g_pid, g_group_type, 
+      g_group_name, g_description, g_creator, 
+      g_updater, g_create_time, g_update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER}, 
+      #{groupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      g_id,
+      <if test="pid != null">
+        g_pid,
+      </if>
+      <if test="groupType != null">
+        g_group_type,
+      </if>
+      <if test="groupName != null">
+        g_group_name,
+      </if>
+      <if test="description != null">
+        g_description,
+      </if>
+      <if test="creator != null">
+        g_creator,
+      </if>
+      <if test="updater != null">
+        g_updater,
+      </if>
+      <if test="createTime != null">
+        g_create_time,
+      </if>
+      <if test="updateTime != null">
+        g_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="groupType != null">
+        #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+    update t_sys_group
+    <set>
+      <if test="pid != null">
+        g_pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="groupType != null">
+        g_group_type = #{groupType,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        g_group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        g_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        g_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        g_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        g_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        g_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where g_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+    update t_sys_group
+    set g_pid = #{pid,jdbcType=BIGINT},
+      g_group_type = #{groupType,jdbcType=INTEGER},
+      g_group_name = #{groupName,jdbcType=VARCHAR},
+      g_description = #{description,jdbcType=VARCHAR},
+      g_creator = #{creator,jdbcType=VARCHAR},
+      g_updater = #{updater,jdbcType=VARCHAR},
+      g_create_time = #{createTime,jdbcType=TIMESTAMP},
+      g_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where g_id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    <id column="g_id" jdbcType="BIGINT" property="id" />
+    <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="g_pid" jdbcType="BIGINT" property="pid" />
+    <result column="g_description" jdbcType="VARCHAR" property="description" />
+    <result column="g_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="g_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    g_id, g_group_name, g_pid, g_description, g_creator, g_updater, g_create_time, g_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_group
+    where g_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_group
+    where g_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_group (g_id, g_group_name, g_pid,
+      g_description, g_creator, g_updater,
+      g_create_time, g_update_time)
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT},
+      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -89,7 +509,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -116,7 +536,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -127,7 +547,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -141,7 +561,7 @@
     g_id, g_group_name, g_pid, g_description, g_creator, g_updater, g_create_time, g_update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
@@ -150,18 +570,18 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_sys_group (g_id, g_group_name, g_pid, 
-      g_description, g_creator, g_updater, 
+    insert into t_sys_group (g_id, g_group_name, g_pid,
+      g_description, g_creator, g_updater,
       g_create_time, g_update_time)
-    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, 
-      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT},
+      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -215,7 +635,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -242,7 +662,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -253,7 +673,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -267,7 +687,7 @@
     g_id, g_group_name, g_pid, g_description, g_creator, g_updater, g_create_time, g_update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
@@ -276,18 +696,18 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into t_sys_group (g_id, g_group_name, g_pid, 
-      g_description, g_creator, g_updater, 
+    insert into t_sys_group (g_id, g_group_name, g_pid,
+      g_description, g_creator, g_updater,
       g_create_time, g_update_time)
-    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, 
-      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT},
+      #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -341,7 +761,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -368,7 +788,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -379,7 +799,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -400,7 +820,7 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -411,7 +831,7 @@
       #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -453,7 +873,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -474,7 +894,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -483,7 +903,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -504,7 +924,7 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -515,7 +935,7 @@
       #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -557,7 +977,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -578,7 +998,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -587,7 +1007,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -608,7 +1028,7 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -619,7 +1039,7 @@
       #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -661,7 +1081,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -682,7 +1102,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -691,7 +1111,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -712,7 +1132,7 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -723,7 +1143,7 @@
       #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -765,7 +1185,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -786,7 +1206,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -795,7 +1215,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -816,7 +1236,7 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -827,7 +1247,7 @@
       #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -869,7 +1289,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -890,7 +1310,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},
@@ -899,7 +1319,7 @@
       g_update_time = #{updateTime,jdbcType=TIMESTAMP}
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <id column="g_id" jdbcType="BIGINT" property="id" />
     <result column="g_group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="g_pid" jdbcType="BIGINT" property="pid" />
@@ -920,7 +1340,7 @@
     delete from t_sys_group
     where g_id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -931,7 +1351,7 @@
       #{description,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -973,7 +1393,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     <set>
       <if test="groupName != null">
@@ -994,7 +1414,7 @@
     </set>
     where g_id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.Group">
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.Group">
     update t_sys_group
     set g_group_name = #{groupName,jdbcType=VARCHAR},
       g_pid = #{pid,jdbcType=BIGINT},

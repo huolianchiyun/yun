@@ -1,15 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper">
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    insert into t_sys_user_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="tGroupId != null">
+        t_group_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="tGroupId != null">
+        #{tGroupId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    insert into t_sys_user_group (user_id, t_group_id)
+    values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -55,15 +82,15 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -82,15 +109,15 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -109,15 +136,15 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -136,15 +163,15 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -163,15 +190,15 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -190,15 +217,15 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -217,15 +244,69 @@
       </if>
     </trim>
   </insert>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
   </resultMap>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group (user_id, t_group_id)
     values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserGroup">
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    insert into t_sys_user_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="tGroupId != null">
+        t_group_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="tGroupId != null">
+        #{tGroupId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    insert into t_sys_user_group (user_id, t_group_id)
+    values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    insert into t_sys_user_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="tGroupId != null">
+        t_group_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="tGroupId != null">
+        #{tGroupId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="t_group_id" jdbcType="BIGINT" property="tGroupId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
+    insert into t_sys_user_group (user_id, t_group_id)
+    values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.entity.UserGroup">
     insert into t_sys_user_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">

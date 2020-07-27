@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.model;
+package com.zhangbin.yun.yunrights.modules.rights.model.entity;
 
 import java.io.Serializable;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 表 t_sys_menu
  * @author ASUS
- * @date 2020-07-21 21:51:01
+ * @date 2020-07-27 21:58:22
  */
 @Data
 public class Menu extends BaseEntity implements Serializable {
@@ -27,6 +27,11 @@ public class Menu extends BaseEntity implements Serializable {
      * 父菜单id
      */
     private Long pid;
+
+    /**
+     * Spring Security使用Spring EL表达式对URL或方法进行权限控制
+     */
+    private String permission;
 
     private static final long serialVersionUID = 1L;
 }

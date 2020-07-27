@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.model;
+package com.zhangbin.yun.yunrights.modules.rights.model.entity;
 
 import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;

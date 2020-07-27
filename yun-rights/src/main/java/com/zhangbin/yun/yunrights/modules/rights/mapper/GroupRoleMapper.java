@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.GroupRole;
+import com.zhangbin.yun.yunrights.modules.rights.model.entity.GroupRole;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

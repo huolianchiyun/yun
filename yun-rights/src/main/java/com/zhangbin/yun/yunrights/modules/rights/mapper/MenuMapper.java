@@ -1,7 +1,9 @@
 package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.Menu;
+import com.zhangbin.yun.yunrights.modules.rights.model.entity.Menu;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.Optional;
 
 @Mapper
 public interface MenuMapper {
@@ -11,7 +13,7 @@ public interface MenuMapper {
 
     int insertSelective(Menu record);
 
-    Menu selectByPrimaryKey(Long id);
+    Optional<Menu> selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(Menu record);
 

@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.security.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zhangbin.yun.yunrights.modules.rights.model.User;
+import com.zhangbin.yun.yunrights.modules.rights.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

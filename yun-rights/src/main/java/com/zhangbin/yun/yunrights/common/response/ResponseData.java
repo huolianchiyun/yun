@@ -1,14 +1,14 @@
 package com.zhangbin.yun.yunrights.common.response;
 
-public class ResponseResult<T> {
+public class ResponseData<T> {
     private T data;
     private Meta meta;
 
-    public ResponseResult(Meta meta) {
+    public ResponseData(Meta meta) {
         this.meta = meta;
     }
 
-    public ResponseResult(T data, Meta meta) {
+    public ResponseData(T data, Meta meta) {
         this.data = data;
         this.meta = meta;
     }

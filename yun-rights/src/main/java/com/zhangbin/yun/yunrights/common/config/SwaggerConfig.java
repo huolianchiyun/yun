@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.config;
+package com.zhangbin.yun.yunrights.common.config;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Predicates;

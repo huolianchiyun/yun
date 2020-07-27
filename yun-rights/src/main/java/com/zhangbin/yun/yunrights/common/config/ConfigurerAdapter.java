@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.config;
+package com.zhangbin.yun.yunrights.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

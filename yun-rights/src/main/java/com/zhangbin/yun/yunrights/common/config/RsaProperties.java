@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.config;
+package com.zhangbin.yun.yunrights.common.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
