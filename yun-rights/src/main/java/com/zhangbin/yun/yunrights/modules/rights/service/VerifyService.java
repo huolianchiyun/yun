@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
+import com.zhangbin.yun.yunrights.modules.email.model.entity.Email;
 
 public interface VerifyService {
 
