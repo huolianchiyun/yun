@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.MenuDoMapper">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <id column="m_id" jdbcType="BIGINT" property="id" />
+    <result column="m_menu_title" jdbcType="VARCHAR" property="menuTitle" />
+    <result column="m_menu_type" jdbcType="INTEGER" property="menuType" />
+    <result column="m_description" jdbcType="VARCHAR" property="description" />
+    <result column="m_pid" jdbcType="BIGINT" property="pid" />
+    <result column="m_permission" jdbcType="VARCHAR" property="permission" />
+    <result column="m_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="m_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    m_id, m_menu_title, m_menu_type, m_description, m_pid, m_permission, m_creator, m_updater, 
+    m_create_time, m_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_menu
+    where m_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_menu
+    where m_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_menu (m_id, m_menu_title, m_menu_type, 
+      m_description, m_pid, m_permission, 
+      m_creator, m_updater, m_create_time, 
+      m_update_time)
+    values (#{id,jdbcType=BIGINT}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      m_id,
+      <if test="menuTitle != null">
+        m_menu_title,
+      </if>
+      <if test="menuType != null">
+        m_menu_type,
+      </if>
+      <if test="description != null">
+        m_description,
+      </if>
+      <if test="pid != null">
+        m_pid,
+      </if>
+      <if test="permission != null">
+        m_permission,
+      </if>
+      <if test="creator != null">
+        m_creator,
+      </if>
+      <if test="updater != null">
+        m_updater,
+      </if>
+      <if test="createTime != null">
+        m_create_time,
+      </if>
+      <if test="updateTime != null">
+        m_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="menuTitle != null">
+        #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="permission != null">
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    update t_sys_menu
+    <set>
+      <if test="menuTitle != null">
+        m_menu_title = #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        m_menu_type = #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        m_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        m_pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="permission != null">
+        m_permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        m_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        m_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        m_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        m_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where m_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    update t_sys_menu
+    set m_menu_title = #{menuTitle,jdbcType=VARCHAR},
+      m_menu_type = #{menuType,jdbcType=INTEGER},
+      m_description = #{description,jdbcType=VARCHAR},
+      m_pid = #{pid,jdbcType=BIGINT},
+      m_permission = #{permission,jdbcType=VARCHAR},
+      m_creator = #{creator,jdbcType=VARCHAR},
+      m_updater = #{updater,jdbcType=VARCHAR},
+      m_create_time = #{createTime,jdbcType=TIMESTAMP},
+      m_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where m_id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <id column="m_id" jdbcType="BIGINT" property="id" />
+    <result column="m_menu_title" jdbcType="VARCHAR" property="menuTitle" />
+    <result column="m_menu_type" jdbcType="INTEGER" property="menuType" />
+    <result column="m_description" jdbcType="VARCHAR" property="description" />
+    <result column="m_pid" jdbcType="BIGINT" property="pid" />
+    <result column="m_permission" jdbcType="VARCHAR" property="permission" />
+    <result column="m_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="m_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    m_id, m_menu_title, m_menu_type, m_description, m_pid, m_permission, m_creator, m_updater,
+    m_create_time, m_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_menu
+    where m_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_menu
+    where m_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_menu (m_id, m_menu_title, m_menu_type,
+      m_description, m_pid, m_permission,
+      m_creator, m_updater, m_create_time,
+      m_update_time)
+    values (#{id,jdbcType=BIGINT}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
+      #{description,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
+      #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      m_id,
+      <if test="menuTitle != null">
+        m_menu_title,
+      </if>
+      <if test="menuType != null">
+        m_menu_type,
+      </if>
+      <if test="description != null">
+        m_description,
+      </if>
+      <if test="pid != null">
+        m_pid,
+      </if>
+      <if test="permission != null">
+        m_permission,
+      </if>
+      <if test="creator != null">
+        m_creator,
+      </if>
+      <if test="updater != null">
+        m_updater,
+      </if>
+      <if test="createTime != null">
+        m_create_time,
+      </if>
+      <if test="updateTime != null">
+        m_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="menuTitle != null">
+        #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="permission != null">
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    update t_sys_menu
+    <set>
+      <if test="menuTitle != null">
+        m_menu_title = #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        m_menu_type = #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        m_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        m_pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="permission != null">
+        m_permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        m_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        m_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        m_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        m_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where m_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    update t_sys_menu
+    set m_menu_title = #{menuTitle,jdbcType=VARCHAR},
+      m_menu_type = #{menuType,jdbcType=INTEGER},
+      m_description = #{description,jdbcType=VARCHAR},
+      m_pid = #{pid,jdbcType=BIGINT},
+      m_permission = #{permission,jdbcType=VARCHAR},
+      m_creator = #{creator,jdbcType=VARCHAR},
+      m_updater = #{updater,jdbcType=VARCHAR},
+      m_create_time = #{createTime,jdbcType=TIMESTAMP},
+      m_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where m_id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <id column="m_id" jdbcType="BIGINT" property="id" />
+    <result column="m_menu_title" jdbcType="VARCHAR" property="menuTitle" />
+    <result column="m_menu_type" jdbcType="INTEGER" property="menuType" />
+    <result column="m_description" jdbcType="VARCHAR" property="description" />
+    <result column="m_pid" jdbcType="BIGINT" property="pid" />
+    <result column="m_permission" jdbcType="VARCHAR" property="permission" />
+    <result column="m_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="m_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    m_id, m_menu_title, m_menu_type, m_description, m_pid, m_permission, m_creator, m_updater,
+    m_create_time, m_update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_menu
+    where m_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_menu
+    where m_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_menu (m_id, m_menu_title, m_menu_type,
+      m_description, m_pid, m_permission,
+      m_creator, m_updater, m_create_time,
+      m_update_time)
+    values (#{id,jdbcType=BIGINT}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
+      #{description,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
+      #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      m_id,
+      <if test="menuTitle != null">
+        m_menu_title,
+      </if>
+      <if test="menuType != null">
+        m_menu_type,
+      </if>
+      <if test="description != null">
+        m_description,
+      </if>
+      <if test="pid != null">
+        m_pid,
+      </if>
+      <if test="permission != null">
+        m_permission,
+      </if>
+      <if test="creator != null">
+        m_creator,
+      </if>
+      <if test="updater != null">
+        m_updater,
+      </if>
+      <if test="createTime != null">
+        m_create_time,
+      </if>
+      <if test="updateTime != null">
+        m_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="menuTitle != null">
+        #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="permission != null">
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    update t_sys_menu
+    <set>
+      <if test="menuTitle != null">
+        m_menu_title = #{menuTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        m_menu_type = #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        m_description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        m_pid = #{pid,jdbcType=BIGINT},
+      </if>
+      <if test="permission != null">
+        m_permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        m_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        m_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        m_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        m_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where m_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo">
+    update t_sys_menu
+    set m_menu_title = #{menuTitle,jdbcType=VARCHAR},
+      m_menu_type = #{menuType,jdbcType=INTEGER},
+      m_description = #{description,jdbcType=VARCHAR},
+      m_pid = #{pid,jdbcType=BIGINT},
+      m_permission = #{permission,jdbcType=VARCHAR},
+      m_creator = #{creator,jdbcType=VARCHAR},
+      m_updater = #{updater,jdbcType=VARCHAR},
+      m_create_time = #{createTime,jdbcType=TIMESTAMP},
+      m_update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where m_id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
