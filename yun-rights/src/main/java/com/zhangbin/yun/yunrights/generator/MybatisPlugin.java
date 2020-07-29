@@ -24,7 +24,6 @@ public class MybatisPlugin extends PluginAdapter {
         //添加domain的注解
         topLevelClass.addAnnotation("@Data");
         topLevelClass.addJavaDocLine("/**");
-
         String remarks = introspectedTable.getRemarks();
         if (StringUtility.stringHasValue(remarks)) {
             String[] remarkLines = remarks.split(System.getProperty("line.separator"));
@@ -51,6 +50,7 @@ public class MybatisPlugin extends PluginAdapter {
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
         if(!topLevelClass.getFields().contains(field)){
+            removeIsPrefixOfField(field);
             field.addJavaDocLine("/**");
             String remarks = introspectedColumn.getRemarks();
             if (StringUtility.stringHasValue(remarks)) {
@@ -64,6 +64,7 @@ public class MybatisPlugin extends PluginAdapter {
         }
         return false;
     }
+
 
     @Override
     public boolean clientGenerated(Interface interfaze, IntrospectedTable introspectedTable) {
@@ -88,5 +89,12 @@ public class MybatisPlugin extends PluginAdapter {
 
     protected String getDateString() {
         return DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+    private void removeIsPrefixOfField(Field field) {
+        String fieldName = field.getName();
+        if(fieldName.matches("is[A-Z_]\\w*")){
+            field.setName((char)(fieldName.charAt(2) + 32) + fieldName.substring(3));
+        }
     }
 }

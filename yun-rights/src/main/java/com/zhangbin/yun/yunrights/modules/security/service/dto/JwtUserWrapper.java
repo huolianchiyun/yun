@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.security.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.User;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUserWrapper implements UserDetails {
 
-    private final User user;
+    private final UserDo user;
 
     private final List<Long> dataScopes;
 
@@ -58,6 +58,7 @@ public class JwtUserWrapper implements UserDetails {
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return user.getEnabled();
+//        return user.getEnabled();
+        return false;
     }
 }

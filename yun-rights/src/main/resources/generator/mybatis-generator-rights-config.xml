@@ -33,7 +33,7 @@
         </javaTypeResolver>
 
         <!--生成的model 包路径 -->
-        <javaModelGenerator targetPackage="com.zhangbin.yun.yunrights.modules.rights.model.entity"
+        <javaModelGenerator targetPackage="com.zhangbin.yun.yunrights.modules.rights.model.$do"
                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="false"/>
@@ -51,41 +51,41 @@
         </javaClientGenerator>
 
         <!--对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 -->
-        <table tableName="t_sys_user" domainObjectName="User" enableCountByExample="false"
+        <table tableName="t_sys_user" domainObjectName="UserDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.$do.BaseDo"/>
             <generatedKey column="u_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="u_" replaceString=""/> <!--移除字段前缀-->
             <!--<ignoreColumn column="u_id"/>-->
         </table>
-        <table tableName="t_sys_role" domainObjectName="Role" enableCountByExample="false"
+        <table tableName="t_sys_role" domainObjectName="RoleDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.$do.BaseDo"/>
             <generatedKey column="r_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="r_" replaceString=""/>
         </table>
-        <table tableName="t_sys_group" domainObjectName="Group" enableCountByExample="false"
+        <table tableName="t_sys_group" domainObjectName="GroupDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.$do.BaseDo"/>
             <generatedKey column="g_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="g_" replaceString=""/>
         </table>
-        <table tableName="t_sys_menu" domainObjectName="Menu" enableCountByExample="false"
+        <table tableName="t_sys_menu" domainObjectName="MenuDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.entity.BaseEntity"/>
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.rights.model.$do.BaseDo"/>
             <generatedKey column="m_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="m_" replaceString=""/>
         </table>
-        <table tableName="t_sys_user_role" domainObjectName="UserRole" enableCountByExample="false"
+        <table tableName="t_sys_user_role" domainObjectName="UserRoleDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
         </table>
-        <table tableName="t_sys_user_group" domainObjectName="UserGroup" enableCountByExample="false"
+        <table tableName="t_sys_user_group" domainObjectName="UserGroupDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
         </table>
-        <table tableName="t_sys_group_role" domainObjectName="GroupRole" enableCountByExample="false"
+        <table tableName="t_sys_group_role" domainObjectName="GroupRoleDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
         </table>
-        <table tableName="t_sys_role_menu" domainObjectName="RoleMenu" enableCountByExample="false"
+        <table tableName="t_sys_role_menu" domainObjectName="RoleMenuDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
         </table>
     </context>

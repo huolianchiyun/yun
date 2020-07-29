@@ -26,7 +26,7 @@
         </javaTypeResolver>
 
         <!--生成的model 包路径 -->
-        <javaModelGenerator targetPackage="com.zhangbin.yun.yunrights.modules.email.model.entity"
+        <javaModelGenerator targetPackage="com.zhangbin.yun.yunrights.modules.email.model.$do"
                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="false"/>
@@ -44,7 +44,7 @@
         </javaClientGenerator>
 
         <!--对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 -->
-        <table tableName="t_email_config" domainObjectName="EmailConfig" enableCountByExample="false"
+        <table tableName="t_email_config" domainObjectName="EmailConfigDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
             <generatedKey column="e_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="e_" replaceString=""/> <!--移除字段前缀-->

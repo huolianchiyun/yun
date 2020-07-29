@@ -11,7 +11,7 @@ import java.util.Set;
  * 用户公共查询类
  */
 @Data
-public class UserQueryConditions implements Serializable {
+public class UserQuery implements Serializable {
 
     private Long id;
 

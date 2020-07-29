@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.email.model.entity;
+package com.zhangbin.yun.yunrights.modules.email.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

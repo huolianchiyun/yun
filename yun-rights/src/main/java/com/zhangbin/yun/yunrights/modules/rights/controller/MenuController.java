@@ -4,8 +4,8 @@ import com.zhangbin.yun.yunrights.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.common.utils.PageUtil;
 import com.zhangbin.yun.yunrights.common.utils.SecurityUtils;
-import com.zhangbin.yun.yunrights.modules.rights.model.MenuQueryConditions;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.Menu;
+import com.zhangbin.yun.yunrights.modules.rights.model.MenuQuery;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
 import static com.zhangbin.yun.yunrights.common.response.ResponseUtil.success;
 import io.swagger.annotations.Api;
@@ -31,7 +31,7 @@ public class MenuController {
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
-    public void download(HttpServletResponse response, MenuQueryConditions queryConditions) throws Exception {
+    public void download(HttpServletResponse response, MenuQuery queryConditions) throws Exception {
         menuService.download(menuService.queryAll(queryConditions, false), response);
     }
 
@@ -52,8 +52,8 @@ public class MenuController {
     @ApiOperation("查询菜单")
     @GetMapping
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<ResponseData> query(MenuQueryConditions criteria) throws Exception {
-        List<Menu> menuDtoList = menuService.queryAll(criteria, true);
+    public ResponseEntity<ResponseData> query(MenuQuery criteria) throws Exception {
+        List<MenuDo> menuDtoList = menuService.queryAll(criteria, true);
         return success(PageUtil.toPage(menuDtoList, menuDtoList.size()));
     }
 
@@ -69,7 +69,7 @@ public class MenuController {
     @ApiOperation("新增菜单")
     @PostMapping
     @PreAuthorize("@el.check('menu:add')")
-    public ResponseEntity<ResponseData> create(@RequestBody Menu resources) {
+    public ResponseEntity<ResponseData> create(@RequestBody MenuDo resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot have an ID.");
         }
@@ -81,7 +81,7 @@ public class MenuController {
     @ApiOperation("修改菜单")
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody Menu resources) {
+    public ResponseEntity<ResponseData> update(@RequestBody MenuDo resources) {
         menuService.update(resources);
         return success();
     }

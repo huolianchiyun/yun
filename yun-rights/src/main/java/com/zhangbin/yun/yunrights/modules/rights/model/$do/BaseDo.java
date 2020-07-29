@@ -1,10 +1,10 @@
-package com.zhangbin.yun.yunrights.modules.rights.model.entity;
+package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class BaseEntity {
+public class BaseDo {
     protected Long id;
     protected String creator;
     protected String updater;

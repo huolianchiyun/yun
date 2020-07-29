@@ -1,8 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.RoleQueryConditions;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.Role;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.User;
+import com.zhangbin.yun.yunrights.modules.rights.model.RoleQuery;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import javax.servlet.http.HttpServletResponse;
@@ -20,26 +20,26 @@ public interface RoleService {
      * 查询全部数据
      * @return /
      */
-    List<Role> queryByConditions();
+    List<RoleDo> queryByConditions();
 
     /**
      * 根据ID查询
      * @param id /
      * @return /
      */
-    Role findById(long id);
+    RoleDo findById(long id);
 
     /**
      * 创建
      * @param resources /
      */
-    void create(Role resources);
+    void create(RoleDo resources);
 
     /**
      * 编辑
      * @param resources /
      */
-    void update(Role resources);
+    void update(RoleDo resources);
 
     /**
      * 删除
@@ -52,21 +52,21 @@ public interface RoleService {
      * @param id 用户ID
      * @return /
      */
-    List<Role> findByUsersId(Long id);
+    List<RoleDo> findByUsersId(Long id);
 
     /**
      * 根据角色查询角色级别
      * @param roles /
      * @return /
      */
-    Integer findByRoles(Set<Role> roles);
+    Integer findByRoles(Set<RoleDo> roles);
 
     /**
      * 修改绑定的菜单
      * @param resources /
      * @param roleDTO /
      */
-    void updateMenu(Role resources, Role roleDTO);
+    void updateMenu(RoleDo resources, RoleDo roleDTO);
 
     /**
      * 解绑菜单
@@ -80,14 +80,14 @@ public interface RoleService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryByConditions(RoleQueryConditions queryConditions, Pageable pageable);
+    Object queryByConditions(RoleQuery queryConditions, Pageable pageable);
 
     /**
      * 查询全部
      * @param queryConditions 条件
      * @return /
      */
-    List<Role> queryByConditions(RoleQueryConditions queryConditions);
+    List<RoleDo> queryByConditions(RoleQuery queryConditions);
 
     /**
      * 导出数据
@@ -95,14 +95,14 @@ public interface RoleService {
      * @param response /
      * @throws IOException /
      */
-    void download(List<Role> queryAll, HttpServletResponse response) throws IOException;
+    void download(List<RoleDo> queryAll, HttpServletResponse response) throws IOException;
 
     /**
      * 获取用户权限信息
      * @param user 用户信息
      * @return 权限信息
      */
-    List<GrantedAuthority> mapToGrantedAuthorities(User user);
+    List<GrantedAuthority> mapToGrantedAuthorities(UserDo user);
 
     /**
      * 验证是否被用户关联
@@ -115,5 +115,5 @@ public interface RoleService {
      * @param menuIds /
      * @return /
      */
-    List<Role> findInMenuId(List<Long> menuIds);
+    List<RoleDo> findInMenuId(List<Long> menuIds);
 }

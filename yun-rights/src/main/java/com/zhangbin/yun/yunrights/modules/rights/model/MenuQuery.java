@@ -5,12 +5,15 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * 角色公共查询类
+ * 菜单公共查询类
  */
 @Data
-public class RoleQueryConditions {
+public class MenuQuery {
 
+    // 模块搜索条件
     private String blurry;
 
     private List<Timestamp> createTime;
+
+    private Long pid;
 }

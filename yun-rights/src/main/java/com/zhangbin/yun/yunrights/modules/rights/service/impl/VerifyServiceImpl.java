@@ -8,6 +8,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import com.zhangbin.yun.yunrights.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.common.utils.RedisUtils;
+import com.zhangbin.yun.yunrights.modules.email.model.Email;
 import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

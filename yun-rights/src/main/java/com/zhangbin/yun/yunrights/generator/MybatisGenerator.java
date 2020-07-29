@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MybatisGenerator {
     public static void main(String[] args) {
-        generate("generator/mybatis-generator-rights-config.xml");
+//        generate("generator/mybatis-generator-rights-config.xml");
         generate("generator/mybatis-generator-email-config.xml");
     }
 

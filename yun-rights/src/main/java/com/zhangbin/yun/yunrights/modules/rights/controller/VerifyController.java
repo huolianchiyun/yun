@@ -4,6 +4,7 @@ import com.zhangbin.yun.yunrights.common.enums.BizCodeEnum;
 import com.zhangbin.yun.yunrights.common.enums.CodeEnum;
 import static com.zhangbin.yun.yunrights.common.response.ResponseUtil.success;
 import com.zhangbin.yun.yunrights.common.response.ResponseData;
+import com.zhangbin.yun.yunrights.modules.email.model.Email;
 import com.zhangbin.yun.yunrights.modules.email.service.EmailService;
 import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
 import io.swagger.annotations.Api;

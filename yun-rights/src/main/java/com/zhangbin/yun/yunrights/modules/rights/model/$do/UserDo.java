@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.model.entity;
+package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -7,10 +7,10 @@ import lombok.Data;
 /**
  * 表 t_sys_user
  * @author ASUS
- * @date 2020-07-27 21:58:22
+ * @date 2020-07-29 22:13:33
  */
 @Data
-public class User extends BaseEntity implements Serializable {
+public class UserDo extends BaseDo implements Serializable {
     /**
      */
     private String userName;
@@ -22,7 +22,7 @@ public class User extends BaseEntity implements Serializable {
     /**
      * 性別：1 男， 2 女
      */
-    private Integer gender;
+    private Byte gender;
 
     /**
      */

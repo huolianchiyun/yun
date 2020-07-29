@@ -3,12 +3,11 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 import com.zhangbin.yun.yunrights.common.utils.FileUtil;
 import com.zhangbin.yun.yunrights.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.common.utils.ValidationUtil;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
-import com.zhangbin.yun.yunrights.modules.rights.model.MenuQueryConditions;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.Menu;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.Role;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.User;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuDoMapper;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.UserDoMapper;
+import com.zhangbin.yun.yunrights.modules.rights.model.MenuQuery;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
 import com.zhangbin.yun.yunrights.modules.rights.service.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -27,13 +25,13 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "menu")
 public class MenuServiceImpl implements MenuService {
 
-    private final UserMapper userMapper;
-    private final MenuMapper menuMapper;
+    private final UserDoMapper userDoMapper;
+    private final MenuDoMapper menuDoMapper;
     private final RoleService roleService;
     private final RedisUtils redisUtils;
 
     @Override
-    public List<Menu> queryAll(MenuQueryConditions criteria, Boolean isQuery) throws Exception {
+    public List<MenuDo> queryAll(MenuQuery criteria, Boolean isQuery) throws Exception {
 //        Sort sort = new Sort(Sort.Direction.ASC, "menuSort");
 //        if(isQuery){
 //            criteria.setPidIsNull(true);
@@ -52,12 +50,13 @@ public class MenuServiceImpl implements MenuService {
 //            }
 //        }
 //        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
+        return null;
     }
 
     @Override
     @Cacheable(key = "'id:' + #p0")
-    public Menu findById(long id) {
-        Menu menu = menuMapper.selectByPrimaryKey(id).orElseGet(Menu::new);
+    public MenuDo findById(long id) {
+        MenuDo menu = menuDoMapper.selectByPrimaryKey(id);
         ValidationUtil.isNull(menu.getId(), "Menu", "id", id);
         return menu;
     }
@@ -70,44 +69,45 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     @Cacheable(key = "'user:' + #p0")
-    public List<Menu> findByUser(Long currentUserId) {
-        List<Role> roles = roleService.findByUsersId(currentUserId);
-        Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
-        LinkedHashSet<Menu> menus = menuMapper.findByRoleIdsAndTypeNot(roleIds, 2);
-        return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
+    public List<MenuDo> findByUser(Long currentUserId) {
+//        List<Role> roles = roleService.findByUsersId(currentUserId);
+//        Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
+//        LinkedHashSet<Menu> menus = menuMapper.findByRoleIdsAndTypeNot(roleIds, 2);
+//        return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
+        return null;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void create(Menu resources) {
-        if (menuRepository.findByTitle(resources.getTitle()) != null) {
-            throw new EntityExistException(Menu.class, "title", resources.getTitle());
-        }
-        if (StringUtils.isNotBlank(resources.getComponentName())) {
-            if (menuRepository.findByComponentName(resources.getComponentName()) != null) {
-                throw new EntityExistException(Menu.class, "componentName", resources.getComponentName());
-            }
-        }
-        if (resources.getPid().equals(0L)) {
-            resources.setPid(null);
-        }
-        if (resources.getIFrame()) {
-            String http = "http://", https = "https://";
-            if (!(resources.getPath().toLowerCase().startsWith(http) || resources.getPath().toLowerCase().startsWith(https))) {
-                throw new BadRequestException("外链必须以http://或者https://开头");
-            }
-        }
-        menuRepository.save(resources);
-        // 计算子节点数目
-        resources.setSubCount(0);
-        // 更新父节点菜单数目
-        updateSubCnt(resources.getPid());
-        redisUtils.del("menu::pid:" + (resources.getPid() == null ? 0 : resources.getPid()));
+    public void create(MenuDo resources) {
+//        if (menuRepository.findByTitle(resources.getTitle()) != null) {
+//            throw new EntityExistException(Menu.class, "title", resources.getTitle());
+//        }
+//        if (StringUtils.isNotBlank(resources.getComponentName())) {
+//            if (menuRepository.findByComponentName(resources.getComponentName()) != null) {
+//                throw new EntityExistException(Menu.class, "componentName", resources.getComponentName());
+//            }
+//        }
+//        if (resources.getPid().equals(0L)) {
+//            resources.setPid(null);
+//        }
+//        if (resources.getIFrame()) {
+//            String http = "http://", https = "https://";
+//            if (!(resources.getPath().toLowerCase().startsWith(http) || resources.getPath().toLowerCase().startsWith(https))) {
+//                throw new BadRequestException("外链必须以http://或者https://开头");
+//            }
+//        }
+//        menuRepository.save(resources);
+//        // 计算子节点数目
+//        resources.setSubCount(0);
+//        // 更新父节点菜单数目
+//        updateSubCnt(resources.getPid());
+//        redisUtils.del("menu::pid:" + (resources.getPid() == null ? 0 : resources.getPid()));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(Menu resources) {
+    public void update(MenuDo resources) {
 //        if(resources.getId().equals(resources.getPid())) {
 //            throw new BadRequestException("上级不能为自己");
 //        }
@@ -163,58 +163,59 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Set<Long> menuIds) {
-        for (Menu menu : menuSet) {
-            // 清理缓存
-            delCaches(menu.getId(), menu.getPid(), null);
-            roleService.untiedMenu(menu.getId());
-            menuMapper.deleteById(menu.getId());
-            updateSubCnt(menu.getPid());
-        }
-        return;
+//        for (Menu menu : menuSet) {
+//            // 清理缓存
+//            delCaches(menu.getId(), menu.getPid(), null);
+//            roleService.untiedMenu(menu.getId());
+//            menuMapper.deleteById(menu.getId());
+//            updateSubCnt(menu.getPid());
+//        }
     }
 
 
     @Override
     @Cacheable(key = "'pid:' + #p0")
-    public List<Menu> getMenus(Long pid) {
-        List<Menu> menus;
-        if (pid != null && !pid.equals(0L)) {
-            menus = menuRepository.findByPid(pid);
-        } else {
-            menus = menuRepository.findByPidIsNull();
-        }
-        return menuMapper.toDto(menus);
+    public List<MenuDo> getMenus(Long pid) {
+//        List<Menu> menus;
+//        if (pid != null && !pid.equals(0L)) {
+//            menus = menuRepository.findByPid(pid);
+//        } else {
+//            menus = menuRepository.findByPidIsNull();
+//        }
+//        return menuMapper.toDto(menus);
+        return null;
     }
 
     @Override
-    public List<Menu> queryFatherAndSiblingForMultiMenus(List<Long> menuIds) {
-        List<Menu> menuList;
-        Set<Menu> menuSet = new LinkedHashSet<>();
-        if (!CollectionUtils.isEmpty(ids)) {
-            for (Long id : ids) {
-                Menu menu = menuMapper.selectByPrimaryKey(id);
-                menuSet.addAll(menuService.getSuperior(menu));
-            }
-            menuList = menuService.buildTree(new ArrayList<>(menuSet));
-        } else {
-            menuList = menuService.getMenus(null);
-        }
-        if (menuDto.getPid() == null) {
-            menus.addAll(menuRepository.findByPidIsNull());
-            return menuMapper.toDto(menus);
-        }
-        menus.addAll(menuRepository.findByPid(menuDto.getPid()));
-        return queryFatherAndSiblingForMultiMenus(findById(menuDto.getPid()), menus);
+    public List<MenuDo> queryFatherAndSiblingForMultiMenus(List<Long> menuIds) {
+//        List<Menu> menuList;
+//        Set<Menu> menuSet = new LinkedHashSet<>();
+//        if (!CollectionUtils.isEmpty(ids)) {
+//            for (Long id : ids) {
+//                Menu menu = menuMapper.selectByPrimaryKey(id);
+//                menuSet.addAll(menuService.getSuperior(menu));
+//            }
+//            menuList = menuService.buildTree(new ArrayList<>(menuSet));
+//        } else {
+//            menuList = menuService.getMenus(null);
+//        }
+//        if (menuDto.getPid() == null) {
+//            menus.addAll(menuRepository.findByPidIsNull());
+//            return menuMapper.toDto(menus);
+//        }
+//        menus.addAll(menuRepository.findByPid(menuDto.getPid()));
+//        return queryFatherAndSiblingForMultiMenus(findById(menuDto.getPid()), menus);
+        return null;
     }
 
     @Override
-    public List<Menu> buildTree(List<Menu> menus) {
+    public List<MenuDo> buildTree(List<MenuDo> menus) {
         return null;
     }
 
 
     @Override
-    public void download(List<Menu> menuList, HttpServletResponse response) throws IOException {
+    public void download(List<MenuDo> menuList, HttpServletResponse response) throws IOException {
         FileUtil.downloadExcel(menuList.stream().map(e -> {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("菜单标题", e.getMenuTitle());
@@ -234,16 +235,16 @@ public class MenuServiceImpl implements MenuService {
      * @param newPid 新的菜单父级ID
      */
     public void delCaches(Long menuId, Long oldPid, Long newPid) {
-        List<User> users = userMapper.findByMenuId(menuId);
-        redisUtils.del("menu::menuId:" + menuId);
-        redisUtils.delByKeys("menu::user:", users.stream().map(User::getId).collect(Collectors.toSet()));
-        redisUtils.del("menu::pid:" + (oldPid == null ? 0 : oldPid));
-        redisUtils.del("menu::pid:" + (newPid == null ? 0 : newPid));
+//        List<User> users = userMapper.findByMenuId(menuId);
+//        redisUtils.del("menu::menuId:" + menuId);
+//        redisUtils.delByKeys("menu::user:", users.stream().map(User::getId).collect(Collectors.toSet()));
+//        redisUtils.del("menu::pid:" + (oldPid == null ? 0 : oldPid));
+//        redisUtils.del("menu::pid:" + (newPid == null ? 0 : newPid));
         // 清除 Role 缓存
-        List<Role> roles = roleService.findInMenuId(new ArrayList<Long>() {{
+        List<RoleDo> roles = roleService.findInMenuId(new ArrayList<Long>() {{
             add(menuId);
             add(newPid == null ? 0 : newPid);
         }});
-        redisUtils.delByKeys("role::menuId:", roles.stream().map(Role::getId).collect(Collectors.toSet()));
+        redisUtils.delByKeys("role::menuId:", roles.stream().map(RoleDo::getId).collect(Collectors.toSet()));
     }
 }

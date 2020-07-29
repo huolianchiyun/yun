@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.UserQueryConditions;
-import com.zhangbin.yun.yunrights.modules.rights.model.entity.User;
+import com.zhangbin.yun.yunrights.modules.rights.model.UserQuery;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
@@ -21,19 +21,19 @@ public interface UserService {
      * @param id ID
      * @return /
      */
-    User findById(long id);
+    UserDo findById(long id);
 
     /**
      * 新增用户
      * @param resources /
      */
-    void create(User resources);
+    void create(UserDo resources);
 
     /**
      * 编辑用户
      * @param resources /
      */
-    void update(User resources);
+    void update(UserDo resources);
 
     /**
      * 删除用户
@@ -46,7 +46,7 @@ public interface UserService {
      * @param userName /
      * @return /
      */
-    User findByName(String userName);
+    UserDo findByName(String userName);
 
     /**
      * 修改密码
@@ -75,14 +75,14 @@ public interface UserService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(UserQueryConditions criteria, Pageable pageable);
+    Object queryAll(UserQuery criteria, Pageable pageable);
 
     /**
      * 查询全部不分页
      * @param criteria 条件
      * @return /
      */
-    List<User> queryAll(UserQueryConditions criteria);
+    List<UserDo> queryAll(UserQuery criteria);
 
     /**
      * 导出数据
@@ -90,11 +90,11 @@ public interface UserService {
      * @param response /
      * @throws IOException /
      */
-    void download(List<User> queryAll, HttpServletResponse response) throws IOException;
+    void download(List<UserDo> queryAll, HttpServletResponse response) throws IOException;
 
     /**
      * 用户自助修改资料
      * @param resources /
      */
-    void updateCenter(User resources);
+    void updateCenter(UserDo resources);
 }

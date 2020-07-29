@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.email.model.entity;
+package com.zhangbin.yun.yunrights.modules.email.model.$do;
 
 import java.io.Serializable;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
  * @date 2020-07-23 20:29:05
  */
 @Data
-public class EmailConfig implements Serializable {
+public class EmailConfigDo implements Serializable {
     /**
      */
     private Long id;

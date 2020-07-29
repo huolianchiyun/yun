@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.model.entity;
+package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import java.io.Serializable;
 import lombok.Data;
@@ -6,10 +6,10 @@ import lombok.Data;
 /**
  * 表 t_sys_role
  * @author ASUS
- * @date 2020-07-27 21:58:22
+ * @date 2020-07-29 22:13:33
  */
 @Data
-public class Role extends BaseEntity implements Serializable {
+public class RoleDo extends BaseDo implements Serializable {
     /**
      */
     private String roleName;
