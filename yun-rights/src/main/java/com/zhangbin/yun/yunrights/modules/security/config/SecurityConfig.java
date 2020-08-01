@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.security.config;
 
-import com.zhangbin.yun.yunrights.common.annotation.AnonymousAccess;
-import com.zhangbin.yun.yunrights.common.enums.RequestMethodEnum;
+import com.zhangbin.yun.yunrights.modules.common.annotation.AnonymousAccess;
+import com.zhangbin.yun.yunrights.modules.common.enums.RequestMethodEnum;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.security.JwtAccessDeniedHandler;
 import com.zhangbin.yun.yunrights.modules.security.security.JwtAuthenticationEntryPoint;

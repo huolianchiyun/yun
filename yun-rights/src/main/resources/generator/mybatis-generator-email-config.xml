@@ -2,7 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
-    <context id="DB2Tables" targetRuntime="MyBatis3">
+    <context id="DB2Tables1" targetRuntime="MyBatis3">
         <plugin type="com.zhangbin.yun.yunrights.generator.MybatisPlugin">
             <property name="hasLombok" value="true"/>
         </plugin>
@@ -33,7 +33,7 @@
         </javaModelGenerator>
 
         <!--生成 mapper文件 路径 -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mapper.email" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
@@ -44,10 +44,11 @@
         </javaClientGenerator>
 
         <!--对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 -->
-        <table tableName="t_email_config" domainObjectName="EmailConfigDo" enableCountByExample="false"
+        <table tableName="t_sys_email_config" domainObjectName="EmailConfigDo" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.common.$do.BaseDo"/>
             <generatedKey column="e_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
-            <columnRenamingRule searchString="e_" replaceString=""/> <!--移除字段前缀-->
+            <columnRenamingRule searchString="ec_" replaceString=""/> <!--移除字段前缀-->
         </table>
     </context>
 </generatorConfiguration>

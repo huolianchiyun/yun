@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights;
 
-import com.zhangbin.yun.yunrights.common.annotation.rest.AnonymousGetMapping;
-import com.zhangbin.yun.yunrights.common.utils.SpringContextHolder;
+import com.zhangbin.yun.yunrights.modules.common.annotation.rest.AnonymousGetMapping;
+import com.zhangbin.yun.yunrights.modules.common.utils.SpringContextHolder;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

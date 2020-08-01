@@ -1,8 +1,11 @@
 package com.zhangbin.yun.yunrights.modules.security.controller;
 
-import com.zhangbin.yun.yunrights.common.response.ResponseData;
-import com.zhangbin.yun.yunrights.common.utils.EncryptUtils;
-import static com.zhangbin.yun.yunrights.common.response.ResponseUtil.success;
+import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.yunrights.modules.common.utils.EncryptUtils;
+
+import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+
+import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.security.service.OnlineUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
@@ -26,11 +30,11 @@ public class OnlineController {
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<ResponseData> query(String filter, Pageable pageable){
+    public ResponseEntity<ResponseData> query(String filter, Pageable pageable) {
         return success(onlineUserService.getAll(filter, pageable));
     }
 
-//    @Log("导出数据")
+    @Logging("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")

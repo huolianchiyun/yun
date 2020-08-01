@@ -2,8 +2,8 @@ package com.zhangbin.yun.yunrights.modules.security.config.bean;
 
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
-import com.zhangbin.yun.yunrights.common.exception.BadConfigurationException;
-import com.zhangbin.yun.yunrights.common.utils.StringUtils;
+import com.zhangbin.yun.yunrights.modules.common.exception.BadConfigurationException;
+import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
 import lombok.Data;
 import java.awt.*;
 import java.util.Objects;

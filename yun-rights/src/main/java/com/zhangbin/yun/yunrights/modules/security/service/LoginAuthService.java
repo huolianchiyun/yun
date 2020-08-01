@@ -2,12 +2,12 @@ package com.zhangbin.yun.yunrights.modules.security.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.wf.captcha.base.Captcha;
-import com.zhangbin.yun.yunrights.common.exception.BadRequestException;
-import com.zhangbin.yun.yunrights.common.utils.RedisUtils;
-import com.zhangbin.yun.yunrights.common.utils.RsaUtils;
-import com.zhangbin.yun.yunrights.common.utils.SecurityUtils;
-import com.zhangbin.yun.yunrights.common.utils.StringUtils;
-import com.zhangbin.yun.yunrights.common.config.RsaProperties;
+import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
+import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
+import com.zhangbin.yun.yunrights.modules.common.utils.RsaUtils;
+import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
+import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
+import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.LoginProperties;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.security.TokenProvider;

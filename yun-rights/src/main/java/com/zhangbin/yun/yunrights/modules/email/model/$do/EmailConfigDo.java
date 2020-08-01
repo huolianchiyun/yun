@@ -1,20 +1,17 @@
 package com.zhangbin.yun.yunrights.modules.email.model.$do;
 
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import java.io.Serializable;
 import lombok.Data;
 
 /**
  * 邮件配置表，数据覆盖式存入数据库
- * 表 t_email_config
+ * 表 t_sys_email_config
  * @author ASUS
- * @date 2020-07-23 20:29:05
+ * @date 2020-07-29 23:57:17
  */
 @Data
-public class EmailConfigDo implements Serializable {
-    /**
-     */
-    private Long id;
-
+public class EmailConfigDo extends BaseDo implements Serializable {
     /**
      * 邮件服务器SMTP地址
      */

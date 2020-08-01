@@ -1,19 +1,14 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.UserQuery;
+import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.yunrights.modules.rights.model.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-/**
- * @author Zheng Jie
- * @date 2018-11-23
- */
 public interface UserService {
 
     /**
@@ -21,80 +16,86 @@ public interface UserService {
      * @param id ID
      * @return /
      */
-    UserDo findById(long id);
+    UserDo findById(Long id);
 
     /**
      * 新增用户
-     * @param resources /
+     * @param user /
      */
-    void create(UserDo resources);
+    void createUser(UserDo user);
 
     /**
      * 编辑用户
-     * @param resources /
+     * @param user /
      */
-    void update(UserDo resources);
+    void updateUser(UserDo user);
 
     /**
      * 删除用户
      * @param ids /
      */
-    void delete(Set<Long> ids);
+    void deleteUsers(Set<Long> ids);
 
     /**
-     * 根据用户名查询
-     * @param userName /
+     * 根据登录名查询
+     * @param loginName /
      * @return /
      */
-    UserDo findByName(String userName);
+    UserDo findByLoginName(String loginName);
+
+    /**
+     * 根据登录名查询
+     * @param criteria /
+     * @return /
+     */
+    PageInfo<List<UserDo>> findByCriteria(UserQueryCriteria criteria);
 
     /**
      * 修改密码
      * @param username 用户名
-     * @param encryptPassword 密码
+     * @param encryptPwd 密码
      */
-    void updatePass(String username, String encryptPassword);
+    void updatePwd(String username, String encryptPwd);
 
     /**
      * 修改头像
      * @param file 文件
      * @return /
      */
-    Map<String, String> updateAvatar(MultipartFile file);
+//    Map<String, String> updateAvatar(MultipartFile file);
 
     /**
      * 修改邮箱
-     * @param username 用户名
+     * @param userName 用户名
      * @param email 邮箱
      */
-    void updateEmail(String username, String email);
+    void updateEmail(String userName, String email);
 
     /**
-     * 查询全部
+     * 分页查询全部
      * @param criteria 条件
-     * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(UserQuery criteria, Pageable pageable);
+    Object queryAllByCriteria(UserQueryCriteria criteria);
 
     /**
      * 查询全部不分页
      * @param criteria 条件
      * @return /
      */
-    List<UserDo> queryAll(UserQuery criteria);
+    List<UserDo> queryAll4NoPage(UserQueryCriteria criteria);
 
     /**
      * 导出数据
-     * @param queryAll 待导出的数据
+     * @param userDoList 待导出的数据
      * @param response /
      * @throws IOException /
      */
-    void download(List<UserDo> queryAll, HttpServletResponse response) throws IOException;
+    void download(List<UserDo> userDoList, HttpServletResponse response) throws IOException;
 
     /**
      * 用户自助修改资料
-     * @param resources /
+     * @param user /
      */
-    void updateCenter(UserDo resources);
+    void updateCenter(UserDo user);
 }

@@ -1,13 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.security.service;
 
-import com.zhangbin.yun.yunrights.common.exception.BadRequestException;
-import com.zhangbin.yun.yunrights.common.exception.EntityNotFoundException;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.LoginProperties;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUserWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

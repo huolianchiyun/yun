@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.generator;
 
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -16,6 +17,7 @@ public class MybatisPlugin extends PluginAdapter {
         return true;
     }
 
+    @SneakyThrows
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         //添加domain的import
@@ -46,10 +48,10 @@ public class MybatisPlugin extends PluginAdapter {
         return true;
     }
 
+
     @Override
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
-        if(!topLevelClass.getFields().contains(field)){
             removeIsPrefixOfField(field);
             field.addJavaDocLine("/**");
             String remarks = introspectedColumn.getRemarks();
@@ -61,10 +63,7 @@ public class MybatisPlugin extends PluginAdapter {
             }
             field.addJavaDocLine(" */");
             return true;
-        }
-        return false;
     }
-
 
     @Override
     public boolean clientGenerated(Interface interfaze, IntrospectedTable introspectedTable) {
@@ -93,8 +92,8 @@ public class MybatisPlugin extends PluginAdapter {
 
     private void removeIsPrefixOfField(Field field) {
         String fieldName = field.getName();
-        if(fieldName.matches("is[A-Z_]\\w*")){
-            field.setName((char)(fieldName.charAt(2) + 32) + fieldName.substring(3));
+        if (fieldName.matches("is[A-Z_]\\w*")) {
+            field.setName((char) (fieldName.charAt(2) + 32) + fieldName.substring(3));
         }
     }
 }

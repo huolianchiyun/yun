@@ -1,11 +1,11 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
-import com.zhangbin.yun.yunrights.common.utils.FileUtil;
-import com.zhangbin.yun.yunrights.common.utils.RedisUtils;
-import com.zhangbin.yun.yunrights.common.utils.ValidationUtil;
+import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
+import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
+import com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuDoMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserDoMapper;
-import com.zhangbin.yun.yunrights.modules.rights.model.MenuQuery;
+import com.zhangbin.yun.yunrights.modules.rights.model.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService {
     private final RedisUtils redisUtils;
 
     @Override
-    public List<MenuDo> queryAll(MenuQuery criteria, Boolean isQuery) throws Exception {
+    public List<MenuDo> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
 //        Sort sort = new Sort(Sort.Direction.ASC, "menuSort");
 //        if(isQuery){
 //            criteria.setPidIsNull(true);

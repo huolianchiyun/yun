@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.RoleQuery;
+import com.zhangbin.yun.yunrights.modules.rights.model.RoleQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
 import org.springframework.data.domain.Pageable;
@@ -80,14 +80,14 @@ public interface RoleService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryByConditions(RoleQuery queryConditions, Pageable pageable);
+    Object queryByConditions(RoleQueryCriteria queryConditions, Pageable pageable);
 
     /**
      * 查询全部
      * @param queryConditions 条件
      * @return /
      */
-    List<RoleDo> queryByConditions(RoleQuery queryConditions);
+    List<RoleDo> queryByConditions(RoleQueryCriteria queryConditions);
 
     /**
      * 导出数据

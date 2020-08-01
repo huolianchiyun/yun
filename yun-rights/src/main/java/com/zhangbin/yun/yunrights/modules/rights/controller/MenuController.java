@@ -1,19 +1,23 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.common.exception.BadRequestException;
-import com.zhangbin.yun.yunrights.common.response.ResponseData;
-import com.zhangbin.yun.yunrights.common.utils.PageUtil;
-import com.zhangbin.yun.yunrights.common.utils.SecurityUtils;
-import com.zhangbin.yun.yunrights.modules.rights.model.MenuQuery;
+import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
+import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.yunrights.modules.common.utils.PageUtil;
+import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
+import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
+import com.zhangbin.yun.yunrights.modules.rights.model.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
-import static com.zhangbin.yun.yunrights.common.response.ResponseUtil.success;
+
+import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -27,11 +31,11 @@ public class MenuController {
     private final static String ENTITY_NAME = "menu";
     private final MenuService menuService;
 
-    //@Log("导出菜单数据")
+    @Logging("导出菜单数据")
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
-    public void download(HttpServletResponse response, MenuQuery queryConditions) throws Exception {
+    public void download(HttpServletResponse response, MenuQueryCriteria queryConditions) throws Exception {
         menuService.download(menuService.queryAll(queryConditions, false), response);
     }
 
@@ -48,16 +52,16 @@ public class MenuController {
         return success(menuService.getMenus(pid));
     }
 
-    //    @Log("查询菜单")
+    @Logging("查询菜单")
     @ApiOperation("查询菜单")
     @GetMapping
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<ResponseData> query(MenuQuery criteria) throws Exception {
+    public ResponseEntity<ResponseData> query(MenuQueryCriteria criteria) throws Exception {
         List<MenuDo> menuDtoList = menuService.queryAll(criteria, true);
         return success(PageUtil.toPage(menuDtoList, menuDtoList.size()));
     }
 
-    //    @Log("查询菜单")
+    @Logging("查询菜单")
     @ApiOperation("查询菜单:根据多个菜单ID，获取其同级与上级数据")
     @PostMapping("/batch/superior")
     @PreAuthorize("@el.check('menu:list')")
@@ -65,7 +69,7 @@ public class MenuController {
         return success(menuService.queryFatherAndSiblingForMultiMenus(menuIds));
     }
 
-    //    @Log("新增菜单")
+    @Logging("新增菜单")
     @ApiOperation("新增菜单")
     @PostMapping
     @PreAuthorize("@el.check('menu:add')")
@@ -77,7 +81,7 @@ public class MenuController {
         return success();
     }
 
-    //    @Log("修改菜单")
+    @Logging("修改菜单")
     @ApiOperation("修改菜单")
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
@@ -86,7 +90,7 @@ public class MenuController {
         return success();
     }
 
-    //    @Log("删除菜单")
+    @Logging("删除菜单")
     @ApiOperation("删除菜单")
     @DeleteMapping
     @PreAuthorize("@el.check('menu:del')")

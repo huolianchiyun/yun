@@ -2,8 +2,8 @@
 //
 //import cn.hutool.extra.mail.Mail;
 //import cn.hutool.extra.mail.MailAccount;
-//import com.zhangbin.yun.yunrights.common.exception.BadRequestException;
-//import com.zhangbin.yun.yunrights.common.utils.EncryptUtils;
+//import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
+//import com.zhangbin.yun.yunrights.modules.common.utils.EncryptUtils;
 //import com.zhangbin.yun.yunrights.modules.email.service.EmailService;
 //import com.zhangbin.yun.yunrights.modules.rights.model.Email;
 //import lombok.RequiredArgsConstructor;

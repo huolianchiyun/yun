@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.security.service;
 
-import com.zhangbin.yun.yunrights.common.utils.*;
+import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUserWrapper;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.OnlineUser;

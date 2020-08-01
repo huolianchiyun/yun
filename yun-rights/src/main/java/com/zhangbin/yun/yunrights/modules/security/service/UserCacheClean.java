@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.security.service;
 
-import com.zhangbin.yun.yunrights.common.utils.StringUtils;
+import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**

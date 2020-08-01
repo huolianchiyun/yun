@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
 
-import com.zhangbin.yun.yunrights.modules.rights.model.MenuQuery;
+import com.zhangbin.yun.yunrights.modules.rights.model.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ public interface MenuService {
      * @throws Exception /
      * @return /
      */
-    List<MenuDo> queryAll(MenuQuery queryConditions, Boolean isQuery) throws Exception;
+    List<MenuDo> queryAll(MenuQueryCriteria queryConditions, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询

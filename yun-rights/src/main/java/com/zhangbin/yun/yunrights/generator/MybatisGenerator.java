@@ -19,11 +19,12 @@ import java.util.List;
 public class MybatisGenerator {
     public static void main(String[] args) {
 //        generate("generator/mybatis-generator-rights-config.xml");
-        generate("generator/mybatis-generator-email-config.xml");
+//        generate("generator/mybatis-generator-email-config.xml");
+        generate("generator/mybatis-generator-logging-config.xml");
     }
 
     private static void generate(String generatorConfigXml)  {
-        List<String> warnings = new ArrayList<String>();
+        List<String> warnings = new ArrayList<>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
         ClassLoader classLoader = MybatisGenerator.class.getClassLoader();
         try {
