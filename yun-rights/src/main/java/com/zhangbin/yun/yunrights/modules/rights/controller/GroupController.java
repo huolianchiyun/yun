@@ -1,26 +1,18 @@
 //package com.zhangbin.yun.yunrights.modules.rights.controller;
 //
 //import cn.hutool.core.lang.Dict;
+//import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 //import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
-//import com.zhangbin.yun.yunrights.modules.rights.service.RoleService;
+//import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
 //import lombok.RequiredArgsConstructor;
-//import me.zhengjie.annotation.Log;
-//import me.zhengjie.exception.BadRequestException;
-//import me.zhengjie.modules.system.domain.Role;
-//import me.zhengjie.modules.system.service.RoleService;
-//import me.zhengjie.modules.system.service.dto.RoleDto;
-//import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
-//import me.zhengjie.modules.system.service.dto.RoleSmallDto;
-//import me.zhengjie.utils.SecurityUtils;
 //import org.springframework.data.domain.Pageable;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.validation.annotation.Validated;
 //import org.springframework.web.bind.annotation.*;
-//
 //import javax.servlet.http.HttpServletResponse;
 //import java.io.IOException;
 //import java.util.Collections;
@@ -30,13 +22,11 @@
 //
 //@RestController
 //@RequiredArgsConstructor
-//@Api(tags = "系统：角色管理")
-//@RequestMapping("/api/roles")
-//public class RoleController {
+//@Api(tags = "系统：组管理")
+//@RequestMapping("/api/group")
+//public class GroupController {
 //
-//    private final RoleService roleService;
-//
-//    private static final String ENTITY_NAME = "role";
+//    private final GroupService groupService;
 //
 //    @ApiOperation("获取单个role")
 //    @GetMapping(value = "/{id}")

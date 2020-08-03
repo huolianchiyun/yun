@@ -3,6 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.service;
 import com.zhangbin.yun.yunrights.modules.rights.model.RoleQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
+import com.zhangbin.yun.yunrights.modules.rights.model.dto.RoleSmallDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import javax.servlet.http.HttpServletResponse;
@@ -10,10 +11,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author Zheng Jie
- * @date 2018-12-03
- */
 public interface RoleService {
 
     /**
@@ -52,7 +49,7 @@ public interface RoleService {
      * @param id 用户ID
      * @return /
      */
-    List<RoleDo> findByUsersId(Long id);
+    List<RoleSmallDto> findByUserId(Long id);
 
     /**
      * 根据角色查询角色级别

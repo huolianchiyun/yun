@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface PageMapper<R extends BaseDo> {
-   List<R> selectByCriteria(@Param("criteria") QueryPage criteria);
+   List<R> selectAllByCriteria(@Param("criteria") QueryPage criteria);
 }

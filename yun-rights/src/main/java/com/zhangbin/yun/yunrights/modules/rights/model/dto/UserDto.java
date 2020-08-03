@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -13,16 +14,15 @@ import java.util.Set;
 @Setter
 public class UserDto extends BaseDo implements Serializable {
 
+    private String username;
+
+    private String nickName;
 
     private Set<RoleSmallDto> roles;
 
     private DeptSmallDto dept;
 
     private Long deptId;
-
-    private String username;
-
-    private String nickName;
 
     private String email;
 
@@ -43,4 +43,5 @@ public class UserDto extends BaseDo implements Serializable {
     private Boolean isAdmin = false;
 
     private Date pwdResetTime;
+
 }

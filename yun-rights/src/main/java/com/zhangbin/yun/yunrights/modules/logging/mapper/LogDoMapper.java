@@ -10,13 +10,7 @@ public interface LogDoMapper extends PageMapper<LogDo> {
 
     int insert(LogDo record);
 
-    int insertSelective(LogDo record);
-
     LogDo selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(LogDo record);
-
-    int updateByPrimaryKey(LogDo record);
 
     int deleteByPrimaryKey(Long id);
 

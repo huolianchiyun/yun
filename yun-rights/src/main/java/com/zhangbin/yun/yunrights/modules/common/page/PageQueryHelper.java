@@ -9,6 +9,6 @@ public final class PageQueryHelper {
 
     public static <R extends BaseDo> Page<R> queryAllByCriteriaWithPage(QueryPage criteria, PageMapper<R> mapper) {
         return PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize(), true)
-                .doSelectPage(() -> mapper.selectByCriteria(criteria));
+                .doSelectPage(() -> mapper.selectAllByCriteria(criteria));
     }
 }

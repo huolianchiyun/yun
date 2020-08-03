@@ -1,1864 +1,249 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.UserDoMapper">
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled, 
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name, 
-      u_gender, u_pwd, u_phone, 
-      u_dept_id, u_is_enabled, u_creator, 
-      u_updater, u_create_time, u_update_time, 
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled,
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name,
-      u_gender, u_pwd, u_phone,
-      u_dept_id, u_is_enabled, u_creator,
-      u_updater, u_create_time, u_update_time,
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR},
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <id column="u_id" jdbcType="BIGINT" property="id" />
-    <result column="u_user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="u_login_name" jdbcType="VARCHAR" property="loginName" />
-    <result column="u_gender" jdbcType="TINYINT" property="gender" />
-    <result column="u_pwd" jdbcType="VARCHAR" property="pwd" />
-    <result column="u_phone" jdbcType="VARCHAR" property="phone" />
-    <result column="u_dept_id" jdbcType="BIGINT" property="deptId" />
-    <result column="u_is_enabled" jdbcType="BIT" property="isEnabled" />
-    <result column="u_creator" jdbcType="VARCHAR" property="creator" />
-    <result column="u_updater" jdbcType="VARCHAR" property="updater" />
-    <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    u_id, u_user_name, u_login_name, u_gender, u_pwd, u_phone, u_dept_id, u_is_enabled,
-    u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_user
-    where u_id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user (u_id, u_user_name, u_login_name,
-      u_gender, u_pwd, u_phone,
-      u_dept_id, u_is_enabled, u_creator,
-      u_updater, u_create_time, u_update_time,
-      u_pwd_reset_time)
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR},
-      #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
-      #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
-      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-      #{pwdResetTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into t_sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      u_id,
-      <if test="userName != null">
-        u_user_name,
-      </if>
-      <if test="loginName != null">
-        u_login_name,
-      </if>
-      <if test="gender != null">
-        u_gender,
-      </if>
-      <if test="pwd != null">
-        u_pwd,
-      </if>
-      <if test="phone != null">
-        u_phone,
-      </if>
-      <if test="deptId != null">
-        u_dept_id,
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled,
-      </if>
-      <if test="creator != null">
-        u_creator,
-      </if>
-      <if test="updater != null">
-        u_updater,
-      </if>
-      <if test="createTime != null">
-        u_create_time,
-      </if>
-      <if test="updateTime != null">
-        u_update_time,
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    <set>
-      <if test="userName != null">
-        u_user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null">
-        u_login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        u_gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="pwd != null">
-        u_pwd = #{pwd,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        u_phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="deptId != null">
-        u_dept_id = #{deptId,jdbcType=BIGINT},
-      </if>
-      <if test="isEnabled != null">
-        u_is_enabled = #{isEnabled,jdbcType=BIT},
-      </if>
-      <if test="creator != null">
-        u_creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        u_updater = #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pwdResetTime != null">
-        u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
-    update t_sys_user
-    set u_user_name = #{userName,jdbcType=VARCHAR},
-      u_login_name = #{loginName,jdbcType=VARCHAR},
-      u_gender = #{gender,jdbcType=TINYINT},
-      u_pwd = #{pwd,jdbcType=VARCHAR},
-      u_phone = #{phone,jdbcType=VARCHAR},
-      u_dept_id = #{deptId,jdbcType=BIGINT},
-      u_is_enabled = #{isEnabled,jdbcType=BIT},
-      u_creator = #{creator,jdbcType=VARCHAR},
-      u_updater = #{updater,jdbcType=VARCHAR},
-      u_create_time = #{createTime,jdbcType=TIMESTAMP},
-      u_update_time = #{updateTime,jdbcType=TIMESTAMP},
-      u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP}
-    where u_id = #{id,jdbcType=BIGINT}
-  </update>
+    <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
+        <id column="u_id" jdbcType="BIGINT" property="id"/>
+        <result column="u_nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="u_user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="u_gender" jdbcType="TINYINT" property="gender"/>
+        <result column="u_pwd" jdbcType="VARCHAR" property="pwd"/>
+        <result column="u_phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="u_email" jdbcType="VARCHAR" property="email"/>
+        <result column="u_dept_id" jdbcType="BIGINT" property="deptId"/>
+        <result column="u_is_enabled" jdbcType="BIT" property="enabled"/>
+        <result column="u_creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="u_updater" jdbcType="VARCHAR" property="updater"/>
+        <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime"/>
+        <collection property="roles" javaType="java.util.HashSet"
+                    column="u_id" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo"
+                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.RoleDoMapper.selectRoleByUserId"
+                    fetchType="lazy">
+            <id column="r_id" jdbcType="BIGINT" property="id" />
+            <result column="r_role_name" jdbcType="VARCHAR" property="roleName" />
+            <result column="r_level" jdbcType="INTEGER" property="level" />
+            <result column="r_description" jdbcType="VARCHAR" property="description" />
+            <result column="r_creator" jdbcType="VARCHAR" property="creator" />
+            <result column="r_updater" jdbcType="VARCHAR" property="updater" />
+            <result column="r_create_time" jdbcType="TIMESTAMP" property="createTime" />
+            <result column="r_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        u_id, u_nick_name, u_user_name, u_gender, u_pwd, u_phone, u_email, u_dept_id, u_is_enabled,
+        u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user
+        where u_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user
+        where u_user_name = #{userName,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.UserQueryCriteria"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_log
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test='criteria != null'>
+                <if test='criteria.blurry != ""'>
+                    <if test='criteria.blurryType == "1"'>
+                        and u_user_name like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                    <if test='criteria.blurryType == "2"'>
+                        and u_nick_name like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                    <if test='criteria.blurryType == "3"'>
+                        and u_email like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                    <if test='criteria.blurryType == "4"'>
+                        and u_phone like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                </if>
+                <if test='criteria.enabled != null'>
+                    and u_is_enabled in (${criteria.enabled})
+                </if>
+                <if test='criteria.createTimes != null and criteria.createTimes > 0'>
+                    and u_create_time
+                    <foreach collection="createTimes" item="createTime" open=" between " separator=" and " close="">
+                        #{createTime}
+                    </foreach>
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_sys_user (u_id, u_nick_name, u_user_name,
+        u_gender, u_pwd, u_phone, u_email,
+        u_dept_id, u_is_enabled, u_creator,
+        u_updater, u_create_time, u_update_time,
+        u_pwd_reset_time)
+        values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR},
+        #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+        #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
+        #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{pwdResetTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            u_id,
+            <if test="userName != null">
+                u_nick_name,
+            </if>
+            <if test="loginName != null">
+                u_user_name,
+            </if>
+            <if test="gender != null">
+                u_gender,
+            </if>
+            <if test="pwd != null">
+                u_pwd,
+            </if>
+            <if test="phone != null">
+                u_phone,
+            </if>
+            <if test="email != null">
+                u_email,
+            </if>
+            <if test="deptId != null">
+                u_dept_id,
+            </if>
+            <if test="isEnabled != null">
+                u_is_enabled,
+            </if>
+            <if test="creator != null">
+                u_creator,
+            </if>
+            <if test="updater != null">
+                u_updater,
+            </if>
+            <if test="createTime != null">
+                u_create_time,
+            </if>
+            <if test="updateTime != null">
+                u_update_time,
+            </if>
+            <if test="pwdResetTime != null">
+                u_pwd_reset_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=BIGINT},
+            <if test="nickName != null">
+                #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=TINYINT},
+            </if>
+            <if test="pwd != null">
+                #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null">
+                #{deptId,jdbcType=BIGINT},
+            </if>
+            <if test="isEnabled != null">
+                #{isEnabled,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null">
+                #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pwdResetTime != null">
+                #{pwdResetTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_sys_user
+        where u_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="batchDelete" parameterType="java.util.Set">
+        delete from t_sys_user
+        where u_id in
+        <foreach collection="userIds" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo">
+        update t_sys_user
+        <set>
+            <if test="nickName != null">
+                u_nick_name = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                u_user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                u_gender = #{gender,jdbcType=TINYINT},
+            </if>
+            <if test="pwd != null">
+                u_pwd = #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                u_phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                u_email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null">
+                u_dept_id = #{deptId,jdbcType=BIGINT},
+            </if>
+            <if test="isEnabled != null">
+                u_is_enabled = #{isEnabled,jdbcType=BIT},
+            </if>
+            <if test="creator != null">
+                u_creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null">
+                u_updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                u_create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                u_update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pwdResetTime != null">
+                u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where u_id = #{id,jdbcType=BIGINT}
+    </update>
+
 </mapper>

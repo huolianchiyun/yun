@@ -47,7 +47,7 @@ spring:
 
 #mybatis
 mybatis:
-  #  config-location: classpath:mybatis-config.xml
+  config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/**/*.xml
 
 # 登录相关配置

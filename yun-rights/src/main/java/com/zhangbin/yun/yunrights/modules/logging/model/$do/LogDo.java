@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 系统日志
@@ -14,7 +15,9 @@ import lombok.Data;
  * @date 2020-07-31 10:50:00
  */
 @Data
+@NoArgsConstructor
 public class LogDo extends BaseDo implements Serializable {
+
     public LogDo(String logLevel, Long requestTimeConsuming) {
         this.logLevel = logLevel;
         this.requestTimeConsuming = requestTimeConsuming;

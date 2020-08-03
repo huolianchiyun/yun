@@ -1,6 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.common.model.$do;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -8,8 +10,8 @@ public class BaseDo {
     protected Long id;
     protected String creator;
     protected String updater;
-    protected LocalDate createTime;
-    protected LocalDate updateTime;
+    protected LocalDateTime createTime;
+    protected LocalDateTime updateTime;
 
     public Long getId() {
         return id;
@@ -35,19 +37,19 @@ public class BaseDo {
         this.updater = updater;
     }
 
-    public LocalDate getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDate createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public LocalDate getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDate updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

@@ -16,7 +16,7 @@ public interface LogService {
      * @param criteria 查询条件
      * @return /
      */
-    PageInfo<Object, L> queryAll(LogQueryCriteria criteria);
+    PageInfo<Object> queryAll(LogQueryCriteria criteria);
 
 
     /**
