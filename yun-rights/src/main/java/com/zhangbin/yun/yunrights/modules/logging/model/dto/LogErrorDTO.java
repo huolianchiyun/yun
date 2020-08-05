@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.logging.model.dto;
 
-import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDo;
+import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class LogErrorDTO implements Serializable {
     public LogErrorDTO() {}
-    public LogErrorDTO(LogDo logDo) {
+    public LogErrorDTO(LogDO logDo) {
         this.id = logDo.getId();
         this.userName = logDo.getUserName();
         this.operationDesc = logDo.getOperationDesc();

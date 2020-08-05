@@ -44,7 +44,7 @@
         </javaClientGenerator>
 
         <!--对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 -->
-        <table tableName="t_sys_email_config" domainObjectName="EmailConfigDo" enableCountByExample="false"
+        <table tableName="t_sys_email_config" domainObjectName="EmailConfigDO" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
             <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.common.$do.BaseDo"/>
             <generatedKey column="e_id" sqlStatement="SELECT LAST_INSERT_ID()"/>

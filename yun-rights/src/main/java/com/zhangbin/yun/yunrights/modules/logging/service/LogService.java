@@ -1,8 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.logging.service;
 
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
-import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDo;
-import com.zhangbin.yun.yunrights.modules.logging.model.dto.LogQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
+import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.scheduling.annotation.Async;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ public interface LogService {
      * @param log       日志实体
      */
     @Async
-    void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, LogDo log);
+    void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log);
 
     /**
      * 查询异常详情

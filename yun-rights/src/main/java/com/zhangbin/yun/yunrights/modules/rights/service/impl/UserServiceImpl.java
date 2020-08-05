@@ -7,12 +7,11 @@ import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.UserDoMapper;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
-import com.zhangbin.yun.yunrights.modules.rights.model.UserQueryCriteria;
-import com.zhangbin.yun.yunrights.modules.rights.model.dto.RoleSmallDto;
-import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVo;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
 import com.zhangbin.yun.yunrights.modules.rights.service.RoleService;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
@@ -20,6 +19,8 @@ import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -32,28 +33,28 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserDoMapper userDoMapper;
+    private final UserMapper userMapper;
     private final RoleService roleService;
     private final RedisUtils redisUtils;
     private final UserCacheClean userCacheClean;
     private final VerifyService verificationCodeService;
 
     @Override
-    public UserDo queryById(Long id) {
+    public UserDO queryById(Long id) {
         return null;
     }
 
     @Override
-    public UserDo queryByUserName(String loginName) {
-        return userDoMapper.selectByUserName(loginName);
+    public UserDO queryByUserName(String loginName) {
+        return userMapper.selectByUserName(loginName);
     }
 
     @Override
-    public Object queryAllByCriteria(UserQueryCriteria criteria) {
-        Page<UserDo> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, userDoMapper);
-        PageInfo<List<UserDo>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
+    public PageInfo<List<UserDO>> queryAllByCriteria(UserQueryCriteria criteria) {
+        Page<UserDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, userMapper);
+        PageInfo<List<UserDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());
-        List<UserDo> result = page.getResult();
+        List<UserDO> result = page.getResult();
         pageInfo.setData(result);
         return pageInfo;
         // TODO 数据权限
@@ -81,29 +82,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDo> queryAllByCriteriaWithNoPage(UserQueryCriteria criteria) {
-        return null;
+    public List<UserDO> queryAllByCriteriaWithNoPage(UserQueryCriteria criteria) {
+        return userMapper.selectAllByCriteria(criteria);
     }
 
     @Override
-    public void createUser(UserDo user) {
-        checkLevel(user);
+    public void createUser(UserDO user) {
+        checkCurrentUserRoleLevel(user);
+        Assert.notNull(userMapper.selectByUserName(user.getUserName()), "用户名已存在，请重新命名！");
         // 默认密码 123456
         user.setPwd(passwordEncoder.encode("123456"));
-        userDoMapper.insert(user);
+        userMapper.insert(user);
     }
 
     @Override
-    public void updateUser(UserDo user) {
-        checkLevel(user);
-        userDoMapper.updateByPrimaryKeySelective(user);
+    public void updateUser(UserDO user) {
+        checkCurrentUserRoleLevel(user);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
-    public void updatePwd(UserPwdVo userPwdVo) throws Exception {
+    public void updatePwd(UserPwdVO userPwdVo) throws Exception {
         String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwdVo.getOldPass());
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwdVo.getNewPass());
-        UserDo user = queryByUserName(SecurityUtils.getCurrentUsername());
+        UserDO user = queryByUserName(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPwd())) {
             throw new BadRequestException("修改失败，旧密码错误");
         }
@@ -111,55 +113,47 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("新密码不能与旧密码相同");
         }
         String username = user.getUserName();
-        userDoMapper.updateByPrimaryKeySelective(new UserDo(username, passwordEncoder.encode(newPass), LocalDateTime.now()));
+        userMapper.updateByPrimaryKeySelective(new UserDO(username, passwordEncoder.encode(newPass), LocalDateTime.now()));
         redisUtils.del("user::username:" + username);
         flushCache(username);
     }
 
     @Override
-    public void updateEmail(String code, UserDo user) throws Exception {
+    public void updateEmail(String code, UserDO user) throws Exception {
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, user.getPwd());
-        UserDo userDb = queryByUserName(SecurityUtils.getCurrentUsername());
+        UserDO userDb = queryByUserName(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(password, userDb.getPwd())) {
             throw new BadRequestException("密码错误");
         }
         verificationCodeService.validate(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + user.getEmail(), code);
-        userDoMapper.updateByPrimaryKeySelective(new UserDo(userDb.getUserName(), user.getEmail()));
+        userMapper.updateByPrimaryKeySelective(new UserDO(userDb.getUserName(), user.getEmail()));
         redisUtils.del(CacheKey.USER_NAME + userDb.getUserName());
         flushCache(userDb.getUserName());
     }
 
     @Override
-    public void updateCenter(UserDo user) {
-        UserDo userDb = Optional.of(userDoMapper.selectByPrimaryKey(user.getId())).orElseGet(UserDo::new);
+    public void updateCenter(UserDO user) {
+        UserDO userDb = Optional.of(userMapper.selectByPrimaryKey(user.getId())).orElseGet(UserDO::new);
         user.setNickName(user.getNickName());
         user.setPhone(user.getPhone());
         user.setGender(user.getGender());
-        userDoMapper.updateByPrimaryKeySelective(userDb);
+        userMapper.updateByPrimaryKeySelective(userDb);
         // 清理缓存
         delCaches(userDb.getId(), userDb.getUserName());
     }
 
     @Override
-    public void deleteUsers(Set<Long> ids) {
-        for (Long id : ids) {
-            Integer currentLevel = Collections.min(roleService.findByUserId(SecurityUtils.getCurrentUserId())
-                    .stream().map(RoleSmallDto::getLevel)
-                    .collect(Collectors.toList()));
-            Integer optLevel = Collections.min(roleService.findByUserId(id).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
-            if (currentLevel > optLevel) {
-                throw new BadRequestException("角色权限不足，不能删除：" + queryById(id).getUserName());
-            }
-        }
-        userDoMapper.batchDelete(ids);
+    public void deleteByUserIds(Set<Long> ids) {
+        Assert.isTrue(roleService.hasSupperLevelInUsers(roleService.getLevelOfCurrentUserMaxRole(), ids),
+                "删除用户集合中存在高于或等于你角色的用户，权限不够，删除失败！");
+        userMapper.batchDeleteByIds(ids);
     }
 
-
     @Override
-    public void download(List<UserDo> userDoList, HttpServletResponse response) throws IOException {
+    public void download(List<UserDO> userDOList, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (UserDo user : userDoList) {
-            List<String> roles = user.getRoles().stream().map(RoleDo::getRoleName).collect(Collectors.toList());
+        for (UserDO user : userDOList) {
+            List<String> roles = user.getRoles().stream().map(RoleDO::getRoleName).collect(Collectors.toList());
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("用户名", user.getUserName());
             map.put("角色", roles);
@@ -175,32 +169,33 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 检测当前用户等级
+     * 如果当前用户的角色级别低于要创建或修改用户的角色级别，则抛出权限不足的提示
+     *
+     * @param user
+     */
+    private void checkCurrentUserRoleLevel(UserDO user) {
+        UserDO currentUser = queryById(SecurityUtils.getCurrentUserId());
+        if(!currentUser.isAdmin()){  // 管理员具有超级权限
+            Integer levelOfCurrentUserMaxRole = roleService.getLevelOfCurrentUserMaxRole();
+            Set<Long> set = user.getRoles().stream().map(RoleDO::getId).collect(Collectors.toSet());
+            Integer levelOfOperatedUserMaxRole = Collections.min(Optional.of(roleService.batchQueryByIds(set)).orElseGet(ArrayList::new)
+                    .stream()
+                    .map(RoleDO::getLevel)
+                    .collect(Collectors.toList()));
+            Assert.isTrue(levelOfCurrentUserMaxRole < levelOfOperatedUserMaxRole, "您的角色权限不够， 不能操作高于或等于你权限的用户！");
+        }
+    }
+
+    /**
      * 清理缓存
      *
      * @param id
      */
-    public void delCaches(Long id, String userName) {
+    private void delCaches(Long id, String userName) {
         redisUtils.del(CacheKey.USER_ID + id);
         redisUtils.del(CacheKey.USER_NAME + userName);
         flushCache(userName);
-    }
-
-    /**
-     * 创建或更新用户权限校验
-     * 如果当前用户的角色级别低于要创建用户的角色级别，则抛出权限不足的错误
-     *
-     * @param user
-     */
-    private void checkLevel(UserDo user) {
-        Integer currentLevel = Collections.min(
-                roleService.findByUserId(SecurityUtils.getCurrentUserId())
-                        .stream()
-                        .map(RoleSmallDto::getLevel)
-                        .collect(Collectors.toList()));
-        Integer optLevel = roleService.findByRoles(user.getRoles());
-        if (currentLevel > optLevel) {
-            throw new BadRequestException("角色权限不足， 操作失败！");
-        }
     }
 
     /**

@@ -8,7 +8,7 @@ import com.zhangbin.yun.yunrights.modules.common.utils.ThrowableUtil;
 
 import static com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel.*;
 
-import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDo;
+import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
 import com.zhangbin.yun.yunrights.modules.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public final class LogAspect {
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         currentTime.set(System.currentTimeMillis());
         Object result = joinPoint.proceed();
-        LogDo log = new LogDo(INFO.getLevel(), System.currentTimeMillis() - currentTime.get());
+        LogDO log = new LogDO(INFO.getLevel(), System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
         logService.save(getUsername(), IPUtil.getBrowser(request), IPUtil.getIp(request), joinPoint, log);
@@ -65,7 +65,7 @@ public final class LogAspect {
      */
     @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        LogDo log = new LogDo(ERROR.getLevel(), System.currentTimeMillis() - currentTime.get());
+        LogDO log = new LogDO(ERROR.getLevel(), System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
         HttpServletRequest request = RequestHolder.getHttpServletRequest();

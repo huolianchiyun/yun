@@ -1,10 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.RoleQueryCriteria;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDo;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
-import com.zhangbin.yun.yunrights.modules.rights.model.dto.RoleSmallDto;
-import org.springframework.data.domain.Pageable;
+import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
+import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RoleQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import org.springframework.security.core.GrantedAuthority;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -14,103 +14,119 @@ import java.util.Set;
 public interface RoleService {
 
     /**
-     * 查询全部数据
-     * @return /
-     */
-    List<RoleDo> queryByConditions();
-
-    /**
      * 根据ID查询
-     * @param id /
-     * @return /
+     *
+     * @param id
+     * @return
      */
-    RoleDo findById(long id);
+    RoleDO queryById(Long id);
 
-    /**
-     * 创建
-     * @param resources /
-     */
-    void create(RoleDo resources);
-
-    /**
-     * 编辑
-     * @param resources /
-     */
-    void update(RoleDo resources);
-
-    /**
-     * 删除
-     * @param ids /
-     */
-    void delete(Set<Long> ids);
-
+    List<RoleDO> batchQueryByIds(Set<Long> ids);
     /**
      * 根据用户ID查询
-     * @param id 用户ID
-     * @return /
+     *
+     * @param userId 用户ID
+     * @return
      */
-    List<RoleSmallDto> findByUserId(Long id);
+    List<RoleDO> queryByUserId(Long userId);
+
 
     /**
-     * 根据角色查询角色级别
-     * @param roles /
-     * @return /
+     * 不分页查询满足条件的角色
+     *
+     * @return
      */
-    Integer findByRoles(Set<RoleDo> roles);
+    List<RoleDO> queryAllByCriteriaWithNoPage(RoleQueryCriteria criteria);
 
     /**
-     * 修改绑定的菜单
-     * @param resources /
-     * @param roleDTO /
+     * 分页查询满足条件的角色
+     *
+     * @return
      */
-    void updateMenu(RoleDo resources, RoleDo roleDTO);
+    PageInfo<List<RoleDO>> queryAllByCriteria(RoleQueryCriteria criteria);
 
     /**
-     * 解绑菜单
-     * @param id /
+     * 创建角色
+     *
+     * @param role
      */
-    void untiedMenu(Long id);
+    void createRole(RoleDO role);
 
     /**
-     * 条件分页查询
-     * @param queryConditions 条件
-     * @param pageable 分页参数
-     * @return /
+     * 编辑角色
+     *
+     * @param role
      */
-    Object queryByConditions(RoleQueryCriteria queryConditions, Pageable pageable);
+    void updateRole(RoleDO role);
 
     /**
-     * 查询全部
-     * @param queryConditions 条件
-     * @return /
+     * 批量删除角色
+     *
+     * @param roleIds
      */
-    List<RoleDo> queryByConditions(RoleQueryCriteria queryConditions);
+    void batchDeleteRoles(Set<Long> roleIds);
 
     /**
-     * 导出数据
-     * @param queryAll 待导出的数据
-     * @param response /
-     * @throws IOException /
+     * 导出角色数据
+     *
+     * @param roleList 待导出角色列表
+     * @param response
+     * @throws IOException
      */
-    void download(List<RoleDo> queryAll, HttpServletResponse response) throws IOException;
+    void download(List<RoleDO> roleList, HttpServletResponse response) throws IOException;
+
+    /**
+     * 检查角色集合是否关联用户
+     *
+     * @param roleIds 将要删除的角色id集合
+     * @return 关联返回 true，反之，返回 false
+     */
+    Boolean isAssociatedUsers(Set<Long> roleIds);
+
+
+    /**
+     * 修改角色关联的菜单
+     *
+     * @param role
+     */
+    void updateAssociatedMenuForRole(RoleDO role);
+
 
     /**
      * 获取用户权限信息
+     *
      * @param user 用户信息
      * @return 权限信息
      */
-    List<GrantedAuthority> mapToGrantedAuthorities(UserDo user);
+    List<GrantedAuthority> getGrantedAuthorities(UserDO user);
 
     /**
-     * 验证是否被用户关联
-     * @param ids /
+     * 获取当前用户最大角色的等级
+     *
+     * @return level
      */
-    void verification(Set<Long> ids);
+    Integer getLevelOfCurrentUserMaxRole();
+
 
     /**
-     * 根据菜单Id查询
-     * @param menuIds /
-     * @return /
+     * 检测当前用户角色等级是否高于将要操作的角色等级，若低于将要操作的角色等级，则抛异常提示权限不够
+     *
+     * @param level 将要操作的角色等级
      */
-    List<RoleDo> findInMenuId(List<Long> menuIds);
+    default void checkRoleLevel(Integer level) {
+        int maxLevel = getLevelOfCurrentUserMaxRole();
+        if (level != null) {
+            if (level < maxLevel) {
+                throw new BadRequestException("权限不足，你的角色级别：" + maxLevel + "，低于要操作的角色级别：" + level);
+            }
+        }
+    }
+
+    /**
+     * 判断 userIds 用户集合中是否存在其角色 level >= LevelOfCurrentUserMaxRole 的用户
+     * @param levelOfCurrentUserMaxRole 当前用户最大角色的等级
+     * @param userIds  将要检测的用户 id 集合
+     * @return 存在 true | 不存在 false
+     */
+    boolean hasSupperLevelInUsers(Integer levelOfCurrentUserMaxRole, Set<Long> userIds);
 }

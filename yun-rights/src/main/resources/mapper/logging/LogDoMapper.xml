@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.yunrights.modules.logging.mapper.LogDoMapper">
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDo">
+<mapper namespace="com.zhangbin.yun.yunrights.modules.logging.mapper.LogMapper">
+    <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO">
         <id column="l_id" jdbcType="BIGINT" property="id"/>
         <result column="l_operation_desc" jdbcType="VARCHAR" property="operationDesc"/>
         <result column="l_log_level" jdbcType="CHAR" property="logLevel"/>
@@ -29,7 +29,7 @@
         where l_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.dto.LogQueryCriteria"
+    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -79,7 +79,7 @@
       where l_log_level = #{logLevel,jdbcType=VARCHAR}
     </delete>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDo">
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -94,7 +94,7 @@
         #{browser,jdbcType=VARCHAR}, #{exceptionDetail,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
         )
     </insert>
-    <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDo">
+    <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>

@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.security.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUserWrapper implements UserDetails {
 
-    private final UserDo user;
+    private final UserDO user;
 
     private final List<Long> dataScopes;
 

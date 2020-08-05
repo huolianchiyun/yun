@@ -47,7 +47,7 @@
         </javaClientGenerator>
 
         <!--对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 -->
-        <table tableName="t_sys_log" domainObjectName="LogDo" enableCountByExample="false"
+        <table tableName="t_sys_log" domainObjectName="LogDO" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
             <generatedKey column="l_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="l_" replaceString=""/> <!--移除字段前缀-->

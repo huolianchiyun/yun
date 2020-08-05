@@ -1,8 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.rights.model.UserQueryCriteria;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
-import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVo;
+import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
+import io.swagger.models.auth.In;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -17,7 +19,7 @@ public interface UserService {
      * @param id ID
      * @return /
      */
-    UserDo queryById(Long id);
+    UserDO queryById(Long id);
 
     /**
      * 根据登录名查询
@@ -25,7 +27,7 @@ public interface UserService {
      * @param loginName /
      * @return /
      */
-    UserDo queryByUserName(String loginName);
+    UserDO queryByUserName(String loginName);
 
     /**
      * 分页查询全部
@@ -33,36 +35,36 @@ public interface UserService {
      * @param criteria 条件
      * @return /
      */
-    Object queryAllByCriteria(UserQueryCriteria criteria);
+    PageInfo<List<UserDO>> queryAllByCriteria(UserQueryCriteria criteria);
 
     /**
-     * 查询全部不分页
+     * 查询全部
      *
      * @param criteria 条件
      * @return /
      */
-    List<UserDo> queryAllByCriteriaWithNoPage(UserQueryCriteria criteria);
+    List<UserDO> queryAllByCriteriaWithNoPage(UserQueryCriteria criteria);
 
     /**
      * 新增用户
      *
      * @param user /
      */
-    void createUser(UserDo user);
+    void createUser(UserDO user);
 
     /**
      * 编辑用户
      *
      * @param user /
      */
-    void updateUser(UserDo user);
+    void updateUser(UserDO user);
 
     /**
      * 删除用户
      *
      * @param ids /
      */
-    void deleteUsers(Set<Long> ids);
+    void deleteByUserIds(Set<Long> ids);
 
 
     /**
@@ -70,7 +72,7 @@ public interface UserService {
      *
      * @param userPwdVo
      */
-    void updatePwd(UserPwdVo userPwdVo) throws Exception;
+    void updatePwd(UserPwdVO userPwdVo) throws Exception;
 
     /**
      * 修改邮箱
@@ -78,28 +80,22 @@ public interface UserService {
      * @param code  验证码
      * @param user
      */
-    void updateEmail(String code, UserDo user) throws Exception;
+    void updateEmail(String code, UserDO user) throws Exception;
 
     /**
      * 用户自助修改资料
      *
      * @param user /
      */
-    void updateCenter(UserDo user);
+    void updateCenter(UserDO user);
 
     /**
      * 导出数据
      *
-     * @param userDoList 待导出的数据
+     * @param userDOList 待导出的数据
      * @param response   /
      * @throws IOException /
      */
-    void download(List<UserDo> userDoList, HttpServletResponse response) throws IOException;
+    void download(List<UserDO> userDOList, HttpServletResponse response) throws IOException;
 
-    /**
-     * 修改头像
-     * @param file 文件
-     * @return /
-     */
-//    Map<String, String> updateAvatar(MultipartFile file);
 }

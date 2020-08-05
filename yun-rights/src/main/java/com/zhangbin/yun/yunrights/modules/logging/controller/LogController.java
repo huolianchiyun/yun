@@ -2,12 +2,11 @@ package com.zhangbin.yun.yunrights.modules.logging.controller;
 
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import static com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel.*;
-import com.zhangbin.yun.yunrights.modules.logging.model.dto.LogQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.logging.service.LogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

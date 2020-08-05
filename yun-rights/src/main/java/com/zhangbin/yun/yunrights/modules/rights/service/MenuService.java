@@ -1,8 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
 
-import com.zhangbin.yun.yunrights.modules.rights.model.MenuQueryCriteria;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDo;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,26 +18,26 @@ public interface MenuService {
      * @throws Exception /
      * @return /
      */
-    List<MenuDo> queryAll(MenuQueryCriteria queryConditions, Boolean isQuery) throws Exception;
+    List<MenuDO> queryAll(MenuQueryCriteria queryConditions, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
      * @param id
-     * @return {@link MenuDo}
+     * @return {@link MenuDO}
      */
-    MenuDo findById(long id);
+    MenuDO findById(long id);
 
     /**
      * 创建
      * @param resource
      */
-    void create(MenuDo resource);
+    void create(MenuDO resource);
 
     /**
      * 编辑
      * @param resource
      */
-    void update(MenuDo resource);
+    void update(MenuDO resource);
 
     /**
      * 删除
@@ -48,9 +48,9 @@ public interface MenuService {
     /**
      * 构建菜单树
      * @param menus
-     * @return {@link  List< MenuDo >}
+     * @return {@link  List<  MenuDO  >}
      */
-    List<MenuDo> buildTree(List<MenuDo> menus);
+    List<MenuDO> buildTree(List<MenuDO> menus);
 
 
 
@@ -60,26 +60,26 @@ public interface MenuService {
      * @param response
      * @throws IOException
      */
-    void download(List<MenuDo> menuList, HttpServletResponse response) throws IOException;
+    void download(List<MenuDO> menuList, HttpServletResponse response) throws IOException;
 
     /**
      * 懒加载菜单数据
      * @param pid
-     * @return {@link List< MenuDo >}
+     * @return {@link List<  MenuDO  >}
      */
-    List<MenuDo> getMenus(Long pid);
+    List<MenuDO> getMenus(Long pid);
 
     /**
      * 根据多个菜单ID，为其获取同级与上级数据
      * @param menuIds
-     * @return {@link List< MenuDo >}
+     * @return {@link List<  MenuDO  >}
      */
-    List<MenuDo> queryFatherAndSiblingForMultiMenus(List<Long> menuIds);
+    List<MenuDO> queryFatherAndSiblingForMultiMenus(List<Long> menuIds);
 
     /**
      * 根据当前用户获取菜单
      * @param currentUserId
      * @return /
      */
-    List<MenuDo> findByUser(Long currentUserId);
+    List<MenuDO> findByUser(Long currentUserId);
 }

@@ -3,9 +3,9 @@ package com.zhangbin.yun.yunrights.modules.rights.controller;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDo;
-import com.zhangbin.yun.yunrights.modules.rights.model.UserQueryCriteria;
-import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVo;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,7 +46,7 @@ public class UserController {
     @ApiOperation("新增用户")
     @PostMapping
     @PreAuthorize("@el.check('user:add')")
-    public ResponseEntity<ResponseData> createUser(@Validated @RequestBody UserDo user) {
+    public ResponseEntity<ResponseData> createUser(@Validated @RequestBody UserDO user) {
         userService.createUser(user);
         return success();
     }
@@ -55,7 +55,7 @@ public class UserController {
     @ApiOperation("修改用户")
     @PutMapping
     @PreAuthorize("@el.check('user:edit')")
-    public ResponseEntity<ResponseData> updateUser(@RequestBody UserDo user) {
+    public ResponseEntity<ResponseData> updateUser(@RequestBody UserDO user) {
         userService.updateUser(user);
         return success();
     }
@@ -63,7 +63,7 @@ public class UserController {
     @Logging("修改用户：个人中心")
     @ApiOperation("修改用户：个人中心")
     @PutMapping(value = "center")
-    public ResponseEntity<ResponseData> updateCenter(@RequestBody UserDo user) {
+    public ResponseEntity<ResponseData> updateCenter(@RequestBody UserDO user) {
         userService.updateCenter(user);
         return success();
     }
@@ -73,13 +73,13 @@ public class UserController {
     @DeleteMapping
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<ResponseData> deleteUsers(@RequestBody Set<Long> ids) {
-        userService.deleteUsers(ids);
+        userService.deleteByUserIds(ids);
         return success();
     }
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/updatePass")
-    public ResponseEntity<ResponseData> updatePwd(@RequestBody UserPwdVo pwdVo) throws Exception {
+    public ResponseEntity<ResponseData> updatePwd(@RequestBody UserPwdVO pwdVo) throws Exception {
         userService.updatePwd(pwdVo);
         return success();
     }
@@ -87,16 +87,8 @@ public class UserController {
     @Logging("修改邮箱")
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/updateEmail/{code}")
-    public ResponseEntity<ResponseData> updateEmail(@PathVariable String code, @RequestBody UserDo user) throws Exception {
+    public ResponseEntity<ResponseData> updateEmail(@PathVariable String code, @RequestBody UserDO user) throws Exception {
         userService.updateEmail(code, user);
         return success();
     }
-
-
-//    @ApiOperation("修改头像")
-//    @PostMapping(value = "/updateAvatar")
-//    public ResponseEntity<ResponseData> updateAvatar(@RequestParam MultipartFile avatar) {
-//        return success(userService.updateAvatar(avatar));
-//    }
-
 }
