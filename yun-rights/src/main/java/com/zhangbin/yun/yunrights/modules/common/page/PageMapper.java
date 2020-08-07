@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.common.page;
 
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import org.apache.ibatis.annotations.Param;
-import java.util.List;
+import java.util.Set;
 
 public interface PageMapper<R extends BaseDo> {
    /**
@@ -10,5 +10,5 @@ public interface PageMapper<R extends BaseDo> {
     * @param criteria 条件
     * @return
     */
-   List<R> selectAllByCriteria(@Param("criteria") QueryPage criteria);
+   Set<R> selectAllByCriteria(@Param("criteria") AbstractQueryPage criteria);
 }

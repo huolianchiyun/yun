@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.zhangbin.yun.yunrights.modules.common.page.QueryPage;
+import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.util.List;
  * 角色公共查询类
  */
 @Data
-public class RoleQueryCriteria extends QueryPage implements Serializable {
+public class RoleQueryCriteria extends AbstractQueryPage implements Serializable {
 
     private String blurry;
 

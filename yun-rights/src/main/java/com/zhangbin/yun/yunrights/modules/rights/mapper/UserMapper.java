@@ -15,7 +15,9 @@ public interface UserMapper extends PageMapper<UserDO> {
 
     UserDO selectByUserName(String userName);
 
-    List<UserDO> selectByRoleId(Long roleId);
+    Set<UserDO> selectByMenuIs(Set<Long> menuIds);
+
+    Set<UserDO> selectByRoleId(Long roleId);
 
     int insert(UserDO record);
 

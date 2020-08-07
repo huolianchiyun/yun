@@ -6,7 +6,7 @@ import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 
 public final class PageQueryHelper {
 
-    public static <R extends BaseDo> Page<R> queryAllByCriteriaWithPage(QueryPage criteria, PageMapper<R> mapper) {
+    public static <R extends BaseDo> Page<R> queryAllByCriteriaWithPage(AbstractQueryPage criteria, PageMapper<R> mapper) {
         return PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize(), true)
                 .doSelectPage(() -> mapper.selectAllByCriteria(criteria));
     }

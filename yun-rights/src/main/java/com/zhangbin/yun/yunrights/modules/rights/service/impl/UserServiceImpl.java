@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDO> queryAllByCriteriaWithNoPage(UserQueryCriteria criteria) {
-        return userMapper.selectAllByCriteria(criteria);
+        return CollectionUtil.list(false, userMapper.selectAllByCriteria(criteria));
     }
 
     @Override
@@ -143,29 +144,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteByUserIds(Set<Long> ids) {
-        Assert.isTrue(roleService.hasSupperLevelInUsers(roleService.getLevelOfCurrentUserMaxRole(), ids),
+    public void deleteByUserIds(Set<Long> userIds) {
+        Assert.isTrue(roleService.hasSupperLevelInUsers(roleService.getLevelOfCurrentUserMaxRole(), userIds),
                 "删除用户集合中存在高于或等于你角色的用户，权限不够，删除失败！");
-        userMapper.batchDeleteByIds(ids);
+        userMapper.batchDeleteByIds(userIds);
     }
 
     @Override
     public void download(List<UserDO> userDOList, HttpServletResponse response) throws IOException {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (UserDO user : userDOList) {
-            List<String> roles = user.getRoles().stream().map(RoleDO::getRoleName).collect(Collectors.toList());
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("用户名", user.getUserName());
-            map.put("角色", roles);
-            map.put("部门", user.getDept().getGroupName());
-            map.put("邮箱", user.getEmail());
-            map.put("状态", user.getEnabled() ? "启用" : "禁用");
-            map.put("手机号码", user.getPhone());
-            map.put("修改密码时间", user.getPwdResetTime());
-            map.put("创建日期", user.getCreateTime());
-            list.add(map);
-        }
-        FileUtil.downloadExcel(list, response);
+        FileUtil.downloadExcel(Optional.of(userDOList).orElseGet(ArrayList::new).stream().map(UserDO::toLinkedMap).collect(Collectors.toList()), response);
     }
 
     /**
@@ -176,7 +163,7 @@ public class UserServiceImpl implements UserService {
      */
     private void checkCurrentUserRoleLevel(UserDO user) {
         UserDO currentUser = queryById(SecurityUtils.getCurrentUserId());
-        if(!currentUser.isAdmin()){  // 管理员具有超级权限
+        if (!currentUser.isAdmin()) {  // 管理员具有超级权限
             Integer levelOfCurrentUserMaxRole = roleService.getLevelOfCurrentUserMaxRole();
             Set<Long> set = user.getRoles().stream().map(RoleDO::getId).collect(Collectors.toSet());
             Integer levelOfOperatedUserMaxRole = Collections.min(Optional.of(roleService.batchQueryByIds(set)).orElseGet(ArrayList::new)

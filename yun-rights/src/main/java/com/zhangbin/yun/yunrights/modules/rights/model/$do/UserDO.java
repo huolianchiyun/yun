@@ -4,8 +4,10 @@ import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import lombok.Data;
 
 /**
@@ -15,7 +17,7 @@ import lombok.Data;
  * @date 2020-07-29 23:10:43
  */
 @Data
-public class UserDO extends BaseDo implements Serializable {
+public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
     /**
      *
@@ -93,5 +95,20 @@ public class UserDO extends BaseDo implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, userName, pwd);
+    }
+
+    @Override
+    public LinkedHashMap<String, Object> toLinkedMap() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        List<String> roles = this.roles.stream().map(RoleDO::getRoleName).collect(Collectors.toList());
+        map.put("用户名", userName);
+        map.put("角色", String.join(",", roles));
+        map.put("部门", dept.getGroupName());
+        map.put("邮箱", email);
+        map.put("状态", enabled ? "启用" : "禁用");
+        map.put("手机号码", phone);
+        map.put("修改密码时间", pwdResetTime);
+        map.put("创建日期", createTime);
+        return map;
     }
 }

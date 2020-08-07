@@ -56,7 +56,7 @@
         where r_role_name = #{roleName,jdbcType=VARCHAR} limit 1
     </select>
 
-    <select id="selectRoleByUserId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_role where r_id in (
@@ -72,16 +72,27 @@
         </foreach>
     </select>
 
-    <select id="hasGreaterLevelInUsers">
+    <select id="countSuperLevelInUserIds" parameterType="java.util.HashSet">
         select count(*)
         from t_sys_role
         where r_id in (
         select role_id from t_sys_user_role where user_id in (
-        <foreach collection="userIds" index="index" item="id" separator="," open="(" close=")">
-            #{id,jdbcType=INTEGER}
+        <foreach collection="userIds" index="index" item="userId" separator="," open="(" close=")">
+            #{userId,jdbcType=INTEGER}
         </foreach>
         ) and r_level >= #{levelOfCurrentUserMaxRole,jdbcType=INTEGER}
         )
+    </select>
+
+    <select id="selectByMenuIds"  parameterType="java.util.HashSet">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_role, t_sys_role_menu
+        where menu_id id in
+        <foreach collection="menuIds" index="index" item="menuId" separator="," open="(" close=")">
+            #{menuId,jdbcType=INTEGER}
+        </foreach>
+        and r_id = role_id
     </select>
 
     <select id="selectAllByCriteria"
@@ -101,7 +112,7 @@
                     </if>
                 </if>
                 <if test='criteria.createTimes != null and criteria.createTimes > 0'>
-                    and u_create_time
+                    and r_create_time
                     <foreach collection="createTimes" item="createTime" open=" between " separator=" and " close="">
                         #{createTime}
                     </foreach>
@@ -214,8 +225,8 @@
     <delete id="batchDeleteByIds" parameterType="java.util.Set">
         delete from t_sys_role
         where r_id in
-        <foreach collection="roleIds" index="index" item="id" separator="," open="(" close=")">
-            #{id,jdbcType=INTEGER}
+        <foreach collection="roleIds" index="index" item="roleId" separator="," open="(" close=")">
+            #{roleId,jdbcType=INTEGER}
         </foreach>
     </delete>
 </mapper>

@@ -4,7 +4,6 @@ import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
-import io.swagger.models.auth.In;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,7 +29,7 @@ public interface UserService {
     UserDO queryByUserName(String loginName);
 
     /**
-     * 分页查询全部
+     * 分页查询满足条件的数据
      *
      * @param criteria 条件
      * @return /
@@ -38,7 +37,7 @@ public interface UserService {
     PageInfo<List<UserDO>> queryAllByCriteria(UserQueryCriteria criteria);
 
     /**
-     * 查询全部
+     * 不分页查询满足条件的数据
      *
      * @param criteria 条件
      * @return /
@@ -60,11 +59,11 @@ public interface UserService {
     void updateUser(UserDO user);
 
     /**
-     * 删除用户
+     * 批量用户
      *
-     * @param ids /
+     * @param userIds /
      */
-    void deleteByUserIds(Set<Long> ids);
+    void deleteByUserIds(Set<Long> userIds);
 
 
     /**

@@ -1,85 +1,93 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 public interface MenuService {
 
     /**
-     * 查询全部数据
-     * @param queryConditions 条件
-     * @param isQuery /
-     * @throws Exception /
+     * 不分页查询满足条件的数据
+     * 查询方式：
+     * 1、根据 pid 查询满足条件的子菜单（直接子菜单）
+     * 2、将 pid 设置为 null可以查询所有满足条件的菜单
+     *
+     * @param criteria 条件
      * @return /
      */
-    List<MenuDO> queryAll(MenuQueryCriteria queryConditions, Boolean isQuery) throws Exception;
+    List<MenuDO> queryAllByCriteriaWithNoPage(MenuQueryCriteria criteria);
 
     /**
      * 根据ID查询
+     *
      * @param id
      * @return {@link MenuDO}
      */
-    MenuDO findById(long id);
+    MenuDO queryById(long id);
 
     /**
-     * 创建
-     * @param resource
+     * 懒根据PID查询
+     *
+     * @param pid
+     * @return {@link List<MenuDO>}
      */
-    void create(MenuDO resource);
+    List<MenuDO> querySubmenusByPid(Long pid);
 
     /**
-     * 编辑
-     * @param resource
+     * 获取多个菜单作为叶子节点的菜单树
+     *
+     * @param menuIds 作为菜单树叶子节点
+     * @return {@link List<MenuDO>}
      */
-    void update(MenuDO resource);
+    List<MenuDO> queryAncestorAndSiblingOfMenus(List<Long> menuIds);
 
     /**
-     * 删除
+     * 根据用户获取菜单
+     *
+     * @param userId
+     * @return /
+     */
+    List<MenuDO> queryByUser(Long userId);
+
+    /**
+     * 创建菜单
+     *
+     * @param menu
+     */
+    void createMenu(MenuDO menu);
+
+    /**
+     * 编辑菜单
+     *
+     * @param menu
+     */
+    void updateMenu(MenuDO menu);
+
+    /**
+     * 批量删除菜单
+     *
      * @param menuIds
      */
-    void delete(Set<Long> menuIds);
+    void deleteByMenuIds(Set<Long> menuIds);
 
     /**
      * 构建菜单树
+     *
      * @param menus
-     * @return {@link  List<  MenuDO  >}
+     * @return {@link  List<MenuDO>}
      */
-    List<MenuDO> buildTree(List<MenuDO> menus);
-
-
+    List<MenuDO> buildMenuTree(Collection<MenuDO> menus);
 
     /**
-     * 导出
-     * @param menuList 待导出的数据
+     * 导出菜单
+     *
+     * @param menus    待导出的数据
      * @param response
      * @throws IOException
      */
-    void download(List<MenuDO> menuList, HttpServletResponse response) throws IOException;
-
-    /**
-     * 懒加载菜单数据
-     * @param pid
-     * @return {@link List<  MenuDO  >}
-     */
-    List<MenuDO> getMenus(Long pid);
-
-    /**
-     * 根据多个菜单ID，为其获取同级与上级数据
-     * @param menuIds
-     * @return {@link List<  MenuDO  >}
-     */
-    List<MenuDO> queryFatherAndSiblingForMultiMenus(List<Long> menuIds);
-
-    /**
-     * 根据当前用户获取菜单
-     * @param currentUserId
-     * @return /
-     */
-    List<MenuDO> findByUser(Long currentUserId);
+    void download(List<MenuDO> menus, HttpServletResponse response) throws IOException;
 }

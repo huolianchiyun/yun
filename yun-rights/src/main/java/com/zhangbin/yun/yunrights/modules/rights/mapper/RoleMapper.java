@@ -13,11 +13,13 @@ public interface RoleMapper extends PageMapper<RoleDO> {
 
     RoleDO selectByPrimaryKey(Long id);
 
-    List<RoleDO> selectByPrimaryKeys(@Param("ids") Set<Long> ids);
+    Set<RoleDO> selectByPrimaryKeys(@Param("ids") Set<Long> ids);
 
     RoleDO selectByRoleName(String roleName);
 
-    List<RoleDO> selectRoleByUserId(Long userId);
+    Set<RoleDO> selectByUserId(Long userId);
+
+    Set<RoleDO> selectByMenuIds(@Param("menuIds") Set<Long> menuIds);
 
     int insert(RoleDO record);
 
@@ -27,9 +29,15 @@ public interface RoleMapper extends PageMapper<RoleDO> {
 
     int deleteByPrimaryKey(Long id);
 
-    int batchDeleteByIds(@Param("roleIds") Set<Long> ids);
+    int batchDeleteByIds(@Param("roleIds") Set<Long> roleIds);
 
-    int countAssociatedUsers(Set<Long> ids);
+    int countAssociatedUsers(@Param("roleIds") Set<Long> roleIds);
 
+    /**
+     * 查询用户集合中有多少个用户角色级别 >= 当前用户最大角色级别
+     * @param levelOfCurrentUserMaxRole
+     * @param userIds
+     * @return
+     */
     int countSuperLevelInUserIds(Integer levelOfCurrentUserMaxRole, @Param("userIds") Set<Long> userIds);
 }

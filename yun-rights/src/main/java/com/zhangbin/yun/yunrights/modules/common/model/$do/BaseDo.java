@@ -2,11 +2,12 @@ package com.zhangbin.yun.yunrights.modules.common.model.$do;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class BaseDo {
+public abstract class BaseDo {
     protected Long id;
     protected String creator;
     protected String updater;

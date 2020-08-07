@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.logging.service;
 
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
-import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.scheduling.annotation.Async;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +16,7 @@ public interface LogService {
      * @param criteria 查询条件
      * @return /
      */
-    PageInfo<Object> queryAll(LogQueryCriteria criteria);
+    PageInfo<Object> queryAll(LogAbstractQueryCriteria criteria);
 
 
     /**
@@ -25,7 +25,7 @@ public interface LogService {
      * @param criteria 查询条件
      * @return -
      */
-    Object queryAllByUser(LogQueryCriteria criteria);
+    Object queryAllByUser(LogAbstractQueryCriteria criteria);
 
     /**
      * 保存日志数据
@@ -55,7 +55,7 @@ public interface LogService {
      * @param response /
      * @throws IOException /
      */
-    void download(LogQueryCriteria criteria, HttpServletResponse response) throws IOException;
+    void download(LogAbstractQueryCriteria criteria, HttpServletResponse response) throws IOException;
 
     /**
      * 删除所有错误日志

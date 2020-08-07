@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserRoleMapper {
+
     int insert(UserRoleDO record);
 
     int insertSelective(UserRoleDO record);

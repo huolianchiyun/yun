@@ -8,4 +8,7 @@ public final class Constants {
     public static final String RIGHT_BRACE = "}";
     public static final String PAIR_BRACE = "{}";
     public static final String PARENTHESES = "()";
+
+    public static final String HTTP = "http://", HTTPS = "https://";
+
 }

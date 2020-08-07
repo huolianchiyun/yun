@@ -29,7 +29,7 @@
         where l_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria"
+    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

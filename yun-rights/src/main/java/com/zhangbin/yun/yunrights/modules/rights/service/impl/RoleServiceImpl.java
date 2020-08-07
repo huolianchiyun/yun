@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -46,17 +47,22 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleDO> batchQueryByIds(Set<Long> ids) {
-        return roleMapper.selectByPrimaryKeys(ids);
+        return Optional.of(roleMapper.selectByPrimaryKeys(ids)).orElseGet(HashSet::new).stream().collect(Collectors.toList());
     }
 
     @Override
     public List<RoleDO> queryByUserId(Long userId) {
-        return roleMapper.selectRoleByUserId(userId);
+        return Optional.of(roleMapper.selectByUserId(userId)).orElseGet(HashSet::new).stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<RoleDO> selectByMenuIds(Set<Long> menuIds) {
+        return roleMapper.selectByMenuIds(menuIds);
     }
 
     @Override
     public List<RoleDO> queryAllByCriteriaWithNoPage(RoleQueryCriteria criteria) {
-        return roleMapper.selectAllByCriteria(criteria);
+        return CollectionUtil.list(false, roleMapper.selectAllByCriteria(criteria));
     }
 
     @Override
@@ -100,15 +106,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void download(List<RoleDO> roleList, HttpServletResponse response) throws IOException {
-        List<Map<String, Object>> mapList = roleList.stream().map(e -> {
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("角色名称", e.getRoleName());
-            map.put("角色级别", e.getLevel());
-            map.put("描述", e.getDescription());
-            map.put("创建日期", e.getCreateTime());
-            return map;
-        }).collect(Collectors.toList());
-        FileUtil.downloadExcel(mapList, response);
+        FileUtil.downloadExcel(Optional.of(roleList).orElseGet(ArrayList::new).stream().map(RoleDO::toLinkedMap).collect(Collectors.toList()), response);
     }
 
     @Override
@@ -125,10 +123,11 @@ public class RoleServiceImpl implements RoleService {
         Set<RoleMenuDO> roleMenus = Optional.of(role.getMenus()).orElseGet(HashSet::new)
                 .stream().map(e -> new RoleMenuDO(role.getId(), e.getId())).collect(Collectors.toSet());
         if (!CollectionUtils.isEmpty(roleMenus)) {
-            roleMenuMapper.batchDeleteByRoleId(role.getId());
+            roleMenuMapper.deleteByRoleId(role.getId());
             roleMenuMapper.batchInsert(roleMenus);
         }
-        List<UserDO> users = userMapper.selectByRoleId(roleDb.getId());
+        List<UserDO> users = Optional.of(userMapper.selectByRoleId(roleDb.getId()))
+                .orElseGet(HashSet::new).stream().collect(Collectors.toList());
         delCaches(role.getId(), users);
     }
 
@@ -139,7 +138,8 @@ public class RoleServiceImpl implements RoleService {
         if (user.isAdmin()) {  // 如果是管理员直接返回
             permissions.add("admin");
         } else {
-            List<RoleDO> roles = roleMapper.selectRoleByUserId(user.getId());
+            List<RoleDO> roles = Optional.of(roleMapper.selectByUserId(user.getId()))
+                    .orElseGet(HashSet::new).stream().collect(Collectors.toList());
             permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                     .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
                     .map(MenuDO::getPermission).collect(Collectors.toSet());
@@ -158,7 +158,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean hasSupperLevelInUsers(Integer levelOfCurrentUserMaxRole, Set<Long> userIds) {
-        return roleMapper.countSuperLevelInUserIds(levelOfCurrentUserMaxRole, userIds) > 0 ? true : false;
+        return roleMapper.countSuperLevelInUserIds(levelOfCurrentUserMaxRole, userIds) > 0;
     }
 
     /**
@@ -168,7 +168,7 @@ public class RoleServiceImpl implements RoleService {
      * @param users
      */
     private void delCaches(Long roleId, List<UserDO> users) {
-        users = CollectionUtil.isEmpty(users) ? userMapper.selectByRoleId(roleId) : users;
+        users = CollectionUtil.isEmpty(users) ? CollectionUtil.list(false, userMapper.selectByRoleId(roleId)) : users;
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheClean.cleanUserCache(item.getUserName()));
             Set<Long> userIds = users.stream().map(UserDO::getId).collect(Collectors.toSet());

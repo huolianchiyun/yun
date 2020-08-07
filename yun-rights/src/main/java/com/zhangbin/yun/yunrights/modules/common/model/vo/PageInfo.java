@@ -1,49 +1,49 @@
 package com.zhangbin.yun.yunrights.modules.common.model.vo;
 
 public class PageInfo<T> {
-    private int pageNum;
-    private int pageSize;
-    private long total;
+    private Integer pageNum;
+    private Integer pageSize;
+    private Long total;
     private T data;
 
-    public PageInfo(int pageNum, int pageSize) {
+    public PageInfo(Integer pageNum, Integer pageSize) {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
     }
 
-    public PageInfo(long total, T data) {
+    public PageInfo(Long total, T data) {
         this.total = total;
         this.data = data;
     }
 
-    public PageInfo(int pageNum, int pageSize, long total, T data) {
+    public PageInfo(Integer pageNum, Integer pageSize, Long total, T data) {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
         this.total = total;
         this.data = data;
     }
 
-    public int getPageNum() {
+    public Integer getPageNum() {
         return pageNum;
     }
 
-    public void setPageNum(int pageNum) {
+    public void setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
     }
 
-    public int getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
-    public long getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 

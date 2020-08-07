@@ -12,5 +12,7 @@ public interface RoleMenuMapper {
 
     int batchInsert(@Param("roleMenus") Set<RoleMenuDO> roleMenus);
 
-    int batchDeleteByRoleId(Long roleId);
+    int deleteByMenuIds(@Param("menuIds") Set<Long> menuIds);
+
+    int deleteByRoleId(Long roleId);
 }

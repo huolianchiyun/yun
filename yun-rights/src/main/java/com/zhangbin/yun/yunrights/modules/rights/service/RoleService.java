@@ -5,6 +5,7 @@ import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RoleQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.GrantedAuthority;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,6 +31,12 @@ public interface RoleService {
      */
     List<RoleDO> queryByUserId(Long userId);
 
+    /**
+     * 根据菜单集合查询
+     * @param menuIds
+     * @return
+     */
+    Set<RoleDO> selectByMenuIds(@Param("menuIds") Set<Long> menuIds);
 
     /**
      * 不分页查询满足条件的角色
@@ -129,4 +136,5 @@ public interface RoleService {
      * @return 存在 true | 不存在 false
      */
     boolean hasSupperLevelInUsers(Integer levelOfCurrentUserMaxRole, Set<Long> userIds);
+
 }

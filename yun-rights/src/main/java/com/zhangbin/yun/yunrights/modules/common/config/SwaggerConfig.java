@@ -64,8 +64,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .description("一个简单且易上手的 Spring boot 后台管理框架")
-                .title("EL-ADMIN 接口文档")
+                .description("一个简单且易上手的 Spring boot 权限框架")
+                .title("YUN-RIGHTS 接口文档")
                 .version("2.4")
                 .build();
     }
@@ -73,7 +73,7 @@ public class SwaggerConfig {
 }
 
 /**
- *  将Pageable转换展示在swagger中
+ * 将Pageable转换展示在swagger中
  */
 @Configuration
 class SwaggerDataConfig {

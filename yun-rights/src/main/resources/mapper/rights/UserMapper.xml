@@ -65,6 +65,18 @@
         where u_user_name = #{userName,jdbcType=BIGINT}
     </select>
 
+    <select id="selectByMenuIs" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user u, t_sys_user_role ur, t_sys_role_menu rm
+        where rm.menu_id in
+        <foreach collection="menuIds" index="index" item="menuId" separator="," open="(" close=")">
+            #{menuId,jdbcType=INTEGER}
+        </foreach>
+        and u.u_id = ur.user_id
+        and ur.role_id = rm.role_id
+    </select>
+
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria"
             resultMap="SmallBaseResultMap">

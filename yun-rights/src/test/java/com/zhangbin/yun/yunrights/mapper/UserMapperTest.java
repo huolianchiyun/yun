@@ -1,6 +1,7 @@
 package com.zhangbin.yun.yunrights.mapper;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
@@ -34,7 +35,7 @@ public class UserMapperTest {
         criteria.setPageSize(5);
         criteria.setBlurryType(UserQueryCriteria.BlurryType.NICK_NAME);
         criteria.setBlurry("张三");
-        List<UserDO> userDOS = userMapper.selectAllByCriteria(criteria);
+        List<UserDO> userDOS = CollectionUtil.list(false, userMapper.selectAllByCriteria(criteria));
         System.out.println("----------------------------");
         System.out.println(userDOS);
     }

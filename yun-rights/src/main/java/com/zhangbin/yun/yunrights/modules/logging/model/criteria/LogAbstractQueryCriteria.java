@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.logging.model.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.zhangbin.yun.yunrights.modules.common.page.QueryPage;
+import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * 日志查询类
  */
 @Data
-public final class LogQueryCriteria extends QueryPage {
+public final class LogAbstractQueryCriteria extends AbstractQueryPage {
 
 
     private String blurry;
@@ -24,22 +24,22 @@ public final class LogQueryCriteria extends QueryPage {
 
     private List<LocalDateTime> createTimes;
 
-    public LogQueryCriteria setLogLevel(LogLevel logLevel) {
+    public LogAbstractQueryCriteria setLogLevel(LogLevel logLevel) {
         this.logLevel = logLevel;
         return this;
     }
 
-    public LogQueryCriteria setBlurry(String blurry) {
+    public LogAbstractQueryCriteria setBlurry(String blurry) {
         this.blurry = blurry;
         return this;
     }
 
-    public LogQueryCriteria setCreateTimes(List<LocalDateTime> createTime) {
+    public LogAbstractQueryCriteria setCreateTimes(List<LocalDateTime> createTime) {
         this.createTimes = createTime;
         return this;
     }
 
-    public LogQueryCriteria setBlurryType(BlurryType blurryType) {
+    public LogAbstractQueryCriteria setBlurryType(BlurryType blurryType) {
         this.blurryType = blurryType;
         return this;
     }

@@ -18,8 +18,8 @@ import com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel;
 import com.zhangbin.yun.yunrights.modules.logging.mapper.LogMapper;
 import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
 import com.zhangbin.yun.yunrights.modules.logging.model.dto.LogErrorDTO;
-import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
-import static com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria.BlurryType.USER_NAME;
+import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria;
+import static com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria.BlurryType.USER_NAME;
 import com.zhangbin.yun.yunrights.modules.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -60,7 +60,7 @@ public class LogServiceImpl implements LogService {
 
 
     @Override
-    public PageInfo<Object> queryAll(LogQueryCriteria criteria) {
+    public PageInfo<Object> queryAll(LogAbstractQueryCriteria criteria) {
         Page<LogDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, logMapper);
         PageInfo<Object> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());
@@ -72,7 +72,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public Object queryAllByUser(LogQueryCriteria criteria) {
+    public Object queryAllByUser(LogAbstractQueryCriteria criteria) {
         criteria.setBlurryType(USER_NAME);
         Page<LogDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, logMapper);
         PageInfo<Object> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
@@ -83,7 +83,7 @@ public class LogServiceImpl implements LogService {
 
 
     @Override
-    public void download(LogQueryCriteria criteria, HttpServletResponse response) throws IOException {
+    public void download(LogAbstractQueryCriteria criteria, HttpServletResponse response) throws IOException {
         criteria.setPageNum(1);
         criteria.setPageSize(500);
         Page<LogDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, logMapper);
