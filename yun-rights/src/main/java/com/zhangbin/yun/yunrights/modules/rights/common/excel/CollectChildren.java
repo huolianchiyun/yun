@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * 收集自己及其自己的子集，并按顺序收集
  * 伪示例效果：[{"a": a, "children":[a, a, a]}, {a: a, "children":[a, a, a]}}] => [a, a, a, a, a, a, a, a, a, a]
  */
-public class CollectChildren<T extends CollectChildren.ChildrenSupport> implements Consumer<T> {
+public class CollectChildren<T extends CollectChildren.ChildrenSupport<T>> implements Consumer<T> {
 
     private List<T> list;
 
@@ -29,5 +29,6 @@ public class CollectChildren<T extends CollectChildren.ChildrenSupport> implemen
     public interface ChildrenSupport<T>{
         List<T> getChildren();
         void setChildren(List<T> t);
+        Long getPid();
     }
 }

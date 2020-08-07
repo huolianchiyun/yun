@@ -2,6 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
+import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
@@ -69,20 +70,14 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDTO> buildDeptTree(Collection<DeptDTO> depts) {
-        Map<Long, DeptDTO> map = depts.stream().collect(Collectors.toMap(DeptDTO::getId, e -> e, (oldValue, newValue) -> newValue));
-        depts.forEach(e -> e.getChildren().add(map.getOrDefault(e.getPid(), null)));
-        return depts.stream().peek(e -> {
-            if (!CollectionUtils.isEmpty(e.getChildren())) {
-                e.getChildren().sort(DeptDTO::compareTo);
-            }
-        }).filter(e -> e.getPid() == null || e.getPid().equals(0L)).collect(Collectors.toList());
+        return TreeBuilder.build().buildTree(depts);
     }
 
     @Override
     public void download(List<DeptDTO> depts, HttpServletResponse response) throws IOException {
-        CollectChildren<DeptDTO> collectChildren = new CollectChildren<>(new ArrayList<>());
-        buildDeptTree(depts).forEach(collectChildren);
-        FileUtil.downloadExcel(collectChildren.getList().stream().map(DeptDTO::toLinkedMap).collect(Collectors.toList()), response);
+        List<DeptDTO> deptsSorted = new ArrayList<>();
+        buildDeptTree(depts).forEach(new CollectChildren<>(deptsSorted));
+        FileUtil.downloadExcel(deptsSorted.stream().map(DeptDTO::toLinkedMap).collect(Collectors.toList()), response);
     }
 
     @Override

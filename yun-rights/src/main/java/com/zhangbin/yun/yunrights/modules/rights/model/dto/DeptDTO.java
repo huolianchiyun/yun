@@ -47,7 +47,7 @@ public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChil
     }
 
     public LinkedHashMap<String, Object> toLinkedMap() {
-        LinkedHashMap map = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("部门名称", deptName);
         map.put("创建日期", createTime);
         return map;

@@ -68,14 +68,6 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<GroupDO> buildGroupTree(Collection<GroupDO> groups) {
         return TreeBuilder.build().buildTree(groups);
-
-//        Map<Long, GroupDO> map = groups.stream().collect(Collectors.toMap(GroupDO::getId, e -> e, (oldValue, newValue) -> newValue));
-//        groups.forEach(e -> e.getChildren().add(map.getOrDefault(e.getPid(), null)));
-//        return groups.stream().peek(e -> {
-//            if (!CollectionUtils.isEmpty(e.getChildren())) {
-//                e.getChildren().sort(GroupDO::compareTo);
-//            }
-//        }).filter(e -> e.getPid() == null || e.getPid().equals(0L)).collect(Collectors.toList());
     }
 
     @Override

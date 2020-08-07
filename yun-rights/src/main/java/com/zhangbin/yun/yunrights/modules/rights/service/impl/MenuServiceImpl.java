@@ -5,6 +5,7 @@ import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTPS
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
+import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.RoleMenuMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
@@ -132,13 +133,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDO> buildMenuTree(Collection<MenuDO> menus) {
-        Map<Long, MenuDO> map = menus.stream().collect(Collectors.toMap(MenuDO::getId, e -> e, (oldValue, newValue) -> newValue));
-        menus.forEach(e -> e.getChildren().add(map.getOrDefault(e.getPid(), null)));
-        return menus.stream().peek(e -> {
-            if (!CollectionUtils.isEmpty(e.getChildren())) {
-                e.getChildren().sort(MenuDO::compareTo);
-            }
-        }).filter(e -> e.getPid() == null || e.getPid().equals(0L)).collect(Collectors.toList());
+        return TreeBuilder.build().buildTree(menus);
     }
 
     /**

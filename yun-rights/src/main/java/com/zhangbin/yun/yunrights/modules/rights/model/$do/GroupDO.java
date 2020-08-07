@@ -70,7 +70,7 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
     }
 
     public LinkedHashMap<String, Object> toLinkedMap() {
-        LinkedHashMap map = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("组名称", groupName);
         map.put("创建日期", createTime);
         return map;
