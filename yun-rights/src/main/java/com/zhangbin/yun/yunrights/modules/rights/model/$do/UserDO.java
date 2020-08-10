@@ -1,14 +1,13 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 表 t_sys_user
@@ -16,7 +15,8 @@ import lombok.Data;
  * @author ASUS
  * @date 2020-07-29 23:10:43
  */
-@Data
+@Getter
+@Setter
 public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
     /**

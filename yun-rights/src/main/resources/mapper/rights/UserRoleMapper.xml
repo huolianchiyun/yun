@@ -30,4 +30,12 @@
       </if>
     </trim>
   </insert>
+
+  <delete id="deleteByUserIds" parameterType="java.util.Set">
+    delete from t_sys_user_role
+    where user_id in
+    <foreach collection="userIds" index="index" item="userId" separator="," open="(" close=")">
+      #{userId,jdbcType=INTEGER}
+    </foreach>
+  </delete>
 </mapper>

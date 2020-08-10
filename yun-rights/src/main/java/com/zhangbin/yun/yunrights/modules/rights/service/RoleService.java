@@ -83,12 +83,12 @@ public interface RoleService {
     void download(List<RoleDO> roleList, HttpServletResponse response) throws IOException;
 
     /**
-     * 检查角色集合是否关联用户
+     * 检查角色集合是否被用户和组关联
      *
      * @param roleIds 将要删除的角色id集合
      * @return 关联返回 true，反之，返回 false
      */
-    Boolean isAssociatedUsers(Set<Long> roleIds);
+    Boolean isAssociatedUserOrGroup(Set<Long> roleIds);
 
 
     /**
@@ -96,7 +96,7 @@ public interface RoleService {
      *
      * @param role
      */
-    void updateAssociatedMenuForRole(RoleDO role);
+    void updateAssociatedMenu(RoleDO role);
 
 
     /**

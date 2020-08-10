@@ -95,9 +95,9 @@ public interface DeptService {
     void download(List<DeptDTO> depts, HttpServletResponse response) throws IOException;
 
     /**
-     * 验证是否被角色或用户关联
+     * 验证是否被用户关联
      *
-     * @param depts 验证的部门集合
+     * @param deptIds 验证的部门集合 ID
      */
-    void verification(Set<DeptDTO> depts);
+    Boolean isAssociatedUser(Set<Long> deptIds);
 }

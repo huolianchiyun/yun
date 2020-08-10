@@ -33,6 +33,14 @@
         ) and g_group_type='${@com.zhangbin.yun.yunrights.modules.common.constant.Constants@GROUP_TYPE}' limit 1
     </select>
 
+    <select id="countAssociatedUser" parameterType="java.util.HashSet">
+        select count(*) FROM t_sys_group g, t_sys_user_group ug
+        where g.g_id = ug.group_id AND ug.group_id in
+        <foreach collection="groupIds" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </select>
+
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria"
             resultMap="BaseResultMap">
@@ -59,12 +67,6 @@
             </if>
         </trim>
     </select>
-
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete
-        from t_sys_group
-        where g_id = #{id,jdbcType=BIGINT}
-    </delete>
 
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
@@ -172,4 +174,19 @@
         </set>
         where g_id = #{id,jdbcType=BIGINT}
     </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from t_sys_group
+        where g_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="java.lang.Long">
+        delete
+        from t_sys_group
+        where g_id in
+        <foreach collection="groupIds" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
 </mapper>

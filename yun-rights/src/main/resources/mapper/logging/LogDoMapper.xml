@@ -29,7 +29,7 @@
         where l_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria"
+    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -68,16 +68,6 @@
             </if>
         </trim>
     </select>
-
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-      delete from t_sys_log
-      where l_id = #{id,jdbcType=BIGINT}
-    </delete>
-
-    <delete id="deleteByLogLevel" parameterType="java.lang.String">
-      delete from t_sys_log
-      where l_log_level = #{logLevel,jdbcType=VARCHAR}
-    </delete>
 
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
@@ -172,4 +162,14 @@
             </if>
         </trim>
     </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_sys_log
+        where l_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByLogLevel" parameterType="java.lang.String">
+        delete from t_sys_log
+        where l_log_level = #{logLevel,jdbcType=VARCHAR}
+    </delete>
 </mapper>

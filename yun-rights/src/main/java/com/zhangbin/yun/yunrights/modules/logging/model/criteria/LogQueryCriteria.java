@@ -13,7 +13,7 @@ import java.util.List;
  * 日志查询类
  */
 @Data
-public final class LogAbstractQueryCriteria extends AbstractQueryPage {
+public final class LogQueryCriteria extends AbstractQueryPage {
 
 
     private String blurry;
@@ -24,22 +24,22 @@ public final class LogAbstractQueryCriteria extends AbstractQueryPage {
 
     private List<LocalDateTime> createTimes;
 
-    public LogAbstractQueryCriteria setLogLevel(LogLevel logLevel) {
+    public LogQueryCriteria setLogLevel(LogLevel logLevel) {
         this.logLevel = logLevel;
         return this;
     }
 
-    public LogAbstractQueryCriteria setBlurry(String blurry) {
+    public LogQueryCriteria setBlurry(String blurry) {
         this.blurry = blurry;
         return this;
     }
 
-    public LogAbstractQueryCriteria setCreateTimes(List<LocalDateTime> createTime) {
+    public LogQueryCriteria setCreateTimes(List<LocalDateTime> createTime) {
         this.createTimes = createTime;
         return this;
     }
 
-    public LogAbstractQueryCriteria setBlurryType(BlurryType blurryType) {
+    public LogQueryCriteria setBlurryType(BlurryType blurryType) {
         this.blurryType = blurryType;
         return this;
     }

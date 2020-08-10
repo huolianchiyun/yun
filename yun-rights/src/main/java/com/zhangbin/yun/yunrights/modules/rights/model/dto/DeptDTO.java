@@ -7,14 +7,17 @@ import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter
 public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChildren.ChildrenSupport<DeptDTO>, ExcelSupport, Serializable {
 
     private Long pid;

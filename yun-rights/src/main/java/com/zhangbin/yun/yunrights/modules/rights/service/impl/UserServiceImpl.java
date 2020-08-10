@@ -8,7 +8,9 @@ import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.UserRoleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
@@ -20,8 +22,8 @@ import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,8 +35,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final UserRoleMapper userRoleMapper;
+    private final UserGroupMapper userGroupMapper;
+    private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final RedisUtils redisUtils;
     private final UserCacheClean userCacheClean;
@@ -100,6 +104,8 @@ public class UserServiceImpl implements UserService {
     public void updateUser(UserDO user) {
         checkCurrentUserRoleLevel(user);
         userMapper.updateByPrimaryKeySelective(user);
+        // 清理缓存
+        clearCaches(user.getId(), user.getUserName());
     }
 
     @Override
@@ -123,9 +129,7 @@ public class UserServiceImpl implements UserService {
     public void updateEmail(String code, UserDO user) throws Exception {
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, user.getPwd());
         UserDO userDb = queryByUserName(SecurityUtils.getCurrentUsername());
-        if (!passwordEncoder.matches(password, userDb.getPwd())) {
-            throw new BadRequestException("密码错误");
-        }
+        Assert.isTrue(!passwordEncoder.matches(password, userDb.getPwd()), "密码错误");
         verificationCodeService.validate(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + user.getEmail(), code);
         userMapper.updateByPrimaryKeySelective(new UserDO(userDb.getUserName(), user.getEmail()));
         redisUtils.del(CacheKey.USER_NAME + userDb.getUserName());
@@ -133,21 +137,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateCenter(UserDO user) {
-        UserDO userDb = Optional.of(userMapper.selectByPrimaryKey(user.getId())).orElseGet(UserDO::new);
-        user.setNickName(user.getNickName());
-        user.setPhone(user.getPhone());
-        user.setGender(user.getGender());
-        userMapper.updateByPrimaryKeySelective(userDb);
-        // 清理缓存
-        delCaches(userDb.getId(), userDb.getUserName());
-    }
-
-    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteByUserIds(Set<Long> userIds) {
         Assert.isTrue(roleService.hasSupperLevelInUsers(roleService.getLevelOfCurrentUserMaxRole(), userIds),
                 "删除用户集合中存在高于或等于你角色的用户，权限不够，删除失败！");
-        userMapper.batchDeleteByIds(userIds);
+        userMapper.deleteByIds(userIds);
+        userRoleMapper.deleteByUserIds(userIds);
+        userGroupMapper.deleteByUserIds(userIds);
+        // 清理缓存
+        Optional.of(userMapper.selectByIds(userIds)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUserName()));
     }
 
     @Override
@@ -177,10 +175,10 @@ public class UserServiceImpl implements UserService {
     /**
      * 清理缓存
      *
-     * @param id
+     * @param userId
      */
-    private void delCaches(Long id, String userName) {
-        redisUtils.del(CacheKey.USER_ID + id);
+    private void clearCaches(Long userId, String userName) {
+        redisUtils.del(CacheKey.USER_ID + userId);
         redisUtils.del(CacheKey.USER_NAME + userName);
         flushCache(userName);
     }

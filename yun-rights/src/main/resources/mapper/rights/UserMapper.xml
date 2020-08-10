@@ -58,11 +58,30 @@
         where u_id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="selectByIds" parameterType="java.util.HashSet" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user
+        where u_id in
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </select>
+
     <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
         where u_user_name = #{userName,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByRoleId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user
+        where u_id in (
+        select user_id from t_sys_user_role where role_id = #{r_id,jdbcType=BIGINT}
+        )
     </select>
 
     <select id="selectByMenuIs" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
@@ -75,6 +94,15 @@
         </foreach>
         and u.u_id = ur.user_id
         and ur.role_id = rm.role_id
+    </select>
+
+    <select id="selectByGroupIds" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user left join t_sys_user_group on u_id = user_id and group_id in
+        <foreach collection="groupIds" item="groupId" separator="," open="(" close=")">
+            #{groupId,jdbcType=INTEGER}
+        </foreach>
     </select>
 
     <select id="selectAllByCriteria"
@@ -112,15 +140,6 @@
         </trim>
     </select>
 
-    <select id="selectByRoleId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from t_sys_user
-        where u_id in (
-        select user_id from t_sys_user_role where role_id = #{r_id,jdbcType=BIGINT}
-        )
-    </select>
-
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
@@ -130,99 +149,11 @@
         u_dept_id, u_is_enabled, u_creator,
         u_updater, u_create_time, u_update_time,
         u_pwd_reset_time)
-        values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR},
+        values (#{id,jdbcType=BIGINT}, #{nickName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
         #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-        #{deptId,jdbcType=BIGINT}, #{isEnabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
+        #{deptId,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
         #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
         #{pwdResetTime,jdbcType=TIMESTAMP})
-    </insert>
-
-    <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-        insert into t_sys_user
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            u_id,
-            <if test="userName != null">
-                u_nick_name,
-            </if>
-            <if test="loginName != null">
-                u_user_name,
-            </if>
-            <if test="gender != null">
-                u_gender,
-            </if>
-            <if test="pwd != null">
-                u_pwd,
-            </if>
-            <if test="phone != null">
-                u_phone,
-            </if>
-            <if test="email != null">
-                u_email,
-            </if>
-            <if test="deptId != null">
-                u_dept_id,
-            </if>
-            <if test="isEnabled != null">
-                u_is_enabled,
-            </if>
-            <if test="creator != null">
-                u_creator,
-            </if>
-            <if test="updater != null">
-                u_updater,
-            </if>
-            <if test="createTime != null">
-                u_create_time,
-            </if>
-            <if test="updateTime != null">
-                u_update_time,
-            </if>
-            <if test="pwdResetTime != null">
-                u_pwd_reset_time,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            #{id,jdbcType=BIGINT},
-            <if test="nickName != null">
-                #{nickName,jdbcType=VARCHAR},
-            </if>
-            <if test="userName != null">
-                #{userName,jdbcType=VARCHAR},
-            </if>
-            <if test="gender != null">
-                #{gender,jdbcType=TINYINT},
-            </if>
-            <if test="pwd != null">
-                #{pwd,jdbcType=VARCHAR},
-            </if>
-            <if test="phone != null">
-                #{phone,jdbcType=VARCHAR},
-            </if>
-            <if test="deptId != null">
-                #{deptId,jdbcType=BIGINT},
-            </if>
-            <if test="isEnabled != null">
-                #{isEnabled,jdbcType=BIT},
-            </if>
-            <if test="creator != null">
-                #{creator,jdbcType=VARCHAR},
-            </if>
-            <if test="updater != null">
-                #{updater,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="pwdResetTime != null">
-                #{pwdResetTime,jdbcType=TIMESTAMP},
-            </if>
-        </trim>
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
@@ -250,7 +181,7 @@
                 u_dept_id = #{deptId,jdbcType=BIGINT},
             </if>
             <if test="isEnabled != null">
-                u_is_enabled = #{isEnabled,jdbcType=BIT},
+                u_is_enabled = #{enabled,jdbcType=BIT},
             </if>
             <if test="creator != null">
                 u_creator = #{creator,jdbcType=VARCHAR},
@@ -277,7 +208,7 @@
         where u_id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <delete id="batchDeleteByIds" parameterType="java.util.Set">
+    <delete id="deleteByIds" parameterType="java.util.Set">
         delete from t_sys_user
         where u_id in
         <foreach collection="userIds" index="index" item="id" separator="," open="(" close=")">

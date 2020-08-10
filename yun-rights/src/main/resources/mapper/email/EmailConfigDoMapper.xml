@@ -26,88 +26,15 @@
     where ec_id = #{id,jdbcType=BIGINT}
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_sys_email_config
-    where ec_id = #{id,jdbcType=BIGINT}
-  </delete>
-
   <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.email.model.$do.EmailConfigDO">
     insert into t_sys_email_config (ec_id, ec_host, ec_port,
-      ec_password, ec_sender, ec_recipients,
+      ec_password, ec_user, ec_sender,
       ec_creator, ec_updater, ec_create_time,
       ec_update_time)
     values (#{id,jdbcType=BIGINT}, #{host,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR},
       #{password,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{recipients,jdbcType=VARCHAR},
       #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP})
-  </insert>
-
-  <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.email.model.$do.EmailConfigDO">
-    insert into t_sys_email_config
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        ec_id,
-      </if>
-      <if test="host != null">
-        ec_host,
-      </if>
-      <if test="port != null">
-        ec_port,
-      </if>
-      <if test="password != null">
-        ec_password,
-      </if>
-      <if test="sender != null">
-        ec_sender,
-      </if>
-      <if test="recipients != null">
-        ec_recipients,
-      </if>
-      <if test="creator != null">
-        ec_creator,
-      </if>
-      <if test="updater != null">
-        ec_updater,
-      </if>
-      <if test="createTime != null">
-        ec_create_time,
-      </if>
-      <if test="updateTime != null">
-        ec_update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="host != null">
-        #{host,jdbcType=VARCHAR},
-      </if>
-      <if test="port != null">
-        #{port,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="sender != null">
-        #{sender,jdbcType=VARCHAR},
-      </if>
-      <if test="recipients != null">
-        #{recipients,jdbcType=VARCHAR},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="updater != null">
-        #{updater,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
   </insert>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.email.model.$do.EmailConfigDO">
@@ -143,4 +70,9 @@
     </set>
     where ec_id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_email_config
+    where ec_id = #{id,jdbcType=BIGINT}
+  </delete>
 </mapper>

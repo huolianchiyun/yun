@@ -21,10 +21,12 @@ public class MybatisPlugin extends PluginAdapter {
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         //添加domain的import
-        topLevelClass.addImportedType("lombok.Data");
-
+        topLevelClass.addImportedType("lombok.Getter");
+        topLevelClass.addImportedType("lombok.Setter");
         //添加domain的注解
-        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@Getter");
+        topLevelClass.addAnnotation("@Setter");
+
         topLevelClass.addJavaDocLine("/**");
         String remarks = introspectedTable.getRemarks();
         if (StringUtility.stringHasValue(remarks)) {

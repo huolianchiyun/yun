@@ -4,9 +4,6 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * @website https://el-admin.vip
- **/
 @Data
 @Component
 public class RsaProperties {

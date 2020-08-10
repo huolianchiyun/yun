@@ -64,12 +64,13 @@
         )
     </select>
 
-    <select id="countAssociatedUsers" parameterType="java.util.HashSet">
-        select count(*) FROM t_sys_user u, t_sys_user_role r
-        where u.u_id = r.user_id AND r.role_id in
+    <select id="countAssociatedUserAndRole" parameterType="java.util.HashSet">
+        select count(*) FROM t_sys_role r, t_sys_user_role ur, t_sys_group_role gr
+        where r.r_id in
         <foreach collection="roleIds" index="index" item="id" separator="," open="(" close=")">
             #{id,jdbcType=INTEGER}
         </foreach>
+        and (r.r_id = ur.role_id or r.r_id = gr.role_id)
     </select>
 
     <select id="countSuperLevelInUserIds" parameterType="java.util.HashSet">
@@ -222,7 +223,7 @@
         where r_id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <delete id="batchDeleteByIds" parameterType="java.util.Set">
+    <delete id="deleteByIds" parameterType="java.util.Set">
         delete from t_sys_role
         where r_id in
         <foreach collection="roleIds" index="index" item="roleId" separator="," open="(" close=")">

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service(value = "el")
-public class ElPermissionConfig {
+public class ELPermissionConfig {
 
     public Boolean check(String... permissions) {
         // 获取当前用户的所有权限

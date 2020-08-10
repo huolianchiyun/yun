@@ -2,10 +2,13 @@ package com.zhangbin.yun.yunrights.modules.logging.model.$do;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import lombok.*;
 
 /**
  * 系统日志
@@ -14,9 +17,14 @@ import lombok.NoArgsConstructor;
  * @author ASUS
  * @date 2020-07-31 10:50:00
  */
-@Data
+
+@Getter
+@Setter
 @NoArgsConstructor
-public class LogDO extends BaseDo implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class LogDO extends BaseDo implements ExcelSupport, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public LogDO(String logLevel, Long requestTimeConsuming) {
         this.logLevel = logLevel;
@@ -83,5 +91,17 @@ public class LogDO extends BaseDo implements Serializable {
      */
     private LocalDateTime createTime;
 
-    private static final long serialVersionUID = 1L;
+    @Override
+    public LinkedHashMap<String, Object> toLinkedMap() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("用户名", userName);
+        map.put("IP", clientIp);
+        map.put("IP来源", address);
+        map.put("描述", operationDesc);
+        map.put("浏览器", browser);
+        map.put("请求耗时/毫秒", requestTimeConsuming);
+        map.put("异常详情", new String(ObjectUtil.isNotNull(exceptionDetail) ? exceptionDetail : Constants.EMPTY_STR.getBytes()));
+        map.put("创建日期", createTime);
+        return map;
+    }
 }

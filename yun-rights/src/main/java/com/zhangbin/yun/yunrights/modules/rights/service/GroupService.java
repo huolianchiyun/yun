@@ -64,7 +64,7 @@ public interface GroupService {
      *
      * @param group 部门
      */
-    void updateDept(GroupDO group);
+    void updateGroup(GroupDO group);
 
     /**
      * 批量删除
@@ -91,9 +91,9 @@ public interface GroupService {
     void download(List<GroupDO> depts, HttpServletResponse response) throws IOException;
 
     /**
-     * 验证是否被角色或用户关联
+     * 验证是否被用户关联
      *
-     * @param groups 验证的部门集合
+     * @param groupIds 验证的组集合ID
      */
-    void verification(Set<GroupDO> groups);
+    Boolean isAssociatedUser(Set<Long> groupIds);
 }

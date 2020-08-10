@@ -29,9 +29,9 @@ public interface RoleMapper extends PageMapper<RoleDO> {
 
     int deleteByPrimaryKey(Long id);
 
-    int batchDeleteByIds(@Param("roleIds") Set<Long> roleIds);
+    int deleteByIds(@Param("roleIds") Set<Long> roleIds);
 
-    int countAssociatedUsers(@Param("roleIds") Set<Long> roleIds);
+    int countAssociatedUserAndRole(@Param("roleIds") Set<Long> roleIds);
 
     /**
      * 查询用户集合中有多少个用户角色级别 >= 当前用户最大角色级别

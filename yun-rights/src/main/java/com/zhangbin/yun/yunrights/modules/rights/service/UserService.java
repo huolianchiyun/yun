@@ -82,13 +82,6 @@ public interface UserService {
     void updateEmail(String code, UserDO user) throws Exception;
 
     /**
-     * 用户自助修改资料
-     *
-     * @param user /
-     */
-    void updateCenter(UserDO user);
-
-    /**
      * 导出数据
      *
      * @param userDOList 待导出的数据

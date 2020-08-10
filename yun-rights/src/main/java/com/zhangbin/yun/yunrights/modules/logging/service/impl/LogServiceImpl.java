@@ -17,15 +17,12 @@ import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel;
 import com.zhangbin.yun.yunrights.modules.logging.mapper.LogMapper;
 import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
-import com.zhangbin.yun.yunrights.modules.logging.model.dto.LogErrorDTO;
-import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria;
-import static com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria.BlurryType.USER_NAME;
+import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.ServletOutputStream;
@@ -36,54 +33,38 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LogServiceImpl implements LogService {
-    private static final Logger log = LoggerFactory.getLogger(LogServiceImpl.class);
 
     private final LogMapper logMapper;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
-        fillSomeValues2LogDo(username, browser, ip, joinPoint, log);
-        logMapper.insert(log);
+    public PageInfo<List<LogDO>> queryAllByCriteria(LogQueryCriteria criteria) {
+        Page<LogDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, logMapper);
+        PageInfo<List<LogDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
+        pageInfo.setTotal(page.getTotal());
+        List<LogDO> result = page.getResult();
+        pageInfo.setData(result);
+        return pageInfo;
     }
 
-
     @Override
-    public Object findByErrDetail(Long id) {
+    public Object queryExceptionalDetailById(Long id) {
         LogDO log = Optional.of(logMapper.selectByPrimaryKey(id)).orElseGet(LogDO::new);
         ValidationUtil.isNull(log.getId(), "Log", "id", id);
         byte[] details = log.getExceptionDetail();
         return Dict.create().set("exception", new String(ObjectUtil.isNotNull(details) ? details : Constants.EMPTY_STR.getBytes()));
     }
 
-
     @Override
-    public PageInfo<Object> queryAll(LogAbstractQueryCriteria criteria) {
-        Page<LogDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, logMapper);
-        PageInfo<Object> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
-        pageInfo.setTotal(page.getTotal());
-        pageInfo.setData(page.getResult());
-        if (LogLevel.ERROR.equals(criteria.getLogLevel())) {
-            pageInfo.setData(page.getResult().stream().map(LogErrorDTO::new).collect(Collectors.toList()));
-        }
-        return pageInfo;
+    public void saveLog(String username, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
+        fillSomeValues2LogDo(username, browser, ip, joinPoint, log);
+        logMapper.insert(log);
     }
 
     @Override
-    public Object queryAllByUser(LogAbstractQueryCriteria criteria) {
-        criteria.setBlurryType(USER_NAME);
-        Page<LogDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, logMapper);
-        PageInfo<Object> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
-        pageInfo.setTotal(page.getTotal());
-        pageInfo.setData(page.getResult());
-        return pageInfo;
-    }
-
-
-    @Override
-    public void download(LogAbstractQueryCriteria criteria, HttpServletResponse response) throws IOException {
+    public void download(LogQueryCriteria criteria, HttpServletResponse response) throws IOException {
         criteria.setPageNum(1);
         criteria.setPageSize(500);
         Page<LogDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, logMapper);
@@ -111,13 +92,13 @@ public class LogServiceImpl implements LogService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delAllByError() {
+    public void deleteAllLogsByErrorLevel() {
         logMapper.deleteByLogLevel(LogLevel.ERROR.getLevel());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delAllByInfo() {
+    public void delAllLogsByInfoLevel() {
         logMapper.deleteByLogLevel(LogLevel.INFO.getLevel());
     }
 
@@ -155,20 +136,8 @@ public class LogServiceImpl implements LogService {
         log.setBrowser(browser);
     }
 
-
     private List<Map<String, Object>> convertLogDOList2MapList(List<LogDO> logs) {
-        return logs.stream().map(e -> {
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("用户名", e.getUserName());
-            map.put("IP", e.getClientIp());
-            map.put("IP来源", e.getAddress());
-            map.put("描述", e.getOperationDesc());
-            map.put("浏览器", e.getBrowser());
-            map.put("请求耗时/毫秒", e.getRequestTimeConsuming());
-            map.put("异常详情", new String(ObjectUtil.isNotNull(e.getExceptionDetail()) ? e.getExceptionDetail() : Constants.EMPTY_STR.getBytes()));
-            map.put("创建日期", e.getCreateTime());
-            return map;
-        }).collect(Collectors.toList());
+        return Optional.of(logs).orElseGet(ArrayList::new).stream().map(LogDO::toLinkedMap).collect(Collectors.toList());
     }
 
 }

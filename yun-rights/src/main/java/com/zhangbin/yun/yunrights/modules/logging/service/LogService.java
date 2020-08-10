@@ -2,30 +2,31 @@ package com.zhangbin.yun.yunrights.modules.logging.service;
 
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
-import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.scheduling.annotation.Async;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public interface LogService {
 
     /**
-     * 分页查询
+     * 分页查询满足条件的操作日志
      *
      * @param criteria 查询条件
      * @return /
      */
-    PageInfo<Object> queryAll(LogAbstractQueryCriteria criteria);
-
+    PageInfo<List<LogDO>> queryAllByCriteria(LogQueryCriteria criteria);
 
     /**
-     * 查询分页用户日志
+     * 查询异常详情
      *
-     * @param criteria 查询条件
-     * @return -
+     * @param id 日志ID
+     * @return /
      */
-    Object queryAllByUser(LogAbstractQueryCriteria criteria);
+    Object queryExceptionalDetailById(Long id);
 
     /**
      * 保存日志数据
@@ -37,33 +38,24 @@ public interface LogService {
      * @param log       日志实体
      */
     @Async
-    void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log);
-
-    /**
-     * 查询异常详情
-     *
-     * @param id 日志ID
-     * @return Object
-     */
-    Object findByErrDetail(Long id);
-
+    void saveLog(String username, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log);
 
     /**
      * 导出日志
      *
-     * @param criteria   查询条件
+     * @param criteria 查询条件
      * @param response /
      * @throws IOException /
      */
-    void download(LogAbstractQueryCriteria criteria, HttpServletResponse response) throws IOException;
+    void download(LogQueryCriteria criteria, HttpServletResponse response) throws IOException;
 
     /**
      * 删除所有错误日志
      */
-    void delAllByError();
+    void deleteAllLogsByErrorLevel();
 
     /**
      * 删除所有INFO日志
      */
-    void delAllByInfo();
+    void delAllLogsByInfoLevel();
 }

@@ -15,18 +15,20 @@ public interface UserMapper extends PageMapper<UserDO> {
 
     UserDO selectByUserName(String userName);
 
-    Set<UserDO> selectByMenuIs(Set<Long> menuIds);
+    Set<UserDO> selectByIds(@Param("ids") Set<Long> ids);
+
+    Set<UserDO> selectByMenuIs(@Param("menuIds") Set<Long> menuIds);
 
     Set<UserDO> selectByRoleId(Long roleId);
 
+    Set<UserDO> selectByGroupIds(@Param("groupIds") Set<Long> groupIds);
+
     int insert(UserDO record);
 
-    int insertSelective(UserDO record);
+    int updateByPrimaryKeySelective(UserDO record);
 
     int deleteByPrimaryKey(Long id);
 
-    int batchDeleteByIds(@Param("userIds") Set<Long> userIds);
-
-    int updateByPrimaryKeySelective(UserDO record);
+    int deleteByIds(@Param("userIds") Set<Long> userIds);
 
 }

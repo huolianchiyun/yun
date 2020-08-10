@@ -11,7 +11,6 @@ import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -60,7 +59,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public void updateDept(DeptDTO dept) {
-        groupService.updateDept(dept.toGroup());
+        groupService.updateGroup(dept.toGroup());
     }
 
     @Override
@@ -70,7 +69,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDTO> buildDeptTree(Collection<DeptDTO> depts) {
-        return TreeBuilder.build().buildTree(depts);
+        return new TreeBuilder<DeptDTO>().buildTree(depts);
     }
 
     @Override
@@ -81,7 +80,8 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public void verification(Set<DeptDTO> depts) {
-
+    public Boolean isAssociatedUser(Set<Long> deptIds) {
+        return groupService.isAssociatedUser(deptIds);
     }
+
 }

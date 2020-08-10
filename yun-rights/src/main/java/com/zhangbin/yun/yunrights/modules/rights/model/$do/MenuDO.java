@@ -4,15 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
-
 import java.beans.Transient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
-
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 表 t_sys_menu
@@ -20,7 +19,8 @@ import lombok.Data;
  * @author ASUS
  * @date 2020-07-29 23:10:43
  */
-@Data
+@Getter
+@Setter
 public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildren.ChildrenSupport<MenuDO>, ExcelSupport,Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -82,6 +82,13 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     @Transient
     public Long getOldPid() {
         return oldPid;
+    }
+
+    public Long getPid() {
+        if(null == pid){
+            pid = 0L;
+        }
+        return pid;
     }
 
     @Override

@@ -81,27 +81,45 @@ public class RoleServiceImpl implements RoleService {
         checkRoleLevel(role.getLevel());
         Assert.notNull(roleMapper.selectByRoleName(role.getRoleName()), "角色名已存在，请重新命名！");
         roleMapper.insert(role);
-        updateAssociatedMenuForRole(role);
+        updateAssociatedMenu(role);
     }
 
     @Override
     public void updateRole(RoleDO role) {
         checkRoleLevel(role.getLevel());
         roleMapper.updateByPrimaryKeySelective(role);
-        updateAssociatedMenuForRole(role);
+        updateAssociatedMenu(role);
         // 更新相关缓存
-        delCaches(role.getId(), null);
+        clearCaches(role.getId(), null);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void batchDeleteRoles(Set<Long> roleIds) {
         for (Long id : roleIds) {
             RoleDO role = queryById(id);
             checkRoleLevel(role.getLevel());
         }
-        // 验证是否被用户关联
-        Assert.isTrue(isAssociatedUsers(roleIds), "将要删除的角色存在用户关联，请解除关联关系后，再尝试！");
-        roleMapper.batchDeleteByIds(roleIds);
+        // 验证是否被用户或组关联
+        Assert.isTrue(isAssociatedUserOrGroup(roleIds), "将要删除的角色存在用户或组关联，请解除关联关系后，再尝试！");
+        roleMapper.deleteByIds(roleIds);
+        roleMenuMapper.deleteByRoleIds(roleIds);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void updateAssociatedMenu(RoleDO role) {
+        RoleDO roleDb = queryById(role.getId());
+        checkRoleLevel(roleDb.getLevel());
+        Set<RoleMenuDO> roleMenus = Optional.of(role.getMenus()).orElseGet(HashSet::new)
+                .stream().map(e -> new RoleMenuDO(role.getId(), e.getId())).collect(Collectors.toSet());
+        if (!CollectionUtils.isEmpty(roleMenus)) {
+            roleMenuMapper.deleteByRoleIds(CollectionUtil.newHashSet(role.getId()));
+            roleMenuMapper.batchInsert(roleMenus);
+        }
+        List<UserDO> users = Optional.of(userMapper.selectByRoleId(roleDb.getId()))
+                .orElseGet(HashSet::new).stream().collect(Collectors.toList());
+        clearCaches(role.getId(), users);
     }
 
     @Override
@@ -110,25 +128,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean isAssociatedUsers(Set<Long> roleIds) {
-        return roleMapper.countAssociatedUsers(roleIds) > 0;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void updateAssociatedMenuForRole(RoleDO role) {
-        RoleDO roleDb = queryById(role.getId());
-        checkRoleLevel(roleDb.getLevel());
-//        roleMapper.updateByPrimaryKeySelective(roleDb);
-        Set<RoleMenuDO> roleMenus = Optional.of(role.getMenus()).orElseGet(HashSet::new)
-                .stream().map(e -> new RoleMenuDO(role.getId(), e.getId())).collect(Collectors.toSet());
-        if (!CollectionUtils.isEmpty(roleMenus)) {
-            roleMenuMapper.deleteByRoleId(role.getId());
-            roleMenuMapper.batchInsert(roleMenus);
-        }
-        List<UserDO> users = Optional.of(userMapper.selectByRoleId(roleDb.getId()))
-                .orElseGet(HashSet::new).stream().collect(Collectors.toList());
-        delCaches(role.getId(), users);
+    public Boolean isAssociatedUserOrGroup(Set<Long> roleIds) {
+        return roleMapper.countAssociatedUserAndRole(roleIds) > 0;
     }
 
     @Override
@@ -167,7 +168,7 @@ public class RoleServiceImpl implements RoleService {
      * @param roleId
      * @param users
      */
-    private void delCaches(Long roleId, List<UserDO> users) {
+    private void clearCaches(Long roleId, List<UserDO> users) {
         users = CollectionUtil.isEmpty(users) ? CollectionUtil.list(false, userMapper.selectByRoleId(roleId)) : users;
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheClean.cleanUserCache(item.getUserName()));

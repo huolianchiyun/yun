@@ -12,7 +12,7 @@ public interface GroupMapper extends PageMapper<GroupDO> {
 
     GroupDO selectByPrimaryKey(Long id);
 
-    GroupDO selectDeptByUserId(Long userId);
+    GroupDO selectByUserId(Long userId);
 
     Set<GroupDO> selectByPid(Long Pid);
 
@@ -24,5 +24,7 @@ public interface GroupMapper extends PageMapper<GroupDO> {
 
     int deleteByPrimaryKey(Long id);
 
-    int batchDeleteByIds(@Param("groupIds") Set<Long> groupIds);
+    int deleteByIds(@Param("groupIds") Set<Long> groupIds);
+
+    int countAssociatedUser(@Param("groupIds") Set<Long> groupIds);
 }

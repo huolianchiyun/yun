@@ -1,19 +1,19 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
-
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 
 /**
@@ -23,8 +23,8 @@ import lombok.EqualsAndHashCode;
  * @date 2020-07-29 23:10:43
  */
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChildren.ChildrenSupport<GroupDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
     /**
@@ -49,8 +49,25 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
 
     private Integer groupSort;
 
+    /**
+     * 非表字段
+     */
+    @JsonIgnore
+    private Long oldPid;
+    @Transient
+    public Long getOldPid() {
+        return oldPid;
+    }
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<GroupDO> children;
+
+    public Long getPid() {
+        if (null == pid) {
+            pid = 0L;
+        }
+        return pid;
+    }
 
     public DeptDTO toDept() {
         DeptDTO deptDTO = new DeptDTO();

@@ -9,11 +9,7 @@ public interface EmailConfigMapper {
 
     int insert(EmailConfigDO record);
 
-    int insertSelective(EmailConfigDO record);
-
     int updateByPrimaryKeySelective(EmailConfigDO record);
-
-    int updateByPrimaryKey(EmailConfigDO record);
 
     int deleteByPrimaryKey(Long id);
 }

@@ -53,7 +53,7 @@ public final class LogAspect {
         LogDO log = new LogDO(INFO.getLevel(), System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.save(getUsername(), IPUtil.getBrowser(request), IPUtil.getIp(request), joinPoint, log);
+        logService.saveLog(getUsername(), IPUtil.getBrowser(request), IPUtil.getIp(request), joinPoint, log);
         return result;
     }
 
@@ -69,7 +69,7 @@ public final class LogAspect {
         currentTime.remove();
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.save(getUsername(), IPUtil.getBrowser(request), IPUtil.getIp(request), (ProceedingJoinPoint) joinPoint, log);
+        logService.saveLog(getUsername(), IPUtil.getBrowser(request), IPUtil.getIp(request), (ProceedingJoinPoint) joinPoint, log);
     }
 
     private String getUsername() {

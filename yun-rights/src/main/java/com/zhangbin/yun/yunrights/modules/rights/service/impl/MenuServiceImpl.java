@@ -87,8 +87,6 @@ public class MenuServiceImpl implements MenuService {
     public void createMenu(MenuDO menu) {
         menu.setId(null);  // 若创建菜单时入参menu.id不为null，默认将其设置为null
         validateExternalLink(menu);
-        menu.setCreator(SecurityUtils.getCurrentUsername());
-        menu.setCreateTime(LocalDateTime.now());
         menuMapper.insert(menu);
         redisUtils.del("menu::pid:" + (menu.getPid() == null ? 0 : menu.getPid()));
     }
@@ -100,12 +98,7 @@ public class MenuServiceImpl implements MenuService {
         MenuDO menuDb = menuMapper.selectByPrimaryKey(updatingMenu.getId());
         Assert.isNull(menuDb, "修改的菜单不存在！");
         validateExternalLink(updatingMenu);
-        if (Objects.isNull(updatingMenu.getPid())) {
-            updatingMenu.setPid(0L);
-        }
         updatingMenu.setOldPid(menuDb.getPid());
-        updatingMenu.setUpdater(SecurityUtils.getCurrentUsername());
-        updatingMenu.setUpdateTime(LocalDateTime.now());
         menuMapper.updateByPrimaryKeySelective(updatingMenu);
         // 清理缓存
         clearCaches(CollectionUtil.newHashSet(updatingMenu));
@@ -115,13 +108,13 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteByMenuIds(Set<Long> menuIds) {
         // 获取要删除菜单及子孙菜单
-        Set<MenuDO> posterityMenusWithSelf = getPosterityMenusWithSelf(menuIds);
-        Set<Long> deletingMenuIds = posterityMenusWithSelf.stream().map(MenuDO::getId).collect(Collectors.toSet());
+        Set<MenuDO> posterityMenuWithSelf = new HashSet<>(getPosterityMenusWithSelf(menuIds));
+        Set<Long> deletingMenuIds = posterityMenuWithSelf.stream().map(MenuDO::getId).collect(Collectors.toSet());
         menuMapper.batchDeleteByIds(deletingMenuIds);
         // 将要删除的菜单与角色解绑
         roleMenuMapper.deleteByMenuIds(deletingMenuIds);
         // 清理缓存
-        clearCaches(posterityMenusWithSelf);
+        clearCaches(posterityMenuWithSelf);
     }
 
     @Override
@@ -133,7 +126,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDO> buildMenuTree(Collection<MenuDO> menus) {
-        return TreeBuilder.build().buildTree(menus);
+        return new TreeBuilder<MenuDO>().buildTree(menus);
     }
 
     /**
@@ -141,12 +134,12 @@ public class MenuServiceImpl implements MenuService {
      *
      * @param menuIds 菜单集合
      */
-    private Set<MenuDO> getPosterityMenusWithSelf(Set<Long> menuIds) {
+    private List<MenuDO> getPosterityMenusWithSelf(Set<Long> menuIds) {
         Set<MenuDO> allMenus = menuMapper.selectAllByCriteria(null);
-        Map<Long, MenuDO> map = allMenus.stream().collect(Collectors.toMap(MenuDO::getId, e -> e, (oldValue, newValue) -> newValue));
-        return allMenus.stream().peek(e -> e.getChildren().add(map.getOrDefault(e.getPid(), null)))
-                .filter(e -> menuIds.contains(e.getId()))
-                .collect(Collectors.toSet());
+        List<MenuDO> tree = new TreeBuilder<MenuDO>().buildTree(allMenus, menuIds);
+        List<MenuDO> menusSorted = new ArrayList<>();
+        tree.forEach(new CollectChildren<>(menusSorted));
+        return menusSorted;
     }
 
     private void validateExternalLink(MenuDO menu) {

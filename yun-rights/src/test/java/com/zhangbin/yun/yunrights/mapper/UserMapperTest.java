@@ -40,4 +40,16 @@ public class UserMapperTest {
         System.out.println(userDOS);
     }
 
+    @Test
+    public void testInsert(){
+        UserDO user = new UserDO();
+        user.setUserName("lisi");
+        user.setNickName("李四");
+        user.setPhone("12345678991");
+        user.setPwd("12345678991");
+        userMapper.insert(user);
+        System.out.println("user:" + user.toString());
+
+    }
+
 }

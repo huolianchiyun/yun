@@ -14,5 +14,5 @@ public interface RoleMenuMapper {
 
     int deleteByMenuIds(@Param("menuIds") Set<Long> menuIds);
 
-    int deleteByRoleId(Long roleId);
+    int deleteByRoleIds(@Param("roleIds")Set<Long> roleIds);
 }

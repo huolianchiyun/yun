@@ -64,7 +64,7 @@ public class UserController {
     @ApiOperation("修改用户：个人中心")
     @PutMapping(value = "center")
     public ResponseEntity<ResponseData> updateCenter(@RequestBody UserDO user) {
-        userService.updateCenter(user);
+        userService.updateUser(user);
         return success();
     }
 

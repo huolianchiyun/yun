@@ -1,17 +1,26 @@
 package com.zhangbin.yun.yunrights.modules.common.model.$do;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 
+import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedBy;
+import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedDate;
+import com.zhangbin.yun.yunrights.modules.common.audit.annotation.LastModifiedBy;
+import com.zhangbin.yun.yunrights.modules.common.audit.annotation.LastModifiedDate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * 子类不要加 lombok.Data注解，其会导致子类重写 toString()，从而导致父类 toString失效
+ */
 public abstract class BaseDo {
     protected Long id;
-    protected String creator;
-    protected String updater;
+    @CreatedBy
+    protected String creator; // 用户登录账号，全局唯一
+    @LastModifiedBy
+    protected String updater; // 用户登录账号，全局唯一
+    @CreatedDate
     protected LocalDateTime createTime;
+    @LastModifiedDate
     protected LocalDateTime updateTime;
 
     public Long getId() {

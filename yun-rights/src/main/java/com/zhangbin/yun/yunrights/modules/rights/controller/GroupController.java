@@ -1,6 +1,5 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.common.utils.PageUtil;
@@ -11,7 +10,6 @@ import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -67,7 +65,7 @@ public class GroupController {
     @PutMapping
     @PreAuthorize("@el.check('group:edit')")
     public ResponseEntity<ResponseData> updateGroup(@RequestBody GroupDO group) {
-        groupService.updateDept(group);
+        groupService.updateGroup(group);
         return success();
     }
 

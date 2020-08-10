@@ -6,7 +6,7 @@ import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import static com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel.*;
-import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogAbstractQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.logging.service.LogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class LogController {
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
-    public void download(HttpServletResponse response, LogAbstractQueryCriteria criteria) throws IOException {
+    public void download(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
         logService.download(criteria.setLogLevel(INFO), response);
     }
 
@@ -37,35 +37,35 @@ public class LogController {
     @ApiOperation("导出错误数据")
     @GetMapping(value = "/download/error")
     @PreAuthorize("@el.check()")
-    public void downloadErrorLog(HttpServletResponse response, LogAbstractQueryCriteria criteria) throws IOException {
+    public void downloadErrorLog(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
         logService.download(criteria.setLogLevel(ERROR), response);
     }
 
     @GetMapping
     @ApiOperation("日志查询")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<ResponseData> query(LogAbstractQueryCriteria criteria) {
-        return success(logService.queryAll(criteria.setLogLevel(INFO)));
+    public ResponseEntity<ResponseData> query(LogQueryCriteria criteria) {
+        return success(logService.queryAllByCriteria(criteria.setLogLevel(INFO)));
     }
 
     @GetMapping(value = "/user")
     @ApiOperation("用户日志查询")
-    public ResponseEntity<ResponseData> queryUserLog(LogAbstractQueryCriteria criteria) {
-        return success(logService.queryAllByUser(criteria.setBlurry(SecurityUtils.getCurrentUsername()).setLogLevel(INFO)));
+    public ResponseEntity<ResponseData> queryUserLog(LogQueryCriteria criteria) {
+        return success(logService.queryAllByCriteria(criteria.setBlurry(SecurityUtils.getCurrentUsername()).setLogLevel(INFO)));
     }
 
     @GetMapping(value = "/error")
     @ApiOperation("错误日志查询")
     @PreAuthorize("@el.check()")
-    public ResponseEntity<ResponseData> queryErrorLog(LogAbstractQueryCriteria criteria) {
-        return success(logService.queryAll(criteria.setLogLevel(ERROR)));
+    public ResponseEntity<ResponseData> queryErrorLog(LogQueryCriteria criteria) {
+        return success(logService.queryAllByCriteria(criteria.setLogLevel(ERROR)));
     }
 
     @GetMapping(value = "/error/{id}")
     @ApiOperation("日志异常详情查询")
     @PreAuthorize("@el.check()")
     public ResponseEntity<ResponseData> queryErrorLogs(@PathVariable Long id) {
-        return success(logService.findByErrDetail(id));
+        return success(logService.queryExceptionalDetailById(id));
     }
 
     @DeleteMapping(value = "/del/error")
@@ -73,7 +73,7 @@ public class LogController {
     @ApiOperation("删除所有ERROR日志")
     @PreAuthorize("@el.check()")
     public ResponseEntity<ResponseData> delAllErrorLog() {
-        logService.delAllByError();
+        logService.deleteAllLogsByErrorLevel();
         return success();
     }
 
@@ -82,7 +82,7 @@ public class LogController {
     @ApiOperation("删除所有INFO日志")
     @PreAuthorize("@el.check()")
     public ResponseEntity<ResponseData> delAllInfoLog() {
-        logService.delAllByInfo();
+        logService.delAllLogsByInfoLevel();
         return success();
     }
 }
