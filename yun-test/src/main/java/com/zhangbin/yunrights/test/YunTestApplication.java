@@ -11,5 +11,4 @@ public class YunTestApplication {
     public static void main(String[] args) {
         SpringApplication.run(YunTestApplication.class, args);
     }
-
 }

@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import(YunRightsAutoConfig.class)
+@Import(YunRightsImportSelector.class)
 public @interface EnableYunRights {
     boolean autoRegister() default true;
 }

@@ -2,11 +2,9 @@ package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
 import com.zhangbin.yun.yunrights.modules.common.page.PageMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.awt.*;
 import java.util.Set;
 
 @Mapper

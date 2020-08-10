@@ -46,8 +46,9 @@ spring:
 
 
 #mybatis
-mybatis:
+#mybatis:
   config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/**/*.xml
 
 # 登录相关配置
 login:
@@ -116,3 +117,4 @@ file:
   # 文件大小 /M
   maxSize: 100
   avatarMaxSize: 5
+

@@ -12,7 +12,10 @@ spring:
     redis:
       repositories:
         enabled: false
-
+  security:
+    user:
+      name: 11
+      password: 11
 
   redis:
     #数据库索引

@@ -17,6 +17,7 @@
     <modules>
         <module>yun-rights</module>
         <module>yun-test</module>
+        <module>yun-common</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

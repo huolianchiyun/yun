@@ -3,11 +3,13 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+
 import java.beans.Transient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import lombok.Getter;

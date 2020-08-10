@@ -4,7 +4,6 @@ import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedBy;
 import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedDate;
 import com.zhangbin.yun.yunrights.modules.common.audit.annotation.LastModifiedBy;
 import com.zhangbin.yun.yunrights.modules.common.audit.annotation.LastModifiedDate;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.ArrayUtils;
