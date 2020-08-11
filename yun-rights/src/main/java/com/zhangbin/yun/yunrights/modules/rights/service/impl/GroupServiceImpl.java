@@ -12,6 +12,7 @@ import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -28,7 +29,12 @@ public class GroupServiceImpl implements GroupService {
     private final UserGroupMapper userGroupMapper;
     private final GroupRoleMapper groupRoleMapper;
     private final UserMapper userMapper;
-    private final RedisUtils redisUtils;
+    private RedisUtils redisUtils;
+
+    @Autowired(required = false)
+    public void setRedisUtils(RedisUtils redisUtils) {
+        this.redisUtils = redisUtils;
+    }
 
     @Override
     public List<GroupDO> queryAllByCriteriaWithNoPage(GroupQueryCriteria criteria) {

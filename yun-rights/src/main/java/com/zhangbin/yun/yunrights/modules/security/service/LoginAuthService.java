@@ -14,6 +14,7 @@ import com.zhangbin.yun.yunrights.modules.security.security.TokenProvider;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.AuthUser;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUserWrapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -32,27 +33,38 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class LoginAuthService {
     private final SecurityProperties properties;
-    private final RedisUtils redisUtils;
     private final OnlineUserService onlineUserService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final LoginProperties loginProperties;
+    private RedisUtils redisUtils;
+
+    @Autowired(required = false)
+    public void setRedisUtils(RedisUtils redisUtils) {
+        this.redisUtils = redisUtils;
+    }
 
     public Map<String, Object> login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request) throws Exception {
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+
         // 查询验证码
         String code = (String) redisUtils.get(authUser.getUuid());
+
         // 清除验证码
         redisUtils.del(authUser.getUuid());
+
         if (StringUtils.isBlank(code)) {
             throw new BadRequestException("验证码不存在或已过期");
         }
+
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
         }
+
+
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
+                new UsernamePasswordAuthenticationToken(authUser.getUserName(), password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
@@ -67,7 +79,7 @@ public class LoginAuthService {
         }};
         if (loginProperties.isSingleLogin()) {
             //踢掉之前已经登录的token
-            onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
+            onlineUserService.checkLoginOnUser(authUser.getUserName(), token);
         }
         return authInfo;
     }

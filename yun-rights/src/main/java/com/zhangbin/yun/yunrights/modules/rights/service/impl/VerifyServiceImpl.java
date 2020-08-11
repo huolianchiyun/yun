@@ -12,6 +12,7 @@ import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.email.model.Email;
 import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,12 @@ public class VerifyServiceImpl implements VerifyService {
 
     @Value("${code.expiration}")
     private Long expiration;
-    private final RedisUtils redisUtils;
+    private RedisUtils redisUtils;
+
+    @Autowired(required = false)
+    public void setRedisUtils(RedisUtils redisUtils) {
+        this.redisUtils = redisUtils;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

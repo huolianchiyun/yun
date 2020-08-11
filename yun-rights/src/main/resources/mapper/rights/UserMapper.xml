@@ -25,7 +25,7 @@
         <!-- 多对多映射的关键:collection -->
         <collection property="roles" javaType="java.util.HashSet"
                     column="u_id" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO"
-                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.RoleMapper.selectRoleByUserId">
+                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.RoleMapper.selectByUserId">
         </collection>
     </resultMap>
 

@@ -1,10 +1,9 @@
 package com.zhangbin.yun.yunrights.modules.common.utils;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.Cursor;
@@ -16,8 +15,10 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+
 @Component
 @SuppressWarnings({"unchecked", "all"})
+@ConditionalOnProperty(value = {"host", "port"}, prefix = "spring.redis")
 public class RedisUtils {
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
     private RedisTemplate<Object, Object> redisTemplate;
@@ -196,9 +197,9 @@ public class RedisUtils {
      * @return
      */
     public List<Object> multiGet(List<String> keys) {
-        List list = redisTemplate.opsForValue().multiGet(Sets.newHashSet(keys));
-        List resultList = Lists.newArrayList();
-        Optional.ofNullable(list).ifPresent(e-> list.forEach(ele-> Optional.ofNullable(ele).ifPresent(resultList::add)));
+        List list = redisTemplate.opsForValue().multiGet(new HashSet(keys));
+        List resultList = new ArrayList();
+        Optional.ofNullable(list).ifPresent(e -> list.forEach(ele -> Optional.ofNullable(ele).ifPresent(resultList::add)));
         return resultList;
     }
 

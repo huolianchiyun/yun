@@ -16,6 +16,8 @@ import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteri
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
 import com.zhangbin.yun.yunrights.modules.rights.service.RoleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,12 @@ public class MenuServiceImpl implements MenuService {
     private final RoleMenuMapper roleMenuMapper;
     private final UserMapper userMapper;
     private final RoleService roleService;
-    private final RedisUtils redisUtils;
+    private RedisUtils redisUtils;
+
+    @Autowired(required = false)
+    public void setRedisUtils(RedisUtils redisUtils) {
+        this.redisUtils = redisUtils;
+    }
 
     @Override
     public List<MenuDO> queryAllByCriteriaWithNoPage(MenuQueryCriteria criteria) {
@@ -87,7 +94,9 @@ public class MenuServiceImpl implements MenuService {
         menu.setId(null);  // 若创建菜单时入参menu.id不为null，默认将其设置为null
         validateExternalLink(menu);
         menuMapper.insert(menu);
-        redisUtils.del("menu::pid:" + (menu.getPid() == null ? 0 : menu.getPid()));
+        if(Objects.nonNull(redisUtils)){
+            redisUtils.del("menu::pid:" + (menu.getPid() == null ? 0 : menu.getPid()));
+        }
     }
 
     @Override
@@ -155,20 +164,21 @@ public class MenuServiceImpl implements MenuService {
      * @param menuSet 不能为 empty或 null
      */
     private void clearCaches(@NotEmpty Set<MenuDO> menuSet) {
-        Set<Long> menuIds = menuSet.stream().map(MenuDO::getId).collect(Collectors.toSet());
-        List<UserDO> users = CollectionUtil.list(false, userMapper.selectByMenuIs(menuIds));
-        redisUtils.delByKeys("menu::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
+        if(Objects.nonNull(redisUtils)){
+            Set<Long> menuIds = menuSet.stream().map(MenuDO::getId).collect(Collectors.toSet());
+            List<UserDO> users = CollectionUtil.list(false, userMapper.selectByMenuIs(menuIds));
+            redisUtils.delByKeys("menu::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
 
-        menuSet.forEach(menu -> {
-            redisUtils.del("menu::menuId:" + menu.getId());
-            redisUtils.del("menu::pid:" + (menu.getPid()));
-            redisUtils.del("menu::pid:" + (menu.getOldPid()));
-            menuIds.add(menu.getPid());  // 后续清除角色缓存时， 也要清除其父菜单对应的角色缓存
-        });
+            menuSet.forEach(menu -> {
+                redisUtils.del("menu::menuId:" + menu.getId());
+                redisUtils.del("menu::pid:" + (menu.getPid()));
+                redisUtils.del("menu::pid:" + (menu.getOldPid()));
+                menuIds.add(menu.getPid());  // 后续清除角色缓存时， 也要清除其父菜单对应的角色缓存
+            });
 
-        // 清除 Role 缓存
-        Set<RoleDO> roles = roleService.selectByMenuIds(menuIds);
-        redisUtils.delByKeys("role::menuId:", roles.stream().map(RoleDO::getId).collect(Collectors.toSet()));
+            // 清除 Role 缓存
+            Set<RoleDO> roles = roleService.selectByMenuIds(menuIds);
+            redisUtils.delByKeys("role::menuId:", roles.stream().map(RoleDO::getId).collect(Collectors.toSet()));
+        }
     }
-
 }

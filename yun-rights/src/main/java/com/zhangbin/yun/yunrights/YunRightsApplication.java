@@ -1,22 +1,17 @@
 package com.zhangbin.yun.yunrights;
 
-import com.zhangbin.yun.yunrights.auto.YunRightsAutoConfig;
 import com.zhangbin.yun.yunrights.modules.common.annotation.rest.AnonymousGetMapping;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(hidden = true)
-@ComponentScan(value = "com.zhangbin.yun.yunrights.modules")
 @SpringBootApplication
-@ConditionalOnMissingBean(YunRightsAutoConfig.class)
 public class YunRightsApplication {
 
     public static void main(String[] args) {

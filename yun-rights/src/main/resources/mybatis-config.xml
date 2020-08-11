@@ -35,8 +35,4 @@
         </plugin>
         <plugin interceptor="com.zhangbin.yun.yunrights.modules.common.audit.MybatisAuditInterceptor" />
     </plugins>
-    <mappers>
-<!--        <package name="com.zhangbin.yun.yunrights.modules"/>-->
-        <mapper class="com.zhangbin.yun.yunrights.modules.email.mapper.EmailConfigMapper"/>
-    </mappers>
 </configuration>

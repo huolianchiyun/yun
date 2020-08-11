@@ -45,7 +45,7 @@ public final class LogQueryCriteria extends AbstractQueryPage {
     }
 
     public enum BlurryType {
-        USER_NAME(1, "userName"),
+        OPERATOR(1, "operator"),
         OPERATION_DESC(2, "operationDesc"),
         ADDRESS(3, "address"),
         CLIENT_IP(4, "clientIp"),

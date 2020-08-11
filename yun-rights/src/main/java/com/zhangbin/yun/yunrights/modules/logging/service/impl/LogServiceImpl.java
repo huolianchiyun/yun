@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
@@ -105,34 +106,27 @@ public class LogServiceImpl implements LogService {
     private void fillSomeValues2LogDo(String userName, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Logging aopLog = signature.getMethod().getAnnotation(Logging.class);
-        // 方法路径
-        String methodName = joinPoint.getTarget().getClass().getName() + Constants.POINT + signature.getName() + Constants.PARENTHESES;
-        StringBuilder params = new StringBuilder(Constants.LEFT_BRACE);
-        //参数值
-        List<Object> argValues = new ArrayList<>(Arrays.asList(joinPoint.getArgs()));
-        //参数名称
-        for (Object argValue : argValues) {
-            params.append(argValue).append(Constants.ONE_SPACE);
-        }
         // 描述
         if (log != null) {
             log.setOperationDesc(aopLog.value());
         }
         assert log != null;
         log.setClientIp(ip);
-
+        //参数值
+        String params = JSON.toJSONString(joinPoint.getArgs()[0]);
         String loginPath = "login";
         if (loginPath.equals(signature.getName())) {
             try {
-                userName = new JSONObject(argValues.get(0)).get("userName").toString();
+                userName = new JSONObject(params).getStr("userName");
             } catch (Exception e) {
                 LogServiceImpl.log.error(e.getMessage(), e);
             }
         }
         log.setAddress(IPUtil.getCityInfo(log.getClientIp()));
+        String methodName = joinPoint.getTarget().getClass().getName() + Constants.POINT + signature.getName() + Constants.PARENTHESES;
         log.setRequestMethod(methodName);
-        log.setUserName(userName);
-        log.setRequestParams(params.toString() + Constants.ONE_SPACE + Constants.LEFT_BRACE);
+        log.setOperator(userName);
+        log.setRequestParams(params);
         log.setBrowser(browser);
     }
 

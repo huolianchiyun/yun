@@ -16,6 +16,7 @@ import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RoleQueryCriteri
 import com.zhangbin.yun.yunrights.modules.rights.service.RoleService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,8 +38,13 @@ public class RoleServiceImpl implements RoleService {
     private final RoleMapper roleMapper;
     private final UserMapper userMapper;
     private final RoleMenuMapper roleMenuMapper;
-    private final RedisUtils redisUtils;
     private final UserCacheClean userCacheClean;
+    private RedisUtils redisUtils;
+
+    @Autowired(required = false)
+    public void setRedisUtils(RedisUtils redisUtils) {
+        this.redisUtils = redisUtils;
+    }
 
     @Override
     public RoleDO queryById(Long id) {

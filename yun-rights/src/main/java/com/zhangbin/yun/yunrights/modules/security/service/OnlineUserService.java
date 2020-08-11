@@ -5,6 +5,7 @@ import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityPropertie
 import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUserWrapper;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.OnlineUser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +18,15 @@ import java.util.*;
 public class OnlineUserService {
 
     private final SecurityProperties properties;
-    private final RedisUtils redisUtils;
+    private RedisUtils redisUtils;
 
-    public OnlineUserService(SecurityProperties properties, RedisUtils redisUtils) {
-        this.properties = properties;
+    @Autowired(required = false)
+    public void setRedisUtils(RedisUtils redisUtils) {
         this.redisUtils = redisUtils;
+    }
+
+    public OnlineUserService(SecurityProperties properties) {
+        this.properties = properties;
     }
 
     /**
@@ -31,8 +36,7 @@ public class OnlineUserService {
      * @param request /
      */
     public void save(JwtUserWrapper jwtUserWrapper, String token, HttpServletRequest request){
-//        String dept = jwtUserWrapper.getUser().getDept().getName();
-        String dept= "";
+        String dept = jwtUserWrapper.getUser().getDept().getGroupName();
         String ip = IPUtil.getIp(request);
         String browser = IPUtil.getBrowser(request);
         String address = IPUtil.getCityInfo(ip);

@@ -1,10 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.logging.model.$do;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedBy;
 import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
@@ -69,7 +69,8 @@ public class LogDO extends BaseDo implements ExcelSupport, Serializable {
     /**
      * 发请求的用户
      */
-    private String userName;
+    @CreatedBy
+    private String operator;
 
     /**
      * 内网、外网
@@ -86,15 +87,11 @@ public class LogDO extends BaseDo implements ExcelSupport, Serializable {
      */
     private byte[] exceptionDetail;
 
-    /**
-     * 日志记录创建时间
-     */
-    private LocalDateTime createTime;
 
     @Override
     public LinkedHashMap<String, Object> toLinkedMap() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("用户名", userName);
+        map.put("用户名", operator);
         map.put("IP", clientIp);
         map.put("IP来源", address);
         map.put("描述", operationDesc);

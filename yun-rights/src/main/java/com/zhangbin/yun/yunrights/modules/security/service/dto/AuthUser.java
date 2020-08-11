@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 public class AuthUser {
 
     @NotBlank
-    private String username;
+    private String userName;
 
     @NotBlank
     private String password;
@@ -21,6 +21,6 @@ public class AuthUser {
 
     @Override
     public String toString() {
-        return "{username=" + username  + ", password= ******}";
+        return "{username=" + userName + ", password= ******}";
     }
 }

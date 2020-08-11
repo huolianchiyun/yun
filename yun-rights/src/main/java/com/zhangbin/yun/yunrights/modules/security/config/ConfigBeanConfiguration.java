@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @apiNote 配置文件转换Pojo类的 统一配置 类
+ * @apiNote 配置文件转换 java bean 的统一配置类
  */
 @Configuration
 public class ConfigBeanConfiguration {

@@ -20,6 +20,7 @@ import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +41,14 @@ public class UserServiceImpl implements UserService {
     private final UserGroupMapper userGroupMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final RedisUtils redisUtils;
     private final UserCacheClean userCacheClean;
     private final VerifyService verificationCodeService;
+    private  RedisUtils redisUtils;
+
+    @Autowired(required = false)
+    public void setRedisUtils(RedisUtils redisUtils) {
+        this.redisUtils = redisUtils;
+    }
 
     @Override
     public UserDO queryById(Long id) {

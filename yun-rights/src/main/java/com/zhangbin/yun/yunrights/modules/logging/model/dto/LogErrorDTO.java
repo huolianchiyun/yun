@@ -10,7 +10,7 @@ public class LogErrorDTO implements Serializable {
     public LogErrorDTO() {}
     public LogErrorDTO(LogDO logDo) {
         this.id = logDo.getId();
-        this.userName = logDo.getUserName();
+        this.userName = logDo.getOperator();
         this.operationDesc = logDo.getOperationDesc();
         this.requestMethod = logDo.getRequestMethod();
         this.requestParams = logDo.getRequestParams();
