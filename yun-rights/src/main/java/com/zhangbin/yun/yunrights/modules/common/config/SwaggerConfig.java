@@ -2,6 +2,7 @@ package com.zhangbin.yun.yunrights.modules.common.config;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Predicates;
+import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
 import springfox.documentation.schema.ModelRef;
@@ -41,9 +43,49 @@ public class SwaggerConfig {
     @Value("${swagger.enabled}")
     private Boolean enabled;
 
+    /**
+     * 业务系统组名
+     */
+    @Value("${swagger.groupName:'业务接口: 接口文档V1.0'}")
+    private String groupName;
+
+    /**
+     * 业务系统总的 api前缀
+     */
+    @Value("${swagger.rootPath:'/api/**'}")
+    private String rootPath;
+
     @Bean
     @SuppressWarnings("all")
-    public Docket createRestApi() {
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .enable(enabled)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.ant(rootPath))
+                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .build()
+                .groupName(groupName)
+                .globalOperationParameters(buildGlobalOperationParameters());
+    }
+
+    @Bean
+    @SuppressWarnings("all")
+    public Docket yunrights_api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .enable(enabled)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.ant("/yun/**"))
+                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .build()
+                .groupName("系统权限: yun-rights-接口文档V1.0")
+                .globalOperationParameters(buildGlobalOperationParameters());
+    }
+
+    private List<Parameter> buildGlobalOperationParameters() {
         ParameterBuilder ticketPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<>();
         ticketPar.name(tokenHeader).description("token")
@@ -53,13 +95,7 @@ public class SwaggerConfig {
                 .required(true)
                 .build();
         pars.add(ticketPar.build());
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(enabled)
-                .apiInfo(apiInfo())
-                .select()
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
-                .build()
-                .globalOperationParameters(pars);
+        return pars;
     }
 
     private ApiInfo apiInfo() {
@@ -73,13 +109,13 @@ public class SwaggerConfig {
 }
 
 /**
- * 将Pageable转换展示在swagger中
+ * 将 PageInfo 转换展示在 swagger 中
  */
 @Configuration
 class SwaggerDataConfig {
 
     @Bean
-    public AlternateTypeRuleConvention pageableConvention(final TypeResolver resolver) {
+    public AlternateTypeRuleConvention pageConvention(final TypeResolver resolver) {
         return new AlternateTypeRuleConvention() {
             @Override
             public int getOrder() {
@@ -88,7 +124,7 @@ class SwaggerDataConfig {
 
             @Override
             public List<AlternateTypeRule> rules() {
-                return newArrayList(newRule(resolver.resolve(Pageable.class), resolver.resolve(Page.class)));
+                return newArrayList(newRule(resolver.resolve(PageInfo.class), resolver.resolve(Page.class)));
             }
         };
     }
@@ -102,7 +138,7 @@ class SwaggerDataConfig {
         @ApiModelProperty("每页显示的数目")
         private Integer size;
 
-        @ApiModelProperty("以下列格式排序标准：property[,asc | desc]。 默认排序顺序为升序。 支持多种排序条件：如：id,asc")
-        private List<String> sort;
+        @ApiModelProperty("总条数")
+        private Long total;
     }
 }

@@ -21,7 +21,7 @@ import java.util.Set;
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "系统：角色管理")
-@RequestMapping("/api/roles")
+@RequestMapping("/yun/role")
 public class RoleController {
 
     private final RoleService roleService;

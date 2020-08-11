@@ -20,7 +20,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "系统：组管理")
-@RequestMapping("/api/group")
+@RequestMapping("/yun/group")
 public class GroupController {
 
     private final GroupService groupService;

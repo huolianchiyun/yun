@@ -23,7 +23,7 @@ import java.util.*;
 @RestController
 @Api(tags = "系统：菜单管理")
 @RequiredArgsConstructor
-@RequestMapping("/api/menus")
+@RequestMapping("/yun/menu")
 public class MenuController {
 
     private final MenuService menuService;

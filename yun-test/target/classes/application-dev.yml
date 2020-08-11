@@ -98,6 +98,8 @@ generator:
 #是否开启 swagger-ui
 swagger:
   enabled: true
+  groupName: 联合电子业务
+  rootPath: /api/**
 
 # IP 本地解析
 ip:

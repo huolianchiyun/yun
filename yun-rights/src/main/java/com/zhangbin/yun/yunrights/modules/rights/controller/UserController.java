@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Api(tags = "系统：用户管理")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/yun/user")
 @RequiredArgsConstructor
 public class UserController {
 
