@@ -11,26 +11,6 @@
         values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
     </insert>
 
-    <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserGroupDO">
-        insert into t_sys_user_group
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                user_id,
-            </if>
-            <if test="tGroupId != null">
-                t_group_id,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                #{userId,jdbcType=BIGINT},
-            </if>
-            <if test="tGroupId != null">
-                #{tGroupId,jdbcType=BIGINT},
-            </if>
-        </trim>
-    </insert>
-
     <delete id="deleteByGroupIds" parameterType="java.util.Set">
         delete from t_sys_user_group
         where group_id in

@@ -144,12 +144,12 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_user (u_id, u_nick_name, u_user_name,
+        insert into t_sys_user (u_nick_name, u_user_name,
         u_gender, u_pwd, u_phone, u_email,
         u_dept_id, u_is_enabled, u_creator,
         u_updater, u_create_time, u_update_time,
         u_pwd_reset_time)
-        values (#{id,jdbcType=BIGINT}, #{nickName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+        values (#{nickName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
         #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
         #{deptId,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
         #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},

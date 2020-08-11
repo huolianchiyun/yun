@@ -11,7 +11,5 @@ public interface UserRoleMapper {
 
     int insert(UserRoleDO record);
 
-    int insertSelective(UserRoleDO record);
-
     int deleteByUserIds(@Param("userIds") Set<Long> userIds);
 }

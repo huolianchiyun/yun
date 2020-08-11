@@ -87,11 +87,11 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_menu (m_id, m_menu_title, m_menu_type,
+        insert into t_sys_menu (m_menu_title, m_menu_type,
         m_description, m_pid, m_permission,
         m_creator, m_updater, m_create_time,
         m_update_time)
-        values (#{id,jdbcType=BIGINT}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
+        values (#{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
         #{description,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
         #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP})

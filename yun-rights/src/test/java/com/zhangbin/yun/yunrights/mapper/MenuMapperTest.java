@@ -50,7 +50,7 @@ public class MenuMapperTest {
 
     @Test
     public void testDownload() {
-        MenuServiceImpl menuService = new MenuServiceImpl(null, null, null, null, null);
+        MenuServiceImpl menuService = new MenuServiceImpl(null, null, null, null);
         MenuDO menu1 = new MenuDO();
         menu1.setId(0L);
         menu1.setMenuTitle("aa");

@@ -126,10 +126,10 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_role (r_id, r_role_name, r_level,
+        insert into t_sys_role (r_role_name, r_level,
         r_description, r_creator, r_updater,
         r_create_time, r_update_time)
-        values (#{id,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER},
+        values (#{roleName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER},
         #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
         #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
     </insert>

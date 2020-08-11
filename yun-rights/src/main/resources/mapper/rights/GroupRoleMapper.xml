@@ -11,26 +11,6 @@
         values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
     </insert>
 
-    <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupRoleDO">
-        insert into t_sys_group_role
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="groupId != null">
-                group_id,
-            </if>
-            <if test="roleId != null">
-                role_id,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="groupId != null">
-                #{groupId,jdbcType=BIGINT},
-            </if>
-            <if test="roleId != null">
-                #{roleId,jdbcType=BIGINT},
-            </if>
-        </trim>
-    </insert>
-
     <delete id="deleteByGroupIds" parameterType="java.util.Set">
         delete from t_sys_group_role
         where group_id in

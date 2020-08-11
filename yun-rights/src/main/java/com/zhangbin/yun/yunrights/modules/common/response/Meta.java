@@ -1,7 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.common.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public final class Meta {
     private Status status;
@@ -42,8 +45,7 @@ public final class Meta {
 
     public enum Status {
         OK(200), Error(500);
-        @JsonProperty
-        @JSONField
+        @JsonValue
         private int code;
 
         Status(int code) {

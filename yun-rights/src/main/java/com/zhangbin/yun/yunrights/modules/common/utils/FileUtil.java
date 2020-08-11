@@ -4,10 +4,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
-import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -214,9 +214,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static void checkSize(long maxSize, long size) {
         // 1M
         int len = 1024 * 1024;
-        if (size > (maxSize * len)) {
-            throw new BadRequestException("文件超出规定大小");
-        }
+        Assert.isTrue(size > (maxSize * len), "文件超出规定大小");
     }
 
     /**

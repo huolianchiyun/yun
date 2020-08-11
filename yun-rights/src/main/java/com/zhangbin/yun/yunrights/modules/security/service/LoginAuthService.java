@@ -2,10 +2,8 @@ package com.zhangbin.yun.yunrights.modules.security.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.wf.captcha.base.Captcha;
-import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.common.utils.RsaUtils;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.LoginProperties;
@@ -19,8 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import javax.servlet.http.HttpServletRequest;
@@ -48,20 +46,7 @@ public class LoginAuthService {
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
 
-        // 查询验证码
-        String code = (String) redisUtils.get(authUser.getUuid());
-
-        // 清除验证码
-        redisUtils.del(authUser.getUuid());
-
-        if (StringUtils.isBlank(code)) {
-            throw new BadRequestException("验证码不存在或已过期");
-        }
-
-        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-            throw new BadRequestException("验证码错误");
-        }
-
+//        validateCaptcha(authUser);
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUserName(), password);
@@ -84,11 +69,11 @@ public class LoginAuthService {
         return authInfo;
     }
 
-    public UserDetails getUserInfo() {
-        return SecurityUtils.getCurrentUser();
+    public void logout(HttpServletRequest request) {
+        onlineUserService.logout(tokenProvider.getToken(request));
     }
 
-    public Map<String, Object> getCode() {
+    public Map<String, Object> getCaptcha() {
         // 获取运算的结果
         Captcha captcha = loginProperties.getCaptcha();
         String uuid = properties.getCodeKey() + IdUtil.simpleUUID();
@@ -101,7 +86,12 @@ public class LoginAuthService {
         }};
     }
 
-    public void logout(HttpServletRequest request) {
-        onlineUserService.logout(tokenProvider.getToken(request));
+    private void validateCaptcha(AuthUser authUser) {
+        // 查询验证码
+        String code = (String) redisUtils.get(authUser.getUuid());
+        // 清除验证码
+        redisUtils.del(authUser.getUuid());
+        Assert.isTrue(StringUtils.isBlank(code), "验证码错误");
+        Assert.isTrue(StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code), "验证码不存在或已过期");
     }
 }

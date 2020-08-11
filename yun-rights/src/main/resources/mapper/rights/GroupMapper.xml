@@ -72,75 +72,14 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_group (g_id, g_pid, g_group_type,
+        insert into t_sys_group (g_pid, g_group_type,
         g_group_name, g_description, g_creator,
         g_updater, g_create_time, g_update_time
         )
-        values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER},
+        values (#{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER},
         #{groupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR},
         #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
         )
-    </insert>
-
-    <insert id="insertSelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-        insert into t_sys_group
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            g_id,
-            <if test="pid != null">
-                g_pid,
-            </if>
-            <if test="groupType != null">
-                g_group_type,
-            </if>
-            <if test="groupName != null">
-                g_group_name,
-            </if>
-            <if test="description != null">
-                g_description,
-            </if>
-            <if test="creator != null">
-                g_creator,
-            </if>
-            <if test="updater != null">
-                g_updater,
-            </if>
-            <if test="createTime != null">
-                g_create_time,
-            </if>
-            <if test="updateTime != null">
-                g_update_time,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            #{id,jdbcType=BIGINT},
-            <if test="pid != null">
-                #{pid,jdbcType=BIGINT},
-            </if>
-            <if test="groupType != null">
-                #{groupType,jdbcType=INTEGER},
-            </if>
-            <if test="groupName != null">
-                #{groupName,jdbcType=VARCHAR},
-            </if>
-            <if test="description != null">
-                #{description,jdbcType=VARCHAR},
-            </if>
-            <if test="creator != null">
-                #{creator,jdbcType=VARCHAR},
-            </if>
-            <if test="updater != null">
-                #{updater,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-        </trim>
     </insert>
 
     <update id="updateByPrimaryKeySelective"

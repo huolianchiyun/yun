@@ -11,8 +11,6 @@ public interface UserGroupMapper {
 
     int insert(UserGroupDO record);
 
-    int insertSelective(UserGroupDO record);
-
     int deleteByGroupIds(@Param("groupIds") Set<Long> groupIds);
 
     int deleteByUserIds(@Param("userIds") Set<Long> userIds);

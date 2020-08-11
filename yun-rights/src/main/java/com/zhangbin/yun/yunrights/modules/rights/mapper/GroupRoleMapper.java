@@ -10,7 +10,5 @@ import java.util.Set;
 public interface GroupRoleMapper {
     int insert(GroupRoleDO record);
 
-    int insertSelective(GroupRoleDO record);
-
     int deleteByGroupIds(@Param("groupIds") Set<Long> groupIds);
 }

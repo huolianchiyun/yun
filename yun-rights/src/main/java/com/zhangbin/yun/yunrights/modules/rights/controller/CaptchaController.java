@@ -18,7 +18,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @RequestMapping("/api/code")
 @Api(tags = "系统：验证码管理")
-public class VerifyController {
+public class CaptchaController {
 
     private final VerifyService verifyService;
     private final EmailService emailService;
@@ -33,7 +33,7 @@ public class VerifyController {
 
     @PostMapping(value = "/email/resetPass")
     @ApiOperation("重置密码，发送验证码")
-    public ResponseEntity<ResponseData> resetPass(@RequestParam String email) {
+    public ResponseEntity<ResponseData> resetPassword(@RequestParam String email) {
         Email emailVo = verifyService.sendEmail(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
         emailService.send(emailVo);
         return success();
@@ -41,7 +41,7 @@ public class VerifyController {
 
     @GetMapping(value = "/validated")
     @ApiOperation("验证码验证")
-    public ResponseEntity<ResponseData> validated(@RequestParam String email, @RequestParam String code, @RequestParam Integer bizCode) {
+    public ResponseEntity<ResponseData> validate(@RequestParam String email, @RequestParam String code, @RequestParam Integer bizCode) {
         BizCodeEnum biEnum = BizCodeEnum.find(bizCode);
         switch (Objects.requireNonNull(biEnum)) {
             case ONE:

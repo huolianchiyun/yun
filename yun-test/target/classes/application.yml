@@ -15,14 +15,14 @@ spring:
       name: 11
       password: 11
 
-#  redis:
-#    #数据库索引
-#    database: 0
-#    host: 192.168.11.131
-#    port: 6379
-#    password: 123456
-#    #连接超时时间
-#    timeout: 5000
+  redis:
+    #数据库索引
+    database: 0
+    host: 192.168.11.131
+    port: 6379
+    password: 123456
+    #连接超时时间
+    timeout: 5000
 
 
 #邮箱验证码有效时间/秒

@@ -21,6 +21,6 @@ public class AuthUser {
 
     @Override
     public String toString() {
-        return "{username=" + userName + ", password= ******}";
+        return "{userName=" + userName + ", password= ******}";
     }
 }

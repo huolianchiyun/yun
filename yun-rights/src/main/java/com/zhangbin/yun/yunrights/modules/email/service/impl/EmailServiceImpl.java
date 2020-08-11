@@ -3,6 +3,7 @@ package com.zhangbin.yun.yunrights.modules.email.service.impl;
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.*;
+
 import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.utils.EncryptUtils;
 import com.zhangbin.yun.yunrights.modules.email.mapper.EmailConfigMapper;

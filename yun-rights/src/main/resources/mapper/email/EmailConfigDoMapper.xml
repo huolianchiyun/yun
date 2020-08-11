@@ -27,11 +27,11 @@
   </select>
 
   <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.email.model.$do.EmailConfigDO">
-    insert into t_sys_email_config (ec_id, ec_host, ec_port,
+    insert into t_sys_email_config (ec_host, ec_port,
       ec_password, ec_user, ec_sender,
       ec_creator, ec_updater, ec_create_time,
       ec_update_time)
-    values (#{id,jdbcType=BIGINT}, #{host,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR},
+    values (#{host,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR},
       #{password,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{recipients,jdbcType=VARCHAR},
       #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP})

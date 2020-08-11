@@ -48,7 +48,7 @@ public class LoginAuthController {
     @ApiOperation("获取验证码")
     @AnonymousGetMapping(value = "/code")
     public ResponseEntity<ResponseData> getCode() {
-        return success(loginAuthService.getCode());
+        return success(loginAuthService.getCaptcha());
     }
 
     @ApiOperation("退出登录")
