@@ -19,6 +19,9 @@ yun-rights/target/
 *.iml
 *.ipr
 target/
+*/node_modules/*
+*/public/*
+
 
 ### NetBeans ###
 /nbproject/private/
