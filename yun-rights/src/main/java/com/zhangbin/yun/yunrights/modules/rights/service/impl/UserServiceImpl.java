@@ -10,14 +10,13 @@ import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.UserRoleMapper;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
-import com.zhangbin.yun.yunrights.modules.rights.service.RoleService;
+import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
-import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
+import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -37,13 +38,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
-    private final UserRoleMapper userRoleMapper;
     private final UserGroupMapper userGroupMapper;
     private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
     private final UserCacheClean userCacheClean;
-    private final VerifyService verificationCodeService;
-    private  RedisUtils redisUtils;
+    private final CaptchaService verificationCodeService;
+    private RedisUtils redisUtils;
 
     @Autowired(required = false)
     public void setRedisUtils(RedisUtils redisUtils) {
@@ -68,28 +67,6 @@ public class UserServiceImpl implements UserService {
         List<UserDO> result = page.getResult();
         pageInfo.setData(result);
         return pageInfo;
-        // TODO 数据权限
-//        if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
-//            criteria.getDeptIds().add(criteria.getDeptId());
-//            criteria.getDeptIds().addAll(groupService.getDeptChildren(criteria.getDeptId(),
-//                    groupService.findByPid(criteria.getDeptId())));
-//        }
-//
-//        // 数据权限
-//        List<Long> dataScopes = groupService.getDeptIds(userService.findByName(SecurityUtils.getCurrentUsername()));
-//        // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
-//        if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)) {
-//            // 取交集
-//            criteria.getDeptIds().retainAll(dataScopes);
-//            if (!CollectionUtil.isEmpty(criteria.getDeptIds())) {
-//                return success(userService.queryAll(criteria, pageable));
-//            }
-//        } else {
-//            // 否则取并集
-//            criteria.getDeptIds().addAll(dataScopes);
-//            return success(userService.queryAllByCriteria(criteria));
-//        }
-//        return success(PageUtil.toPage(null, 0));
     }
 
     @Override
@@ -99,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(UserDO user) {
-        checkCurrentUserRoleLevel(user);
+        checkOperationalRights(user);
         Assert.notNull(userMapper.selectByUserName(user.getUserName()), "用户名已存在，请重新命名！");
         // 默认密码 123456
         user.setPwd(passwordEncoder.encode("123456"));
@@ -108,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDO user) {
-        checkCurrentUserRoleLevel(user);
+        checkOperationalRights(user);
         userMapper.updateByPrimaryKeySelective(user);
         // 清理缓存
         clearCaches(user.getId(), user.getUserName());
@@ -119,12 +96,8 @@ public class UserServiceImpl implements UserService {
         String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwdVo.getOldPass());
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwdVo.getNewPass());
         UserDO user = queryByUserName(SecurityUtils.getCurrentUsername());
-        if (!passwordEncoder.matches(oldPass, user.getPwd())) {
-            throw new BadRequestException("修改失败，旧密码错误");
-        }
-        if (passwordEncoder.matches(newPass, user.getPwd())) {
-            throw new BadRequestException("新密码不能与旧密码相同");
-        }
+        Assert.isTrue(!passwordEncoder.matches(oldPass, user.getPwd()), "修改失败，旧密码错误");
+        Assert.isTrue(passwordEncoder.matches(newPass, user.getPwd()), "新密码不能与旧密码相同");
         String username = user.getUserName();
         userMapper.updateByPrimaryKeySelective(new UserDO(username, passwordEncoder.encode(newPass), LocalDateTime.now()));
         redisUtils.del("user::username:" + username);
@@ -145,10 +118,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteByUserIds(Set<Long> userIds) {
-        Assert.isTrue(roleService.hasSupperLevelInUsers(roleService.getLevelOfCurrentUserMaxRole(), userIds),
-                "删除用户集合中存在高于或等于你角色的用户，权限不够，删除失败！");
+        Set<UserDO> users = userMapper.selectByPrimaryKeys(userIds);
+        UserDO currentUser = userMapper.selectByUserName(SecurityUtils.getCurrentUsername());
+        users.forEach(e -> checkOperationalRights(e, currentUser));
         userMapper.deleteByIds(userIds);
-        userRoleMapper.deleteByUserIds(userIds);
+        // TODO　考虑是否删除该用户创建的组及该用户为组长的组？？
+
         userGroupMapper.deleteByUserIds(userIds);
         // 清理缓存
         Optional.of(userMapper.selectByIds(userIds)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUserName()));
@@ -160,28 +135,32 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 检测当前用户等级
-     * 如果当前用户的角色级别低于要创建或修改用户的角色级别，则抛出权限不足的提示
+     * 检查当前用户操作权限，权限不够，抛异常提示
      *
-     * @param user
+     * @param operatingUser 将要被操作的用户
      */
-    private void checkCurrentUserRoleLevel(UserDO user) {
-        UserDO currentUser = queryById(SecurityUtils.getCurrentUserId());
-        if (!currentUser.isAdmin()) {  // 管理员具有超级权限
-            Integer levelOfCurrentUserMaxRole = roleService.getLevelOfCurrentUserMaxRole();
-            Set<Long> set = user.getRoles().stream().map(RoleDO::getId).collect(Collectors.toSet());
-            Integer levelOfOperatedUserMaxRole = Collections.min(Optional.of(roleService.batchQueryByIds(set)).orElseGet(ArrayList::new)
-                    .stream()
-                    .map(RoleDO::getLevel)
-                    .collect(Collectors.toList()));
-            Assert.isTrue(levelOfCurrentUserMaxRole < levelOfOperatedUserMaxRole, "您的角色权限不够， 不能操作高于或等于你权限的用户！");
+    private void checkOperationalRights(UserDO operatingUser) {
+        UserDO currentUser = userMapper.selectByUserName(SecurityUtils.getCurrentUsername());
+        checkOperationalRights(operatingUser, currentUser);
+    }
+
+    private void checkOperationalRights(UserDO operatingUser, UserDO currentUser) {
+        if (currentUser.isAdmin()) {
+            return;
+        }
+        // 部门权限校验：检查操作人所在部门是否高于或等于被操作用户所属部门，满足yes，不满足no
+        GroupDO dept = operatingUser.getDept();
+        if (Objects.nonNull(dept) && StringUtils.hasText(dept.getGroupCode())) {
+            Assert.isNull(currentUser.getDept(), "你不属于一个部门，没有操作权限！");
+            Assert.isTrue(!currentUser.getUserName().equals(currentUser.getDept().getGroupMaster()), "你不是部门管者，没有操作权限！");
+            Assert.isTrue(!dept.getGroupCode().startsWith(currentUser.getDept().getGroupCode()), "你只能操作你所属部门下的用户！");
         }
     }
 
     /**
      * 清理缓存
      *
-     * @param userId
+     * @param userId 用户 ID
      */
     private void clearCaches(Long userId, String userName) {
         redisUtils.del(CacheKey.USER_ID + userId);
@@ -192,9 +171,9 @@ public class UserServiceImpl implements UserService {
     /**
      * 清理 登陆时 用户缓存信息
      *
-     * @param username
+     * @param userName 用户名
      */
-    private void flushCache(String username) {
-        userCacheClean.cleanUserCache(username);
+    private void flushCache(String userName) {
+        userCacheClean.cleanUserCache(userName);
     }
 }

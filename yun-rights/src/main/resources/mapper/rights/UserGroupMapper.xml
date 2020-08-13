@@ -11,6 +11,14 @@
         values (#{userId,jdbcType=BIGINT}, #{tGroupId,jdbcType=BIGINT})
     </insert>
 
+    <insert id="addUsersIntoGroup" parameterType="java.util.HashSet">
+        insert into t_sys_user_group (user_id, group_id)
+        values
+        <foreach collection="userIds" item="userId" separator=",">
+            (#{userId,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
     <delete id="deleteByGroupIds" parameterType="java.util.Set">
         delete from t_sys_user_group
         where group_id in

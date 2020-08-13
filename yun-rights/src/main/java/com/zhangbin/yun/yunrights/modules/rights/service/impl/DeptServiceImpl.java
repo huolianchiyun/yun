@@ -31,7 +31,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public DeptDTO queryById(Long id) {
-        return Optional.of(groupService.queryById(id)).orElseGet(GroupDO::new).toDept();
+        return groupService.queryById(id).toDept();
     }
 
     @Override
@@ -42,13 +42,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDTO> queryAncestorAndSiblingOfDepts(Set<Long> groupIds) {
-        return Optional.of(groupService.queryAncestorAndSiblingOfDepts(groupIds))
-                .orElseGet(ArrayList::new).stream().map(GroupDO::toDept).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DeptDTO> queryByRoleId(Long roleId) {
-        return Optional.of(groupService.queryByRoleId(roleId))
+        return Optional.of(groupService.queryAncestorAndSiblingOfGroups(groupIds))
                 .orElseGet(ArrayList::new).stream().map(GroupDO::toDept).collect(Collectors.toList());
     }
 
@@ -64,7 +58,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public void deleteByDeptIds(Set<Long> deptIds) {
-        groupService.deleteByGroupIds(deptIds);
+        groupService.deleteByIds(deptIds);
     }
 
     @Override

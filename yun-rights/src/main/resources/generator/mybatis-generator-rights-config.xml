@@ -22,7 +22,7 @@
 
         <!--数据库连接信息 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.11.131:3306/yunrights?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+                        connectionURL="jdbc:mysql://192.168.11.131:3306/yunrights_no_role?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
                         userId="root" password="123456">
             <property name="useInformationSchema" value="true"></property>
         </jdbcConnection>

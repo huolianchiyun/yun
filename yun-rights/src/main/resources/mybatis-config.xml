@@ -3,8 +3,8 @@
 <configuration>
     <settings>
         <!-- 开启全局延迟加载 -->
-        <setting name="lazyLoadingEnabled" value="true" />
-        <setting name="aggressiveLazyLoading" value="false" />
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <plugins>
         <!-- com.github.pagehelper为PageHelper类所在包名 -->
@@ -33,6 +33,9 @@
             <!-- always总是返回PageInfo类型,check检查返回类型是否为PageInfo,none返回Page -->
             <property name="returnPageInfo" value="none"/>
         </plugin>
-        <plugin interceptor="com.zhangbin.yun.yunrights.modules.common.audit.MybatisAuditInterceptor" />
+        <plugin interceptor="com.zhangbin.yun.yunrights.modules.common.audit.MybatisAuditInterceptor"/>
+        <!--由于mybatis拦截器的拦截顺序是从下到上，所有应将DDataRightsInterceptor配置在最后，使其被最先拦截。-->
+        <plugin interceptor="com.zhangbin.yun.yunrights.modules.rights.common.data_rights.DataRightsInterceptor">
+        </plugin>
     </plugins>
 </configuration>

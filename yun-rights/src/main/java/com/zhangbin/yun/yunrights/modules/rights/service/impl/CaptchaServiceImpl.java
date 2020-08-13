@@ -10,7 +10,7 @@ import cn.hutool.extra.template.TemplateUtil;
 import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.email.model.Email;
-import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
+import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class VerifyServiceImpl implements VerifyService {
+public class CaptchaServiceImpl implements CaptchaService {
 
     @Value("${code.expiration}")
     private Long expiration;

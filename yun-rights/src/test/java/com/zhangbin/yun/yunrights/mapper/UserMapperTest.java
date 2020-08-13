@@ -23,7 +23,7 @@ public class UserMapperTest {
         System.out.println("----------------------------");
         System.out.println(userDo.getNickName());
         System.out.println("----------------------------");
-        System.out.println(userDo.getRoles());
+        System.out.println(userDo.getGroups());
         System.out.println("----------------------------");
         System.out.println(userDo.getDept());
     }

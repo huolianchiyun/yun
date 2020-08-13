@@ -48,7 +48,7 @@ public class GroupController {
     @PostMapping("/batch/family")
     @PreAuthorize("@el.check('user:list','group:list')")
     public ResponseEntity<ResponseData> getSuperior(@RequestBody Set<Long> groupIds) {
-        return success(groupService.queryAncestorAndSiblingOfDepts(groupIds));
+        return success(groupService.queryAncestorAndSiblingOfGroups(groupIds));
     }
 
     @Logging("新增组")
@@ -74,7 +74,7 @@ public class GroupController {
     @DeleteMapping
     @PreAuthorize("@el.check('group:del')")
     public ResponseEntity<ResponseData> deleteByGroupIds(@RequestBody Set<Long> groupIds) {
-        groupService.deleteByGroupIds(groupIds);
+        groupService.deleteByIds(groupIds);
         return success();
     }
 }

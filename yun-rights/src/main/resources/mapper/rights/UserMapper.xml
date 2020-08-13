@@ -9,8 +9,10 @@
         <result column="u_pwd" jdbcType="VARCHAR" property="pwd"/>
         <result column="u_phone" jdbcType="VARCHAR" property="phone"/>
         <result column="u_email" jdbcType="VARCHAR" property="email"/>
+        <result column="u_is_admin" jdbcType="BIT" property="admin"/>
         <result column="u_dept_id" jdbcType="BIGINT" property="deptId"/>
-        <result column="u_is_enabled" jdbcType="BIT" property="enabled"/>
+        <result column="u_status" jdbcType="BIT" property="status"/>
+        <result column="u_is_deleted" jdbcType="BIT" property="deleted"/>
         <result column="u_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="u_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -23,9 +25,9 @@
                      select="com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper.selectDeptByUserId">
         </association>
         <!-- 多对多映射的关键:collection -->
-        <collection property="roles" javaType="java.util.HashSet"
-                    column="u_id" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO"
-                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.RoleMapper.selectByUserId">
+        <collection property="groups" javaType="java.util.HashSet"
+                    column="u_id" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
+                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper.selectByUserId">
         </collection>
     </resultMap>
 
@@ -37,8 +39,10 @@
         <result column="u_pwd" jdbcType="VARCHAR" property="pwd"/>
         <result column="u_phone" jdbcType="VARCHAR" property="phone"/>
         <result column="u_email" jdbcType="VARCHAR" property="email"/>
+        <result column="u_is_admin" jdbcType="BIT" property="admin"/>
         <result column="u_dept_id" jdbcType="BIGINT" property="deptId"/>
-        <result column="u_is_enabled" jdbcType="BIT" property="enabled"/>
+        <result column="u_status" jdbcType="BIT" property="status"/>
+        <result column="u_is_deleted" jdbcType="BIT" property="deleted"/>
         <result column="u_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="u_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -47,7 +51,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        u_id, u_nick_name, u_user_name, u_gender, u_pwd, u_phone, u_email, u_dept_id, u_is_enabled,
+        u_id, u_nick_name, u_user_name, u_gender, u_pwd, u_phone, u_email, u_is_admin, u_dept_id, u_status, u_is_deleted,
         u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
     </sql>
 
@@ -75,25 +79,25 @@
         where u_user_name = #{userName,jdbcType=BIGINT}
     </select>
 
-    <select id="selectByRoleId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
+    <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
         where u_id in (
-        select user_id from t_sys_user_role where role_id = #{r_id,jdbcType=BIGINT}
+        select user_id from t_sys_user_group where group_id = #{groupId,jdbcType=BIGINT}
         )
     </select>
 
     <select id="selectByMenuIs" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_sys_user u, t_sys_user_role ur, t_sys_role_menu rm
-        where rm.menu_id in
+        from t_sys_user u, t_sys_user_group ug, t_sys_group_menu gm
+        where gm.menu_id in
         <foreach collection="menuIds" index="index" item="menuId" separator="," open="(" close=")">
             #{menuId,jdbcType=INTEGER}
         </foreach>
-        and u.u_id = ur.user_id
-        and ur.role_id = rm.role_id
+        and u.u_id = ug.user_id
+        and ug.group_id = gm.group_id
     </select>
 
     <select id="selectByGroupIds" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
@@ -127,8 +131,8 @@
                         and u_phone like concat('%', #{criteria.blurry}, '%')
                     </if>
                 </if>
-                <if test='criteria.enabled != null'>
-                    and u_is_enabled in (${criteria.enabled})
+                <if test='criteria.status != null'>
+                    and u_status in (${criteria.status})
                 </if>
                 <if test='criteria.createTimes != null and criteria.createTimes > 0'>
                     and u_create_time
@@ -145,15 +149,16 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into t_sys_user (u_nick_name, u_user_name,
-        u_gender, u_pwd, u_phone, u_email,
-        u_dept_id, u_is_enabled, u_creator,
+        u_gender, u_pwd, u_phone, u_email, u_is_admin,
+        u_dept_id, u_status, u_is_deleted, u_creator,
         u_updater, u_create_time, u_update_time,
         u_pwd_reset_time)
         values (#{nickName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
         #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-        #{deptId,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{creator,jdbcType=VARCHAR},
-        #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-        #{pwdResetTime,jdbcType=TIMESTAMP})
+        #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, #{deleted,jdbcType=BIT},
+        #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
+
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
@@ -177,11 +182,17 @@
             <if test="email != null">
                 u_email = #{email,jdbcType=VARCHAR},
             </if>
+            <if test="admin != null">
+                u_is_admin = #{admin,jdbcType=VARCHAR},
+            </if>
             <if test="deptId != null">
                 u_dept_id = #{deptId,jdbcType=BIGINT},
             </if>
-            <if test="isEnabled != null">
-                u_is_enabled = #{enabled,jdbcType=BIT},
+            <if test="status != null">
+                u_status = #{status,jdbcType=BIT},
+            </if>
+            <if test="deleted != null">
+                u_is_deleted = #{deleted,jdbcType=BIT},
             </if>
             <if test="creator != null">
                 u_creator = #{creator,jdbcType=VARCHAR},
@@ -202,17 +213,18 @@
         where u_id = #{id,jdbcType=BIGINT}
     </update>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete
-        from t_sys_user
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update t_sys_user
+        set u_is_deleted = 1
         where u_id = #{id,jdbcType=BIGINT}
-    </delete>
+    </update>
 
-    <delete id="deleteByIds" parameterType="java.util.Set">
-        delete from t_sys_user
+    <update id="deleteByIds" parameterType="java.util.Set">
+        update t_sys_user
+        set u_is_deleted = 1
         where u_id in
         <foreach collection="userIds" index="index" item="id" separator="," open="(" close=")">
             #{id,jdbcType=INTEGER}
         </foreach>
-    </delete>
+    </update>
 </mapper>

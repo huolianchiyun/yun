@@ -6,7 +6,7 @@ import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.su
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.email.model.Email;
 import com.zhangbin.yun.yunrights.modules.email.service.EmailService;
-import com.zhangbin.yun.yunrights.modules.rights.service.VerifyService;
+import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,13 @@ import java.util.Objects;
 @Api(tags = "系统：验证码管理")
 public class CaptchaController {
 
-    private final VerifyService verifyService;
+    private final CaptchaService captchaService;
     private final EmailService emailService;
 
     @PostMapping(value = "/resetEmail")
     @ApiOperation("重置邮箱，发送验证码")
     public ResponseEntity<ResponseData> resetEmail(@RequestParam String email) {
-        Email emailVo = verifyService.sendEmail(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
+        Email emailVo = captchaService.sendEmail(email, CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey());
         emailService.send(emailVo);
         return success();
     }
@@ -34,7 +34,7 @@ public class CaptchaController {
     @PostMapping(value = "/email/resetPass")
     @ApiOperation("重置密码，发送验证码")
     public ResponseEntity<ResponseData> resetPassword(@RequestParam String email) {
-        Email emailVo = verifyService.sendEmail(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
+        Email emailVo = captchaService.sendEmail(email, CodeEnum.EMAIL_RESET_PWD_CODE.getKey());
         emailService.send(emailVo);
         return success();
     }
@@ -45,10 +45,10 @@ public class CaptchaController {
         BizCodeEnum biEnum = BizCodeEnum.find(bizCode);
         switch (Objects.requireNonNull(biEnum)) {
             case ONE:
-                verifyService.validate(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + email, code);
+                captchaService.validate(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + email, code);
                 break;
             case TWO:
-                verifyService.validate(CodeEnum.EMAIL_RESET_PWD_CODE.getKey() + email, code);
+                captchaService.validate(CodeEnum.EMAIL_RESET_PWD_CODE.getKey() + email, code);
                 break;
             default:
                 break;

@@ -8,6 +8,8 @@ import java.beans.Transient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
@@ -35,27 +37,43 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
     private Long pid;
 
     /**
+     * 组编码，生成规则："父编号:子组数量"
+     */
+    private String groupCode;
+
+    /**
      * 组类型
      */
     private String groupType;
 
-    /**
-     *
-     */
     private String groupName;
 
-    /**
-     *
-     */
     private String description;
 
     private Integer groupSort;
+
+    /**
+     * 组长，群主
+     */
+    private String groupMaster;
 
     /**
      * 非表字段
      */
     @JsonIgnore
     private Long oldPid;
+
+    /**
+     * 非表字段
+     */
+    private Set<UserDO> users;
+
+    /**
+     * 非表字段
+     */
+    protected Set<MenuDO> menus;
+
+
     @Transient
     public Long getOldPid() {
         return oldPid;
@@ -75,6 +93,7 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
         DeptDTO deptDTO = new DeptDTO();
         deptDTO.setId(id);
         deptDTO.setPid(pid);
+        deptDTO.setDeptCode(groupCode);
         deptDTO.setDeptName(groupName);
         deptDTO.setDeptSort(groupSort);
         deptDTO.setDescription(description);
@@ -91,6 +110,7 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
     public LinkedHashMap<String, Object> toLinkedMap() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("组名称", groupName);
+        map.put("组长", groupMaster);
         map.put("创建日期", createTime);
         return map;
     }
@@ -106,5 +126,18 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
         } else {
             return Integer.compare(groupSort, o.groupSort);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GroupDO)) return false;
+        GroupDO other = (GroupDO) o;
+        return groupCode.equals(other.groupCode) || id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(groupCode, id);
     }
 }

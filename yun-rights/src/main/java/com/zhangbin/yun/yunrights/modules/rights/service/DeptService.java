@@ -25,6 +25,14 @@ public interface DeptService {
     List<DeptDTO> queryAllByCriteriaWithNoPage(DeptQueryCriteria criteria);
 
     /**
+     * 根据部门 id 集合获取同级与上级数据
+     *
+     * @param deptIds 部门 ID 集合
+     * @return {@link List<DeptDTO>}
+     */
+    List<DeptDTO> queryAncestorAndSiblingOfDepts(Set<Long> deptIds);
+
+    /**
      * 根据ID查询
      *
      * @param id 部门 ID
@@ -39,22 +47,6 @@ public interface DeptService {
      * @return {@link List<DeptDTO>}
      */
     List<DeptDTO> queryByPid(Long pid);
-
-    /**
-     * 根据部门 id 集合获取同级与上级数据
-     *
-     * @param deptIds 部门 ID 集合
-     * @return {@link List<DeptDTO>}
-     */
-    List<DeptDTO> queryAncestorAndSiblingOfDepts(Set<Long> deptIds);
-
-    /**
-     * 根据角色ID查询
-     *
-     * @param roleId 角色 ID
-     * @return {@link Set<DeptDTO>}
-     */
-    List<DeptDTO> queryByRoleId(Long roleId);
 
     /**
      * 创建部门

@@ -12,11 +12,20 @@ public interface GroupMapper extends PageMapper<GroupDO> {
 
     GroupDO selectByPrimaryKey(Long id);
 
-    GroupDO selectByUserId(Long userId);
+    Set<GroupDO> selectByPrimaryKeys(Set<Long> ids);
+
+    /**
+     * 根据用户Id查询用户所属组，但部门类型的组除外
+     * @param userId /
+     * @return {@link Set<GroupDO>}
+     */
+    Set<GroupDO> selectByUserId(Long userId);
 
     Set<GroupDO> selectByPid(Long Pid);
 
-    Set<GroupDO> selectByRoleId(Long roleId);
+    GroupDO selectDeptByUserId(Long userId);
+
+    Set<GroupDO> selectByMenuIds(@Param("menuIds") Set<Long> menuIds);
 
     int insert(GroupDO record);
 

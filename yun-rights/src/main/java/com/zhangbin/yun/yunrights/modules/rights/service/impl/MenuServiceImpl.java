@@ -6,18 +6,18 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.RoleMenuMapper;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMenuMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.RoleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
-import com.zhangbin.yun.yunrights.modules.rights.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -36,9 +36,9 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl implements MenuService {
 
     private final MenuMapper menuMapper;
-    private final RoleMenuMapper roleMenuMapper;
     private final UserMapper userMapper;
-    private final RoleService roleService;
+    private final GroupMenuMapper groupMenuMapper;
+    private final GroupService groupService;
     private RedisUtils redisUtils;
 
     @Autowired(required = false)
@@ -80,11 +80,11 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Cacheable(key = "'user:' + #p0")
     public List<MenuDO> queryByUser(Long userId) {
-        List<RoleDO> roles = roleService.queryByUserId(userId);
-        if (CollectionUtils.isEmpty(roles)) {
+        List<GroupDO> groups = groupService.queryByUserId(userId);
+        if (CollectionUtils.isEmpty(groups)) {
             return new ArrayList<>();
         }
-        Set<Long> roleIds = roles.stream().map(RoleDO::getId).collect(Collectors.toSet());
+        Set<Long> roleIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
         Set<MenuDO> menuSet = menuMapper.selectByRoleIds(roleIds);
         return buildMenuTree(menuSet);
     }
@@ -120,7 +120,7 @@ public class MenuServiceImpl implements MenuService {
         Set<Long> deletingMenuIds = posterityMenuWithSelf.stream().map(MenuDO::getId).collect(Collectors.toSet());
         menuMapper.batchDeleteByIds(deletingMenuIds);
         // 将要删除的菜单与角色解绑
-        roleMenuMapper.deleteByMenuIds(deletingMenuIds);
+        groupMenuMapper.deleteByMenuIds(deletingMenuIds);
         // 清理缓存
         clearCaches(posterityMenuWithSelf);
     }
@@ -177,8 +177,8 @@ public class MenuServiceImpl implements MenuService {
             });
 
             // 清除 Role 缓存
-            Set<RoleDO> roles = roleService.selectByMenuIds(menuIds);
-            redisUtils.delByKeys("role::menuId:", roles.stream().map(RoleDO::getId).collect(Collectors.toSet()));
+            Set<GroupDO> groups = groupService.queryByMenuIds(menuIds);
+            redisUtils.delByKeys("role::menuId:", groups.stream().map(GroupDO::getId).collect(Collectors.toSet()));
         }
     }
 }

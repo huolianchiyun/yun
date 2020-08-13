@@ -2,45 +2,42 @@ package com.zhangbin.yun.yunrights.modules.rights.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
-
 
 @Getter
 @Setter
 public class UserDTO extends BaseDo implements Serializable {
 
-    private String username;
-
     private String nickName;
 
-    private Set<RoleSmallDTO> roles;
-
-    private DeptSmallDTO dept;
-
-    private Long deptId;
-
-    private String email;
-
-    private String phone;
+    private String username;
 
     private String gender;
-
-    private String avatarName;
-
-    private String avatarPath;
 
     @JsonIgnore
     private String password;
 
-    private Boolean enabled;
+    private String phone;
+
+    private String email;
+
+    private Long deptId;
 
     @JsonIgnore
-    private Boolean isAdmin = false;
+    private Boolean admin;
+
+    private Boolean status;
+
+    private Boolean deleted;
+
+    private Set<GroupDO> groups;
+
+    private DeptSmallDTO dept;
 
     private Date pwdResetTime;
 

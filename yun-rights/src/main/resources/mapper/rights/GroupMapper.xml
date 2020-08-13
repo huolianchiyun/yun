@@ -7,6 +7,26 @@
         <result column="g_group_type" jdbcType="VARCHAR" property="groupType"/>
         <result column="g_group_name" jdbcType="VARCHAR" property="groupName"/>
         <result column="g_description" jdbcType="VARCHAR" property="description"/>
+        <result column="g_group_sort" jdbcType="INTEGER" property="groupSort"/>
+        <result column="g_group_master" jdbcType="VARCHAR" property="groupMaster"/>
+        <result column="g_creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="g_updater" jdbcType="VARCHAR" property="updater"/>
+        <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <collection column="r_id" property="users"
+                    javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO"
+                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper.selectByGroupId">
+        </collection>
+    </resultMap>
+
+    <resultMap id="SmallBaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
+        <id column="g_id" jdbcType="BIGINT" property="id"/>
+        <result column="g_pid" jdbcType="BIGINT" property="pid"/>
+        <result column="g_group_type" jdbcType="VARCHAR" property="groupType"/>
+        <result column="g_group_name" jdbcType="VARCHAR" property="groupName"/>
+        <result column="g_description" jdbcType="VARCHAR" property="description"/>
+        <result column="g_group_sort" jdbcType="INTEGER" property="groupSort"/>
+        <result column="g_group_master" jdbcType="VARCHAR" property="groupMaster"/>
         <result column="g_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="g_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -14,15 +34,32 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        g_id, g_pid, g_group_type, g_group_name, g_description, g_creator, g_updater, g_create_time,
-    g_update_time
+        g_id, g_pid, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_creator, g_updater, g_create_time, g_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group
-        where g_id = #{id,jdbcType=BIGINT}
+        where g_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByPrimaryKeys" parameterType="java.util.HashSet" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group
+        where g_id in (
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+        )
+    </select>
+
+    <select id="selectByPid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group
+        where g_pid = #{id,jdbcType=INTEGER}
     </select>
 
     <select id="selectDeptByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -30,7 +67,16 @@
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{u_id}
-        ) and g_group_type='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}' limit 1
+        ) and g_group_type='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}'
+        limit 1
+    </select>
+
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group where g_id in (
+        select group_id from t_sys_user_group where user_id = #{u_id}
+        ) and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}'
     </select>
 
     <select id="countAssociatedUser" parameterType="java.util.HashSet">
@@ -39,6 +85,17 @@
         <foreach collection="groupIds" index="index" item="id" separator="," open="(" close=")">
             #{id,jdbcType=INTEGER}
         </foreach>
+    </select>
+
+    <select id="selectByMenuIds" parameterType="java.util.HashSet">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group, t_sys_group_menu
+        where menu_id id in
+        <foreach collection="menuIds" index="index" item="menuId" separator="," open="(" close=")">
+            #{menuId,jdbcType=INTEGER}
+        </foreach>
+        and g_id = group_id
     </select>
 
     <select id="selectAllByCriteria"
@@ -73,12 +130,13 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into t_sys_group (g_pid, g_group_type,
-        g_group_name, g_description, g_creator,
+        g_group_name, g_description, g_group_sort, g_group_master, g_creator,
         g_updater, g_create_time, g_update_time
         )
-        values (#{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER},
-        #{groupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR},
-        #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+        values (#{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER},#{groupName,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR}, #{groupSort,jdbcType=INTEGER}, #{groupMaster,jdbcType=VARCHAR},
+        #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
         )
     </insert>
 
@@ -97,6 +155,12 @@
             </if>
             <if test="description != null">
                 g_description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="groupSort != null">
+                g_group_sort = #{groupSort,jdbcType=VARCHAR},
+            </if>
+            <if test="groupMaster != null">
+                g_group_master = #{groupMaster,jdbcType=VARCHAR},
             </if>
             <if test="creator != null">
                 g_creator = #{creator,jdbcType=VARCHAR},

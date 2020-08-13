@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.service;
 
 import com.zhangbin.yun.yunrights.modules.email.model.Email;
 
-public interface VerifyService {
+public interface CaptchaService {
 
     /**
      * 发送验证码

@@ -22,6 +22,8 @@ public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChil
 
     private Long pid;
 
+    private String deptCode;
+
     private String deptName;
 
     private Integer deptSort;
@@ -35,6 +37,7 @@ public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChil
         GroupDO groupDO = new GroupDO();
         groupDO.setId(id);
         groupDO.setPid(pid);
+        groupDO.setGroupCode(deptCode);
         groupDO.setGroupName(deptName);
         groupDO.setGroupSort(deptSort);
         groupDO.setGroupType(RightsConstants.GROUP_TYPE);
@@ -51,6 +54,7 @@ public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChil
 
     public LinkedHashMap<String, Object> toLinkedMap() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("部门编码", deptCode);
         map.put("部门名称", deptName);
         map.put("创建日期", createTime);
         return map;

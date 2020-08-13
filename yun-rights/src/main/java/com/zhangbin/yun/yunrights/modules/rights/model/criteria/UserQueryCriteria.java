@@ -25,7 +25,7 @@ public class UserQueryCriteria extends AbstractQueryPage implements Serializable
 
     private String blurry;
 
-    private Boolean enabled;
+    private Boolean status;
 
     private Long deptId;
 
