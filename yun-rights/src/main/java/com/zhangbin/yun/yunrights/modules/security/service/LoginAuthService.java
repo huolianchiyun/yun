@@ -43,10 +43,11 @@ public class LoginAuthService {
     }
 
     public Map<String, Object> login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request) throws Exception {
+        //TODO 未见密码正确验证
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
 
-//        validateCaptcha(authUser);
+        validateCaptcha(authUser);
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUserName(), password);

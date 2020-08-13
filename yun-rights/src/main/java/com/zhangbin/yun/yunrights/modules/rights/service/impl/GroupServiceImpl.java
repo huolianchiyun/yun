@@ -101,6 +101,13 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void createGroup(GroupDO group) {
         group.setId(null);
+        String groupMaster = group.getGroupMaster();
+        String currentUsername = SecurityUtils.getCurrentUsername();
+        if (StringUtils.isBlank(groupMaster)) {
+            group.setGroupMaster(currentUsername);
+        } else {
+            Assert.isTrue(Objects.isNull(userMapper.selectByUserName(groupMaster)), "指定的组长（" + groupMaster + "）不存在!");
+        }
         checkOperationalRights(group);
         groupMapper.insert(group);
         // 清理缓存
@@ -189,15 +196,22 @@ public class GroupServiceImpl implements GroupService {
             return;
         }
         Set<GroupDO> currentUserGroups = groupMapper.selectByUserId(currentUser.getId());
-        // 当前用户是不是该组群主，是直接放行
-        List<GroupDO> groupFiltered = currentUserGroups.stream().filter(group::equals).collect(Collectors.toList());
-        if (CollectionUtil.isNotEmpty(groupFiltered)) {
-            if (groupFiltered.get(0).getGroupMaster().equals(currentUser.getUserName())) return;
-        }
-        // 操作的组是不是当前用户的所属组的子组
         String groupCode = group.getGroupCode();
-        Assert.isTrue(currentUserGroups.stream().noneMatch((e -> groupCode.startsWith(e.getGroupCode()))),
-                "权限不够，你只能对你所属的组或子组进行操作！");
+        if (Objects.nonNull(group.getId())) {
+            // 修改组
+            // 若修改的组是当前用户所属组或其子组且用户所属组或其父组的群主，则放行
+            Assert.isTrue(currentUserGroups.stream()
+                            .filter(e -> groupCode.startsWith(e.getGroupCode()))
+                            .noneMatch(e -> currentUser.getUserName().equals(e.getGroupMaster())),
+                    "你不是将要修改组或其父组的群主，故没有操作权限！");
+        } else {
+            // 创建组
+            // 若创建的组是当前用户所属组的子组且用户是父组群主，则放行
+            Assert.isTrue(currentUserGroups.stream()
+                            .filter(e -> groupCode.startsWith(e.getGroupCode()) && !groupCode.equals(e.getGroupCode()))
+                            .noneMatch(e -> currentUser.getUserName().equals(e.getGroupMaster())),
+                    "你不是将要创建组的父组的群主，故没有操作权限！");
+        }
     }
 
     /**

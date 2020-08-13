@@ -58,7 +58,6 @@ public class JwtUserWrapper implements UserDetails {
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-//        return user.getEnabled();
-        return false;
+        return user.getStatus();
     }
 }
