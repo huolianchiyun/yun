@@ -44,7 +44,7 @@ public class CaptchaServiceImpl implements CaptchaService {
         if(oldCode == null){
             String code = RandomUtil.randomNumbers (6);
             // 存入缓存
-            Assert.isTrue(!redisUtils.set(redisKey, code, expiration), "服务异常，请联系网站负责人");
+            Assert.isTrue(redisUtils.set(redisKey, code, expiration), "服务异常，请联系网站负责人");
             content = template.render(Dict.create().set("code",code));
             emailVo = new Email(Collections.singletonList(email),"yunrights",content);
         // 存在就再次发送原来的验证码

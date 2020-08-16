@@ -102,7 +102,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateMenu(MenuDO updatingMenu) {
-        Assert.isTrue(updatingMenu.getId().equals(updatingMenu.getPid()), "上级不能为自己!");
+        Assert.isTrue(!updatingMenu.getId().equals(updatingMenu.getPid()), "上级不能为自己!");
         MenuDO menuDb = menuMapper.selectByPrimaryKey(updatingMenu.getId());
         Assert.isNull(menuDb, "修改的菜单不存在！");
         validateExternalLink(updatingMenu);
@@ -153,7 +153,7 @@ public class MenuServiceImpl implements MenuService {
     private void validateExternalLink(MenuDO menu) {
         if (menu.getExternalLink()) {
             String url = menu.getAccessUrl().toLowerCase();
-            Assert.isTrue(!(url.startsWith(HTTP) || url.startsWith(HTTPS)),
+            Assert.isTrue(url.startsWith(HTTP) || url.startsWith(HTTPS),
                     "外链必须以http://或者https://开头");
         }
     }

@@ -4,7 +4,6 @@ import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
@@ -85,9 +84,9 @@ public class DeptServiceImpl implements DeptService {
         return groupService.isAssociatedUser(deptIds);
     }
 
-    private void checkOperationalRights(){
+    private void checkOperationalRights(){// TODO
         String currentUsername = SecurityUtils.getCurrentUsername();
-        UserDO currentUser = userService.queryByUserName(currentUsername);
-        Assert.isTrue(!currentUser.isAdmin(), "你没有操作权限，尽");
+        UserDO currentUser = userService.queryByUsername(currentUsername);
+        Assert.isTrue(currentUser.isAdmin(), "你没有操作权限，尽");
     }
 }

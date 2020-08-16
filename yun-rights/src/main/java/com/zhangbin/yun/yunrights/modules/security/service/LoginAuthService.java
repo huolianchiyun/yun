@@ -10,7 +10,7 @@ import com.zhangbin.yun.yunrights.modules.security.config.bean.LoginProperties;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.security.TokenProvider;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.AuthUser;
-import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUserWrapper;
+import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,19 +43,17 @@ public class LoginAuthService {
     }
 
     public Map<String, Object> login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request) throws Exception {
-        //TODO 未见密码正确验证
+        validateCaptcha(authUser);
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
-
-        validateCaptcha(authUser);
-
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUserName(), password);
+        // 密码正确验证:UserDetailsServiceImpl#loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
-        final JwtUserWrapper jwtUser = (JwtUserWrapper) authentication.getPrincipal();
+        final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
         // 保存在线信息
         onlineUserService.save(jwtUser, token, request);
         // 返回 token 与 用户信息
@@ -92,7 +90,7 @@ public class LoginAuthService {
         String code = (String) redisUtils.get(authUser.getUuid());
         // 清除验证码
         redisUtils.del(authUser.getUuid());
-        Assert.isTrue(StringUtils.isBlank(code), "验证码错误");
-        Assert.isTrue(StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code), "验证码不存在或已过期");
+        Assert.hasText(code, "验证码错误");
+        Assert.isTrue(StringUtils.isNotBlank(authUser.getCode()) && authUser.getCode().equalsIgnoreCase(code), "验证码不存在或已过期");
     }
 }

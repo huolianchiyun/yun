@@ -23,10 +23,10 @@ public interface UserService {
     /**
      * 根据登录名查询
      *
-     * @param loginName /
+     * @param username /
      * @return /
      */
-    UserDO queryByUserName(String loginName);
+    UserDO queryByUsername(String username);
 
     /**
      * 分页查询满足条件的数据

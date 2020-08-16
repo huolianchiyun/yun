@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
-import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
@@ -14,7 +13,6 @@ import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
-import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
@@ -55,8 +53,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDO queryByUserName(String loginName) {
-        return userMapper.selectByUserName(loginName);
+    public UserDO queryByUsername(String username) {
+        return userMapper.selectByUsername(username);
     }
 
     @Override
@@ -77,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(UserDO user) {
         checkOperationalRights(user);
-        Assert.notNull(userMapper.selectByUserName(user.getUserName()), "用户名已存在，请重新命名！");
+        Assert.isNull(userMapper.selectByUsername(user.getUsername()), "用户名已存在，请重新命名！");
         // 默认密码 123456
         user.setPwd(passwordEncoder.encode("123456"));
         userMapper.insert(user);
@@ -88,17 +86,17 @@ public class UserServiceImpl implements UserService {
         checkOperationalRights(user);
         userMapper.updateByPrimaryKeySelective(user);
         // 清理缓存
-        clearCaches(user.getId(), user.getUserName());
+        clearCaches(user.getId(), user.getUsername());
     }
 
     @Override
     public void updatePwd(UserPwdVO userPwdVo) throws Exception {
         String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwdVo.getOldPass());
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwdVo.getNewPass());
-        UserDO user = queryByUserName(SecurityUtils.getCurrentUsername());
-        Assert.isTrue(!passwordEncoder.matches(oldPass, user.getPwd()), "修改失败，旧密码错误");
-        Assert.isTrue(passwordEncoder.matches(newPass, user.getPwd()), "新密码不能与旧密码相同");
-        String username = user.getUserName();
+        UserDO user = queryByUsername(SecurityUtils.getCurrentUsername());
+        Assert.isTrue(passwordEncoder.matches(oldPass, user.getPwd()), "修改失败，旧密码错误");
+        Assert.isTrue(!passwordEncoder.matches(newPass, user.getPwd()), "新密码不能与旧密码相同");
+        String username = user.getUsername();
         userMapper.updateByPrimaryKeySelective(new UserDO(username, passwordEncoder.encode(newPass), LocalDateTime.now()));
         redisUtils.del("user::username:" + username);
         flushCache(username);
@@ -107,26 +105,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateEmail(String code, UserDO user) throws Exception {
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, user.getPwd());
-        UserDO userDb = queryByUserName(SecurityUtils.getCurrentUsername());
-        Assert.isTrue(!passwordEncoder.matches(password, userDb.getPwd()), "密码错误");
+        UserDO userDb = queryByUsername(SecurityUtils.getCurrentUsername());
+        Assert.isTrue(passwordEncoder.matches(password, userDb.getPwd()), "密码错误");
         verificationCodeService.validate(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + user.getEmail(), code);
-        userMapper.updateByPrimaryKeySelective(new UserDO(userDb.getUserName(), user.getEmail()));
-        redisUtils.del(CacheKey.USER_NAME + userDb.getUserName());
-        flushCache(userDb.getUserName());
+        userMapper.updateByPrimaryKeySelective(new UserDO(userDb.getUsername(), user.getEmail()));
+        redisUtils.del(CacheKey.USER_NAME + userDb.getUsername());
+        flushCache(userDb.getUsername());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteByUserIds(Set<Long> userIds) {
         Set<UserDO> users = userMapper.selectByPrimaryKeys(userIds);
-        UserDO currentUser = userMapper.selectByUserName(SecurityUtils.getCurrentUsername());
+        UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         users.forEach(e -> checkOperationalRights(e, currentUser));
         userMapper.deleteByIds(userIds);
         // TODO　考虑是否删除该用户创建的组及该用户为组长的组？？
 
         userGroupMapper.deleteByUserIds(userIds);
         // 清理缓存
-        Optional.of(userMapper.selectByIds(userIds)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUserName()));
+        Optional.of(userMapper.selectByIds(userIds)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUsername()));
     }
 
     @Override
@@ -140,7 +138,7 @@ public class UserServiceImpl implements UserService {
      * @param operatingUser 将要被操作的用户
      */
     private void checkOperationalRights(UserDO operatingUser) {
-        UserDO currentUser = userMapper.selectByUserName(SecurityUtils.getCurrentUsername());
+        UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         checkOperationalRights(operatingUser, currentUser);
     }
 
@@ -152,8 +150,8 @@ public class UserServiceImpl implements UserService {
         GroupDO dept = operatingUser.getDept();
         if (Objects.nonNull(dept) && StringUtils.hasText(dept.getGroupCode())) {
             Assert.isNull(currentUser.getDept(), "你不属于一个部门，没有操作权限！");
-            Assert.isTrue(!currentUser.getUserName().equals(currentUser.getDept().getGroupMaster()), "你不是部门管者，没有操作权限！");
-            Assert.isTrue(!dept.getGroupCode().startsWith(currentUser.getDept().getGroupCode()), "你只能操作你所属部门下的用户！");
+            Assert.isTrue(currentUser.getUsername().equals(currentUser.getDept().getGroupMaster()), "你不是部门管者，没有操作权限！");
+            Assert.isTrue(dept.getGroupCode().startsWith(currentUser.getDept().getGroupCode()), "你只能操作你所属部门下的用户！");
         }
     }
 

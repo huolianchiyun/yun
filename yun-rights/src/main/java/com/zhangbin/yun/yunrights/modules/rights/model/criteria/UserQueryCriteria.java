@@ -32,8 +32,8 @@ public class UserQueryCriteria extends AbstractQueryPage implements Serializable
     private List<LocalDateTime> createTimes;
 
     public enum BlurryType {
-        USER_NAME(1, "userName"),
-        NICK_NAME(2, "nickName"),
+        USERNAME(1, "username"),
+        NICKNAME(2, "nickname"),
         EMAIL(3, "email"),
         PHONE(4, "phone");
 

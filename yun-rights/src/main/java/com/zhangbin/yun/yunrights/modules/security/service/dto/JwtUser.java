@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public class JwtUserWrapper implements UserDetails {
+public class JwtUser implements UserDetails {
 
     private final UserDO user;
 
@@ -34,7 +34,7 @@ public class JwtUserWrapper implements UserDetails {
     @Override
     @JsonIgnore
     public String getUsername() {
-        return user.getUserName();
+        return user.getUsername();
     }
 
     @JsonIgnore

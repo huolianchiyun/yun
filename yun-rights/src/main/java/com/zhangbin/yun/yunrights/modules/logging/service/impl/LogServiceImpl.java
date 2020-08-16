@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
@@ -26,6 +27,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -113,7 +115,8 @@ public class LogServiceImpl implements LogService {
         assert log != null;
         log.setClientIp(ip);
         //参数值
-        String params = JSON.toJSONString(joinPoint.getArgs()[0]);
+        String params = JSON.toJSONString(joinPoint.getArgs()[0], SerializerFeature.DisableCircularReferenceDetect,
+                SerializerFeature.IgnoreNonFieldGetter);
         String loginPath = "login";
         if (loginPath.equals(signature.getName())) {
             try {

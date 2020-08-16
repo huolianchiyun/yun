@@ -106,7 +106,7 @@ public class GroupServiceImpl implements GroupService {
         if (StringUtils.isBlank(groupMaster)) {
             group.setGroupMaster(currentUsername);
         } else {
-            Assert.isTrue(Objects.isNull(userMapper.selectByUserName(groupMaster)), "指定的组长（" + groupMaster + "）不存在!");
+            Assert.notNull(userMapper.selectByUsername(groupMaster), "指定的组长（" + groupMaster + "）不存在!");
         }
         checkOperationalRights(group);
         groupMapper.insert(group);
@@ -116,7 +116,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void updateGroup(GroupDO updatingGroup) {
-        Assert.isTrue(updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
+        Assert.isTrue(!updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
         GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getPid());
         Assert.isNull(groupDB, "修改的组不存在！");
         checkOperationalRights(updatingGroup);
@@ -133,8 +133,8 @@ public class GroupServiceImpl implements GroupService {
         // 获取要删除组及子孙组
         Set<GroupDO> posterityGroupWithSelf = new HashSet<>(getPosterityMenusWithSelf(ids));
         Set<Long> deletingGroupIds = posterityGroupWithSelf.stream().map(GroupDO::getId).collect(Collectors.toSet());
-        Assert.isTrue(isAssociatedUser(deletingGroupIds), "将要删除的组或其子组与用户存在关联，请解除关联关系后，再尝试！");
-        UserDO currentUser = userMapper.selectByUserName(SecurityUtils.getCurrentUsername());
+        Assert.isTrue(!isAssociatedUser(deletingGroupIds), "将要删除的组或其子组与用户存在关联，请解除关联关系后，再尝试！");
+        UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         Set<GroupDO> deletingGroups = posterityGroupWithSelf.stream().filter(e -> ids.contains(e.getId())).collect(Collectors.toSet());
         deletingGroups.forEach(e -> {
             checkOperationalRights(e, currentUser);
@@ -187,7 +187,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private void checkOperationalRights(GroupDO group) {
-        UserDO currentUser = userMapper.selectByUserName(SecurityUtils.getCurrentUsername());
+        UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         checkOperationalRights(group, currentUser);
     }
 
@@ -199,17 +199,17 @@ public class GroupServiceImpl implements GroupService {
         String groupCode = group.getGroupCode();
         if (Objects.nonNull(group.getId())) {
             // 修改组
-            // 若修改的组是当前用户所属组或其子组且用户所属组或其父组的群主，则放行
+            // 若修改的组是当前用户所属组或其子组且是用户所属组或其父组的群主，则放行
             Assert.isTrue(currentUserGroups.stream()
                             .filter(e -> groupCode.startsWith(e.getGroupCode()))
-                            .noneMatch(e -> currentUser.getUserName().equals(e.getGroupMaster())),
+                            .anyMatch(e -> currentUser.getUsername().equals(e.getGroupMaster())),
                     "你不是将要修改组或其父组的群主，故没有操作权限！");
         } else {
             // 创建组
             // 若创建的组是当前用户所属组的子组且用户是父组群主，则放行
             Assert.isTrue(currentUserGroups.stream()
                             .filter(e -> groupCode.startsWith(e.getGroupCode()) && !groupCode.equals(e.getGroupCode()))
-                            .noneMatch(e -> currentUser.getUserName().equals(e.getGroupMaster())),
+                            .anyMatch(e -> currentUser.getUsername().equals(e.getGroupMaster())),
                     "你不是将要创建组的父组的群主，故没有操作权限！");
         }
     }
@@ -261,7 +261,7 @@ public class GroupServiceImpl implements GroupService {
         });
         if (CollectionUtil.isNotEmpty(users)) {
             redisUtils.delByKeys("data::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
-            users.forEach(item -> userCacheClean.cleanUserCache(item.getUserName()));
+            users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
             Set<Long> userIds = users.stream().map(UserDO::getId).collect(Collectors.toSet());
             redisUtils.delByKeys(CacheKey.DATE_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);

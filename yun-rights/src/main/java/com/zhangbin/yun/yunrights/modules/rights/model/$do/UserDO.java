@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,12 +18,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties("handler")
 public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String userName;
+    private String username;
 
-    private String nickName;
+    private String nickname;
 
     /**
      * 性別：1 男， 2 女
@@ -61,14 +63,14 @@ public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     public UserDO() {
     }
 
-    public UserDO(String userName, String pwd, LocalDateTime pwdResetTime) {
-        this.userName = userName;
+    public UserDO(String username, String pwd, LocalDateTime pwdResetTime) {
+        this.username = username;
         this.pwd = pwd;
         this.pwdResetTime = pwdResetTime;
     }
 
-    public UserDO(String userName, String email) {
-        this.userName = userName;
+    public UserDO(String username, String email) {
+        this.username = username;
         this.email = email;
     }
 
@@ -77,20 +79,20 @@ public class UserDO extends BaseDo implements ExcelSupport, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDO other = (UserDO) o;
-        return Objects.equals(id, other.id) || (Objects.equals(userName, other.userName) && Objects.equals(pwd, other.pwd));
+        return Objects.equals(id, other.id) || (Objects.equals(username, other.username) && Objects.equals(pwd, other.pwd));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, pwd);
+        return Objects.hash(id, username, pwd);
     }
 
     @Override
     public LinkedHashMap<String, Object> toLinkedMap() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         List<String> groups = this.groups.stream().map(GroupDO::getGroupName).collect(Collectors.toList());
-        map.put("显示名", nickName);
-        map.put("用户名", userName);
+        map.put("显示名", nickname);
+        map.put("用户名", username);
         map.put("所属组", String.join(",", groups));
         map.put("所属部门", dept.getGroupName());
         map.put("手机号码", phone);

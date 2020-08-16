@@ -2,6 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.beans.Transient;
@@ -29,6 +30,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@JsonIgnoreProperties("handler")
 public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChildren.ChildrenSupport<GroupDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
     /**

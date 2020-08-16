@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.security.service;
 
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
-import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUserWrapper;
+import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUser;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.OnlineUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +31,18 @@ public class OnlineUserService {
 
     /**
      * 保存在线用户信息
-     * @param jwtUserWrapper /
+     * @param jwtUser /
      * @param token /
      * @param request /
      */
-    public void save(JwtUserWrapper jwtUserWrapper, String token, HttpServletRequest request){
-        String dept = jwtUserWrapper.getUser().getDept().getGroupName();
+    public void save(JwtUser jwtUser, String token, HttpServletRequest request){
+        String dept = jwtUser.getUser().getDept().getGroupName();
         String ip = IPUtil.getIp(request);
         String browser = IPUtil.getBrowser(request);
         String address = IPUtil.getCityInfo(ip);
         OnlineUser onlineUser = null;
         try {
-            onlineUser = new OnlineUser(jwtUserWrapper.getUsername(), dept, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
+            onlineUser = new OnlineUser(jwtUser.getUsername(), dept, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
         } catch (Exception e) {
             log.error(e.getMessage(),e);
         }

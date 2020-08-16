@@ -3,8 +3,8 @@
 <mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
         <id column="u_id" jdbcType="BIGINT" property="id"/>
-        <result column="u_nick_name" jdbcType="VARCHAR" property="nickName"/>
-        <result column="u_user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="u_nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="u_username" jdbcType="VARCHAR" property="username"/>
         <result column="u_gender" jdbcType="TINYINT" property="gender"/>
         <result column="u_pwd" jdbcType="VARCHAR" property="pwd"/>
         <result column="u_phone" jdbcType="VARCHAR" property="phone"/>
@@ -33,8 +33,8 @@
 
     <resultMap id="SmallBaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
         <id column="u_id" jdbcType="BIGINT" property="id"/>
-        <result column="u_nick_name" jdbcType="VARCHAR" property="nickName"/>
-        <result column="u_user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="u_nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="u_username" jdbcType="VARCHAR" property="username"/>
         <result column="u_gender" jdbcType="TINYINT" property="gender"/>
         <result column="u_pwd" jdbcType="VARCHAR" property="pwd"/>
         <result column="u_phone" jdbcType="VARCHAR" property="phone"/>
@@ -51,7 +51,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        u_id, u_nick_name, u_user_name, u_gender, u_pwd, u_phone, u_email, u_is_admin, u_dept_id, u_status, u_is_deleted,
+        u_id, u_nickname, u_username, u_gender, u_pwd, u_phone, u_email, u_is_admin, u_dept_id, u_status, u_is_deleted,
         u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
     </sql>
 
@@ -72,11 +72,11 @@
         </foreach>
     </select>
 
-    <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
-        where u_user_name = #{userName,jdbcType=BIGINT}
+        where u_username = #{userName,jdbcType=BIGINT}
     </select>
 
     <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
@@ -118,11 +118,11 @@
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
                 <if test='criteria.blurry != ""'>
-                    <if test='criteria.blurryType.isMatch("userName")'>
-                        and u_user_name like concat('%', #{criteria.blurry}, '%')
+                    <if test='criteria.blurryType.isMatch("username")'>
+                        and u_username like concat('%', #{criteria.blurry}, '%')
                     </if>
-                    <if test='criteria.blurryType.isMatch("nickName")'>
-                        and u_nick_name like concat('%', #{criteria.blurry}, '%')
+                    <if test='criteria.blurryType.isMatch("nickname")'>
+                        and u_nickname like concat('%', #{criteria.blurry}, '%')
                     </if>
                     <if test='criteria.blurryType.isMatch("email")'>
                         and u_email like concat('%', #{criteria.blurry}, '%')
@@ -148,12 +148,12 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_user (u_nick_name, u_user_name,
+        insert into t_sys_user (u_nickname, u_username,
         u_gender, u_pwd, u_phone, u_email, u_is_admin,
         u_dept_id, u_status, u_is_deleted, u_creator,
         u_updater, u_create_time, u_update_time,
         u_pwd_reset_time)
-        values (#{nickName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+        values (#{nickname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
         #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
         #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, #{deleted,jdbcType=BIT},
         #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
@@ -164,11 +164,11 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
         update t_sys_user
         <set>
-            <if test="nickName != null">
-                u_nick_name = #{nickName,jdbcType=VARCHAR},
+            <if test="nickname != null">
+                u_nickname = #{nickname,jdbcType=VARCHAR},
             </if>
-            <if test="userName != null">
-                u_user_name = #{userName,jdbcType=VARCHAR},
+            <if test="username != null">
+                u_username = #{username,jdbcType=VARCHAR},
             </if>
             <if test="gender != null">
                 u_gender = #{gender,jdbcType=TINYINT},

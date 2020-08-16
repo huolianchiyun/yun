@@ -14,7 +14,7 @@ public interface UserMapper extends PageMapper<UserDO> {
 
     Set<UserDO> selectByPrimaryKeys(Set<Long> ids);
 
-    UserDO selectByUserName(String userName);
+    UserDO selectByUsername(String username);
 
     Set<UserDO> selectByIds(@Param("ids") Set<Long> ids);
 

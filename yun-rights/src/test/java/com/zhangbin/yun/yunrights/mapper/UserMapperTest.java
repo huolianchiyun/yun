@@ -17,11 +17,11 @@ public class UserMapperTest {
     UserMapper userMapper;
 
     @Test
-    public void testSelectByUserName() {
-        UserDO userDo = userMapper.selectByUserName("zhangsan");
-        System.out.println(userDo.getUserName());
+    public void testSelectByUsername() {
+        UserDO userDo = userMapper.selectByUsername("zhangsan");
+        System.out.println(userDo.getUsername());
         System.out.println("----------------------------");
-        System.out.println(userDo.getNickName());
+        System.out.println(userDo.getNickname());
         System.out.println("----------------------------");
         System.out.println(userDo.getGroups());
         System.out.println("----------------------------");
@@ -33,7 +33,7 @@ public class UserMapperTest {
         UserQueryCriteria criteria = new UserQueryCriteria();
         criteria.setPageNum(1);
         criteria.setPageSize(5);
-        criteria.setBlurryType(UserQueryCriteria.BlurryType.NICK_NAME);
+        criteria.setBlurryType(UserQueryCriteria.BlurryType.NICKNAME);
         criteria.setBlurry("张三");
         List<UserDO> userDOS = CollectionUtil.list(false, userMapper.selectAllByCriteria(criteria));
         System.out.println("----------------------------");
@@ -43,8 +43,8 @@ public class UserMapperTest {
     @Test
     public void testInsert(){
         UserDO user = new UserDO();
-        user.setUserName("lisi");
-        user.setNickName("李四");
+        user.setUsername("lisi");
+        user.setNickname("李四");
         user.setPhone("12345678991");
         user.setPwd("12345678991");
         userMapper.insert(user);
