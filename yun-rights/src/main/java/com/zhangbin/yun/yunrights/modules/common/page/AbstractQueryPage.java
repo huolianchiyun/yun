@@ -8,6 +8,6 @@ import lombok.Data;
  */
 @Data
 public abstract class AbstractQueryPage {
-    protected Integer pageNum;
-    protected Integer pageSize;
+    protected Integer pageNum = 0;
+    protected Integer pageSize = 10;
 }

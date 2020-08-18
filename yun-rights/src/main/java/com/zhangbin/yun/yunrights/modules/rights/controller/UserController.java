@@ -60,14 +60,6 @@ public class UserController {
         return success();
     }
 
-    @Logging("修改用户：个人中心")
-    @ApiOperation("修改用户：个人中心")
-    @PutMapping(value = "center")
-    public ResponseEntity<ResponseData> updateCenter(@RequestBody UserDO user) {
-        userService.updateUser(user);
-        return success();
-    }
-
     @Logging("删除用户")
     @ApiOperation("删除用户")
     @DeleteMapping

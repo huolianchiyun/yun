@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.service.OnlineUserService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
-import com.zhangbin.yun.yunrights.modules.security.service.dto.OnlineUser;
+import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

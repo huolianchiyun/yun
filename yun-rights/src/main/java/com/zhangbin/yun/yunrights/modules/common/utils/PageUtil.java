@@ -15,11 +15,11 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
     /**
      * List 分页
      */
-    public static List toPage(int page, int size, List list) {
+    public static <T> List<T> toPage(int page, int size, List<T> list) {
         int fromIndex = page * size;
         int toIndex = page * size + size;
         if (fromIndex > list.size()) {
-            return new ArrayList();
+            return new ArrayList<>();
         } else if (toIndex >= list.size()) {
             return list.subList(fromIndex, list.size());
         } else {

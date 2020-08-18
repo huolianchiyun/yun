@@ -12,7 +12,7 @@
 
     <properties>
         <spring-boot-admin.version>2.2.3</spring-boot-admin.version>
-        <swagger.version>2.9.2</swagger.version>
+        <swagger.version>3.0.0</swagger.version>
         <log4jdbc.version>1.16</log4jdbc.version>
         <jjwt.version>0.11.1</jjwt.version>
         <hutool.version>5.3.4</hutool.version>
@@ -109,40 +109,18 @@
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-        <!-- Swagger UI 相关 -->
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.swagger</groupId>
-                    <artifactId>swagger-annotations</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger</groupId>
-                    <artifactId>swagger-models</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.5.21</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-models</artifactId>
-            <version>1.5.21</version>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core -->
         <dependency>
@@ -203,14 +181,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.3</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis-spring-boot-starter</artifactId>
-                    <groupId>org.mybatis.spring.boot</groupId>
-                </exclusion>
-            </exclusions>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.11</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

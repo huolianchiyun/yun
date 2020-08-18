@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.security.service.dto;
+package com.zhangbin.yun.yunrights.modules.security.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;

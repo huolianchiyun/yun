@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Predicates;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
@@ -10,28 +11,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.data.domain.Pageable;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.*;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
-import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Parameter;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
+import java.util.*;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
+import static springfox.documentation.service.ParameterType.HEADER;
 
 @Configuration
-@EnableSwagger2
+@EnableOpenApi
 public class SwaggerConfig {
 
     @Value("${jwt.header}")
@@ -40,8 +33,8 @@ public class SwaggerConfig {
     @Value("${jwt.token-start-with}")
     private String tokenStartWith;
 
-    @Value("${swagger.enabled}")
-    private Boolean enabled;
+    @Value("${swagger.enable}")
+    private Boolean enable;
 
     /**
      * 业务系统组名
@@ -52,60 +45,59 @@ public class SwaggerConfig {
     /**
      * 业务系统总的 api前缀
      */
-    @Value("${swagger.rootPath:'/api/**'}")
-    private String rootPath;
+    @Value("${swagger.baseUrl:'/api/**'}")
+    private String baseUrl;
 
     @Bean
-    @SuppressWarnings("all")
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(enabled)
-                .apiInfo(apiInfo())
+        return getDocket(baseUrl, groupName, "业务接口", "", "1.0", enable);
+    }
+
+    private Docket getDocket(String baseUrl, String groupName, String title, String description, String version, Boolean enable) {
+        return new Docket(DocumentationType.OAS_30)
+                .enable(enable)
+                .apiInfo(new ApiInfoBuilder()
+                        .description(description)
+                        .title(title)
+                        .version(version)
+                        .build())
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant(rootPath))
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .paths(PathSelectors.ant(baseUrl))
                 .build()
                 .groupName(groupName)
-                .globalOperationParameters(buildGlobalOperationParameters());
+                .globalRequestParameters(buildGlobalOperationParameters())
+                // 支持的通讯协议集合
+                .protocols(new LinkedHashSet<>(
+                        Arrays.asList("https", "http")))
+                // 授权信息设置，必要的header token等认证信息
+                .securitySchemes(Collections.singletonList(
+                        new ApiKey("BASE_TOKEN", "token", "pass")))
+                // 授权信息全局应用
+                .securityContexts(Collections.singletonList(
+                        SecurityContext.builder().securityReferences(Collections.singletonList(
+                                new SecurityReference("BASE_TOKEN", new AuthorizationScope[]{new AuthorizationScope("global", "")}))).build()
+                ));
     }
+
 
     @Bean
-    @SuppressWarnings("all")
     public Docket yunrights_api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(enabled)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/yun/**"))
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
-                .build()
-                .groupName("系统权限: yun-rights-接口文档V1.0")
-                .globalOperationParameters(buildGlobalOperationParameters());
+        return getDocket("/yun/**", "系统权限: yun-rights-接口文档V1.0", "业务接口",
+                "一个简单且易上手的 Spring boot 权限框架", "1.0", enable);
     }
 
-    private List<Parameter> buildGlobalOperationParameters() {
-        ParameterBuilder ticketPar = new ParameterBuilder();
-        List<Parameter> pars = new ArrayList<>();
-        ticketPar.name(tokenHeader).description("token")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .defaultValue(tokenStartWith + " ")
+    private List<RequestParameter> buildGlobalOperationParameters() {
+        RequestParameterBuilder ticketPar = new RequestParameterBuilder();
+        List<RequestParameter> pars = new ArrayList<>();
+        ticketPar.name(tokenHeader)
+                .description("token")
+                .in(HEADER)
                 .required(true)
                 .build();
         pars.add(ticketPar.build());
         return pars;
     }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .description("一个简单且易上手的 Spring boot 权限框架")
-                .title("YUN-RIGHTS 接口文档")
-                .version("2.4")
-                .build();
-    }
-
 }
 
 /**
@@ -124,7 +116,7 @@ class SwaggerDataConfig {
 
             @Override
             public List<AlternateTypeRule> rules() {
-                return newArrayList(newRule(resolver.resolve(PageInfo.class), resolver.resolve(Page.class)));
+                return CollectionUtil.newArrayList(newRule(resolver.resolve(PageInfo.class), resolver.resolve(Page.class)));
             }
         };
     }

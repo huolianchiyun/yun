@@ -7,7 +7,7 @@ import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.security.service.LoginAuthService;
-import com.zhangbin.yun.yunrights.modules.security.service.dto.AuthUser;
+import com.zhangbin.yun.yunrights.modules.security.model.dto.AuthUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

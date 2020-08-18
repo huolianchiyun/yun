@@ -31,10 +31,10 @@ public class UserMapperTest {
     @Test
     public void testSelectAllByCriteria() {
         UserQueryCriteria criteria = new UserQueryCriteria();
-        criteria.setPageNum(1);
-        criteria.setPageSize(5);
-        criteria.setBlurryType(UserQueryCriteria.BlurryType.NICKNAME);
-        criteria.setBlurry("张三");
+//        criteria.setPageNum(1);
+//        criteria.setPageSize(5);
+//        criteria.setBlurryType(UserQueryCriteria.BlurryType.NICKNAME);
+//        criteria.setBlurry("张三");
         List<UserDO> userDOS = CollectionUtil.list(false, userMapper.selectAllByCriteria(criteria));
         System.out.println("----------------------------");
         System.out.println(userDOS);

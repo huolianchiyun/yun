@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.security.service.dto;
+package com.zhangbin.yun.yunrights.modules.security.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

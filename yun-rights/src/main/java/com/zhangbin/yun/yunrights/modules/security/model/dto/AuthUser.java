@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.security.service.dto;
+package com.zhangbin.yun.yunrights.modules.security.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +21,6 @@ public class AuthUser {
 
     @Override
     public String toString() {
-        return "{userName=" + username + ", password= ******}";
+        return "{username=" + username + ", password= ******}";
     }
 }
