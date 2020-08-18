@@ -21,7 +21,7 @@ import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/online")
+@RequestMapping("/yun/auth/online")
 @Api(tags = "系统：在线用户管理")
 public class OnlineController {
 

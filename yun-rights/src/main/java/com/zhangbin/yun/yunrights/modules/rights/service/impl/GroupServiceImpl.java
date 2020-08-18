@@ -265,7 +265,7 @@ public class GroupServiceImpl implements GroupService {
     private String generateGroupCode(GroupDO group, String prefix) {
         GroupDO fatherGroup = null;
         if(Objects.nonNull(group.getPid())){
-            fatherGroup = groupMapper.selectByPrimaryKey(group.getPid());
+            fatherGroup = groupMapper.selectByIdForUpdate(group.getPid());
         }
         if (Objects.nonNull(fatherGroup)) {
             return fatherGroup.getGroupCode() + ":" + group.getId();

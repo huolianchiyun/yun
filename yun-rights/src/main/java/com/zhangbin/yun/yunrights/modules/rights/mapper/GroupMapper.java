@@ -4,6 +4,7 @@ import com.zhangbin.yun.yunrights.modules.common.page.PageMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.Set;
@@ -12,6 +13,9 @@ import java.util.Set;
 public interface GroupMapper extends PageMapper<GroupDO> {
 
     GroupDO selectByPrimaryKey(Long id);
+
+    @Select("select g_group_code from t_sys_group where g_id = #{id} for update")
+    GroupDO selectByIdForUpdate(Long id);
 
     Set<GroupDO> selectByPrimaryKeys(Set<Long> ids);
 
@@ -33,7 +37,7 @@ public interface GroupMapper extends PageMapper<GroupDO> {
     int updateByPrimaryKeySelective(GroupDO record);
 
     @Update("update t_sys_group set g_group_code = #{groupCode} where g_id = #{groupId}")
-    int updateGroupCodeById(String groupCode, Long groupId);
+    void updateGroupCodeById(String groupCode, Long groupId);
 
     int deleteByPrimaryKey(Long id);
 

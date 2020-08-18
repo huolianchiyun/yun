@@ -47,7 +47,7 @@ public class LoginAuthService {
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(authUser.getUserName(), password);
+                new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         // 密码正确验证:UserDetailsServiceImpl#loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -63,7 +63,7 @@ public class LoginAuthService {
         }};
         if (loginProperties.isSingleLogin()) {
             //踢掉之前已经登录的token
-            onlineUserService.checkLoginOnUser(authUser.getUserName(), token);
+            onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
         }
         return authInfo;
     }
