@@ -45,7 +45,7 @@ public class GroupController {
 
     @Logging("查询组")
     @ApiOperation("查询组:根据ID获取同级与上级数据")
-    @PostMapping("/batch/family")
+    @PostMapping("/tree2me")
     @PreAuthorize("@el.check('user:list','group:list')")
     public ResponseEntity<ResponseData> getSuperior(@RequestBody Set<Long> groupIds) {
         return success(groupService.queryAncestorAndSiblingOfGroups(groupIds));

@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @ApiOperation("修改密码")
-    @PostMapping(value = "/updatePass")
+    @PostMapping(value = "/update/pwd")
     public ResponseEntity<ResponseData> updatePwd(@RequestBody UserPwdVO pwdVo) throws Exception {
         userService.updatePwd(pwdVo);
         return success();
@@ -86,7 +86,7 @@ public class UserController {
 
     @Logging("修改邮箱")
     @ApiOperation("修改邮箱")
-    @PostMapping(value = "/updateEmail/{code}")
+    @PostMapping(value = "/update/email/{code}")
     public ResponseEntity<ResponseData> updateEmail(@PathVariable String code, @RequestBody UserDO user) throws Exception {
         userService.updateEmail(code, user);
         return success();

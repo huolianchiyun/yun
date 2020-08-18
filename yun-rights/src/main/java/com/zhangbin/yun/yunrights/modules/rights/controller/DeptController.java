@@ -44,7 +44,7 @@ public class DeptController {
 
     @Logging("查询部门")
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
-    @PostMapping("/batch/family")
+    @PostMapping("/tree2me")
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<ResponseData> queryAncestorAndSiblingOfDepts(@RequestBody Set<Long> deptIds) {
         return success(deptService.queryAncestorAndSiblingOfDepts(deptIds));
