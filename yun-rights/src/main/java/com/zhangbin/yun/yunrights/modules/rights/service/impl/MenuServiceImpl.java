@@ -6,7 +6,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMenuMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
@@ -85,7 +84,7 @@ public class MenuServiceImpl implements MenuService {
             return new ArrayList<>();
         }
         Set<Long> roleIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
-        Set<MenuDO> menuSet = menuMapper.selectByRoleIds(roleIds);
+        Set<MenuDO> menuSet = menuMapper.selectByGroupIds(roleIds);
         return buildMenuTree(menuSet);
     }
 

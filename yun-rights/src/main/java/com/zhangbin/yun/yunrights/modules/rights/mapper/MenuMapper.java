@@ -15,7 +15,7 @@ public interface MenuMapper extends PageMapper<MenuDO> {
 
     Set<MenuDO> batchSelectById(@Param("menuIds")Set<Long> menuIds);
 
-    Set<MenuDO> selectByRoleIds(@Param("roleIds") Set<Long> roleIds);
+    Set<MenuDO> selectByGroupIds(@Param("groupIds") Set<Long> groupIds);
 
     int insert(MenuDO record);
 

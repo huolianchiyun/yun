@@ -1,5 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.security.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.service.dto.JwtUser;
@@ -131,7 +133,7 @@ public class OnlineUserService {
      * @return /
      */
     public OnlineUser getOne(String key) {
-        return (OnlineUser)redisUtils.get(key);
+        return JSON.parseObject(JSON.toJSONString(redisUtils.get(key)), OnlineUser.class, Feature.IgnoreNotMatch);
     }
 
     /**

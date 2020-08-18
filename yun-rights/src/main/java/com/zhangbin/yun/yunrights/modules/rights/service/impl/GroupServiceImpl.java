@@ -5,6 +5,9 @@ import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
+
+import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.GROUP_TYPE;
+
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.*;
@@ -99,8 +102,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createGroup(GroupDO group) {
         group.setId(null);
+
+        // 校验组长信息，若不存在，将创建人设置为组长
         String groupMaster = group.getGroupMaster();
         String currentUsername = SecurityUtils.getCurrentUsername();
         if (StringUtils.isBlank(groupMaster)) {
@@ -108,13 +114,17 @@ public class GroupServiceImpl implements GroupService {
         } else {
             Assert.notNull(userMapper.selectByUsername(groupMaster), "指定的组长（" + groupMaster + "）不存在!");
         }
+
         checkOperationalRights(group);
         groupMapper.insert(group);
+        groupMapper.updateGroupCodeById(generateGroupCode(group), group.getId());
+
         // 清理缓存
         redisUtils.del("group::pid:" + (group.getPid()));
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateGroup(GroupDO updatingGroup) {
         Assert.isTrue(!updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
         GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getPid());
@@ -241,6 +251,26 @@ public class GroupServiceImpl implements GroupService {
             groupMenuMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
             // 重新绑定新的菜单
             groupMenuMapper.batchInsert(groupMenus);
+        }
+    }
+
+    private String generateGroupCode(GroupDO group) {
+        if (GROUP_TYPE.equals(group.getGroupType())) {
+            return generateGroupCode(group, "group::");
+        } else {
+            return generateGroupCode(group, "dept::");
+        }
+    }
+
+    private String generateGroupCode(GroupDO group, String prefix) {
+        GroupDO fatherGroup = null;
+        if(Objects.nonNull(group.getPid())){
+            fatherGroup = groupMapper.selectByPrimaryKey(group.getPid());
+        }
+        if (Objects.nonNull(fatherGroup)) {
+            return fatherGroup.getGroupCode() + ":" + group.getId();
+        } else {
+           return  prefix + group.getId();
         }
     }
 

@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
         <id column="g_id" jdbcType="BIGINT" property="id"/>
         <result column="g_pid" jdbcType="BIGINT" property="pid"/>
+        <result column="g_group_code" jdbcType="INTEGER" property="groupCode"/>
         <result column="g_group_type" jdbcType="VARCHAR" property="groupType"/>
         <result column="g_group_name" jdbcType="VARCHAR" property="groupName"/>
         <result column="g_description" jdbcType="VARCHAR" property="description"/>
@@ -22,6 +23,7 @@
     <resultMap id="SmallBaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
         <id column="g_id" jdbcType="BIGINT" property="id"/>
         <result column="g_pid" jdbcType="BIGINT" property="pid"/>
+        <result column="g_group_code" jdbcType="INTEGER" property="groupCode"/>
         <result column="g_group_type" jdbcType="VARCHAR" property="groupType"/>
         <result column="g_group_name" jdbcType="VARCHAR" property="groupName"/>
         <result column="g_description" jdbcType="VARCHAR" property="description"/>
@@ -34,7 +36,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        g_id, g_pid, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_creator, g_updater, g_create_time, g_update_time
+        g_id, g_pid, g_group_code, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_creator, g_updater, g_create_time, g_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -125,15 +127,13 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-        insert into t_sys_group (g_pid, g_group_type,
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_group (g_pid, g_group_code, g_group_type,
         g_group_name, g_description, g_group_sort, g_group_master, g_creator,
         g_updater, g_create_time, g_update_time
         )
-        values (#{pid,jdbcType=BIGINT}, #{groupType,jdbcType=INTEGER},#{groupName,jdbcType=VARCHAR},
+        values (#{pid,jdbcType=BIGINT}, #{groupCode,jdbcType=INTEGER}, #{groupType,jdbcType=INTEGER},#{groupName,jdbcType=VARCHAR},
         #{description,jdbcType=VARCHAR}, #{groupSort,jdbcType=INTEGER}, #{groupMaster,jdbcType=VARCHAR},
         #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP}
@@ -146,6 +146,9 @@
         <set>
             <if test="pid != null">
                 g_pid = #{pid,jdbcType=BIGINT},
+            </if>
+            <if test="groupCode != null">
+                g_group_code = #{groupCode,jdbcType=INTEGER},
             </if>
             <if test="groupType != null">
                 g_group_type = #{groupType,jdbcType=INTEGER},

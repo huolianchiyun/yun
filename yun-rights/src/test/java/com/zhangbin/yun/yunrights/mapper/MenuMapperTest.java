@@ -3,12 +3,11 @@ package com.zhangbin.yun.yunrights.mapper;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
 import com.zhangbin.yun.yunrights.modules.rights.service.impl.MenuServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @SpringBootTest
@@ -24,6 +24,8 @@ public class MenuMapperTest {
 
     @Autowired
     MenuMapper menuMapper;
+    @Autowired
+    MenuService menuService;
 
     @Test
     public void testDownload() {
@@ -82,6 +84,19 @@ public class MenuMapperTest {
         });
 
         System.out.println(JSON.toJSONString(menuSorted, SerializerFeature.DisableCircularReferenceDetect));
+
+    }
+
+    @Test
+    public void testSelectAllByCriteria(){
+        Set<MenuDO> set = menuMapper.selectAllByCriteria(null);
+        System.out.println(set);
+    }
+
+    @Test
+    public void testMenuTree(){
+        Set<MenuDO> set = menuMapper.selectAllByCriteria(null);
+        System.out.println(JSON.toJSONString(menuService.buildMenuTree(set), SerializerFeature.WriteNullListAsEmpty));
 
     }
 

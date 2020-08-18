@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
@@ -116,13 +117,13 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
         return map;
     }
 
-    public enum MenuType{
+    public enum MenuType implements BaseEnumValue<Integer> {
         Dir(1, "directory", "目录"),
         MENU(2, "menu", "菜单"),
         BUTTON(3, "button", "按钮");
 
         @JsonValue
-        private int code;
+        private Integer code;
         private String enName;  // 英文名
         private String zhName;  // 中文名
 
@@ -132,11 +133,11 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
             this.zhName = zhName;
         }
 
-        public int getCode() {
+        public Integer getCode() {
             return code;
         }
 
-        public void setCode(int code) {
+        public void setCode(Integer code) {
             this.code = code;
         }
 
@@ -165,6 +166,11 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
                 }
             }
             return null;
+        }
+
+        @Override
+        public Integer getValue() {
+            return code;
         }
     }
 }

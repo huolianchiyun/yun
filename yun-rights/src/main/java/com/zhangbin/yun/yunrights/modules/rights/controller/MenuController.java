@@ -36,7 +36,7 @@ public class MenuController {
         menuService.download(menuService.queryAllByCriteriaWithNoPage(criteria.setPid(null)), response);
     }
 
-    @GetMapping(value = "/menus/user")
+    @GetMapping(value = "/user")
     @ApiOperation("获取当前用户菜单")
     public ResponseEntity<ResponseData> getMenusForUser() {
         return success(menuService.buildMenuTree(menuService.queryByUser(SecurityUtils.getCurrentUserId())));
@@ -59,8 +59,8 @@ public class MenuController {
     }
 
     @Logging("查询菜单")
-    @ApiOperation("查询菜单: 获取多个菜单作为叶子节点的菜单树， 若 menuIds 为空，则获取所有根菜单")
-    @PostMapping("/batch/family")
+    @ApiOperation("查询菜单: 获取多个菜单作为叶子节点的菜单树，若 menuIds 为空，则获取所有根级菜单")
+    @PostMapping("/tree2me")
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<ResponseData> queryAncestorAndSiblingOfMenus(@RequestBody List<Long> menuIds) {
         return success(menuService.queryAncestorAndSiblingOfMenus(menuIds));
