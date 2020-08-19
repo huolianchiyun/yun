@@ -42,20 +42,19 @@ public class MenuController {
         return success(menuService.queryByUser(SecurityUtils.getCurrentUserId()));
     }
 
-    @ApiOperation("返回全部的菜单")
+    @ApiOperation("根据父菜单ID查询子菜单")
     @GetMapping(value = "/lazy")
-    @PreAuthorize("@el.check('menu:list','roles:list')")
+    @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<ResponseData> query(@RequestParam Long pid) {
         return success(menuService.querySubmenusByPid(pid));
     }
 
-    @Logging("查询菜单")
-    @ApiOperation("查询菜单")
+    @Logging("查询所有菜单")
+    @ApiOperation("查询所有菜单：1、根据 pid 查询满足条件的子菜单（直接子菜单）2、将 pid 设置为 null可以查询所有满足条件的菜单")
     @GetMapping
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<ResponseData> query(MenuQueryCriteria criteria) {
-        List<MenuDO> menuDtoList = menuService.queryAllByCriteriaWithNoPage(criteria);
-        return success(PageUtil.toPage(menuDtoList, menuDtoList.size()));
+        return success(menuService.queryAllByCriteriaWithNoPage(criteria));
     }
 
     @Logging("查询菜单")
