@@ -1,11 +1,14 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +57,7 @@ public class UserDO extends BaseDo implements ExcelSupport, Serializable {
      */
     private boolean admin;
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     private LocalDateTime pwdResetTime;
 
     private Set<GroupDO> groups;

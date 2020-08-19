@@ -47,7 +47,7 @@
         select
         <include refid="Base_Column_List"/>
         from t_sys_menu, t_sys_group_menu
-        where group_id
+        where group_id in 
         <foreach collection="groupIds" item="groupId" open="(" separator=", " close=")">
             #{groupId,jdbcType=INTEGER}
         </foreach>

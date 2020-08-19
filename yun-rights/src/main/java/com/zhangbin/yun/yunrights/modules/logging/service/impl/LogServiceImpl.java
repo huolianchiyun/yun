@@ -115,21 +115,24 @@ public class LogServiceImpl implements LogService {
         assert log != null;
         log.setClientIp(ip);
         //参数值
-        String params = JSON.toJSONString(joinPoint.getArgs()[0], SerializerFeature.DisableCircularReferenceDetect,
-                SerializerFeature.IgnoreNonFieldGetter);
-        String loginPath = "login";
-        if (loginPath.equals(signature.getName())) {
-            try {
-                userName = new JSONObject(params).getStr("userName");
-            } catch (Exception e) {
-                LogServiceImpl.log.error(e.getMessage(), e);
+        Object[] args = joinPoint.getArgs();
+        if(args != null && args.length >= 1){
+            String params = JSON.toJSONString(args[0], SerializerFeature.DisableCircularReferenceDetect,
+                    SerializerFeature.IgnoreNonFieldGetter);
+            String loginPath = "login";
+            if (loginPath.equals(signature.getName())) {
+                try {
+                    userName = new JSONObject(params).getStr("userName");
+                } catch (Exception e) {
+                    LogServiceImpl.log.error(e.getMessage(), e);
+                }
             }
+            log.setRequestParams(params);
         }
         log.setAddress(IPUtil.getCityInfo(log.getClientIp()));
         String methodName = joinPoint.getTarget().getClass().getName() + Constants.POINT + signature.getName() + Constants.PARENTHESES;
         log.setRequestMethod(methodName);
         log.setOperator(userName);
-        log.setRequestParams(params);
         log.setBrowser(browser);
     }
 

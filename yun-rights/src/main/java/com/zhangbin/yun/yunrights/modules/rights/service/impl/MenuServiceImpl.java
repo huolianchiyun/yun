@@ -77,14 +77,14 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(key = "'user:' + #p0")
+//    @Cacheable(key = "'user:' + #p0")
     public List<MenuDO> queryByUser(Long userId) {
         List<GroupDO> groups = groupService.queryByUserId(userId);
         if (CollectionUtils.isEmpty(groups)) {
             return new ArrayList<>();
         }
-        Set<Long> roleIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
-        Set<MenuDO> menuSet = menuMapper.selectByGroupIds(roleIds);
+        Set<Long> groupIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
+        Set<MenuDO> menuSet = menuMapper.selectByGroupIds(groupIds);
         return buildMenuTree(menuSet);
     }
 

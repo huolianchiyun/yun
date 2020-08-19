@@ -39,7 +39,7 @@ public class MenuController {
     @GetMapping(value = "/user")
     @ApiOperation("获取当前用户菜单")
     public ResponseEntity<ResponseData> getMenusForUser() {
-        return success(menuService.buildMenuTree(menuService.queryByUser(SecurityUtils.getCurrentUserId())));
+        return success(menuService.queryByUser(SecurityUtils.getCurrentUserId()));
     }
 
     @ApiOperation("返回全部的菜单")
