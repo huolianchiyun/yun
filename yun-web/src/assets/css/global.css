@@ -1,0 +1,32 @@
+/*全局样式表*/
+html, body, #app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.el-breadcrumb{
+    margin-bottom: 15px;
+}
+.el-card{
+    box-shadow: 0 1px 1px rgba(0,0,0,0.15) !important;
+}
+.el-table{
+    margin-top: 10px;
+}
+.el-pagination{
+    margin-top: 10px;
+}
+.el-dialog{
+    border: 1px solid grey;
+}
+.el-dialog__header{
+    font-weight: bold;
+    background-color: #ebf0f2;
+}
+.el-dialog__footer{
+    padding-bottom: 10px;
+    background-color: #ebf0f2;
+}
+.el-form-item__label, .el-collapse-item__header{
+    font-weight: bold;
+}

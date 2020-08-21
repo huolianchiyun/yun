@@ -1,0 +1,93 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "338695",
+      "name": "用户详情",
+      "font_class": "zhongqingdianxinicon13",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "1559607",
+      "name": "用户详情",
+      "font_class": "yonghuxiangqing",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "2157204",
+      "name": "更多图标",
+      "font_class": "gengduotubiao",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "3113097",
+      "name": "权限",
+      "font_class": "quanxian",
+      "unicode": "e771",
+      "unicode_decimal": 59249
+    },
+    {
+      "icon_id": "6641429",
+      "name": "权限",
+      "font_class": "quanxian1",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "8488781",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e515",
+      "unicode_decimal": 58645
+    },
+    {
+      "icon_id": "9575749",
+      "name": "管理员",
+      "font_class": "guanliyuan1",
+      "unicode": "e501",
+      "unicode_decimal": 58625
+    },
+    {
+      "icon_id": "10255304",
+      "name": "退出",
+      "font_class": "tuichu1",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "11244534",
+      "name": "退出",
+      "font_class": "tuichu2",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "11383061",
+      "name": "更多图标",
+      "font_class": "gengduotubiao1",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "12459257",
+      "name": "更多图标",
+      "font_class": "gengduotubiao2",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "12640301",
+      "name": "普通用户",
+      "font_class": "denglu",
+      "unicode": "e533",
+      "unicode_decimal": 58675
+    }
+  ]
+}
