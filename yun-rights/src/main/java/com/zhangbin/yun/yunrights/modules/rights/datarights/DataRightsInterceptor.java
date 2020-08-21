@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.common.datarights;
+package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 import com.zhangbin.yun.yunrights.modules.common.exception.BadConfigurationException;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -19,8 +19,18 @@ public class DataRightsInterceptor implements Interceptor {
     private Dialect dialect;
     private String default_dialect_class = DataRightsHelper.class.getName();
 
+    /**
+     * 数据权限控制逻辑
+     */
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+
+
+
+
+
+
+
 
 
 

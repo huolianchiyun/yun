@@ -37,7 +37,7 @@
         </plugin>
         <plugin interceptor="com.zhangbin.yun.yunrights.modules.common.audit.MybatisAuditInterceptor"/>
         <!--由于mybatis拦截器的拦截顺序是从下到上，所有应将DDataRightsInterceptor配置在最后，使其被最先拦截。-->
-        <plugin interceptor="com.zhangbin.yun.yunrights.modules.rights.common.datarights.DataRightsInterceptor">
+        <plugin interceptor="com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsInterceptor">
         </plugin>
     </plugins>
 </configuration>

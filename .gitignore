@@ -1,5 +1,4 @@
 ../HELP.md
-yun-rights/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

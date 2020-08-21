@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.common.datarights;
+package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 
 /**
