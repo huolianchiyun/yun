@@ -38,9 +38,8 @@ public class GroupController {
     @ApiOperation("查询组")
     @GetMapping
     @PreAuthorize("@el.check('user:list','group:list')")
-    public ResponseEntity<ResponseData> query(GroupQueryCriteria criteria) throws Exception {
-        List<GroupDO> groups = groupService.queryAllByCriteriaWithNoPage(criteria);
-        return success(PageUtil.toPage(groups, groups.size()));
+    public ResponseEntity<ResponseData> query(GroupQueryCriteria criteria) {
+        return success(groupService.queryAllByCriteriaWithNoPage(criteria));
     }
 
     @Logging("查询组")

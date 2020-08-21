@@ -136,7 +136,7 @@ public interface GroupService {
     /**
      * 获取用户权限信息
      *
-     * @param user 用户信息
+     * @param user 用户
      * @return 权限信息
      */
     List<GrantedAuthority> getGrantedAuthorities(UserDO user);

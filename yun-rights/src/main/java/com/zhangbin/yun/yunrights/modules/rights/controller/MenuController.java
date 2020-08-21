@@ -1,15 +1,12 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
-import com.zhangbin.yun.yunrights.modules.common.utils.PageUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
-
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +51,7 @@ public class MenuController {
     @GetMapping
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<ResponseData> query(MenuQueryCriteria criteria) {
-        return success(menuService.queryAllByCriteriaWithNoPage(criteria));
+        return success(menuService.buildMenuTree(menuService.queryAllByCriteriaWithNoPage(criteria)));
     }
 
     @Logging("查询菜单")

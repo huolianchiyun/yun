@@ -10,7 +10,7 @@ import com.zhangbin.yun.yunrights.modules.security.config.bean.LoginProperties;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.security.TokenProvider;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.AuthUser;
-import com.zhangbin.yun.yunrights.modules.security.model.dto.JwtUser;
+import com.zhangbin.yun.yunrights.modules.security.model.dto.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,19 +53,18 @@ public class LoginAuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
-        final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
+        final MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         // 保存在线信息
-        onlineUserService.save(jwtUser, token, request);
-        // 返回 token 与 用户信息
-        Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
-            put("token", properties.getTokenStartWith() + token);
-            put("user", jwtUser);
-        }};
+        onlineUserService.save(myUserDetails, token, request);
         if (loginProperties.isSingleLogin()) {
             //踢掉之前已经登录的token
             onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
         }
-        return authInfo;
+        // 返回 token 与 用户信息
+        return new HashMap<String, Object>(2) {{
+            put("token", properties.getTokenStartWith() + token);
+            put("user", myUserDetails);
+        }};
     }
 
     public void logout(HttpServletRequest request) {
@@ -90,7 +89,8 @@ public class LoginAuthService {
         String code = (String) redisUtils.get(authUser.getUuid());
         // 清除验证码
         redisUtils.del(authUser.getUuid());
-        Assert.hasText(code, "验证码错误");
-        Assert.isTrue(StringUtils.isNotBlank(authUser.getCode()) && authUser.getCode().equalsIgnoreCase(code), "验证码不存在或已过期");
+        Assert.isTrue(StringUtils.isNotBlank(code)
+                && StringUtils.isNotBlank(authUser.getCode())
+                && authUser.getCode().equalsIgnoreCase(code), "验证码不存在或已过期！");
     }
 }

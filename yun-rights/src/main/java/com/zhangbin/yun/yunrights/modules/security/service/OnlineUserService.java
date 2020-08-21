@@ -5,11 +5,10 @@ import com.alibaba.fastjson.parser.Feature;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
-import com.zhangbin.yun.yunrights.modules.security.model.dto.JwtUser;
+import com.zhangbin.yun.yunrights.modules.security.model.dto.MyUserDetails;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,18 +35,18 @@ public class OnlineUserService {
     /**
      * 保存在线用户信息
      *
-     * @param jwtUser /
+     * @param myUserDetails /
      * @param token   /
      * @param request /
      */
-    public void save(JwtUser jwtUser, String token, HttpServletRequest request) {
-        String dept = jwtUser.getUser().getDept().getGroupName();
+    public void save(MyUserDetails myUserDetails, String token, HttpServletRequest request) {
+        String dept = myUserDetails.getUser().getDept().getGroupName();
         String ip = IPUtil.getIp(request);
         String browser = IPUtil.getBrowser(request);
         String address = IPUtil.getCityInfo(ip);
         OnlineUser onlineUser = null;
         try {
-            onlineUser = new OnlineUser(jwtUser.getUsername(), dept, browser, ip, address, EncryptUtils.desEncrypt(token), new Date());
+            onlineUser = new OnlineUser(myUserDetails.getUsername(), dept, browser, ip, address, EncryptUtils.desEncrypt(token), new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

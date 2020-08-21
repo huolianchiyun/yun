@@ -18,6 +18,8 @@ import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "user")
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
@@ -48,11 +51,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public UserDO queryById(Long id) {
-        return null;
+        return userMapper.selectByPrimaryKey(id);
     }
 
     @Override
+    @Cacheable(key = "'username:' + #p0")
     public UserDO queryByUsername(String username) {
         return userMapper.selectByUsername(username);
     }

@@ -12,16 +12,14 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public class JwtUser implements UserDetails {
+public class MyUserDetails implements UserDetails {
 
     private final UserDO user;
-
-    private final List<Long> dataScopes;
 
     @JsonIgnore
     private final List<GrantedAuthority> authorities;
 
-    public Set<String> getRoles() {
+    public Set<String> getUrlRights() {
         return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
 

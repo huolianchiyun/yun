@@ -39,18 +39,18 @@ import java.util.Map;
 public class RedisConfig extends CachingConfigurerSupport {
 
     /**
-     *  设置 redis 数据默认过期时间，默认2小时
-     *  设置@cacheable 序列化方式
+     * 设置 redis 数据默认过期时间，默认2小时
+     * 设置@cacheable 序列化方式
      */
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration(){
+    public RedisCacheConfiguration redisCacheConfiguration() {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
+        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair
+                .fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
         return configuration;
     }
 
-    @SuppressWarnings("all")
     @Bean(name = "redisTemplate")
     @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -78,17 +78,17 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            Map<String,Object> container = new HashMap<>(3);
+            Map<String, Object> container = new HashMap<>(3);
             Class<?> targetClassClass = target.getClass();
             // 类地址
-            container.put("class",targetClassClass.toGenericString());
+            container.put("class", targetClassClass.toGenericString());
             // 方法名称
-            container.put("methodName",method.getName());
+            container.put("methodName", method.getName());
             // 包名称
-            container.put("package",targetClassClass.getPackage());
+            container.put("package", targetClassClass.getPackage());
             // 参数列表
             for (int i = 0; i < params.length; i++) {
-                container.put(String.valueOf(i),params[i]);
+                container.put(String.valueOf(i), params[i]);
             }
             // 转为JSON字符串
             String jsonString = JSON.toJSONString(container);
@@ -130,7 +130,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 /**
  * Value 序列化
  */
- class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
+class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
     private final Class<T> clazz;
 

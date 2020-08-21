@@ -63,6 +63,11 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     private String accessUrl;
 
     /**
+     * 菜单路由地址，前端路由跳转用
+     */
+    private String routerPath;
+
+    /**
      * 是否是外部链接
      */
     private Boolean externalLink;

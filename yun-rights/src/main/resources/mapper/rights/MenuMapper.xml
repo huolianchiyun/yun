@@ -3,11 +3,15 @@
 <mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper">
     <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO">
         <id column="m_id" jdbcType="BIGINT" property="id"/>
+        <result column="m_menu_code" jdbcType="VARCHAR" property="menuCode"/>
         <result column="m_menu_title" jdbcType="VARCHAR" property="menuTitle"/>
         <result column="m_menu_type" jdbcType="INTEGER" property="menuType"/>
         <result column="m_description" jdbcType="VARCHAR" property="description"/>
+        <result column="m_menu_sort" jdbcType="INTEGER" property="menuSort"/>
         <result column="m_pid" jdbcType="BIGINT" property="pid"/>
         <result column="m_permission" jdbcType="VARCHAR" property="permission"/>
+        <result column="m_access_url" jdbcType="VARCHAR" property="accessUrl"/>
+        <result column="m_router_path" jdbcType="VARCHAR" property="routerPath"/>
         <result column="m_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="m_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -15,8 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        m_id, m_menu_title, m_menu_type, m_description, m_pid, m_permission, m_creator, m_updater,
-    m_create_time, m_update_time
+        m_id, m_menu_code, m_menu_title, m_menu_type, m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path, m_creator, m_updater, m_create_time, m_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -47,7 +50,7 @@
         select
         <include refid="Base_Column_List"/>
         from t_sys_menu, t_sys_group_menu
-        where group_id in 
+        where group_id in
         <foreach collection="groupIds" item="groupId" open="(" separator=", " close=")">
             #{groupId,jdbcType=INTEGER}
         </foreach>
@@ -65,7 +68,7 @@
                 <if test="criteria.pid != null">
                     and m_pid = #{pid,jdbcType=BIGINT}
                 </if>
-                <if test='criteria.blurry != ""'>
+                <if test='criteria.blurry != null and criteria.blurry != ""'>
                     <if test='criteria.blurryType.isMatch("menuTitle")'>
                         and m_menu_title like concat('%', #{criteria.blurry}, '%')
                     </if>
@@ -87,19 +90,22 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_menu (m_menu_title, m_menu_type,
-        m_description, m_pid, m_permission,
+        insert into t_sys_menu (m_menu_code, m_menu_title, m_menu_type,
+        m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path,
         m_creator, m_updater, m_create_time,
         m_update_time)
-        values (#{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
-        #{description,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
-        #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        values (#{menuCode,jdbcType=VARCHAR},#{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
+        #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
+        #{accessUrl,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO">
         update t_sys_menu
         <set>
+            <if test="menuCode != null">
+                m_menu_code = #{menuCode,jdbcType=VARCHAR},
+            </if>
             <if test="menuTitle != null">
                 m_menu_title = #{menuTitle,jdbcType=VARCHAR},
             </if>
@@ -109,11 +115,20 @@
             <if test="description != null">
                 m_description = #{description,jdbcType=VARCHAR},
             </if>
+            <if test="menuSort != null">
+                m_menu_sort = #{menuSort,jdbcType=INTEGER},
+            </if>
             <if test="pid != null">
                 m_pid = #{pid,jdbcType=BIGINT},
             </if>
             <if test="permission != null">
                 m_permission = #{permission,jdbcType=VARCHAR},
+            </if>
+            <if test="accessUrl != null">
+                m_access_url = #{accessUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="routerPath != null">
+                m_router_path = #{routerPath,jdbcType=VARCHAR},
             </if>
             <if test="creator != null">
                 m_creator = #{creator,jdbcType=VARCHAR},

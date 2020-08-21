@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.common.data_rights;
+package com.zhangbin.yun.yunrights.modules.rights.common.datarights;
 
 public class DataRightsHelper implements Dialect {
     protected static final ThreadLocal<String> LOCAL_PAGE = new ThreadLocal<>();

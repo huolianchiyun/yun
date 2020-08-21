@@ -77,7 +77,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-//    @Cacheable(key = "'user:' + #p0")
+    @Cacheable(key = "'user:' + #p0")  // eg. key-> menu::user:1
     public List<MenuDO> queryByUser(Long userId) {
         List<GroupDO> groups = groupService.queryByUserId(userId);
         if (CollectionUtils.isEmpty(groups)) {

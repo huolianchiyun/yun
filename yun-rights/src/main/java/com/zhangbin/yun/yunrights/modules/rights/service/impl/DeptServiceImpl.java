@@ -13,6 +13,7 @@ import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -36,6 +37,7 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public DeptDTO queryById(Long id) {
         return groupService.queryById(id).toDept();
     }

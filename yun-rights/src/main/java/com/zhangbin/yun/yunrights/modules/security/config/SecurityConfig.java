@@ -31,10 +31,14 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import java.util.*;
 
+/**
+ * WebSecurityConfigurerAdapter
+ * 主要职责就是配置配置哪些资源不需要权限限制啊，哪些需要啊等等
+ */
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity  // 开启Spring Security的功能
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)  // 开启注解控制权限
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;

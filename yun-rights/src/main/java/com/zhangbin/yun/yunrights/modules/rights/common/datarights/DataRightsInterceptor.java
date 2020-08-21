@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.common.data_rights;
+package com.zhangbin.yun.yunrights.modules.rights.common.datarights;
 
 import com.zhangbin.yun.yunrights.modules.common.exception.BadConfigurationException;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -21,6 +21,10 @@ public class DataRightsInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+
+
+
+
 
 
 

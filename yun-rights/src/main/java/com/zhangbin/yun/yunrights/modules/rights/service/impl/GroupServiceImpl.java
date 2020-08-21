@@ -20,6 +20,7 @@ import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "group")
 public class GroupServiceImpl implements GroupService {
 
     private final GroupMapper groupMapper;
@@ -65,6 +67,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public GroupDO queryById(Long id) {
         return Optional.of(groupMapper.selectByPrimaryKey(id)).orElseGet(GroupDO::new);
     }
@@ -184,7 +187,7 @@ public class GroupServiceImpl implements GroupService {
     public List<GrantedAuthority> getGrantedAuthorities(UserDO user) {
         Set<String> permissions = new HashSet<>(1);
         if (user.isAdmin()) {  // 如果是管理员直接返回
-            permissions.add("admin");
+            permissions.add("all");
         } else {
             List<GroupDO> roles = new ArrayList<>(Optional.of(groupMapper.selectByUserId(user.getId()))
                     .orElseGet(HashSet::new));

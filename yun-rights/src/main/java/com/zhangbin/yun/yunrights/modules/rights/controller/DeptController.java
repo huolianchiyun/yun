@@ -1,7 +1,9 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+
 import com.zhangbin.yun.yunrights.modules.common.utils.PageUtil;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -38,8 +41,7 @@ public class DeptController {
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<ResponseData> query(DeptQueryCriteria criteria) {
-        List<DeptDTO> depts = deptService.queryAllByCriteriaWithNoPage(criteria);
-        return success(PageUtil.toPage(depts, depts.size()));
+        return success(deptService.queryAllByCriteriaWithNoPage(criteria));
     }
 
     @Logging("查询部门")
