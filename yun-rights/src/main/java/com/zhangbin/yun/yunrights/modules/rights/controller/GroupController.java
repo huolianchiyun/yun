@@ -54,7 +54,7 @@ public class GroupController {
     @ApiOperation("新增组")
     @PostMapping
     @PreAuthorize("@el.check('group:add')")
-    public ResponseEntity<ResponseData> createGroup(@Validated @RequestBody GroupDO group) {
+    public ResponseEntity<ResponseData> create(@Validated @RequestBody GroupDO group) {
         groupService.createGroup(group);
         return success();
     }
@@ -63,7 +63,7 @@ public class GroupController {
     @ApiOperation("修改组")
     @PutMapping
     @PreAuthorize("@el.check('group:edit')")
-    public ResponseEntity<ResponseData> updateGroup(@RequestBody GroupDO group) {
+    public ResponseEntity<ResponseData> update(@RequestBody GroupDO group) {
         groupService.updateGroup(group);
         return success();
     }
@@ -72,8 +72,8 @@ public class GroupController {
     @ApiOperation("删除组")
     @DeleteMapping
     @PreAuthorize("@el.check('group:del')")
-    public ResponseEntity<ResponseData> deleteByGroupIds(@RequestBody Set<Long> groupIds) {
-        groupService.deleteByIds(groupIds);
+    public ResponseEntity<ResponseData> deleteByIds(@RequestBody Set<Long> ids) {
+        groupService.deleteByIds(ids);
         return success();
     }
 }

@@ -1,0 +1,66 @@
+package com.zhangbin.yun.yunrights.modules.rights.service.impl;
+
+import cn.hutool.core.collection.CollectionUtil;
+import com.github.pagehelper.Page;
+import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
+import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.service.PermissionRuleService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class PermissionRuleServiceImpl implements PermissionRuleService {
+
+    private final PermissionRuleMapper ruleMapper;
+
+    @Override
+    public PermissionRuleDO queryById(Long id) {
+        return ruleMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public PageInfo<List<PermissionRuleDO>> queryAllByCriteria(RuleQueryCriteria criteria) {
+        Page<PermissionRuleDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, ruleMapper);
+        PageInfo<List<PermissionRuleDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
+        pageInfo.setTotal(page.getTotal());
+        List<PermissionRuleDO> result = page.getResult();
+        pageInfo.setData(result);
+        return pageInfo;
+    }
+
+    @Override
+    public List<PermissionRuleDO> queryAllByCriteriaWithNoPage(RuleQueryCriteria criteria) {
+        return CollectionUtil.list(false, ruleMapper.selectAllByCriteria(criteria));
+    }
+
+    @Override
+    public void createRule(PermissionRuleDO rule) {
+        ruleMapper.insert(rule);
+    }
+
+    @Override
+    public void updateRule(PermissionRuleDO rule) {
+        ruleMapper.updateByPrimaryKeySelective(rule);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        ruleMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public void download(List<PermissionRuleDO> permissionRuleList, HttpServletResponse response) throws IOException {
+        FileUtil.downloadExcel(Optional.of(permissionRuleList).orElseGet(ArrayList::new).stream().map(PermissionRuleDO::toLinkedMap).collect(Collectors.toList()), response);
+    }
+}

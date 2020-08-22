@@ -46,7 +46,7 @@ public class UserController {
     @ApiOperation("新增用户")
     @PostMapping
     @PreAuthorize("@el.check('user:add')")
-    public ResponseEntity<ResponseData> createUser(@Validated @RequestBody UserDO user) {
+    public ResponseEntity<ResponseData> create(@Validated @RequestBody UserDO user) {
         userService.createUser(user);
         return success();
     }
@@ -55,7 +55,7 @@ public class UserController {
     @ApiOperation("修改用户")
     @PutMapping
     @PreAuthorize("@el.check('user:edit')")
-    public ResponseEntity<ResponseData> updateUser(@RequestBody UserDO user) {
+    public ResponseEntity<ResponseData> update(@RequestBody UserDO user) {
         userService.updateUser(user);
         return success();
     }
@@ -64,8 +64,8 @@ public class UserController {
     @ApiOperation("删除用户")
     @DeleteMapping
     @PreAuthorize("@el.check('user:del')")
-    public ResponseEntity<ResponseData> deleteUsers(@RequestBody Set<Long> ids) {
-        userService.deleteByUserIds(ids);
+    public ResponseEntity<ResponseData> deleteByIds(@RequestBody Set<Long> ids) {
+        userService.deleteByIds(ids);
         return success();
     }
 

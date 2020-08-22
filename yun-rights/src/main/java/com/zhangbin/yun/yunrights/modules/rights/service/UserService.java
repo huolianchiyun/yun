@@ -61,9 +61,9 @@ public interface UserService {
     /**
      * 批量用户
      *
-     * @param userIds /
+     * @param ids /
      */
-    void deleteByUserIds(Set<Long> userIds);
+    void deleteByIds(Set<Long> ids);
 
 
     /**

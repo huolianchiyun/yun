@@ -56,7 +56,7 @@ public class DeptController {
     @ApiOperation("新增部门")
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<ResponseData> createDept(@RequestBody DeptDTO dept) {
+    public ResponseEntity<ResponseData> create(@RequestBody DeptDTO dept) {
         deptService.createDept(dept);
         return success();
     }
@@ -65,7 +65,7 @@ public class DeptController {
     @ApiOperation("修改部门")
     @PutMapping
     @PreAuthorize("@el.check('dept:edit')")
-    public ResponseEntity<ResponseData> updateDept(@RequestBody DeptDTO dept) {
+    public ResponseEntity<ResponseData> update(@RequestBody DeptDTO dept) {
         deptService.updateDept(dept);
         return success();
     }
@@ -74,7 +74,7 @@ public class DeptController {
     @ApiOperation("删除部门")
     @DeleteMapping
     @PreAuthorize("@el.check('dept:del')")
-    public ResponseEntity<ResponseData> deleteDept(@RequestBody Set<Long> deptIds) {
+    public ResponseEntity<ResponseData> delete(@RequestBody Set<Long> deptIds) {
         deptService.deleteByDeptIds(deptIds);
         return success();
     }

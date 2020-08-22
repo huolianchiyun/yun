@@ -120,16 +120,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteByUserIds(Set<Long> userIds) {
-        Set<UserDO> users = userMapper.selectByPrimaryKeys(userIds);
+    public void deleteByIds(Set<Long> ids) {
+        Set<UserDO> users = userMapper.selectByPrimaryKeys(ids);
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         users.forEach(e -> checkOperationalRights(e, currentUser));
-        userMapper.deleteByIds(userIds);
+        userMapper.deleteByIds(ids);
         // TODO　考虑是否删除该用户创建的组及该用户为组长的组？？
 
-        userGroupMapper.deleteByUserIds(userIds);
+        userGroupMapper.deleteByUserIds(ids);
         // 清理缓存
-        Optional.of(userMapper.selectByIds(userIds)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUsername()));
+        Optional.of(userMapper.selectByIds(ids)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUsername()));
     }
 
     @Override

@@ -66,7 +66,7 @@ public class MenuController {
     @ApiOperation("新增菜单")
     @PostMapping
     @PreAuthorize("@el.check('menu:add')")
-    public ResponseEntity<ResponseData> createMenu(@RequestBody MenuDO menu) {
+    public ResponseEntity<ResponseData> create(@RequestBody MenuDO menu) {
         menuService.createMenu(menu);
         return success();
     }
@@ -75,7 +75,7 @@ public class MenuController {
     @ApiOperation("修改菜单")
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
-    public ResponseEntity<ResponseData> updateMenu(@RequestBody MenuDO menu) {
+    public ResponseEntity<ResponseData> update(@RequestBody MenuDO menu) {
         menuService.updateMenu(menu);
         return success();
     }
@@ -84,8 +84,8 @@ public class MenuController {
     @ApiOperation("删除菜单")
     @DeleteMapping
     @PreAuthorize("@el.check('menu:del')")
-    public ResponseEntity<ResponseData> deleteMenus(@RequestBody Set<Long> menuIds) {
-        menuService.deleteByMenuIds(menuIds);
+    public ResponseEntity<ResponseData> deleteByIds(@RequestBody Set<Long> ids) {
+        menuService.deleteByMenuIds(ids);
         return success();
     }
 }

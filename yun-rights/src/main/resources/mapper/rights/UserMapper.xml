@@ -132,7 +132,7 @@
                     </if>
                 </if>
                 <if test='criteria.status != null'>
-                    and u_status in (${criteria.status})
+                    and u_status = ${criteria.status}
                 </if>
                 <if test='criteria.createTimes != null and criteria.createTimes > 0'>
                     and u_create_time
