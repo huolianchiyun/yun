@@ -36,9 +36,9 @@ public class GroupController {
 
     @Logging("根据ID查询组")
     @ApiOperation("根据ID查询组")
-    @GetMapping
+    @GetMapping("/{id}")
     @PreAuthorize("@el.check('user:list','group:list')")
-    public ResponseEntity<ResponseData> query(Long id) {
+    public ResponseEntity<ResponseData> query(@PathVariable Long id) {
         return success(groupService.queryById(id));
     }
 
@@ -46,7 +46,7 @@ public class GroupController {
     @ApiOperation("根据条件查询组")
     @GetMapping
     @PreAuthorize("@el.check('user:list','group:list')")
-    public ResponseEntity<ResponseData> query(GroupQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> query(@RequestParam GroupQueryCriteria criteria) {
         return success(groupService.queryAllByCriteriaWithNoPage(criteria));
     }
 

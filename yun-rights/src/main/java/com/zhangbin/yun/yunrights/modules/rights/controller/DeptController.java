@@ -38,9 +38,9 @@ public class DeptController {
 
     @Logging("根据ID查询部门")
     @ApiOperation("根据ID查询部门")
-    @GetMapping
+    @GetMapping("/{id}")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<ResponseData> query(Long id) {
+    public ResponseEntity<ResponseData> query(@PathVariable Long id) {
         return success(deptService.queryById(id));
     }
 
@@ -48,7 +48,7 @@ public class DeptController {
     @ApiOperation("根据条件查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<ResponseData> query(DeptQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> query(@RequestParam DeptQueryCriteria criteria) {
         return success(deptService.queryAllByCriteriaWithNoPage(criteria));
     }
 
