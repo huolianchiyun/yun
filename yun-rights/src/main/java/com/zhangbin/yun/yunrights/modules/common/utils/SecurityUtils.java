@@ -46,8 +46,11 @@ public class SecurityUtils {
         if (authentication == null) {
             throw new BadRequestException(HttpStatus.UNAUTHORIZED, "当前登录状态过期");
         }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userDetails.getUsername();
+        Object principal = authentication.getPrincipal();
+        if(authentication.getPrincipal() instanceof UserDetails){
+            return ((UserDetails)principal).getUsername();
+        }
+      return principal.toString();
     }
 
     /**

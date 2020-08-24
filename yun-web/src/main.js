@@ -2,11 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import index from './router'
 import store from './store'
-import './plugins/element.js'
+
 // global css
 import './assets/styles/index.scss'
 // 导入字体图标
 import './assets/fonts/user/iconfont.css'
+
+import './plugins/element.js'
+import './assets/icons' // icon
+
 import axios from 'axios'
 // 打印
 import Print from 'vue-print-nb'
@@ -14,7 +18,6 @@ import Print from 'vue-print-nb'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import lodash from 'lodash'
-import './assets/icons' // icon
 
 // 配置请求的根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8081/yun/'

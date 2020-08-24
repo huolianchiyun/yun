@@ -4,16 +4,18 @@
              class="login-form">
       <h3 class="title">YUN 系统</h3>
       <el-form-item prop="username">
-        <el-input prefix-icon="iconfont icon-user" v-model="loginForm.username" type="text" auto-complete="off"
-                  placeholder="账号" clearable></el-input>
+        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号" clearable>
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+        </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input prefix-icon="iconfont icon-3702mima" v-model="loginForm.password" type="password" auto-complete="off"
-                  placeholder="密码" clearable></el-input>
+        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" show-password>
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+        </el-input>
       </el-form-item>
       <el-form-item prop="code">
-        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%"
-                  @keyup.enter.native="login" clearable>
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="login" clearable>
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode" alt="验证码">
@@ -143,9 +145,8 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-color: #c9e5ff;
+    background-size: cover;
   }
-
   .title {
     margin: 0 auto 30px auto;
     text-align: center;
@@ -157,37 +158,29 @@ export default {
     background: #ffffff;
     width: 385px;
     padding: 25px 25px 5px 25px;
-
     .el-input {
       height: 38px;
-
       input {
         height: 38px;
       }
     }
-
-    .input-icon {
-      height: 39px;
-      width: 14px;
-      margin-left: 2px;
+    .input-icon{
+      height: 39px;width: 14px;margin-left: 2px;
     }
   }
-
   .login-tip {
     font-size: 13px;
     text-align: center;
     color: #bfbfbf;
   }
-
   .login-code {
     width: 33%;
     display: inline-block;
     height: 38px;
     float: right;
-
-    img {
+    img{
       cursor: pointer;
-      vertical-align: middle
+      vertical-align:middle
     }
   }
 </style>

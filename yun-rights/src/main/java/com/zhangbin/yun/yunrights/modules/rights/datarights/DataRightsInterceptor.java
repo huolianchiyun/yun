@@ -11,18 +11,19 @@ import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.util.StringUtils;
+
 import java.util.List;
 import java.util.Properties;
 
 /**
  * 数据权限控制
  */
-@Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
+@Intercepts({/*@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),*/
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class DataRightsInterceptor implements Interceptor {
 
     private Dialect dialect;
-    private String default_dialect_class = DataRightsHelper.class.getName();
+    private final String default_dialect_class = DataRightsHelper.class.getName();
 
     /**
      * 数据权限控制逻辑
@@ -86,6 +87,7 @@ public class DataRightsInterceptor implements Interceptor {
         } catch (Exception e) {
             throw new BadConfigurationException(e);
         }
+        dialect.setProperties(properties);
     }
 
     /**

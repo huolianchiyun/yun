@@ -3,9 +3,9 @@ package com.zhangbin.yun.yunrights.modules.rights.datarights;
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.common.utils.SpringContextHolder;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
-import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
-import com.zhangbin.yun.yunrights.modules.rights.service.PermissionRuleService;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -13,7 +13,7 @@ public final class RuleManager {
     private static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
     private static volatile Map<String, Set<PermissionRuleDO>> groupCodePermissionMap;
 
-    static Set<PermissionRuleDO> getRuleForCurrentUser() {
+    static Set<PermissionRuleDO> getRulesForCurrentUser() {
         if (groupCodePermissionMap == null) {
             init();
         }
@@ -37,10 +37,8 @@ public final class RuleManager {
     private static void init() {
         synchronized (RuleManager.class) {
             if (groupCodePermissionMap == null) {
-                PermissionRuleService ruleService = SpringContextHolder.getBean(PermissionRuleService.class);
                 Map<String, Set<PermissionRuleDO>> groupCodePermissionMap = new HashMap<>();
-                List<PermissionRuleDO> rules = ruleService.queryAllByCriteriaWithNoPage(null);
-                rules.stream().map(e -> {
+                getRules().stream().map(e -> {
                     String groupCodesStr = e.getGroupCodes();
                     HashMap<String, PermissionRuleDO> map = new HashMap<>(10);
                     if (Pattern.matches(".*[,].*", groupCodesStr)) {
@@ -65,11 +63,19 @@ public final class RuleManager {
         }
     }
 
+    private static Set<PermissionRuleDO> getRules() {
+        PermissionRuleMapper ruleMapper = SpringContextHolder.getBean(PermissionRuleMapper.class);
+        return ruleMapper.selectAllUsableForSystem();
+    }
+
     private static Set<PermissionRuleDO> filterByCurrentUserGroups() {
-        Map<String, Set<PermissionRuleDO>> ruleMap = ruleMapThreadLocal.get();
-        GroupService groupService = SpringContextHolder.getBean(GroupService.class);
-        List<String> groupCodes = groupService.queryByUsername(SecurityUtils.getCurrentUsername());
+        String currentUsername = SecurityUtils.getCurrentUsername();
         Set<PermissionRuleDO> filtered = new HashSet<>(10);
+        if("anonymousUser".equalsIgnoreCase(currentUsername)){
+            return filtered;
+        }
+        Set<String> groupCodes = SpringContextHolder.getBean(GroupMapper.class).selectByUsername(currentUsername);
+        Map<String, Set<PermissionRuleDO>> ruleMap = ruleMapThreadLocal.get();
         ruleMap.forEach((k, v) -> {
             if (groupCodes.contains(k)) {
                 filtered.addAll(v);

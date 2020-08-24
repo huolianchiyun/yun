@@ -26,6 +26,10 @@
         where pr_id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="selectAllUsableForSystem" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select pr_rule_name, pr_group_codes, pr_from_table, pr_rule_exps from t_sys_permission_rule where pr_is_enabled = true
+    </select>
+
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteria"
             resultMap="BaseResultMap">

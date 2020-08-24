@@ -74,7 +74,7 @@ public class DataRightsAutoDialect {
 
     private String fromJdbcUrl(String jdbcUrl) {
         for (String dialect : dialectAliasMap.keySet()) {
-            if (jdbcUrl.indexOf(":" + dialect + ":") != -1) {
+            if (jdbcUrl.contains(":" + dialect + ":")) {
                 return dialect;
             }
         }

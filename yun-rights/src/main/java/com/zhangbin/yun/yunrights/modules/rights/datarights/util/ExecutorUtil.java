@@ -43,7 +43,6 @@ public abstract class ExecutorUtil {
         }
     }
 
-
     /**
      * 权限查询
      *
@@ -51,7 +50,6 @@ public abstract class ExecutorUtil {
      * @param executor
      * @param ms
      * @param parameter
-     * @param rowBounds
      * @param resultHandler
      * @param boundSql
      * @param cacheKey
@@ -61,7 +59,7 @@ public abstract class ExecutorUtil {
      */
     public static  <E> List<E> dataRightsQuery(Dialect dialect, Executor executor, MappedStatement ms, Object parameter, ResultHandler resultHandler,
                                  BoundSql boundSql, CacheKey cacheKey) throws SQLException {
-        //判断是否需要进行分页查询
+        //判断是否需要进行权限查询
         if (dialect.beforeRightsQuery(ms, parameter)) {
             //生成分页的缓存 key
             CacheKey pageKey = cacheKey;
@@ -76,10 +74,11 @@ public abstract class ExecutorUtil {
             for (String key : additionalParameters.keySet()) {
                 pageBoundSql.setAdditionalParameter(key, additionalParameters.get(key));
             }
-            //执行分页查询
-            return executor.query(ms, parameter, RowBounds.DEFAULT, resultHandler, pageKey, pageBoundSql);
+//            //执行分页查询
+//            return executor.query(ms, parameter, RowBounds.DEFAULT, resultHandler, pageKey, pageBoundSql);
+            return executor.query(ms, parameter, RowBounds.DEFAULT, resultHandler, cacheKey, boundSql);
         } else {
-            //不执行分页的情况下，也不执行内存分页
+            //不执行权限的情况下，也不执行内存分页
             return executor.query(ms, parameter, RowBounds.DEFAULT, resultHandler, cacheKey, boundSql);
         }
     }

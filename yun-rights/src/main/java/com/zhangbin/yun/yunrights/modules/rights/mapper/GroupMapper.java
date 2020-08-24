@@ -1,6 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
 import com.zhangbin.yun.yunrights.modules.common.page.PageMapper;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.NotPermission;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -31,6 +32,7 @@ public interface GroupMapper extends PageMapper<GroupDO> {
      * @param username /
      * @return {@link Set<String>}
      */
+    @NotPermission
     Set<String> selectByUsername(String username);
 
     Set<GroupDO> selectByPid(Long Pid);

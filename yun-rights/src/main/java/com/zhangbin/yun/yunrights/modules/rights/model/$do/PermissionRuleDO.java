@@ -3,6 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PermissionRuleDO extends BaseDo implements ExcelSupport, Serializable {
 
     private String ruleName;
@@ -23,6 +25,13 @@ public class PermissionRuleDO extends BaseDo implements ExcelSupport, Serializab
     private String description;
 
     private Boolean enabled;
+
+    public PermissionRuleDO(String ruleName, String groupCodes, String fromTable, String ruleExps) {
+        this.ruleName = ruleName;
+        this.groupCodes = groupCodes;
+        this.fromTable = fromTable;
+        this.ruleExps = ruleExps;
+    }
 
     @Override
     public LinkedHashMap<String, Object> toLinkedMap() {
@@ -54,4 +63,5 @@ public class PermissionRuleDO extends BaseDo implements ExcelSupport, Serializab
     public int hashCode() {
         return Objects.hash(groupCodes, fromTable, ruleExps);
     }
+
 }

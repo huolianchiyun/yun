@@ -1,10 +1,16 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
+import com.zhangbin.yun.yunrights.modules.logging.mapper.LogMapper;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.aspectj.weaver.ast.Not;
+
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,7 +23,8 @@ public class DataRightsHelper implements Dialect {
 
     @Override
     public boolean skip(MappedStatement ms, Object parameterObject) {
-        if (RuleManager.getRuleForCurrentUser() == null) {
+        if ("admin".equals(SecurityUtils.getCurrentUsername()) || isNotPermission(ms)
+                || CollectionUtil.isEmpty(RuleManager.getRulesForCurrentUser())) {
             return true;
         } else {
             autoDialect.initDelegateDialect(ms);
@@ -64,6 +71,19 @@ public class DataRightsHelper implements Dialect {
     public void setProperties(Properties properties) {
         autoDialect = new DataRightsAutoDialect();
         autoDialect.setProperties(properties);
+    }
+
+    private boolean isNotPermission(MappedStatement ms) {
+        try {
+            Class<?> clazz = Class.forName(ms.getId().substring(0, ms.getId().lastIndexOf(".")));
+            Method[] declaredMethods = clazz.getDeclaredMethods();
+            for (Method method : declaredMethods) {
+                if (method.isAnnotationPresent(NotPermission.class)) return true;
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

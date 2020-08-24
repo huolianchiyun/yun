@@ -57,14 +57,6 @@ public interface GroupService {
     List<GroupDO> queryByUserId(Long userId);
 
     /**
-     * 根据用户名查询所属组 groupCode
-     *
-     * @param username /
-     * @return {@link List<String>}
-     */
-    List<String> queryByUsername(String username);
-
-    /**
      * 根据菜单集合查询
      *
      * @param menuIds 菜单ID集合

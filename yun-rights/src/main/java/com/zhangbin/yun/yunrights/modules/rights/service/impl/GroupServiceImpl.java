@@ -83,11 +83,6 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<String> queryByUsername(String username) {
-        return new ArrayList<>(Optional.of(groupMapper.selectByUsername(username)).orElseGet(HashSet::new));
-    }
-
-    @Override
     public Set<GroupDO> queryByMenuIds(Set<Long> menuIds) {
         return Optional.of(groupMapper.selectByMenuIds(menuIds)).orElseGet(HashSet::new);
     }
