@@ -11,6 +11,14 @@ import java.util.Set;
 public interface MenuService {
 
     /**
+     * 根据ID查询
+     *
+     * @param id
+     * @return {@link MenuDO}
+     */
+    MenuDO queryById(long id);
+
+    /**
      * 不分页查询满足条件的数据
      * 查询方式：
      * 1、根据 pid 查询满足条件的子菜单（直接子菜单）
@@ -20,14 +28,6 @@ public interface MenuService {
      * @return /
      */
     List<MenuDO> queryAllByCriteriaWithNoPage(MenuQueryCriteria criteria);
-
-    /**
-     * 根据ID查询
-     *
-     * @param id
-     * @return {@link MenuDO}
-     */
-    MenuDO queryById(long id);
 
     /**
      * 懒根据PID查询

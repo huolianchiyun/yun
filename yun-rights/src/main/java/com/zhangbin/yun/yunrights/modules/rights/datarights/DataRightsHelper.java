@@ -2,12 +2,10 @@ package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -16,11 +14,10 @@ import java.util.Properties;
 public class DataRightsHelper implements Dialect {
     private DataRightsAutoDialect autoDialect;
 
-    private Map<String, List<PermissionRuleDO>> groupCodePermissionsMap;
 
     @Override
     public boolean skip(MappedStatement ms, Object parameterObject) {
-        if (groupCodePermissionsMap == null) {
+        if (RuleManager.getRuleForCurrentUser() == null) {
             return true;
         } else {
             autoDialect.initDelegateDialect(ms);

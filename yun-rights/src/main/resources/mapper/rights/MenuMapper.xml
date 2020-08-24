@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO">
         <id column="m_id" jdbcType="BIGINT" property="id"/>
         <result column="m_menu_code" jdbcType="VARCHAR" property="menuCode"/>
+        <result column="m_menu_icon" jdbcType="VARCHAR" property="menuIcon"/>
         <result column="m_menu_title" jdbcType="VARCHAR" property="menuTitle"/>
         <result column="m_menu_type" jdbcType="INTEGER" property="menuType"/>
         <result column="m_description" jdbcType="VARCHAR" property="description"/>
@@ -19,7 +20,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        m_id, m_menu_code, m_menu_title, m_menu_type, m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path, m_creator, m_updater, m_create_time, m_update_time
+        m_id, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path, m_creator, m_updater, m_create_time, m_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -90,11 +91,11 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_menu (m_menu_code, m_menu_title, m_menu_type,
+        insert into t_sys_menu (m_menu_code, m_menu_code, m_menu_title, m_menu_type,
         m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path,
         m_creator, m_updater, m_create_time,
         m_update_time)
-        values (#{menuCode,jdbcType=VARCHAR},#{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
+        values (#{menuCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
         #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
         #{accessUrl,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP})
@@ -105,6 +106,9 @@
         <set>
             <if test="menuCode != null">
                 m_menu_code = #{menuCode,jdbcType=VARCHAR},
+            </if>
+            <if test="menuCode != null">
+                m_menu_icon = #{menuIcon,jdbcType=VARCHAR},
             </if>
             <if test="menuTitle != null">
                 m_menu_title = #{menuTitle,jdbcType=VARCHAR},

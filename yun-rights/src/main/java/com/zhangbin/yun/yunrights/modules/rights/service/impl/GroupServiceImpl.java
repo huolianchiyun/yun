@@ -83,6 +83,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<String> queryByUsername(String username) {
+        return new ArrayList<>(Optional.of(groupMapper.selectByUsername(username)).orElseGet(HashSet::new));
+    }
+
+    @Override
     public Set<GroupDO> queryByMenuIds(Set<Long> menuIds) {
         return Optional.of(groupMapper.selectByMenuIds(menuIds)).orElseGet(HashSet::new);
     }
@@ -267,13 +272,13 @@ public class GroupServiceImpl implements GroupService {
 
     private String generateGroupCode(GroupDO group, String prefix) {
         GroupDO fatherGroup = null;
-        if(Objects.nonNull(group.getPid())){
+        if (Objects.nonNull(group.getPid())) {
             fatherGroup = groupMapper.selectByIdForUpdate(group.getPid());
         }
         if (Objects.nonNull(fatherGroup)) {
             return fatherGroup.getGroupCode() + ":" + group.getId();
         } else {
-           return  prefix + group.getId();
+            return prefix + group.getId();
         }
     }
 

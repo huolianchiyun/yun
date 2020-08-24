@@ -28,7 +28,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     private static final long serialVersionUID = 1L;
 
     /**
-     *
+     * 菜单标题，显示名
      */
     private String menuTitle;
 
@@ -38,12 +38,17 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     private String menuCode;
 
     /**
+     * 菜单图标
+     */
+    private String menuIcon;
+
+    /**
      * 菜单类型
      */
     private MenuType menuType;
 
     /**
-     *
+     * 菜单描述
      */
     private String description;
 
@@ -77,7 +82,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     private Integer menuSort;
 
     /**
-     * 子菜单
+     * 子菜单（非表字段）
      */
     private List<MenuDO> children;
 

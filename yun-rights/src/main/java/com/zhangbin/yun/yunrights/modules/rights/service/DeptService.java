@@ -14,6 +14,14 @@ import java.util.Set;
 public interface DeptService {
 
     /**
+     * 根据ID查询
+     *
+     * @param id 部门 ID
+     * @return
+     */
+    DeptDTO queryById(Long id);
+
+    /**
      * 不分页查询满足条件的数据
      * 查询方式：
      * 1、根据 pid 查询满足条件的子部门（直接子部门）
@@ -31,14 +39,6 @@ public interface DeptService {
      * @return {@link List<DeptDTO>}
      */
     List<DeptDTO> queryAncestorAndSiblingOfDepts(Set<Long> deptIds);
-
-    /**
-     * 根据ID查询
-     *
-     * @param id 部门 ID
-     * @return
-     */
-    DeptDTO queryById(Long id);
 
     /**
      * 根据PID查询子部门

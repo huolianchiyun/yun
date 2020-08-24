@@ -34,11 +34,19 @@ public class UserController {
         userService.download(userService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
-    @Logging("查询用户")
-    @ApiOperation("查询用户")
+    @Logging("根据ID查询用户")
+    @ApiOperation("根据ID查询用户")
+    @GetMapping("/{id}")
+    @PreAuthorize("@el.check('user:list')")
+    public ResponseEntity<ResponseData> query(@PathVariable Long id) {
+        return success(userService.queryById(id));
+    }
+
+    @Logging("根据条件查询用户")
+    @ApiOperation("根据条件查询用户")
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<ResponseData> queryByCriteria(UserQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> queryByCriteria(@RequestParam UserQueryCriteria criteria) {
         return success(userService.queryAllByCriteria(criteria));
     }
 

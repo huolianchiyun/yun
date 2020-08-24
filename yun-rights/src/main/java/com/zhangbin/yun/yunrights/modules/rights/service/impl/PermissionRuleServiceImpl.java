@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteria;
@@ -47,16 +48,19 @@ public class PermissionRuleServiceImpl implements PermissionRuleService {
     @Override
     public void createRule(PermissionRuleDO rule) {
         ruleMapper.insert(rule);
+        RuleManager.refreshCache();
     }
 
     @Override
     public void updateRule(PermissionRuleDO rule) {
         ruleMapper.updateByPrimaryKeySelective(rule);
+        RuleManager.refreshCache();
     }
 
     @Override
     public void deleteById(Long id) {
         ruleMapper.deleteByPrimaryKey(id);
+        RuleManager.refreshCache();
     }
 
     @Override

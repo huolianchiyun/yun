@@ -39,22 +39,30 @@ public class MenuController {
         return success(menuService.queryByUser(SecurityUtils.getCurrentUserId()));
     }
 
-    @ApiOperation("根据父菜单ID查询子菜单")
-    @GetMapping(value = "/lazy")
+
+    @ApiOperation("根据ID查询菜单")
+    @GetMapping(value = "/{id}")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<ResponseData> query(@RequestParam Long pid) {
+    public ResponseEntity<ResponseData> query(@PathVariable Long id) {
+        return success(menuService.queryById(id));
+    }
+
+    @ApiOperation("根据父菜单ID查询子菜单")
+    @GetMapping(value = "/lazy/{pid}")
+    @PreAuthorize("@el.check('menu:list')")
+    public ResponseEntity<ResponseData> queryByPid(@PathVariable Long pid) {
         return success(menuService.querySubmenusByPid(pid));
     }
 
-    @Logging("查询所有菜单")
+    @Logging("根据条件查询所有菜单")
     @ApiOperation("查询所有菜单：1、根据 pid 查询满足条件的子菜单（直接子菜单）2、将 pid 设置为 null可以查询所有满足条件的菜单")
     @GetMapping
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<ResponseData> query(MenuQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> queryByPid(@RequestParam MenuQueryCriteria criteria) {
         return success(menuService.buildMenuTree(menuService.queryAllByCriteriaWithNoPage(criteria)));
     }
 
-    @Logging("查询菜单")
+    @Logging("查询菜单同级及其上级菜单")
     @ApiOperation("查询菜单: 获取多个菜单作为叶子节点的菜单树，若 menuIds 为空，则获取所有根级菜单")
     @PostMapping("/tree2me")
     @PreAuthorize("@el.check('menu:list')")

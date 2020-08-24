@@ -15,6 +15,22 @@ import java.util.Set;
 public interface GroupService {
 
     /**
+     * 根据ID查询
+
+     * @param id 组ID
+     * @return {@link GroupDO}
+     */
+    GroupDO queryById(Long id);
+
+    /**
+     * 根据ID集合查询
+     *
+     * @param ids 组ID集合
+     * @return {@link List<GroupDO>}
+     */
+    List<GroupDO> queryByIds(Set<Long> ids);
+
+    /**
      * 分页查询满足条件的组
      *
      * @return {@link PageInfo<List<GroupDO>> }
@@ -33,28 +49,20 @@ public interface GroupService {
     List<GroupDO> queryAllByCriteriaWithNoPage(GroupQueryCriteria criteria);
 
     /**
-     * 根据ID查询
-
-     * @param id 组ID
-     * @return {@link GroupDO}
-     */
-    GroupDO queryById(Long id);
-
-    /**
-     * 根据ID集合查询
-     *
-     * @param ids 组ID集合
-     * @return {@link List<GroupDO>}
-     */
-    List<GroupDO> queryByIds(Set<Long> ids);
-
-    /**
      * 根据用户ID查询
      *
      * @param userId 用户ID
      * @return {@link List<GroupDO>}
      */
     List<GroupDO> queryByUserId(Long userId);
+
+    /**
+     * 根据用户名查询所属组 groupCode
+     *
+     * @param username /
+     * @return {@link List<String>}
+     */
+    List<String> queryByUsername(String username);
 
     /**
      * 根据菜单集合查询

@@ -77,8 +77,16 @@
         select
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
-        select group_id from t_sys_user_group where user_id = #{u_id}
+        select group_id from t_sys_user_group where user_id = #{userId}
         ) and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}'
+    </select>
+
+    <select id="selectByUsername" parameterType="java.lang.String">
+        select
+          g_group_code
+        from t_sys_group where g_id in (
+        select group_id from t_sys_user_group join t_sys_user on user_id = u_id and u_username = #{username}
+        )
     </select>
 
     <select id="countAssociatedUser" parameterType="java.util.HashSet">

@@ -33,20 +33,20 @@ public class PermissionRuleController {
         ruleService.download(ruleService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
+    @Logging("根据ID查询规则")
+    @ApiOperation("根据ID查询规则")
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("@el.check('rule:list')")
+    public ResponseEntity<ResponseData> query(@PathVariable Long id) {
+        return success(ruleService.queryById(id));
+    }
+
     @Logging("根据条件查询规则")
     @ApiOperation("根据条件查询规则")
     @GetMapping
     @PreAuthorize("@el.check('rule:list')")
-    public ResponseEntity<ResponseData> queryByCriteria(RuleQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> queryByCriteria(@RequestParam RuleQueryCriteria criteria) {
         return success(ruleService.queryAllByCriteria(criteria));
-    }
-
-    @Logging("根据ID查询规则")
-    @ApiOperation("根据ID查询规则")
-    @GetMapping
-    @PreAuthorize("@el.check('rule:list')")
-    public ResponseEntity<ResponseData> query(Long id) {
-        return success(ruleService.queryById(id));
     }
 
     @Logging("新增规则")
@@ -69,9 +69,9 @@ public class PermissionRuleController {
 
     @Logging("删除规则")
     @ApiOperation("删除规则")
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @PreAuthorize("@el.check('rule:del')")
-    public ResponseEntity<ResponseData> delete(@RequestBody Long id) {
+    public ResponseEntity<ResponseData> delete(@PathVariable Long id) {
         ruleService.deleteById(id);
         return success();
     }

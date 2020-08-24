@@ -36,16 +36,24 @@ public class DeptController {
         deptService.download(deptService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
-    @Logging("查询部门")
-    @ApiOperation("查询部门")
+    @Logging("根据ID查询部门")
+    @ApiOperation("根据ID查询部门")
+    @GetMapping
+    @PreAuthorize("@el.check('user:list','dept:list')")
+    public ResponseEntity<ResponseData> query(Long id) {
+        return success(deptService.queryById(id));
+    }
+
+    @Logging("根据条件查询部门")
+    @ApiOperation("根据条件查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<ResponseData> query(DeptQueryCriteria criteria) {
         return success(deptService.queryAllByCriteriaWithNoPage(criteria));
     }
 
-    @Logging("查询部门")
-    @ApiOperation("查询部门:根据ID获取同级与上级数据")
+    @Logging("查询部门: 根据ID获取同级与上级数据")
+    @ApiOperation("查询部门: 根据ID获取同级与上级数据")
     @PostMapping("/tree2me")
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<ResponseData> queryAncestorAndSiblingOfDepts(@RequestBody Set<Long> deptIds) {

@@ -34,15 +34,23 @@ public class GroupController {
         groupService.download(groupService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
-    @Logging("查询组")
-    @ApiOperation("查询组")
+    @Logging("根据ID查询组")
+    @ApiOperation("根据ID查询组")
+    @GetMapping
+    @PreAuthorize("@el.check('user:list','group:list')")
+    public ResponseEntity<ResponseData> query(Long id) {
+        return success(groupService.queryById(id));
+    }
+
+    @Logging("根据条件查询组")
+    @ApiOperation("根据条件查询组")
     @GetMapping
     @PreAuthorize("@el.check('user:list','group:list')")
     public ResponseEntity<ResponseData> query(GroupQueryCriteria criteria) {
         return success(groupService.queryAllByCriteriaWithNoPage(criteria));
     }
 
-    @Logging("查询组")
+    @Logging("查询组:根据ID获取同级与上级数据")
     @ApiOperation("查询组:根据ID获取同级与上级数据")
     @PostMapping("/tree2me")
     @PreAuthorize("@el.check('user:list','group:list')")
