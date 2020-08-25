@@ -3,13 +3,9 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * 用户公共查询类
@@ -17,19 +13,23 @@ import java.util.Set;
 @Data
 public class UserQueryCriteria extends AbstractQueryPage implements Serializable {
 
-    private Long id;
-
-    private Set<Long> deptIds = new HashSet<>();
+    private String blurry;
 
     private BlurryType blurryType;
 
-    private String blurry;
-
     private Boolean status;
 
-    private Long deptId;
+    /**
+     * 搜索范围：开始时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-22")
+    private String startTime;
 
-    private List<LocalDateTime> createTimes;
+    /**
+     * 搜索范围：结束时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-25")
+    private String endTime;
 
     public enum BlurryType {
         USERNAME(1, "username"),

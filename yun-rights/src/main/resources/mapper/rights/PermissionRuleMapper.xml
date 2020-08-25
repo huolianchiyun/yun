@@ -49,11 +49,11 @@
                 <if test='criteria.enabled != null'>
                     and pr_enabled = ${criteria.enabled}
                 </if>
-                <if test='criteria.createTimes != null and criteria.createTimes > 0'>
-                    and u_create_time
-                    <foreach collection="createTimes" item="createTime" open=" between " separator=" and " close="">
-                        #{createTime}
-                    </foreach>
+                <if test='criteria.startTime != null and criteria.startTime != ""'>
+                    and u_create_time >= #{criteria.startTime}
+                </if>
+                <if test='criteria.endTime != null and criteria.endTime != ""'>
+                    and u_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
         </trim>

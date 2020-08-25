@@ -125,11 +125,11 @@
                 <if test='criteria.groupName != null and criteria.groupName != ""'>
                     and g_group_name like concat('%', #{criteria.groupName}, '%')
                 </if>
-                <if test='criteria.createTimes != null and criteria.createTimes > 0'>
-                    and m_create_time
-                    <foreach collection="createTimes" item="createTime" open=" between " separator=" and " close="">
-                        #{createTime}
-                    </foreach>
+                <if test='criteria.startTime != null and criteria.startTime != ""'>
+                    and u_create_time >= #{criteria.startTime}
+                </if>
+                <if test='criteria.endTime != null and criteria.endTime != ""'>
+                    and u_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
         </trim>

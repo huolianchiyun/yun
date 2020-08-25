@@ -77,11 +77,11 @@
                         and m_description like concat('%', #{criteria.blurry}, '%')
                     </if>
                 </if>
-                <if test='criteria.createTimes != null and criteria.createTimes > 0'>
-                    and m_create_time
-                    <foreach collection="createTimes" item="createTime" open=" between " separator=" and " close="">
-                        #{createTime}
-                    </foreach>
+                <if test='criteria.startTime != null and criteria.startTime != ""'>
+                    and u_create_time >= #{criteria.startTime}
+                </if>
+                <if test='criteria.endTime != null and criteria.endTime != ""'>
+                    and u_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
         </trim>
@@ -91,11 +91,11 @@
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_menu (m_menu_code, m_menu_code, m_menu_title, m_menu_type,
+        insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
         m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path,
         m_creator, m_updater, m_create_time,
         m_update_time)
-        values (#{menuCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
+        values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
         #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
         #{accessUrl,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP})

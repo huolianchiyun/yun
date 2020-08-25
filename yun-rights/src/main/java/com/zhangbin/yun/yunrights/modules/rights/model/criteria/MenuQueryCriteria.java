@@ -3,11 +3,9 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 菜单公共查询类
@@ -20,7 +18,17 @@ public class MenuQueryCriteria extends AbstractQueryPage {
 
     private BlurryType blurryType;
 
-    private List<LocalDateTime> createTimes;
+    /**
+     * 搜索范围：开始时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-22")
+    private String startTime;
+
+    /**
+     * 搜索范围：结束时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-25")
+    private String endTime;
 
     private Long pid;
 

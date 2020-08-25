@@ -30,7 +30,7 @@ public class UserController {
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
-    public void download(UserQueryCriteria criteria, HttpServletResponse response) throws IOException {
+    public void download(@RequestParam UserQueryCriteria criteria, HttpServletResponse response) throws IOException {
         userService.download(userService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
@@ -46,7 +46,7 @@ public class UserController {
     @ApiOperation("根据条件查询用户")
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<ResponseData> queryByCriteria(@RequestParam UserQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> queryByCriteria(UserQueryCriteria criteria) {// 不加注解，默认从url拿数据封装成controller参数对象，加 @RequestBody 注解 spring mvc才会从http body里去拿数据。
         return success(userService.queryAllByCriteria(criteria));
     }
 

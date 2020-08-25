@@ -1,8 +1,6 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-editor-container">
-      <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
-      dd
     </div>
   </div>
 </template>
@@ -36,7 +34,7 @@ export default {
     }
   }
 
-  @media (max-width:1024px) {
+  @media (max-width: 1024px) {
     .chart-wrapper {
       padding: 8px;
     }

@@ -3,10 +3,9 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 数据权限规则公共查询类
@@ -14,13 +13,24 @@ import java.util.List;
 @Data
 public class RuleQueryCriteria extends AbstractQueryPage implements Serializable {
 
+    private String blurry;
+
     private BlurryType blurryType;
 
-    private String blurry;
 
     private Boolean enabled;
 
-    private List<LocalDateTime> createTimes;
+    /**
+     * 搜索范围：开始时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-22")
+    private String startTime;
+
+    /**
+     * 搜索范围：结束时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-25")
+    private String endTime;
 
     public enum BlurryType {
         RULE_NAME(1, "ruleName"),

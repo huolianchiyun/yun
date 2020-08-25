@@ -15,11 +15,18 @@ import springfox.documentation.builders.*;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
+import springfox.documentation.schema.property.ModelSpecificationFactory;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.*;
+
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 import static springfox.documentation.service.ParameterType.HEADER;
 
@@ -53,6 +60,13 @@ public class SwaggerConfig {
         return getDocket(baseUrl, groupName, "业务接口", "", "1.0", enable);
     }
 
+
+    @Bean
+    public Docket yunrights_api() {
+        return getDocket("/yun/**", "系统权限: yun-rights-接口文档V1.0", "业务接口",
+                "一个简单且易上手的 Spring boot 权限框架", "1.0", enable);
+    }
+
     private Docket getDocket(String baseUrl, String groupName, String title, String description, String version, Boolean enable) {
         return new Docket(DocumentationType.OAS_30)
                 .enable(enable)
@@ -66,37 +80,21 @@ public class SwaggerConfig {
                 .paths(PathSelectors.ant(baseUrl))
                 .build()
                 .groupName(groupName)
-                .globalRequestParameters(buildGlobalOperationParameters())
+//                .directModelSubstitute(LocalDateTime.class, String.class)
+//                .directModelSubstitute(LocalDate.class, String.class)
+//                .directModelSubstitute(LocalTime.class, String.class)
+//                .directModelSubstitute(ZonedDateTime.class, String.class)
                 // 支持的通讯协议集合
                 .protocols(new LinkedHashSet<>(
                         Arrays.asList("https", "http")))
                 // 授权信息设置，必要的header token等认证信息
                 .securitySchemes(Collections.singletonList(
-                        new ApiKey("BASE_TOKEN", "token", "pass")))
-                // 授权信息全局应用
+                        new ApiKey(tokenHeader, "token", "header")))
+                // 授权信息全局token
                 .securityContexts(Collections.singletonList(
                         SecurityContext.builder().securityReferences(Collections.singletonList(
-                                new SecurityReference("BASE_TOKEN", new AuthorizationScope[]{new AuthorizationScope("global", "")}))).build()
+                                new SecurityReference(tokenHeader, new AuthorizationScope[]{new AuthorizationScope("global", "")}))).build()
                 ));
-    }
-
-
-    @Bean
-    public Docket yunrights_api() {
-        return getDocket("/yun/**", "系统权限: yun-rights-接口文档V1.0", "业务接口",
-                "一个简单且易上手的 Spring boot 权限框架", "1.0", enable);
-    }
-
-    private List<RequestParameter> buildGlobalOperationParameters() {
-        RequestParameterBuilder ticketPar = new RequestParameterBuilder();
-        List<RequestParameter> pars = new ArrayList<>();
-        ticketPar.name(tokenHeader)
-                .description("token")
-                .in(HEADER)
-                .required(true)
-                .build();
-        pars.add(ticketPar.build());
-        return pars;
     }
 }
 
