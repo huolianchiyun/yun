@@ -46,5 +46,5 @@ module.exports = {
   /**
    * 备案号
    */
-  caseNumber: '陕ICP备888888号'
+  caseNumber: 'Huo Lian Chi Yun'
 }

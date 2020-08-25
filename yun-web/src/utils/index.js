@@ -36,15 +36,18 @@ export function parseTime (time, cFormat) {
     s: date.getSeconds(),
     a: date.getDay()
   }
+  // eslint-disable-next-line camelcase
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
+    // eslint-disable-next-line standard/computed-property-even-spacing
     if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
     return value || 0
   })
+  // eslint-disable-next-line camelcase
   return time_str
 }
 
@@ -361,16 +364,20 @@ export function regEmail (email) {
         _s += '*'
       }
     }
+    // eslint-disable-next-line camelcase
     var new_email = str[0].substr(0, 3) + _s + '@' + str[1]
   }
+  // eslint-disable-next-line camelcase
   return new_email
 }
 
 // 替换手机字符
 export function regMobile (mobile) {
   if (mobile.length > 7) {
+    // eslint-disable-next-line camelcase
     var new_mobile = mobile.substr(0, 3) + '****' + mobile.substr(7)
   }
+  // eslint-disable-next-line camelcase
   return new_mobile
 }
 

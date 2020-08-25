@@ -5,17 +5,18 @@
       <h3 class="title">YUN 系统</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号" clearable>
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" show-password>
-          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
       <el-form-item prop="code">
-        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="login" clearable>
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%"
+                  @keyup.enter.native="login" clearable>
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
         </el-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode" alt="验证码">
@@ -29,6 +30,12 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <!--  底部  -->
+    <div v-if="$store.state.settings.showFooter" id="el-login-footer">
+      <span v-html="$store.state.settings.footerTxt" />
+      <span> ⋅ </span>
+      <a href="#" target="_blank">{{ $store.state.settings.caseNumber }}</a>
+    </div>
   </div>
 </template>
 
@@ -36,6 +43,7 @@
 import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import Cookies from 'js-cookie'
+
 export default {
   name: 'Login',
   data () {
@@ -140,12 +148,15 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+  body{
+    margin: 0;
+  }
   .login {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    background-size: cover;
+    background-color: #eafcff;
   }
   .title {
     margin: 0 auto 30px auto;
@@ -182,5 +193,8 @@ export default {
       cursor: pointer;
       vertical-align:middle
     }
+  }
+  #el-login-footer{
+    color: gray;
   }
 </style>
