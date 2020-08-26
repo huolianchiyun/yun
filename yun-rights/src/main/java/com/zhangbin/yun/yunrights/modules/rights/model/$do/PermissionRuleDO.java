@@ -2,6 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,16 +15,17 @@ import java.util.Objects;
 @NoArgsConstructor
 public class PermissionRuleDO extends BaseDo implements ExcelSupport, Serializable {
 
+    @ApiModelProperty(required = true)
     private String ruleName;
-
+    @ApiModelProperty(required = true)
     private String groupCodes;
-
+    @ApiModelProperty(required = true)
     private String fromTable;
-
+    @ApiModelProperty(required = true)
     private String ruleExps;
 
     private String description;
-
+    @ApiModelProperty(required = true)
     private Boolean enabled;
 
     public PermissionRuleDO(String ruleName, String groupCodes, String fromTable, String ruleExps) {

@@ -45,7 +45,7 @@ public class PermissionRuleController {
     @ApiOperation("根据条件查询规则")
     @GetMapping
     @PreAuthorize("@el.check('rule:list')")
-    public ResponseEntity<ResponseData> queryByCriteria(@RequestParam RuleQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> queryByCriteria(RuleQueryCriteria criteria) {
         return success(ruleService.queryAllByCriteria(criteria));
     }
 

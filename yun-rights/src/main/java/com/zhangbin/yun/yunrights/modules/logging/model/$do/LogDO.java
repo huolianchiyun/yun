@@ -8,6 +8,7 @@ import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedBy;
 import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**

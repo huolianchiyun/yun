@@ -17,8 +17,10 @@ import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -36,18 +38,21 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
     /**
      * 父组id
      */
+    @ApiModelProperty(required = true)
     private Long pid;
 
     /**
-     * 组编码，生成规则："父编号:子组数量"
+     * 组编码，生成规则："父编号:子组ID"
      */
+    @ApiModelProperty(required = true)
     private String groupCode;
 
     /**
      * 组类型
      */
+    @ApiModelProperty(required = true)
     private String groupType;
-
+    @ApiModelProperty(required = true)
     private String groupName;
 
     private String description;
@@ -57,22 +62,26 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
     /**
      * 组长，群主
      */
+    @ApiModelProperty(required = true)
     private String groupMaster;
 
     /**
      * 非表字段
      */
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private Long oldPid;
 
     /**
      * 非表字段
      */
+    @ApiModelProperty(hidden = true)
     private Set<UserDO> users;
 
     /**
      * 非表字段
      */
+    @ApiModelProperty(hidden = true)
     protected Set<MenuDO> menus;
 
 

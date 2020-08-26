@@ -7,6 +7,7 @@ import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedBy;
 import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedDate;
 import com.zhangbin.yun.yunrights.modules.common.audit.annotation.LastModifiedBy;
 import com.zhangbin.yun.yunrights.modules.common.audit.annotation.LastModifiedDate;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,13 +18,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 public abstract class BaseDo {
     protected Long id;
     @CreatedBy
+    @ApiModelProperty(hidden = true)
     protected String creator; // 用户登录账号，全局唯一
     @LastModifiedBy
+    @ApiModelProperty(hidden = true)
     protected String updater; // 用户登录账号，全局唯一
     @CreatedDate
+    @ApiModelProperty(hidden = true)
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     protected LocalDateTime createTime;
     @LastModifiedDate
+    @ApiModelProperty(hidden = true)
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     protected LocalDateTime updateTime;
 

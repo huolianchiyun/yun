@@ -48,7 +48,7 @@ public class DeptController {
     @ApiOperation("根据条件查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<ResponseData> query(@RequestParam DeptQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> query(DeptQueryCriteria criteria) {
         return success(deptService.queryAllByCriteriaWithNoPage(criteria));
     }
 

@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,7 @@ import lombok.Setter;
 public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(required = true)
     private String username;
 
     private String nickname;
@@ -32,8 +34,10 @@ public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     /**
      * 性別：1 男， 2 女
      */
+    @ApiModelProperty(required = true)
     private Byte gender;
 
+    @ApiModelProperty(required = true)
     private String pwd;
 
     private String phone;
@@ -45,23 +49,29 @@ public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     /**
      * 用户状态：0 禁用，1 启用
      */
+    @ApiModelProperty(required = true)
     private Boolean status;
 
     /**
      * 是否已删除：0：未删除，1：已删除
      */
+    @ApiModelProperty(required = true)
     private Boolean deleted;
 
     /**
      * 是否是管理员，管理员全局唯一，即系统中只有一个
      */
+    @ApiModelProperty(required = true)
     private boolean admin;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    @ApiModelProperty(hidden = true)
     private LocalDateTime pwdResetTime;
 
+    @ApiModelProperty(hidden = true)
     private Set<GroupDO> groups;
 
+    @ApiModelProperty(hidden = true)
     private GroupDO dept;
 
     public UserDO() {

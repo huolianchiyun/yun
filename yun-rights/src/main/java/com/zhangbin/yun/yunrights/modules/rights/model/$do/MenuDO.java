@@ -13,6 +13,7 @@ import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     /**
      * 菜单标题，显示名
      */
+    @ApiModelProperty(required = true)
     private String menuTitle;
 
     /**
@@ -45,6 +47,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     /**
      * 菜单类型
      */
+    @ApiModelProperty(required = true)
     private MenuType menuType;
 
     /**
@@ -55,6 +58,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     /**
      * 父菜单id
      */
+    @ApiModelProperty(required = true)
     private Long pid;
 
     /**
@@ -75,6 +79,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     /**
      * 是否是外部链接
      */
+    @ApiModelProperty(required = true)
     private Boolean externalLink;
 
     private Boolean hidden;
@@ -84,12 +89,14 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     /**
      * 子菜单（非表字段）
      */
+    @ApiModelProperty(hidden = true)
     private List<MenuDO> children;
 
     /**
      * 非表字段
      */
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private Long oldPid;
 
     @Transient

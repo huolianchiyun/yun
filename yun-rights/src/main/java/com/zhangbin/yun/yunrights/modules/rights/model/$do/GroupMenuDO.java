@@ -13,12 +13,9 @@ import lombok.Setter;
 @Setter
 public class GroupMenuDO implements Serializable {
     private static final long serialVersionUID = 1L;
-    /**
-     */
+
     private Long groupId;
 
-    /**
-     */
     private Long menuId;
 
     public GroupMenuDO(Long roleId, Long menuId) {

@@ -46,7 +46,7 @@ public class GroupController {
     @ApiOperation("根据条件查询组")
     @GetMapping
     @PreAuthorize("@el.check('user:list','group:list')")
-    public ResponseEntity<ResponseData> query(@RequestParam GroupQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> query(GroupQueryCriteria criteria) {
         return success(groupService.queryAllByCriteriaWithNoPage(criteria));
     }
 
