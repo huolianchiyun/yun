@@ -53,9 +53,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Cacheable(key = "'id:' + #p0")
     public MenuDO queryById(long id) {
-        MenuDO menu = menuMapper.selectByPrimaryKey(id);
-        ValidationUtil.isNull(menu.getId(), "Menu", "id", id);
-        return menu;
+        return menuMapper.selectByPrimaryKey(id);
     }
 
     @Override

@@ -10,7 +10,10 @@ public class MySqlDialect extends AbstractDialect {
 
     @Override
     protected String getPermissionSql(String sql, Set<PermissionRuleDO> rules, CacheKey cacheKey) {
-        // TODO mysql 数据权限处理
+        // TODO mysql 数据权限处理逻辑  根据权限修改原有sql
+
+
+
 
 
         return null;

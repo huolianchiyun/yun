@@ -89,6 +89,6 @@ public class DeptServiceImpl implements DeptService {
     private void checkOperationalRights(){// TODO
         String currentUsername = SecurityUtils.getCurrentUsername();
         UserDO currentUser = userService.queryByUsername(currentUsername);
-        Assert.isTrue(currentUser.isAdmin(), "你没有操作权限，尽");
+        Assert.isTrue(currentUser.isAdmin(), "你没有操作权限!");
     }
 }
