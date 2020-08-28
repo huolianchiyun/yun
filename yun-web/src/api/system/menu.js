@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getMenusTree (pid) {
   return request({
-    url: 'api/menus/lazy?pid=' + pid,
+    url: 'menus/lazy?pid=' + pid,
     method: 'get'
   })
 }

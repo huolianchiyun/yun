@@ -32,7 +32,7 @@
     </el-form>
     <!--  底部  -->
     <div v-if="$store.state.settings.showFooter" id="el-login-footer">
-      <span v-html="$store.state.settings.footerTxt" />
+      <span v-html="$store.state.settings.footerTxt"/>
       <span> ⋅ </span>
       <a href="#" target="_blank">{{ $store.state.settings.caseNumber }}</a>
     </div>
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     async getCode () {
-      const { data: res } = await this.$http.get('auth/code')
+      const res = await this.$login.getCodeImg()
       if (res.meta.status !== 200) {
         return this.$message.error(' 获取验证码失败!')
       }
@@ -120,9 +120,8 @@ export default {
           Cookies.remove('password')
           Cookies.remove('rememberMe')
         }
-        const { data: res } = await this.$http.post('auth/login', user)
+        const res = await this.$login.login(user)
         this.loading = false
-        console.log(res)
         if (res.meta.status !== 200) {
           this.getCode()
           return this.$message.error('登录失败，的原因：' + res.meta.message)
@@ -148,9 +147,10 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  body{
+  body {
     margin: 0;
   }
+
   .login {
     display: flex;
     justify-content: center;
@@ -158,6 +158,7 @@ export default {
     height: 100%;
     background-color: #eafcff;
   }
+
   .title {
     margin: 0 auto 30px auto;
     text-align: center;
@@ -169,32 +170,41 @@ export default {
     background: #ffffff;
     width: 385px;
     padding: 25px 25px 5px 25px;
+
     .el-input {
       height: 38px;
+
       input {
         height: 38px;
       }
     }
-    .input-icon{
-      height: 39px;width: 14px;margin-left: 2px;
+
+    .input-icon {
+      height: 39px;
+      width: 14px;
+      margin-left: 2px;
     }
   }
+
   .login-tip {
     font-size: 13px;
     text-align: center;
     color: #bfbfbf;
   }
+
   .login-code {
     width: 33%;
     display: inline-block;
     height: 38px;
     float: right;
-    img{
+
+    img {
       cursor: pointer;
-      vertical-align:middle
+      vertical-align: middle
     }
   }
-  #el-login-footer{
+
+  #el-login-footer {
     color: gray;
   }
 </style>

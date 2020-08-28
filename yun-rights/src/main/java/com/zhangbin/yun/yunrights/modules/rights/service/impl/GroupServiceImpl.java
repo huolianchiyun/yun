@@ -89,11 +89,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDO> queryByPid(Long pid) {
-        return CollectionUtil.list(false, groupMapper.selectByPid(pid));
+        return SetUtils.toListWithSorted(groupMapper.selectByPid(pid), GroupDO::compareTo);
     }
 
     @Override
-    public List<GroupDO> queryAncestorAndSiblingOfGroups(Set<Long> groupIds) {
+    public List<GroupDO> queryAncestorAndSibling(Set<Long> groupIds) {
         if (CollectionUtil.isEmpty(groupIds)) {
             return queryByPid(null);
         }

@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
-import com.zhangbin.yun.yunrights.modules.common.utils.PageUtil;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
@@ -42,8 +41,15 @@ public class GroupController {
         return success(groupService.queryById(id));
     }
 
+    @ApiOperation("根据父组ID查询子组")
+    @GetMapping(value = "/lazy/{pid}")
+    @PreAuthorize("@el.check('group:list')")
+    public ResponseEntity<ResponseData> queryByPid(@PathVariable Long pid) {
+        return success(groupService.queryByPid(pid));
+    }
+
     @Logging("根据条件查询组")
-    @ApiOperation("根据条件查询组")
+    @ApiOperation("根据条件查询组：1、根据 pid 查询满足条件的子组（直接子组）2、将 pid 设置为 null可以查询所有满足条件的组")
     @GetMapping
     @PreAuthorize("@el.check('user:list','group:list')")
     public ResponseEntity<ResponseData> query(GroupQueryCriteria criteria) {
@@ -54,8 +60,8 @@ public class GroupController {
     @ApiOperation("查询组:根据ID获取同级与上级数据")
     @PostMapping("/tree2me")
     @PreAuthorize("@el.check('user:list','group:list')")
-    public ResponseEntity<ResponseData> getSuperior(@RequestBody Set<Long> groupIds) {
-        return success(groupService.queryAncestorAndSiblingOfGroups(groupIds));
+    public ResponseEntity<ResponseData> queryAncestorAndSibling(@RequestBody Set<Long> groupIds) {
+        return success(groupService.queryAncestorAndSibling(groupIds));
     }
 
     @Logging("新增组")

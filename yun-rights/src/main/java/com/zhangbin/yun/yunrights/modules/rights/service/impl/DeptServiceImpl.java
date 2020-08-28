@@ -50,7 +50,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDTO> queryAncestorAndSiblingOfDepts(Set<Long> groupIds) {
-        return Optional.of(groupService.queryAncestorAndSiblingOfGroups(groupIds))
+        return Optional.of(groupService.queryAncestorAndSibling(groupIds))
                 .orElseGet(ArrayList::new).stream().map(GroupDO::toDept).collect(Collectors.toList());
     }
 

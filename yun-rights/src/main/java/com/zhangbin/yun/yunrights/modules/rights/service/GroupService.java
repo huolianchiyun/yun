@@ -65,7 +65,7 @@ public interface GroupService {
     Set<GroupDO> queryByMenuIds(Set<Long> menuIds);
 
     /**
-     * 根据PID查询子部门
+     * 根据PID查询子组
      *
      * @param pid 父 ID
      * @return {@link List<GroupDO>}
@@ -78,7 +78,7 @@ public interface GroupService {
      * @param groupIds 部门 ID 集合
      * @return {@link List<GroupDO>}
      */
-    List<GroupDO> queryAncestorAndSiblingOfGroups(Set<Long> groupIds);
+    List<GroupDO> queryAncestorAndSibling(Set<Long> groupIds);
 
     /**
      * 创建部门

@@ -35,7 +35,7 @@ public interface MenuService {
      * @param pid
      * @return {@link List<MenuDO>}
      */
-    List<MenuDO> querySubmenusByPid(Long pid);
+    List<MenuDO> queryByPid(Long pid);
 
     /**
      * 获取多个菜单作为叶子节点的菜单树
@@ -43,7 +43,7 @@ public interface MenuService {
      * @param menuIds 作为菜单树叶子节点
      * @return {@link List<MenuDO>}
      */
-    List<MenuDO> queryAncestorAndSiblingOfMenus(List<Long> menuIds);
+    List<MenuDO> queryAncestorAndSibling(List<Long> menuIds);
 
     /**
      * 根据用户获取菜单

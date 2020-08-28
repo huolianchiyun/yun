@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
@@ -58,14 +60,14 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Cacheable(key = "'pid:' + #p0")
-    public List<MenuDO> querySubmenusByPid(Long pid) {
+    public List<MenuDO> queryByPid(Long pid) {
         return SetUtils.toListWithSorted(menuMapper.selectByPid(pid), MenuDO::compareTo);
     }
 
     @Override
-    public List<MenuDO> queryAncestorAndSiblingOfMenus(List<Long> menuIds) {
+    public List<MenuDO> queryAncestorAndSibling(List<Long> menuIds) {
         if (CollectionUtil.isEmpty(menuIds)) {
-            return querySubmenusByPid(null);
+            return queryByPid(null);
         }
         // 获取所有菜单
         Set<MenuDO> allMenus = menuMapper.selectAllByCriteria(null);
@@ -101,7 +103,7 @@ public class MenuServiceImpl implements MenuService {
     public void updateMenu(MenuDO updatingMenu) {
         Assert.isTrue(!updatingMenu.getId().equals(updatingMenu.getPid()), "上级不能为自己!");
         MenuDO menuDb = menuMapper.selectByPrimaryKey(updatingMenu.getId());
-        Assert.isNull(menuDb, "修改的菜单不存在！");
+        Assert.notNull(menuDb, "修改的菜单不存在！");
         validateExternalLink(updatingMenu);
         updatingMenu.setOldPid(menuDb.getPid());
         menuMapper.updateByPrimaryKeySelective(updatingMenu);
@@ -149,9 +151,12 @@ public class MenuServiceImpl implements MenuService {
 
     private void validateExternalLink(MenuDO menu) {
         if (menu.getExternalLink()) {
-            String url = menu.getAccessUrl().toLowerCase();
-            Assert.isTrue(url.startsWith(HTTP) || url.startsWith(HTTPS),
-                    "外链必须以http://或者https://开头");
+            String accessUrl = menu.getAccessUrl();
+            if(StringUtils.hasText(accessUrl)){
+                String url = accessUrl.toLowerCase();
+                Assert.isTrue(url.startsWith(HTTP) || url.startsWith(HTTPS),
+                        "外链必须以http://或者https://开头");
+            }
         }
     }
 

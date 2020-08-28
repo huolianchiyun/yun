@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import index from './router'
 import store from './store'
-
+import lodash from 'lodash'
 // global css
 import './assets/styles/index.scss'
 // 导入字体图标
@@ -11,40 +11,9 @@ import './assets/fonts/user/iconfont.css'
 import './plugins/element.js'
 import './assets/icons' // icon
 
-import axios from 'axios'
-// 打印
-import Print from 'vue-print-nb'
-// 导入NProgress包对应的JS和CSS
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-import lodash from 'lodash'
-
-// 配置请求的根路径
-axios.defaults.baseURL = 'http://127.0.0.1:8081/yun/'
-Vue.prototype.$http = axios
-Vue.prototype.$_ = lodash
 Vue.config.devtools = true // 控制F12时是否可以使用vue-devtool插件
 Vue.config.productionTip = false
-// 注册
-Vue.use(Print)
-
-// 在request拦截器中展示进度条
-axios.interceptors.request.use(config => {
-  NProgress.start()
-  config.headers.authorization = window.sessionStorage.getItem('token')
-  return config // 必须return config
-})
-
-// 在response拦截器中隐藏进度条
-axios.interceptors.response.use(async config => {
-  NProgress.done()
-  const { data: res } = config
-  if (res.meta.message !== undefined && res.meta.message === 'Authorization失效，请重新登录') {
-    await index.push('/login')
-    return
-  }
-  return config // 必须return config
-})
+Vue.prototype.$_ = lodash
 
 // 设置浏览器标题
 Vue.directive('title', {

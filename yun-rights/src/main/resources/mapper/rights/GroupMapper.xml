@@ -97,11 +97,11 @@
         </foreach>
     </select>
 
-    <select id="selectByMenuIds" parameterType="java.util.HashSet">
+    <select id="selectByMenuIds" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group, t_sys_group_menu
-        where menu_id id in
+        where menu_id in
         <foreach collection="menuIds" index="index" item="menuId" separator="," open="(" close=")">
             #{menuId,jdbcType=INTEGER}
         </foreach>
