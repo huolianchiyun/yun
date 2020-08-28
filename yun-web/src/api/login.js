@@ -9,6 +9,12 @@ const Login = {
       data: user
     })
   },
+  getInfo () {
+    return request({
+      url: 'auth/info',
+      method: 'get'
+    })
+  },
   getCodeImg () {
     return request({
       url: 'auth/code',

@@ -79,6 +79,8 @@ export default {
     this.getCode()
     // 获取用户名密码等Cookie
     this.getCookie()
+    // token 过期提示
+    this.point()
   },
   methods: {
     async getCode () {
@@ -105,7 +107,10 @@ export default {
     },
     login () {
       this.$refs.loginFormRef.validate(async valid => {
-        if (!valid) return
+        if (!valid) {
+          console.log('error submit!!')
+          return
+        }
         const user = this.$_.cloneDeep(this.loginForm)
         if (user.password !== this.cookiePass) {
           user.password = encrypt(user.password)
@@ -131,8 +136,14 @@ export default {
         window.sessionStorage.setItem('token', res.data.token)
         // 通过编程式导航跳转到后台主页，路由地址是 /home
         try {
-          console.log(this.$router)
           await this.$router.push({ path: '/layout' })
+          this.$store.dispatch('Login', user).then(() => {
+            this.loading = false
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch(() => {
+            this.loading = false
+            this.getCode()
+          })
         } catch (e) {
           console.log(e)
         }
@@ -140,10 +151,21 @@ export default {
         //   console.log(err)
         // })
       })
+    },
+    point () {
+      const point = Cookies.get('point') !== undefined
+      if (point) {
+        this.$notify({
+          title: '提示',
+          message: '当前登录状态已过期，请重新登录！',
+          type: 'warning',
+          duration: 5000
+        })
+        Cookies.remove('point')
+      }
     }
   }
 }
-
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

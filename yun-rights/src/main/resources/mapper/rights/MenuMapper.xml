@@ -67,7 +67,7 @@
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
                 <if test="criteria.pid != null">
-                    and m_pid = #{pid,jdbcType=BIGINT}
+                    and m_pid = #{criteria.pid,jdbcType=BIGINT}
                 </if>
                 <if test='criteria.blurry != null and criteria.blurry != ""'>
                     <if test='criteria.blurryType.isMatch("menuTitle")'>
