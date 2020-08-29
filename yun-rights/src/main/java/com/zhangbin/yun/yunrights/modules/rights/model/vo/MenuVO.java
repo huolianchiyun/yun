@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MenuVO implements Serializable {
+    private String name;
 
     private String path;
 
@@ -24,7 +25,8 @@ public class MenuVO implements Serializable {
 
     private List<MenuVO> children;
 
-    public MenuVO(String path, String component, Boolean hidden) {
+    public MenuVO(String name, String path, String component, Boolean hidden) {
+        this.name = name;
         this.path = path;
         this.component = component;
         this.hidden = hidden;

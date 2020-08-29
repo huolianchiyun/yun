@@ -132,7 +132,6 @@ export default {
           this.getCode()
           return this.$message.error('登录失败，的原因：' + res.meta.message)
         }
-        this.$message.success('登录成功!')
         try {
           await this.$router.push({ path: '/' })
         } catch (e) {

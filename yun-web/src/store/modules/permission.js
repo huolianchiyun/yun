@@ -30,8 +30,7 @@ export const toRouter = (menus) => {
       if (router.component === 'Layout') { // Layout组件特殊处理
         router.component = Layout
       } else {
-        const component = router.component
-        router.component = loadView(component)
+        router.component = loadView(router.component)
       }
     }
     if (router.children && router.children.length) {
