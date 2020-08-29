@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import index from './router'
+import router from './router'
+import './router/guard'
 import store from './store'
 import lodash from 'lodash'
 // global css
@@ -36,7 +37,7 @@ Vue.filter('dateFormat', originVal => {
 
 new Vue({
   store,
-  router: index,
+  router: router,
   render: h => h(App),
   created () {
     // 在页面加载时读取sessionStorage里的状态信息

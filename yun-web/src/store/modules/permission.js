@@ -19,8 +19,13 @@ const permission = {
   }
 }
 
-export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由字符串，转换为组件对象
-  return routers.filter(router => {
+/**
+ * 将菜单类型的菜单component转换为vue组件对象
+ * @param menus
+ * @returns {*}
+ */
+export const toRouter = (menus) => {
+  return menus.filter(router => {
     if (router.component) {
       if (router.component === 'Layout') { // Layout组件特殊处理
         router.component = Layout
@@ -30,7 +35,7 @@ export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由�
       }
     }
     if (router.children && router.children.length) {
-      router.children = filterAsyncRouter(router.children)
+      router.children = toRouter(router.children)
     }
     return true
   })

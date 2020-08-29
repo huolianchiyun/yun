@@ -29,3 +29,4 @@ const Login = {
   }
 }
 Vue.prototype.$login = Login
+export default Login

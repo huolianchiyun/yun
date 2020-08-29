@@ -11,8 +11,10 @@
         <result column="m_menu_sort" jdbcType="INTEGER" property="menuSort"/>
         <result column="m_pid" jdbcType="BIGINT" property="pid"/>
         <result column="m_permission" jdbcType="VARCHAR" property="permission"/>
-        <result column="m_access_url" jdbcType="VARCHAR" property="accessUrl"/>
-        <result column="m_router_path" jdbcType="VARCHAR" property="routerPath"/>
+        <result column="m_path" jdbcType="VARCHAR" property="path"/>
+        <result column="m_component" jdbcType="VARCHAR" property="component"/>
+        <result column="m_is_external_link" jdbcType="BIT" property="externalLink"/>
+        <result column="m_is_hidden" jdbcType="BIT" property="hidden"/>
         <result column="m_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="m_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -20,7 +22,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        m_id, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path, m_creator, m_updater, m_create_time, m_update_time
+        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_permission, m_path, m_component,
+        m_is_external_link, m_is_hidden, m_creator, m_updater, m_create_time, m_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -58,6 +61,12 @@
         and m_id = menu_id
     </select>
 
+    <select id="selectRouterMenusByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select m_id, m_pid, m_menu_icon, m_menu_title, m_menu_type, m_menu_sort, m_permission, m_path, m_component, m_is_external_link, m_is_hidden
+        from t_sys_menu m, t_sys_group_menu gm, t_sys_user_group ug, t_sys_user u
+        where m.m_menu_type in (1, 2) and m.m_id = gm.menu_id and  gm.group_id = ug.group_id and  ug.user_id = u.u_id and u.u_id = #{userId}
+    </select>
+
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria"
             resultMap="BaseResultMap">
@@ -92,12 +101,15 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
-        m_description, m_menu_sort, m_pid, m_permission, m_access_url, m_router_path,
+        m_description, m_menu_sort, m_pid, m_permission, m_path, m_component, m_is_external_link, m_is_hidden,
         m_creator, m_updater, m_create_time,
         m_update_time)
-        values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER},
-        #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT}, #{permission,jdbcType=VARCHAR},
-        #{accessUrl,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR},
+        #{menuType,jdbcType=INTEGER},
+        #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
+        #{permission,jdbcType=VARCHAR},#{path,jdbcType=VARCHAR}, #{component,jdbcType=VARCHAR},
+        #{externalLink,jdbcType=BIT},#{hidden,jdbcType=BIT},
+        #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
@@ -107,7 +119,7 @@
             <if test="menuCode != null">
                 m_menu_code = #{menuCode,jdbcType=VARCHAR},
             </if>
-            <if test="menuCode != null">
+            <if test="menuIcon != null">
                 m_menu_icon = #{menuIcon,jdbcType=VARCHAR},
             </if>
             <if test="menuTitle != null">
@@ -128,11 +140,17 @@
             <if test="permission != null">
                 m_permission = #{permission,jdbcType=VARCHAR},
             </if>
-            <if test="accessUrl != null">
-                m_access_url = #{accessUrl,jdbcType=VARCHAR},
+            <if test="path != null">
+                m_path = #{path,jdbcType=VARCHAR},
             </if>
-            <if test="routerPath != null">
-                m_router_path = #{routerPath,jdbcType=VARCHAR},
+            <if test="component != null">
+                m_component = #{component,jdbcType=VARCHAR},
+            </if>
+            <if test="externalLink != null">
+                m_is_external_link = #{externalLink,jdbcType=BIT},
+            </if>
+            <if test="hidden != null">
+                m_is_hidden, = #{hidden,jdbcType=BIT},
             </if>
             <if test="creator != null">
                 m_creator = #{creator,jdbcType=VARCHAR},

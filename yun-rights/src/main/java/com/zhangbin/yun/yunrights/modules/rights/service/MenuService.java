@@ -2,6 +2,8 @@ package com.zhangbin.yun.yunrights.modules.rights.service;
 
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuVO;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
@@ -49,9 +51,18 @@ public interface MenuService {
      * 根据用户获取菜单
      *
      * @param userId
+     * @param isTree 是否以树状返回
      * @return /
      */
-    List<MenuDO> queryByUser(Long userId);
+    List<MenuDO> queryByUser(Long userId, Boolean isTree);
+
+    /**
+     * 根据用户获取菜单路由
+     *
+     * @param userId
+     * @return /
+     */
+    List<MenuVO> getRouterMenusForUser(Long userId);
 
     /**
      * 创建菜单

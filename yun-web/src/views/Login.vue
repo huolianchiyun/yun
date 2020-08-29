@@ -125,25 +125,16 @@ export default {
           Cookies.remove('password')
           Cookies.remove('rememberMe')
         }
-        const res = await this.$login.login(user)
+
+        const res = await this.$store.dispatch('Login', user)
         this.loading = false
         if (res.meta.status !== 200) {
           this.getCode()
           return this.$message.error('登录失败，的原因：' + res.meta.message)
         }
         this.$message.success('登录成功!')
-        // 将登录成功后的 token 保存到客户端的 sessionStorage 中
-        window.sessionStorage.setItem('token', res.data.token)
-        // 通过编程式导航跳转到后台主页，路由地址是 /home
         try {
-          await this.$router.push({ path: '/layout' })
-          this.$store.dispatch('Login', user).then(() => {
-            this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch(() => {
-            this.loading = false
-            this.getCode()
-          })
+          await this.$router.push({ path: '/' })
         } catch (e) {
           console.log(e)
         }

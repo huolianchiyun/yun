@@ -5,7 +5,7 @@ import {
   Menu, Submenu, MenuItem, Breadcrumb, BreadcrumbItem, Card, Row, Col, Table,
   TableColumn, Pagination, Tooltip, Switch, Dialog, Select, Option, DatePicker, TimePicker,
   Checkbox, CheckboxGroup, Radio, RadioGroup, Collapse, CollapseItem, Steps, Step, Divider,
-  Dropdown, DropdownItem, DropdownMenu, Scrollbar, ColorPicker
+  Dropdown, DropdownItem, DropdownMenu, Scrollbar, ColorPicker, Notification
 } from 'element-ui'
 
 // 注册为全局可用的插件
@@ -16,7 +16,6 @@ Vue.use(Input)
 Vue.use(Container)
 Vue.use(Header)
 Vue.use(Aside)
-Vue.use(Main)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
@@ -34,7 +33,6 @@ Vue.use(Switch)
 Vue.use(Dialog)
 Vue.use(Select)
 Vue.use(Option)
-Vue.use(Dialog)
 Vue.use(DatePicker)
 Vue.use(TimePicker)
 Vue.use(Checkbox)
@@ -74,3 +72,4 @@ const resetMessage = (options) => {
 // 全局挂载到Vue的原型对象上，这就vue组件就可以直接this.$message使用了
 Vue.prototype.$message = resetMessage
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$notify = Notification

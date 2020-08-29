@@ -26,7 +26,7 @@ module.exports = {
   /**
    * @description token key
    */
-  TokenKey: 'EL-ADMIN-TOEKN',
+  TokenKey: 'YUN-TOKEN',
   /**
    * @description 请求超时时间，毫秒（默认2分钟）
    */

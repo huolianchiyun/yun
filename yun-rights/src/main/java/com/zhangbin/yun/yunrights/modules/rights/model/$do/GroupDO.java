@@ -128,15 +128,7 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
 
     @Override
     public int compareTo(GroupDO o) {
-        if (groupSort == null && o.groupSort == null) {
-            return 0;
-        } else if (groupSort != null && o.groupSort == null) {
-            return 1;
-        } else if (groupSort == null && o.groupSort != null) {
-            return -1;
-        } else {
-            return Integer.compare(groupSort, o.groupSort);
-        }
+        return Integer.compare(groupSort == null ? 0 : groupSort, o.groupSort == null ? 0 : o.groupSort);
     }
 
     @Override

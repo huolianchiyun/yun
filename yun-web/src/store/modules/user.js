@@ -1,11 +1,11 @@
-import { login, getInfo, logout } from '@/api/login'
+import $login from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
   state: {
     token: getToken(),
-    user: {},
-    roles: [],
+    user: { groups: [] },
+    urlRights: [],
     // 第一次加载菜单时用到
     loadMenus: false
   },
@@ -17,8 +17,8 @@ const user = {
     SET_USER: (state, user) => {
       state.user = user
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_URL_RIGHTS: (state, urlRights) => {
+      state.urlRights = urlRights
     },
     SET_LOAD_MENUS: (state, loadMenus) => {
       state.loadMenus = loadMenus
@@ -30,13 +30,15 @@ const user = {
     Login ({ commit }, userInfo) {
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
-        login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid).then(res => {
-          setToken(res.token, rememberMe)
-          commit('SET_TOKEN', res.token)
-          setUserInfo(res.user, commit)
-          // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
-          commit('SET_LOAD_MENUS', true)
-          resolve()
+        $login.login(userInfo).then(res => {
+          if (res.meta.status === 200) {
+            setToken(res.data.token, rememberMe)
+            commit('SET_TOKEN', res.data.token)
+            setUserInfo(res.data.user, commit)
+            // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
+            commit('SET_LOAD_MENUS', true)
+          }
+          resolve(res)
         }).catch(error => {
           reject(error)
         })
@@ -46,8 +48,12 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(res => {
-          setUserInfo(res, commit)
+        $login.getInfo().then(res => {
+          if (res.meta.status !== 200) {
+            reject(res.meta)
+            return
+          }
+          setUserInfo(res.data, commit)
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -57,7 +63,7 @@ const user = {
     // 登出
     LogOut ({ commit }) {
       return new Promise((resolve, reject) => {
-        logout().then(res => {
+        $login.logout().then(res => {
           logOut(commit)
           resolve()
         }).catch(error => {
@@ -83,10 +89,10 @@ export const logOut = (commit) => {
 
 export const setUserInfo = (res, commit) => {
   // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
-  if (res.roles.length === 0) {
+  if (res.urlRights.length === 0) {
     commit('SET_ROLES', ['ROLE_SYSTEM_DEFAULT'])
   } else {
-    commit('SET_ROLES', res.roles)
+    commit('SET_URL_RIGHTS', res.urlRights)
   }
   commit('SET_USER', res.user)
 }

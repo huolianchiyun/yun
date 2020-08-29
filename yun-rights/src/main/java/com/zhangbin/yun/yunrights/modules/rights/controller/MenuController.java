@@ -33,12 +33,17 @@ public class MenuController {
         menuService.download(menuService.queryAllByCriteriaWithNoPage(criteria.setPid(null)), response);
     }
 
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/user/{isTree}")
     @ApiOperation("获取当前用户菜单")
-    public ResponseEntity<ResponseData> getMenusForUser() {
-        return success(menuService.queryByUser(SecurityUtils.getCurrentUserId()));
+    public ResponseEntity<ResponseData> getMenusForUser(@PathVariable Boolean isTree) {
+        return success(menuService.queryByUser(SecurityUtils.getCurrentUserId(), isTree));
     }
 
+    @GetMapping(value = "/user/router")
+    @ApiOperation("获取当前用户路由菜单")
+    public ResponseEntity<ResponseData> getRouterMenusForUser() {
+        return success(menuService.getRouterMenusForUser(SecurityUtils.getCurrentUserId()));
+    }
 
     @ApiOperation("根据ID查询菜单")
     @GetMapping(value = "/{id}")

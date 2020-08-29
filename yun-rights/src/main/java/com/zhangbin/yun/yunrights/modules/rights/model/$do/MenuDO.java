@@ -1,5 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -8,11 +10,14 @@ import java.beans.Transient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuMetaVO;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +30,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildren.ChildrenSupport<MenuDO>, ExcelSupport,Serializable {
+public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildren.ChildrenSupport<MenuDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -67,14 +72,14 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     private String permission;
 
     /**
-     * 访问后端服务url
+     * 菜单路由地址
      */
-    private String accessUrl;
+    private String path;
 
     /**
-     * 菜单路由地址，前端路由跳转用
+     * 菜单组件路径
      */
-    private String routerPath;
+    private String component;
 
     /**
      * 是否是外部链接
@@ -105,23 +110,26 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     }
 
     public Long getPid() {
-        if(null == pid){
+        if (null == pid) {
             pid = 0L;
         }
         return pid;
     }
 
+    public MenuVO toMenuVO() {
+        String menuComponent = StrUtil.isEmpty(component) ? "Layout" : component;
+        MenuVO menuVO = new MenuVO(path, menuComponent, hidden);
+        menuVO.setMeta(new MenuMetaVO(menuTitle, menuIcon));
+        if (CollectionUtil.isNotEmpty(children)) {
+            menuVO.setRedirect("noredirect");
+            menuVO.setChildren(children.stream().map(MenuDO::toMenuVO).collect(Collectors.toList()));
+        }
+        return menuVO;
+    }
+
     @Override
     public int compareTo(MenuDO o) {
-        if (menuSort == null && o.menuSort == null) {
-            return 0;
-        } else if (menuSort != null && o.menuSort == null) {
-            return 1;
-        } else if (menuSort == null && o.menuSort != null) {
-            return -1;
-        } else {
-            return Integer.compare(menuSort, o.menuSort);
-        }
+        return Integer.compare(menuSort == null ? 0 : menuSort, o.menuSort == null ? 0 : o.menuSort);
     }
 
     @Override

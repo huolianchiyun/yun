@@ -117,7 +117,7 @@
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
                 <if test="criteria.pid != null">
-                    and g_pid = #{pid,jdbcType=BIGINT}
+                    and g_pid = #{criteria.pid,jdbcType=BIGINT}
                 </if>
                 <if test='criteria.groupType != null and criteria.groupType != ""'>
                     and g_group_type = #{groupType,jdbcType=VARCHAR}

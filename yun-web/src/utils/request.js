@@ -5,7 +5,7 @@ import { Notification } from 'element-ui'
 import store from '../store'
 import Config from '@/settings'
 import Cookies from 'js-cookie'
-
+import { getToken } from '@/utils/auth'
 // 导入NProgress包对应的JS和CSS
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -19,7 +19,7 @@ const axios = Axios.create({
 // 在request拦截器中展示进度条
 axios.interceptors.request.use(config => {
   NProgress.start()
-  config.headers.authorization = window.sessionStorage.getItem('token')
+  config.headers['Authorization'] = getToken()
   config.headers['Content-Type'] = 'application/json'
   return config // 必须return config
 })

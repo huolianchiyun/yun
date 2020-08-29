@@ -1,9 +1,9 @@
 <template>
   <div v-if="!item.hidden" class="menu-wrapper">
-    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title"/>
+    <template v-if="isLeafNode(item)">
+      <app-link v-if="menuItem.meta" :to="resolvePath(menuItem.path)">
+        <el-menu-item :index="resolvePath(menuItem.path)" :class="{'submenu-title-noDropdown':!isNest}">
+          <item :icon="menuItem.meta && menuItem.meta.icon" :title="menuItem.meta.title"/>
         </el-menu-item>
       </app-link>
     </template>
@@ -51,35 +51,22 @@ export default {
     }
   },
   data () {
-    // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
-    // TODO: refactor with render function
-    this.onlyOneChild = null
+    this.menuItem = {}
     return {}
   },
   methods: {
-    hasOneShowingChild (children = [], parent) {
-      const showingChildren = children.filter(item => {
-        if (item.hidden) {
-          return false
-        } else {
-          // Temp set(will be used if only has one showing child)
-          this.onlyOneChild = item
-          return true
+    isLeafNode (node) {
+      let children = node.children
+      if (children == null) {
+        this.menuItem = node
+        return true
+      }
+      return children.filter(item => {
+        if (item.path === 'home') {
+          this.menuItem = item
         }
-      })
-
-      // When there is only one child index, the child index is displayed by default
-      if (showingChildren.length === 1) {
-        return true
-      }
-
-      // Show parent if there are no child index to display
-      if (showingChildren.length === 0) {
-        this.onlyOneChild = { ...parent, path: '', noShowingChildren: true }
-        return true
-      }
-
-      return false
+        return !item.hidden
+      }).length === 0 || this.menuItem.path === 'home'
     },
     resolvePath (routePath) {
       if (isExternal(routePath)) {

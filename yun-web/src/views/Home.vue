@@ -1,16 +1,13 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-editor-container">
+      1122
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: 'Home',
-  async created () {
-    const { data: res } = await this.$http.get('menu/user')
-    console.log(res)
-  }
+  name: 'Home'
 }
 </script>
 

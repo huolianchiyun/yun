@@ -2,6 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTP;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTPS;
+
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
@@ -13,6 +14,7 @@ import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuVO;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -78,14 +80,19 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Cacheable(key = "'user:' + #p0")  // eg. key-> menu::user:1
-    public List<MenuDO> queryByUser(Long userId) {
+    public List<MenuDO> queryByUser(Long userId, Boolean isTree) {
         List<GroupDO> groups = groupService.queryByUserId(userId);
         if (CollectionUtils.isEmpty(groups)) {
             return new ArrayList<>();
         }
         Set<Long> groupIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
         Set<MenuDO> menuSet = menuMapper.selectByGroupIds(groupIds);
-        return buildMenuTree(menuSet);
+        return isTree ? buildMenuTree(menuSet) : new ArrayList<>(menuSet);
+    }
+
+    @Override
+    public List<MenuVO> getRouterMenusForUser(Long userId) {
+        return buildMenuForRouter(menuMapper.selectRouterMenusByUserId(userId));
     }
 
     @Override
@@ -93,7 +100,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setId(null);  // 若创建菜单时入参menu.id不为null，默认将其设置为null
         validateExternalLink(menu);
         menuMapper.insert(menu);
-        if(Objects.nonNull(redisUtils)){
+        if (Objects.nonNull(redisUtils)) {
             redisUtils.del("menu::pid:" + (menu.getPid() == null ? 0 : menu.getPid()));
         }
     }
@@ -137,6 +144,20 @@ public class MenuServiceImpl implements MenuService {
     }
 
     /**
+     * 为前端路由构造菜单树
+     *
+     * @param menus
+     * @return
+     */
+    private List<MenuVO> buildMenuForRouter(Collection<MenuDO> menus) {
+        if (CollectionUtil.isEmpty(menus)) {
+            return new ArrayList<>(0);
+        }
+        List<MenuDO> tree = new TreeBuilder<MenuDO>().buildTree(menus);
+        return tree.stream().sorted(MenuDO::compareTo).map(MenuDO::toMenuVO).collect(Collectors.toList());
+    }
+
+    /**
      * 获取菜单集合的子孙菜单及自己
      *
      * @param menuIds 菜单集合
@@ -151,8 +172,8 @@ public class MenuServiceImpl implements MenuService {
 
     private void validateExternalLink(MenuDO menu) {
         if (menu.getExternalLink()) {
-            String accessUrl = menu.getAccessUrl();
-            if(StringUtils.hasText(accessUrl)){
+            String accessUrl = menu.getPath();
+            if (StringUtils.hasText(accessUrl)) {
                 String url = accessUrl.toLowerCase();
                 Assert.isTrue(url.startsWith(HTTP) || url.startsWith(HTTPS),
                         "外链必须以http://或者https://开头");
@@ -166,7 +187,7 @@ public class MenuServiceImpl implements MenuService {
      * @param menuSet 不能为 empty或 null
      */
     private void clearCaches(@NotEmpty Set<MenuDO> menuSet) {
-        if(Objects.nonNull(redisUtils)){
+        if (Objects.nonNull(redisUtils)) {
             Set<Long> menuIds = menuSet.stream().map(MenuDO::getId).collect(Collectors.toSet());
             List<UserDO> users = CollectionUtil.list(false, userMapper.selectByMenuIs(menuIds));
             redisUtils.delByKeys("menu::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
