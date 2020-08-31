@@ -9,13 +9,8 @@ import java.util.Set;
 public class MySqlDialect extends AbstractDialect {
 
     @Override
-    protected String getPermissionSql(String sql, Set<PermissionRuleDO> rules, CacheKey cacheKey) {
+    protected String getPermissionSql(String sql, Set<PermissionRuleDO> rules) {
         // TODO mysql 数据权限处理逻辑  根据权限修改原有sql
-
-
-
-
-
         return null;
     }
 }
