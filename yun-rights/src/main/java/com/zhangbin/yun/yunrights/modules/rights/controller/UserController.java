@@ -71,7 +71,7 @@ public class UserController {
     @Logging("删除用户")
     @ApiOperation("删除用户")
     @DeleteMapping
-    @PreAuthorize("@el.check('user:del')")
+//    @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<ResponseData> deleteByIds(@RequestBody Set<Long> ids) {
         userService.deleteByIds(ids);
         return success();

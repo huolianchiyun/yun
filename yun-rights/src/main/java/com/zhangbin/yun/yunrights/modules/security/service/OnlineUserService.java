@@ -2,8 +2,10 @@ package com.zhangbin.yun.yunrights.modules.security.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
+import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.MyUserDetails;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;
@@ -40,13 +42,14 @@ public class OnlineUserService {
      * @param request /
      */
     public void save(MyUserDetails myUserDetails, String token, HttpServletRequest request) {
-        String dept = myUserDetails.getUser().getDept().getGroupName();
+        GroupDO dept = myUserDetails.getUser().getDept();
+        String deptStr = dept != null ? dept.getGroupName() : Constants.EMPTY_STR;
         String ip = IPUtil.getIp(request);
         String browser = IPUtil.getBrowser(request);
         String address = IPUtil.getCityInfo(ip);
         OnlineUser onlineUser = null;
         try {
-            onlineUser = new OnlineUser(myUserDetails.getUsername(), dept, browser, ip, address, EncryptUtils.desEncrypt(token), new Date());
+            onlineUser = new OnlineUser(myUserDetails.getUsername(), deptStr, browser, ip, address, EncryptUtils.desEncrypt(token), new Date());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

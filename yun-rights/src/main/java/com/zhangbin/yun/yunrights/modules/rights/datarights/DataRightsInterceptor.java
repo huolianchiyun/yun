@@ -1,29 +1,36 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 import com.zhangbin.yun.yunrights.modules.common.exception.BadConfigurationException;
+import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
-import com.zhangbin.yun.yunrights.modules.rights.datarights.util.ExecutorUtil;
-import org.apache.ibatis.cache.CacheKey;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.reflection.DefaultReflectorFactory;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
+import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 数据权限控制
  */
-@Intercepts({/*@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),*/
-        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
+@Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 public class DataRightsInterceptor implements Interceptor {
 
     private Dialect dialect;
     private final String default_dialect_class = DataRightsHelper.class.getName();
+    private final static Pattern pattern = Pattern.compile("(\\w+_\\w+)");
+
 
     /**
      * 数据权限控制逻辑
@@ -31,35 +38,15 @@ public class DataRightsInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         try {
-            Object[] args = invocation.getArgs();
-            MappedStatement ms = (MappedStatement) args[0];
-            Object parameter = args[1];
-            RowBounds rowBounds = (RowBounds) args[2];
-            ResultHandler resultHandler = (ResultHandler) args[3];
-            Executor executor = (Executor) invocation.getTarget();
-            CacheKey cacheKey;
-            BoundSql boundSql;
-            //由于逻辑关系，只会进入一次
-            if (args.length == 4) {
-                //4 个参数时
-                boundSql = ms.getBoundSql(parameter);
-                cacheKey = executor.createCacheKey(ms, parameter, rowBounds, boundSql);
-            } else {
-                //6 个参数时
-                cacheKey = (CacheKey) args[4];
-                boundSql = (BoundSql) args[5];
+            StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
+            MappedStatement mappedStatement = getMappedStatement(statementHandler);
+            SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
+            if (SqlCommandType.SELECT.equals(sqlCommandType)) {
+                processForSelectSql(statementHandler, mappedStatement);
+            } else if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
+                processForUpdateOrDeleteSql(statementHandler, mappedStatement);
             }
-            checkDialectExists();
-
-            List resultList;
-            //调用方法判断是否需要进行数据权限控制，如果不需要，直接返回结果
-            if (!dialect.skip(ms, parameter)) {
-                resultList = ExecutorUtil.dataRightsQuery(dialect, executor, ms, parameter, resultHandler, boundSql, cacheKey);
-            } else {
-                //rowBounds用参数值，仍然支持默认的内存分页
-                resultList = executor.query(ms, parameter, rowBounds, resultHandler, cacheKey, boundSql);
-            }
-            return dialect.afterRightsQuery(resultList, parameter);
+            return invocation.proceed();
         } finally {
             if (dialect != null) {
                 dialect.afterAll();
@@ -69,8 +56,8 @@ public class DataRightsInterceptor implements Interceptor {
 
     @Override
     public Object plugin(Object target) {
-        if (target instanceof Executor) {
-            return Plugin.wrap(target, this);
+        if (target instanceof StatementHandler || target instanceof Executor) {
+            return Plugin.wrap(target, this); // 添加拦截代理
         }
         return target;
     }
@@ -105,4 +92,61 @@ public class DataRightsInterceptor implements Interceptor {
         }
     }
 
+    /**
+     * 非数据创建本人和管理员则不能对数据进行 update、delete操作
+     *
+     * @param statementHandler /
+     * @param mappedStatement  /
+     */
+    private void processForUpdateOrDeleteSql(StatementHandler statementHandler, MappedStatement mappedStatement) {
+        if (dialect.skipForUpdate(mappedStatement)) {
+            BoundSql boundSql = statementHandler.getBoundSql();
+            //获取到原始sql语句
+            String sql = boundSql.getSql();
+            if (sql.toLowerCase().contains("where")) {
+                String prefix = findColumnPrefix(sql);
+                sql += " and " + prefix + "_creator = '" + SecurityUtils.getCurrentUsername() + "'";
+                try {
+                    Field field = boundSql.getClass().getDeclaredField("sql");
+                    field.setAccessible(true);
+                    field.set(boundSql, sql);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 数据查询权限
+     *
+     * @param statementHandler /
+     * @param mappedStatement  /
+     */
+    private void processForSelectSql(StatementHandler statementHandler, MappedStatement mappedStatement) {
+        checkDialectExists();
+        BoundSql boundSql = statementHandler.getBoundSql();
+        // TODO
+
+        if (!dialect.skip(mappedStatement)) {
+//            StatementHandlerUtil.dataRightsQuery(dialect,  boundSql);
+        }
+    }
+
+    private MappedStatement getMappedStatement(StatementHandler statementHandler) {
+        MetaObject metaObject = MetaObject.forObject(statementHandler, SystemMetaObject.DEFAULT_OBJECT_FACTORY,
+                SystemMetaObject.DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
+        return (MappedStatement) metaObject.getValue("delegate.mappedStatement");
+    }
+
+    private static String findColumnPrefix(String sql) {
+        String toLowerCaseSql = sql.toLowerCase();
+        String replacedSql = toLowerCaseSql.substring(toLowerCaseSql.lastIndexOf("where")).replaceAll("[()?]", " ");
+        Matcher matcher = pattern.matcher(replacedSql);
+        if (matcher.find()) {
+            String group = matcher.group(1);
+            return group.substring(0, group.lastIndexOf('_'));
+        }
+        return "";
+    }
 }

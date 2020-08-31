@@ -22,7 +22,7 @@ public class DataRightsHelper implements Dialect {
 
 
     @Override
-    public boolean skip(MappedStatement ms, Object parameterObject) {
+    public boolean skip(MappedStatement ms) {
         if ("admin".equals(SecurityUtils.getCurrentUsername()) || isNotPermission(ms)
                 || CollectionUtil.isEmpty(RuleManager.getRulesForCurrentUser())) {
             return true;
@@ -30,6 +30,11 @@ public class DataRightsHelper implements Dialect {
             autoDialect.initDelegateDialect(ms);
             return false;
         }
+    }
+
+    @Override
+    public boolean skipForUpdate(MappedStatement ms) {
+        return "admin".equals(SecurityUtils.getCurrentUsername()) || isNotPermission(ms);
     }
 
     @Override
@@ -43,18 +48,8 @@ public class DataRightsHelper implements Dialect {
     }
 
     @Override
-    public String getPermissionSql(MappedStatement ms, BoundSql boundSql, Object parameterObject, CacheKey cacheKey) {
-        return autoDialect.getDelegate().getPermissionSql(ms, boundSql, parameterObject, cacheKey);
-    }
-
-    @Override
-    public Object afterRightsQuery(List rightsList, Object parameterObject) {
-        //这个方法即使不分页也会被执行，所以要判断 null
-        AbstractDialect delegate = autoDialect.getDelegate();
-        if (delegate != null) {
-            return delegate.afterRightsQuery(rightsList, parameterObject);
-        }
-        return rightsList;
+    public String getPermissionSql(BoundSql boundSql, Object parameterObject) {
+        return autoDialect.getDelegate().getPermissionSql(boundSql, parameterObject);
     }
 
     @Override
@@ -76,6 +71,7 @@ public class DataRightsHelper implements Dialect {
     private boolean isNotPermission(MappedStatement ms) {
         try {
             Class<?> clazz = Class.forName(ms.getId().substring(0, ms.getId().lastIndexOf(".")));
+            if(clazz.isAnnotationPresent(NotPermission.class)) return true;
             Method[] declaredMethods = clazz.getDeclaredMethods();
             for (Method method : declaredMethods) {
                 if (method.isAnnotationPresent(NotPermission.class)) return true;

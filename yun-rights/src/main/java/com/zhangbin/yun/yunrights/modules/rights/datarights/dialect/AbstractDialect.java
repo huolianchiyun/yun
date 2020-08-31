@@ -14,11 +14,15 @@ public abstract class AbstractDialect implements Dialect {
      * 查看 {@link com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsHelper#skip}
      *
      * @param ms              MappedStatement
-     * @param parameterObject 方法参数
      * @return
      */
     @Override
-    public boolean skip(MappedStatement ms, Object parameterObject) {
+    public boolean skip(MappedStatement ms) {
+        return true;
+    }
+
+    @Override
+    public boolean skipForUpdate(MappedStatement ms) {
         return true;
     }
 
@@ -33,12 +37,12 @@ public abstract class AbstractDialect implements Dialect {
     }
 
     @Override
-    public String getPermissionSql(MappedStatement ms, BoundSql boundSql, Object parameterObject, CacheKey cacheKey) {
+    public String getPermissionSql(BoundSql boundSql, Object parameterObject) {
         String sql = boundSql.getSql();
         // 获取数据权限规则对象
         Set<PermissionRuleDO> rules = null;
 
-        return getPermissionSql(sql, rules, cacheKey);
+        return getPermissionSql(sql, rules);
     }
 
     /**
@@ -46,15 +50,9 @@ public abstract class AbstractDialect implements Dialect {
      *
      * @param sql
      * @param rules
-     * @param cacheKey
      * @return
      */
-    protected abstract String getPermissionSql(String sql, Set<PermissionRuleDO> rules, CacheKey cacheKey);
-
-    @Override
-    public Object afterRightsQuery(List rightsList, Object parameterObject) {
-        return rightsList;
-    }
+    protected abstract String getPermissionSql(String sql, Set<PermissionRuleDO> rules);
 
     @Override
     public void afterAll() {

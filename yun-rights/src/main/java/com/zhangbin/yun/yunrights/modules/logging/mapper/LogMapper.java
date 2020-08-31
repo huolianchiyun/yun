@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 
 @Mapper
+@NotPermission
 public interface LogMapper extends PageMapper<LogDO> {
 
     @NotPermission

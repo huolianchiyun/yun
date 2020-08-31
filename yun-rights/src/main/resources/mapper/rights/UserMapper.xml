@@ -167,9 +167,6 @@
             <if test="nickname != null">
                 u_nickname = #{nickname,jdbcType=VARCHAR},
             </if>
-            <if test="username != null">
-                u_username = #{username,jdbcType=VARCHAR},
-            </if>
             <if test="gender != null">
                 u_gender = #{gender,jdbcType=TINYINT},
             </if>

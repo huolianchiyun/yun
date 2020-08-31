@@ -6,11 +6,12 @@ import com.zhangbin.yun.yunrights.modules.common.utils.SpringContextHolder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
 public final class RuleManager {
-    private static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
+    private final static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
     private static volatile Map<String, Set<PermissionRuleDO>> groupCodePermissionMap;
 
     static Set<PermissionRuleDO> getRulesForCurrentUser() {
@@ -71,16 +72,20 @@ public final class RuleManager {
     private static Set<PermissionRuleDO> filterByCurrentUserGroups() {
         String currentUsername = SecurityUtils.getCurrentUsername();
         Set<PermissionRuleDO> filtered = new HashSet<>(10);
-        if("anonymousUser".equalsIgnoreCase(currentUsername)){
+        if ("anonymousUser".equalsIgnoreCase(currentUsername)) {
             return filtered;
         }
         Set<String> groupCodes = SpringContextHolder.getBean(GroupMapper.class).selectByUsername(currentUsername);
-        Map<String, Set<PermissionRuleDO>> ruleMap = ruleMapThreadLocal.get();
-        ruleMap.forEach((k, v) -> {
-            if (groupCodes.contains(k)) {
-                filtered.addAll(v);
+        if (CollectionUtil.isNotEmpty(groupCodes)) {
+            Map<String, Set<PermissionRuleDO>> ruleMap = ruleMapThreadLocal.get();
+            if (CollectionUtil.isNotEmpty(ruleMap)) {
+                ruleMap.forEach((k, v) -> {
+                    if (groupCodes.contains(k)) {
+                        filtered.addAll(v);
+                    }
+                });
             }
-        });
+        }
         return filtered;
     }
 }

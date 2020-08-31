@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteByIds(Set<Long> ids) {
-        Set<UserDO> users = userMapper.selectByPrimaryKeys(ids);
+        Set<UserDO> users = userMapper.selectByIds(ids);
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         users.forEach(e -> checkOperationalRights(e, currentUser));
         userMapper.deleteByIds(ids);
