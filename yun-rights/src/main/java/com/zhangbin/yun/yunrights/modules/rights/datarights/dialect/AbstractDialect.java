@@ -1,14 +1,17 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights.dialect;
 
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
-import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import java.util.List;
+
+import javax.validation.constraints.NotNull;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class AbstractDialect implements Dialect {
+    private final static Pattern pattern = Pattern.compile("(\\w+_\\w+)");
     /**
      * 该方法不会被调用
      * 查看 {@link com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsHelper#skip}
@@ -27,39 +30,36 @@ public abstract class AbstractDialect implements Dialect {
     }
 
     @Override
-    public Object processParameterObject(MappedStatement ms, Object parameterObject, BoundSql boundSql, CacheKey pageKey) {
-        return parameterObject;
-    }
-
-    @Override
-    public boolean beforeRightsQuery(MappedStatement ms, Object parameterObject) {
+    public boolean beforeRightsQuery(MappedStatement ms) {
         return true;
     }
 
     @Override
-    public String getPermissionSql(BoundSql boundSql, Object parameterObject) {
-        String sql = boundSql.getSql();
-        // 获取数据权限规则对象
-        Set<PermissionRuleDO> rules = null;
-
-        return getPermissionSql(sql, rules);
+    public String getPermissionSqlForUpdate(BoundSql boundSql, Set<PermissionRuleDO> rules) {
+        return boundSql.getSql();
     }
 
-    /**
-     * 单独处理数据权限部分
-     *
-     * @param sql
-     * @param rules
-     * @return
-     */
-    protected abstract String getPermissionSql(String sql, Set<PermissionRuleDO> rules);
+    @Override
+    public String getPermissionSqlForSelect(BoundSql boundSql, Set<PermissionRuleDO> rules) {
+        return boundSql.getSql();
+    }
 
     @Override
     public void afterAll() {
-
     }
 
     @Override
     public void setProperties(Properties properties) {
+    }
+
+    protected static String findColumnPrefix(String sql) {
+        String toLowerCaseSql = sql.toLowerCase();
+        String replacedSql = toLowerCaseSql.substring(toLowerCaseSql.lastIndexOf("where")).replaceAll("[()?]", " ");
+        Matcher matcher = pattern.matcher(replacedSql);
+        if (matcher.find()) {
+            String group = matcher.group(1);
+            return group.substring(0, group.lastIndexOf('_'));
+        }
+        return "";
     }
 }

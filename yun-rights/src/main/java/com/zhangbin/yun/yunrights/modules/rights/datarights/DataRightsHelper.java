@@ -2,24 +2,22 @@ package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
-import com.zhangbin.yun.yunrights.modules.logging.mapper.LogMapper;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
-import org.apache.ibatis.cache.CacheKey;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.aspectj.weaver.ast.Not;
-
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Mybatis - 通用数据权限拦截器<br/>
+ * DataRightsInterceptor.dialect = DataRightsHelper
  */
 public class DataRightsHelper implements Dialect {
-    private DataRightsAutoDialect autoDialect;
 
+    private DataRightsAutoDialect autoDialect;
 
     @Override
     public boolean skip(MappedStatement ms) {
@@ -38,18 +36,18 @@ public class DataRightsHelper implements Dialect {
     }
 
     @Override
-    public Object processParameterObject(MappedStatement ms, Object parameterObject, BoundSql boundSql, CacheKey pageKey) {
-        return autoDialect.getDelegate().processParameterObject(ms, parameterObject, boundSql, pageKey);
+    public boolean beforeRightsQuery(MappedStatement ms) {
+        return false;
     }
 
     @Override
-    public boolean beforeRightsQuery(MappedStatement ms, Object parameterObject) {
-        return autoDialect.getDelegate().beforeRightsQuery(ms, parameterObject);
+    public String getPermissionSqlForSelect(BoundSql boundSql, Set<PermissionRuleDO> rules) {
+        return autoDialect.getDelegate().getPermissionSqlForSelect(boundSql, rules);
     }
 
     @Override
-    public String getPermissionSql(BoundSql boundSql, Object parameterObject) {
-        return autoDialect.getDelegate().getPermissionSql(boundSql, parameterObject);
+    public String getPermissionSqlForUpdate(BoundSql boundSql, Set<PermissionRuleDO> rules) {
+        return autoDialect.getDelegate().getPermissionSqlForUpdate(boundSql, rules);
     }
 
     @Override

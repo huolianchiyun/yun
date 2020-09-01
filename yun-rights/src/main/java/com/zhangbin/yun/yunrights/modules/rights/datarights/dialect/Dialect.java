@@ -1,10 +1,11 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights.dialect;
 
 
-import org.apache.ibatis.cache.CacheKey;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * 数据库方言，针对不同数据库进行实现
@@ -28,34 +29,30 @@ public interface Dialect {
   boolean skipForUpdate(MappedStatement ms);
 
   /**
-   * 处理查询参数对象
-   *
-   * @param ms              MappedStatement
-   * @param parameterObject
-   * @param boundSql
-   * @param pageKey
-   * @return
-   */
-  Object processParameterObject(MappedStatement ms, Object parameterObject, BoundSql boundSql, CacheKey pageKey);
-
-  /**
    * 执行数据权限前
    *
    * @param ms              MappedStatement
-   * @param parameterObject 方法参数
    * @return 返回 true 会进行数据权限查询
    */
-  boolean beforeRightsQuery(MappedStatement ms, Object parameterObject);
+  boolean beforeRightsQuery(MappedStatement ms);
 
   /**
-   * 生成权限查询 sql
+   * 生成权限 select sql
    *
    * @param boundSql        绑定 SQL 对象
-   * @param parameterObject 方法参数
-   * @return
+   * @param rules          规则
+   * @return rights select sql
    */
-  String getPermissionSql( BoundSql boundSql, Object parameterObject);
+  String getPermissionSqlForSelect(BoundSql boundSql, Set<PermissionRuleDO> rules);
 
+  /**
+   * 生成权限 update|delete sql
+   *
+   * @param boundSql        绑定 SQL 对象
+   * @param rules          规则
+   * @return rights update|delete sql
+   */
+  String getPermissionSqlForUpdate(BoundSql boundSql, Set<PermissionRuleDO> rules);
 
   /**
    * 完成所有任务后

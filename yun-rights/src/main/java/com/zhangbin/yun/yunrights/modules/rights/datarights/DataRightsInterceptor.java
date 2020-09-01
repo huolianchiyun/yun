@@ -1,12 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 import com.zhangbin.yun.yunrights.modules.common.exception.BadConfigurationException;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
@@ -14,12 +12,8 @@ import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.util.StringUtils;
-
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 数据权限控制
@@ -29,7 +23,6 @@ public class DataRightsInterceptor implements Interceptor {
 
     private Dialect dialect;
     private final String default_dialect_class = DataRightsHelper.class.getName();
-    private final static Pattern pattern = Pattern.compile("(\\w+_\\w+)");
 
 
     /**
@@ -44,7 +37,8 @@ public class DataRightsInterceptor implements Interceptor {
             if (SqlCommandType.SELECT.equals(sqlCommandType)) {
                 processForSelectSql(statementHandler, mappedStatement);
             } else if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
-                processForUpdateOrDeleteSql(statementHandler, mappedStatement);
+                // TODO 先不做处理，update权限在rights业务代码中控制，无法是控制系统权限修改等操作，真正业务暂不考虑
+                // processForUpdateOrDeleteSql(statementHandler, mappedStatement);
             }
             return invocation.proceed();
         } finally {
@@ -93,43 +87,27 @@ public class DataRightsInterceptor implements Interceptor {
     }
 
     /**
-     * 非数据创建本人和管理员则不能对数据进行 update、delete操作
+     * 数据查询权限
      *
      * @param statementHandler /
-     * @param mappedStatement  /
+     * @param ms               /
      */
-    private void processForUpdateOrDeleteSql(StatementHandler statementHandler, MappedStatement mappedStatement) {
-        if (dialect.skipForUpdate(mappedStatement)) {
-            BoundSql boundSql = statementHandler.getBoundSql();
-            //获取到原始sql语句
-            String sql = boundSql.getSql();
-            if (sql.toLowerCase().contains("where")) {
-                String prefix = findColumnPrefix(sql);
-                sql += " and " + prefix + "_creator = '" + SecurityUtils.getCurrentUsername() + "'";
-                try {
-                    Field field = boundSql.getClass().getDeclaredField("sql");
-                    field.setAccessible(true);
-                    field.set(boundSql, sql);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
+    private void processForSelectSql(StatementHandler statementHandler, MappedStatement ms) {
+        checkDialectExists();
+        if (!dialect.skip(ms)) {
+            StatementHandlerUtil.dataRightsQuery(dialect, statementHandler.getBoundSql(), ms);
         }
     }
 
     /**
-     * 数据查询权限
+     * 非数据创建本人和管理员则不能对数据进行 update、delete操作
      *
      * @param statementHandler /
-     * @param mappedStatement  /
+     * @param ms  /
      */
-    private void processForSelectSql(StatementHandler statementHandler, MappedStatement mappedStatement) {
-        checkDialectExists();
-        BoundSql boundSql = statementHandler.getBoundSql();
-        // TODO
-
-        if (!dialect.skip(mappedStatement)) {
-//            StatementHandlerUtil.dataRightsQuery(dialect,  boundSql);
+    private void processForUpdateOrDeleteSql(StatementHandler statementHandler, MappedStatement ms) {
+        if (dialect.skipForUpdate(ms)) {
+            StatementHandlerUtil.dataRightsUpdate(dialect, statementHandler.getBoundSql(), ms);
         }
     }
 
@@ -137,16 +115,5 @@ public class DataRightsInterceptor implements Interceptor {
         MetaObject metaObject = MetaObject.forObject(statementHandler, SystemMetaObject.DEFAULT_OBJECT_FACTORY,
                 SystemMetaObject.DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
         return (MappedStatement) metaObject.getValue("delegate.mappedStatement");
-    }
-
-    private static String findColumnPrefix(String sql) {
-        String toLowerCaseSql = sql.toLowerCase();
-        String replacedSql = toLowerCaseSql.substring(toLowerCaseSql.lastIndexOf("where")).replaceAll("[()?]", " ");
-        Matcher matcher = pattern.matcher(replacedSql);
-        if (matcher.find()) {
-            String group = matcher.group(1);
-            return group.substring(0, group.lastIndexOf('_'));
-        }
-        return "";
     }
 }

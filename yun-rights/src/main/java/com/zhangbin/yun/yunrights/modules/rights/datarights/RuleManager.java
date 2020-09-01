@@ -6,7 +6,6 @@ import com.zhangbin.yun.yunrights.modules.common.utils.SpringContextHolder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
-
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,7 @@ public final class RuleManager {
     private final static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
     private static volatile Map<String, Set<PermissionRuleDO>> groupCodePermissionMap;
 
-    static Set<PermissionRuleDO> getRulesForCurrentUser() {
+    public static Set<PermissionRuleDO> getRulesForCurrentUser() {
         if (groupCodePermissionMap == null) {
             init();
         }
