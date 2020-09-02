@@ -67,6 +67,16 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable(key = "'group:' + #p0 + #p1")
+    public List<MenuDO> queryByGroupId(Long groupId, Boolean isTree) {
+        Set<MenuDO> menuSet = menuMapper.selectByGroupIds(CollectionUtil.set(false, groupId));
+        if (CollectionUtils.isEmpty(menuSet)) {
+            return new ArrayList<>();
+        }
+        return isTree ? buildMenuTree(menuSet) : new ArrayList<>(menuSet);
+    }
+
+    @Override
     public List<MenuDO> queryAncestorAndSibling(List<Long> menuIds) {
         if (CollectionUtil.isEmpty(menuIds)) {
             return queryByPid(null);

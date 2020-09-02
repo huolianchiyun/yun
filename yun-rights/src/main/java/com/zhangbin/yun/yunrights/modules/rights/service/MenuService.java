@@ -40,6 +40,15 @@ public interface MenuService {
     List<MenuDO> queryByPid(Long pid);
 
     /**
+     * 懒根据组ID查询
+     *
+     * @param groupId
+     * @param isTree
+     * @return {@link List<MenuDO>}
+     */
+    List<MenuDO> queryByGroupId(Long groupId, Boolean isTree);
+
+    /**
      * 获取多个菜单作为叶子节点的菜单树
      *
      * @param menuIds 作为菜单树叶子节点

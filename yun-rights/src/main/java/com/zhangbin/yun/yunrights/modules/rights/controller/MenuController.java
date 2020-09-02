@@ -6,13 +6,16 @@ import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
+
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -57,6 +60,12 @@ public class MenuController {
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<ResponseData> queryByPid(@PathVariable Long pid) {
         return success(menuService.queryByPid(pid));
+    }
+
+    @GetMapping(value = "/group/{groupId}/{isTree}")
+    @ApiOperation("根据组ID菜单")
+    public ResponseEntity<ResponseData> queryByGroupId(@PathVariable Long groupId, @PathVariable Boolean isTree) {
+        return success(menuService.queryByGroupId(groupId, isTree));
     }
 
     @Logging("根据条件查询菜单")
