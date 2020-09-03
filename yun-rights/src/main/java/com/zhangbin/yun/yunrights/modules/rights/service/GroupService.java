@@ -102,13 +102,6 @@ public interface GroupService {
     void deleteByIds(Set<Long> groupIds);
 
     /**
-     * 添加用户到组
-     * @param userIds 用户ID集合
-     * @param groupId 组ID
-     */
-    void addUsersIntoGroup(Set<Long> userIds, Long groupId);
-
-    /**
      * 构建部门树
      *
      * @param depts 用于构建部门树的部门集合源数据

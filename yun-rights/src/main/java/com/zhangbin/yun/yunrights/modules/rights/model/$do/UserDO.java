@@ -68,7 +68,6 @@ public class UserDO extends BaseDo implements ExcelSupport, Serializable {
     @ApiModelProperty(hidden = true)
     private LocalDateTime pwdResetTime;
 
-    @ApiModelProperty(hidden = true)
     private Set<GroupDO> groups;
 
     @ApiModelProperty(hidden = true)

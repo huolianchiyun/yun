@@ -137,9 +137,6 @@ export default {
         } catch (e) {
           console.log(e)
         }
-        // this.$index.replace('/home').catch(err => {
-        //   console.log(err)
-        // })
       })
     },
     point () {

@@ -10,7 +10,9 @@ import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupMenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserGroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
@@ -24,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -78,18 +81,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createUser(UserDO user) {
         checkOperationalRights(user);
         Assert.isNull(userMapper.selectByUsername(user.getUsername()), "用户名已存在，请重新命名！");
         // 默认密码 123456
         user.setPwd(passwordEncoder.encode("123456"));
         userMapper.insert(user);
+        updateAssociatedGroup(user, true);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateUser(UserDO user) {
         checkOperationalRights(user);
         userMapper.updateByPrimaryKeySelective(user);
+        updateAssociatedGroup(user, false);
         // 清理缓存
         clearCaches(user.getId(), user.getUsername());
     }
@@ -138,12 +145,30 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 修改用户关联的组
+     *
+     * @param user 创建或修改的用户
+     * @param isCreat 是否是创建用户
+     */
+    private void updateAssociatedGroup(UserDO user, boolean isCreat) {
+        Set<UserGroupDO> userGroups = Optional.of(user.getGroups()).orElseGet(HashSet::new)
+                .stream().map(e -> new UserGroupDO(user.getId(), e.getId())).collect(Collectors.toSet());
+        if (!CollectionUtils.isEmpty(userGroups)) {
+            if(!isCreat){
+                userGroupMapper.deleteByUserIds(CollectionUtil.newHashSet(user.getId()));
+            }
+            userGroupMapper.batchInsert(userGroups);
+        }
+    }
+
+    /**
      * 检查当前用户操作权限，权限不够，抛异常提示
      *
      * @param operatingUser 将要被操作的用户
      */
     private void checkOperationalRights(UserDO operatingUser) {
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
+        Assert.notNull(currentUser, "修改的用户不存在！");
         checkOperationalRights(operatingUser, currentUser);
     }
 

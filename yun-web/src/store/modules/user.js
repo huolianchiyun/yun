@@ -4,10 +4,12 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     token: getToken(),
-    user: { groups: [] },
+    user: {
+      groups: []
+    },
     urlRights: [],
     // 第一次加载菜单时用到
-    loadMenus: false
+    isLoadMenus: false
   },
 
   mutations: {
@@ -19,9 +21,6 @@ const user = {
     },
     SET_URL_RIGHTS: (state, urlRights) => {
       state.urlRights = urlRights
-    },
-    SET_LOAD_MENUS: (state, loadMenus) => {
-      state.loadMenus = loadMenus
     }
   },
 
@@ -35,8 +34,6 @@ const user = {
             setToken(res.data.token, rememberMe)
             commit('SET_TOKEN', res.data.token)
             setUserInfo(res.data.user, commit)
-            // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
-            commit('SET_LOAD_MENUS', true)
           }
           resolve(res)
         }).catch(error => {
@@ -70,12 +67,6 @@ const user = {
           logOut(commit)
           reject(error)
         })
-      })
-    },
-
-    updateLoadMenus ({ commit }) {
-      return new Promise((resolve, reject) => {
-        commit('SET_LOAD_MENUS', false)
       })
     }
   }

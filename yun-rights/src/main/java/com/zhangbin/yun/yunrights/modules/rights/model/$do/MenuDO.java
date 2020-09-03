@@ -10,6 +10,7 @@ import java.beans.Transient;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
@@ -145,6 +146,19 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
         map.put("权限标识", permission);
         map.put("创建日期", createTime);
         return map;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MenuDO)) return false;
+        MenuDO menuDO = (MenuDO) o;
+        return Objects.equals(id, menuDO.id) && Objects.equals(pid, menuDO.pid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pid);
     }
 
     public enum MenuType implements BaseEnumValue<Integer> {

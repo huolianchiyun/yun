@@ -25,9 +25,8 @@ router.beforeEach((to, from, next) => {
     // 已登录且要跳转的页面是登录页
     if (to.path === '/login') {
       next({ path: '/' })
-      NProgress.done()
     } else {
-      if (store.getters.user == null) {
+      if (!(store.getters.user)) { // 判断有无用户信息，若没有在加载
         store.dispatch('GetInfo').then(() => {
           loadRouterMenus(next, to)
         }).catch((err) => {
@@ -36,23 +35,20 @@ router.beforeEach((to, from, next) => {
             location.reload() // 为了重新实例化vue-router对象 避免bug
           })
         })
-      } else if (store.getters.loadMenus) { // 登录时未拉取路由菜单，在此处拉取
-        // 修改成false，防止死循环
-        store.dispatch('updateLoadMenus').then(() => {})
+      } else if (!(store.getters.permission_routers && store.getters.permission_routers.length > 0)) { // 判断是否加载了路由菜单，若没有，则加载
         loadRouterMenus(next, to)
       } else {
         next()
       }
     }
   } else {
-    /* has no token */
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next()
     } else {
       next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
-      NProgress.done()
     }
   }
+  NProgress.done()
 })
 
 export const loadRouterMenus = (next, to) => {

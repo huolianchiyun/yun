@@ -11,10 +11,7 @@ import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsCo
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.*;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupMenuDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.*;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
@@ -108,7 +105,6 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(rollbackFor = Exception.class)
     public void createGroup(GroupDO group) {
         group.setId(null);
-
         // 校验组长信息，若不存在，将创建人设置为组长
         String groupMaster = group.getGroupMaster();
         String currentUsername = SecurityUtils.getCurrentUsername();
@@ -117,11 +113,11 @@ public class GroupServiceImpl implements GroupService {
         } else {
             Assert.notNull(userMapper.selectByUsername(groupMaster), "指定的组长（" + groupMaster + "）不存在!");
         }
-
         checkOperationalRights(group);
         groupMapper.insert(group);
         groupMapper.updateGroupCodeById(generateGroupCode(group), group.getId());
-
+        updateAssociatedMenu(group, true);
+        updateAssociatedUser(group, true);
         // 清理缓存
         redisUtils.del("group::pid:" + (group.getPid()));
     }
@@ -130,12 +126,13 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(rollbackFor = Exception.class)
     public void updateGroup(GroupDO updatingGroup) {
         Assert.isTrue(!updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
-        GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getPid());
-        Assert.isNull(groupDB, "修改的组不存在！");
+        GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getId());
+        Assert.notNull(groupDB, "修改的组不存在！");
         checkOperationalRights(updatingGroup);
         updatingGroup.setOldPid(groupDB.getPid());
         groupMapper.updateByPrimaryKeySelective(updatingGroup);
-        updateAssociatedMenu(updatingGroup);
+        updateAssociatedMenu(updatingGroup, false);
+        updateAssociatedUser(updatingGroup, false);
         // 清理缓存
         clearCaches(CollectionUtil.newHashSet(updatingGroup));
     }
@@ -156,13 +153,6 @@ public class GroupServiceImpl implements GroupService {
         groupMenuMapper.deleteByGroupIds(deletingGroupIds);
         userGroupMapper.deleteByGroupIds(deletingGroupIds);
         clearCaches(posterityGroupWithSelf);
-    }
-
-    @Override
-    public void addUsersIntoGroup(Set<Long> userIds, Long groupId) {
-        GroupDO group = groupMapper.selectByPrimaryKey(groupId);
-        checkOperationalRights(group);
-        userGroupMapper.addUsersIntoGroup(userIds, groupId);
     }
 
     @Override
@@ -243,17 +233,35 @@ public class GroupServiceImpl implements GroupService {
     /**
      * 修改组关联的菜单
      * 注意： 使用前要进行操作权限校验，参考： {@code  GroupServiceImpl#checkOperationalRights(updatingGroup)}
-     *
-     * @param group 修改的组
+     * @param group 创建或修改的组
+     * @param isCreat 是否是创建组
      */
-    private void updateAssociatedMenu(GroupDO group) {
+    private void updateAssociatedMenu(GroupDO group, boolean isCreat) {
         Set<GroupMenuDO> groupMenus = Optional.of(group.getMenus()).orElseGet(HashSet::new)
                 .stream().map(e -> new GroupMenuDO(group.getId(), e.getId())).collect(Collectors.toSet());
-        if (!CollectionUtils.isEmpty(groupMenus)) {
-            // 清除之前绑定的菜单
-            groupMenuMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
+        if (CollectionUtil.isNotEmpty(groupMenus)) {
+            if (!isCreat) {
+                // 清除之前绑定的菜单
+                groupMenuMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
+            }
             // 重新绑定新的菜单
             groupMenuMapper.batchInsert(groupMenus);
+        }
+    }
+
+    /**
+     * 修改组关联的用户
+     * @param group 创建或修改的组
+     * @param isCreate  是否是创建组
+     */
+    private void updateAssociatedUser(GroupDO group, boolean isCreate) {
+        Set<UserGroupDO> userGroups = Optional.of(group.getMenus()).orElseGet(HashSet::new)
+                .stream().map(e -> new UserGroupDO(group.getId(), e.getId())).collect(Collectors.toSet());
+        if (CollectionUtil.isNotEmpty(userGroups)) {
+            if (!isCreate) {
+                userGroupMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
+            }
+            userGroupMapper.batchInsert(userGroups);
         }
     }
 

@@ -12,10 +12,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserGroupDO implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    public UserGroupDO() {
+    }
+
+    public UserGroupDO(Long userId, Long tGroupId) {
+        this.userId = userId;
+        this.tGroupId = tGroupId;
+    }
 
     private Long userId;
 
     private Long tGroupId;
 
-    private static final long serialVersionUID = 1L;
 }

@@ -75,15 +75,12 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
     /**
      * 非表字段
      */
-    @ApiModelProperty(hidden = true)
     private Set<UserDO> users;
 
     /**
      * 非表字段
      */
-    @ApiModelProperty(hidden = true)
     protected Set<MenuDO> menus;
-
 
     @Transient
     public Long getOldPid() {
