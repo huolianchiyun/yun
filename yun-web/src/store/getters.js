@@ -1,4 +1,4 @@
-const getters = {
+var getters = {
   size: state => state.app.size,
   sidebar: state => state.app.sidebar,
   device: state => state.app.device,

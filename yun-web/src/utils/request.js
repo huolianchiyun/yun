@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import Axios from 'axios'
 import router from '@/router'
-import { Notification } from 'element-ui'
 import store from '../store'
 import Config from '@/settings'
 import Cookies from 'js-cookie'
+import { Notification } from 'element-ui'
 import { getToken } from '@/utils/auth'
 // 导入NProgress包对应的JS和CSS
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+
+// 再次封装是因为axios.interceptors.response#user.error 中会自动将Notification变为_Notification导致无法识别
+const notifyError = function (options) {
+  Notification.error(options)
+}
 
 // 创建axios实例
 const axios = Axios.create({
@@ -47,10 +52,10 @@ error => {
   NProgress.done()
   let code = 0
   try {
-    code = error.response.data.status
+    code = error.response.status
   } catch (e) {
     if (error.toString().indexOf('Error: timeout') !== -1) {
-      Notification.error({
+      notifyError({
         title: '网络请求超时',
         duration: 5000
       })
@@ -67,16 +72,16 @@ error => {
     } else if (code === 403) {
       router.push({ path: '/401' })
     } else {
-      const errorMsg = error.response.data.message
+      const errorMsg = error.response.data.message || error.response.data
       if (errorMsg !== undefined) {
-        Notification.error({
-          title: errorMsg,
+        notifyError({
+          title: '接口请求异常',
           duration: 5000
         })
       }
     }
   } else {
-    Notification.error({
+    notifyError({
       title: '接口请求失败',
       duration: 5000
     })

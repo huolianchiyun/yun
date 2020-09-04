@@ -65,6 +65,6 @@ public class PermissionRuleServiceImpl implements PermissionRuleService {
 
     @Override
     public void download(List<PermissionRuleDO> permissionRuleList, HttpServletResponse response) throws IOException {
-        FileUtil.downloadExcel(Optional.of(permissionRuleList).orElseGet(ArrayList::new).stream().map(PermissionRuleDO::toLinkedMap).collect(Collectors.toList()), response);
+        FileUtil.downloadExcel(Optional.ofNullable(permissionRuleList).orElseGet(ArrayList::new).stream().map(PermissionRuleDO::toLinkedMap).collect(Collectors.toList()), response);
     }
 }

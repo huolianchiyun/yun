@@ -25,21 +25,17 @@ router.beforeEach((to, from, next) => {
     // 已登录且要跳转的页面是登录页
     if (to.path === '/login') {
       next({ path: '/' })
-    } else {
-      if (!(store.getters.user)) { // 判断有无用户信息，若没有在加载
-        store.dispatch('GetInfo').then(() => {
-          loadRouterMenus(next, to)
-        }).catch((err) => {
-          console.log(err)
-          store.dispatch('LogOut').then(() => {
-            location.reload() // 为了重新实例化vue-router对象 避免bug
-          })
-        })
-      } else if (!(store.getters.permission_routers && store.getters.permission_routers.length > 0)) { // 判断是否加载了路由菜单，若没有，则加载
+    } else if (!(store.getters.user && store.getters.user.username)) { // 判断有无用户信息，若没有在加载
+      store.dispatch('GetInfo').then(() => {
         loadRouterMenus(next, to)
-      } else {
-        next()
-      }
+      }).catch((err) => {
+        console.log(err)
+        store.dispatch('LogOut').then(() => {
+          location.reload() // 为了重新实例化vue-router对象 避免bug
+        })
+      })
+    } else {
+      next()
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入

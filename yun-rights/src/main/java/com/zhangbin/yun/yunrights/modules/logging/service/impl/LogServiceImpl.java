@@ -54,7 +54,7 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public Object queryExceptionalDetailById(Long id) {
-        LogDO log = Optional.of(logMapper.selectByPrimaryKey(id)).orElseGet(LogDO::new);
+        LogDO log = Optional.ofNullable(logMapper.selectByPrimaryKey(id)).orElseGet(LogDO::new);
         ValidationUtil.isNull(log.getId(), "Log", "id", id);
         byte[] details = log.getExceptionDetail();
         return Dict.create().set("exception", new String(ObjectUtil.isNotNull(details) ? details : Constants.EMPTY_STR.getBytes()));
@@ -137,7 +137,7 @@ public class LogServiceImpl implements LogService {
     }
 
     private List<Map<String, Object>> convertLogDOList2MapList(List<LogDO> logs) {
-        return Optional.of(logs).orElseGet(ArrayList::new).stream().map(LogDO::toLinkedMap).collect(Collectors.toList());
+        return Optional.ofNullable(logs).orElseGet(ArrayList::new).stream().map(LogDO::toLinkedMap).collect(Collectors.toList());
     }
 
 }

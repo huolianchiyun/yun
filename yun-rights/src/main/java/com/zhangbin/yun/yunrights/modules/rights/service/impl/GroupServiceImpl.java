@@ -66,22 +66,22 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Cacheable(key = "'id:' + #p0")
     public GroupDO queryById(Long id) {
-        return Optional.of(groupMapper.selectByPrimaryKey(id)).orElseGet(GroupDO::new);
+        return Optional.ofNullable(groupMapper.selectByPrimaryKey(id)).orElseGet(GroupDO::new);
     }
 
     @Override
     public List<GroupDO> queryByIds(Set<Long> ids) {
-        return new ArrayList<>(Optional.of(groupMapper.selectByPrimaryKeys(ids)).orElseGet(HashSet::new));
+        return new ArrayList<>(Optional.ofNullable(groupMapper.selectByPrimaryKeys(ids)).orElseGet(HashSet::new));
     }
 
     @Override
     public List<GroupDO> queryByUserId(Long userId) {
-        return new ArrayList<>(Optional.of(groupMapper.selectByUserId(userId)).orElseGet(HashSet::new));
+        return new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(userId)).orElseGet(HashSet::new));
     }
 
     @Override
     public Set<GroupDO> queryByMenuIds(Set<Long> menuIds) {
-        return Optional.of(groupMapper.selectByMenuIds(menuIds)).orElseGet(HashSet::new);
+        return Optional.ofNullable(groupMapper.selectByMenuIds(menuIds)).orElseGet(HashSet::new);
     }
 
     @Override
@@ -179,7 +179,7 @@ public class GroupServiceImpl implements GroupService {
         if (user.isAdmin()) {  // 如果是管理员直接返回
             permissions.add("all");
         } else {
-            List<GroupDO> roles = new ArrayList<>(Optional.of(groupMapper.selectByUserId(user.getId()))
+            List<GroupDO> roles = new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(user.getId()))
                     .orElseGet(HashSet::new));
             permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                     .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
@@ -237,7 +237,7 @@ public class GroupServiceImpl implements GroupService {
      * @param isCreat 是否是创建组
      */
     private void updateAssociatedMenu(GroupDO group, boolean isCreat) {
-        Set<GroupMenuDO> groupMenus = Optional.of(group.getMenus()).orElseGet(HashSet::new)
+        Set<GroupMenuDO> groupMenus = Optional.ofNullable(group.getMenus()).orElseGet(HashSet::new)
                 .stream().map(e -> new GroupMenuDO(group.getId(), e.getId())).collect(Collectors.toSet());
         if (CollectionUtil.isNotEmpty(groupMenus)) {
             if (!isCreat) {
@@ -255,7 +255,7 @@ public class GroupServiceImpl implements GroupService {
      * @param isCreate  是否是创建组
      */
     private void updateAssociatedUser(GroupDO group, boolean isCreate) {
-        Set<UserGroupDO> userGroups = Optional.of(group.getMenus()).orElseGet(HashSet::new)
+        Set<UserGroupDO> userGroups = Optional.ofNullable(group.getMenus()).orElseGet(HashSet::new)
                 .stream().map(e -> new UserGroupDO(group.getId(), e.getId())).collect(Collectors.toSet());
         if (CollectionUtil.isNotEmpty(userGroups)) {
             if (!isCreate) {

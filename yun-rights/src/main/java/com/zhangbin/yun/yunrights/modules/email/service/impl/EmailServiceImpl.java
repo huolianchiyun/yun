@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Cacheable(key = "'config'")
     public EmailConfigDO queryEmailConfig() {
-        return Optional.of(emailConfigMapper.selectByPrimaryKey(1L)).orElseGet(EmailConfigDO::new);
+        return Optional.ofNullable(emailConfigMapper.selectByPrimaryKey(1L)).orElseGet(EmailConfigDO::new);
     }
 
     @Override

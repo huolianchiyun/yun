@@ -32,7 +32,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDTO> queryAllByCriteriaWithNoPage(DeptQueryCriteria criteria) {
-        return Optional.of(groupService.queryAllByCriteriaWithNoPage(criteria))
+        return Optional.ofNullable(groupService.queryAllByCriteriaWithNoPage(criteria))
                 .orElseGet(ArrayList::new).stream().map(GroupDO::toDept).collect(Collectors.toList());
     }
 
@@ -44,13 +44,13 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDTO> queryByPid(Long pid) {
-        return Optional.of(groupService.queryByPid(pid))
+        return Optional.ofNullable(groupService.queryByPid(pid))
                 .orElseGet(ArrayList::new).stream().map(GroupDO::toDept).collect(Collectors.toList());
     }
 
     @Override
     public List<DeptDTO> queryAncestorAndSiblingOfDepts(Set<Long> groupIds) {
-        return Optional.of(groupService.queryAncestorAndSibling(groupIds))
+        return Optional.ofNullable(groupService.queryAncestorAndSibling(groupIds))
                 .orElseGet(ArrayList::new).stream().map(GroupDO::toDept).collect(Collectors.toList());
     }
 

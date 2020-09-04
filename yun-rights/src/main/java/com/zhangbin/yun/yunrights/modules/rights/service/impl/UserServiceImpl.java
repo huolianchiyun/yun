@@ -136,12 +136,12 @@ public class UserServiceImpl implements UserService {
 
         userGroupMapper.deleteByUserIds(ids);
         // 清理缓存
-        Optional.of(userMapper.selectByIds(ids)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUsername()));
+        Optional.ofNullable(userMapper.selectByIds(ids)).orElseGet(HashSet::new).forEach(e -> clearCaches(e.getId(), e.getUsername()));
     }
 
     @Override
     public void download(List<UserDO> userDOList, HttpServletResponse response) throws IOException {
-        FileUtil.downloadExcel(Optional.of(userDOList).orElseGet(ArrayList::new).stream().map(UserDO::toLinkedMap).collect(Collectors.toList()), response);
+        FileUtil.downloadExcel(Optional.ofNullable(userDOList).orElseGet(ArrayList::new).stream().map(UserDO::toLinkedMap).collect(Collectors.toList()), response);
     }
 
     /**
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
      * @param isCreat 是否是创建用户
      */
     private void updateAssociatedGroup(UserDO user, boolean isCreat) {
-        Set<UserGroupDO> userGroups = Optional.of(user.getGroups()).orElseGet(HashSet::new)
+        Set<UserGroupDO> userGroups = Optional.ofNullable(user.getGroups()).orElseGet(HashSet::new)
                 .stream().map(e -> new UserGroupDO(user.getId(), e.getId())).collect(Collectors.toSet());
         if (!CollectionUtils.isEmpty(userGroups)) {
             if(!isCreat){
