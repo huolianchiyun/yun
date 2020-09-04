@@ -15,6 +15,7 @@ const whiteList = ['/login']// no redirect whitelist
  * to:将要访问的路径
  * from:代表从哪个路径跳转而来
  * next:是一个函数，表示放行（next():放行， next('/login'):强制跳转）
+ * next('xxx') 发生路由跳转，将导致会再次进入路由守卫，故应注意守卫死循环
  */
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {

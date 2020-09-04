@@ -49,7 +49,12 @@ const user = {
                     router.addRoutes(asyncRouter) // 动态添加可访问路由表
                   })
                 }
-                resolve(response) // 不管resolve调用多少次，调用方只会拿到第一个resolve(xx),后面的都会忽略的
+
+                /*
+                 1.不管resolve调用多少次，调用方只会拿到第一个resolve(xx), 后面的都会忽略的
+                 2. 调用方先收到resolve(xx)，下来才会继续执行后续的then(f)
+                 */
+                resolve(response)
               })
             } else {
               resolve(res)
