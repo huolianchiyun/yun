@@ -40,7 +40,7 @@ public interface Dialect {
    * 生成权限 select sql
    *
    * @param boundSql        绑定 SQL 对象
-   * @param rules          规则
+   * @param rules          当前用户数据权限规则
    * @return rights select sql
    */
   String getPermissionSqlForSelect(BoundSql boundSql, Set<PermissionRuleDO> rules);
@@ -49,7 +49,7 @@ public interface Dialect {
    * 生成权限 update|delete sql
    *
    * @param boundSql        绑定 SQL 对象
-   * @param rules          规则
+   * @param rules          当前用户数据权限规则
    * @return rights update|delete sql
    */
   String getPermissionSqlForUpdate(BoundSql boundSql, Set<PermissionRuleDO> rules);

@@ -62,13 +62,8 @@ public class SecurityUtils {
         return new JSONObject(new JSONObject(userDetails).get("user")).get("id", Long.class);
     }
 
-    /**
-     * 获取当前用户的数据权限
-     * @return /
-     */
-    public static List<Long> getCurrentUserDataScope(){
+    public static Boolean isAdmin(){
         UserDetails userDetails = getCurrentUser();
-        JSONArray array = JSONUtil.parseArray(new JSONObject(userDetails).get("dataScopes"));
-        return JSONUtil.toList(array,Long.class);
+        return new JSONObject(new JSONObject(userDetails).get("user")).get("admin", Boolean.class);
     }
 }

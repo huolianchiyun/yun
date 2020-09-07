@@ -86,6 +86,23 @@
           and u.u_id = #{userId}
     </select>
 
+    <select id="selectRouterMenus" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select m_id,
+               m_pid,
+               m_menu_icon,
+               m_menu_title,
+               m_menu_type,
+               m_menu_sort,
+               m_permission,
+               m_router_name,
+               m_router_path,
+               m_component,
+               m_is_external_link,
+               m_is_hidden
+        from t_sys_menu
+        where m_menu_type in (1, 2)
+    </select>
+
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria"
             resultMap="BaseResultMap">

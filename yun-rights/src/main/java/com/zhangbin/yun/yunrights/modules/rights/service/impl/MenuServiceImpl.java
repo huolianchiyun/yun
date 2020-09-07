@@ -91,17 +91,26 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Cacheable(key = "'user:' + #p0")  // eg. key-> menu::user:1
     public List<MenuDO> queryByUser(Long userId, Boolean isTree) {
-        List<GroupDO> groups = groupService.queryByUserId(userId);
-        if (CollectionUtils.isEmpty(groups)) {
-            return new ArrayList<>();
+        Set<MenuDO> menuSet;
+        // 如果是admin，则返回所有菜单
+        if(SecurityUtils.isAdmin()){
+            menuSet = menuMapper.selectAllByCriteria(null);
+        }else {
+            List<GroupDO> groups = groupService.queryByUserId(userId);
+            if (CollectionUtils.isEmpty(groups)) {
+                return new ArrayList<>();
+            }
+            Set<Long> groupIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
+            menuSet = menuMapper.selectByGroupIds(groupIds);
         }
-        Set<Long> groupIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
-        Set<MenuDO> menuSet = menuMapper.selectByGroupIds(groupIds);
         return isTree ? buildMenuTree(menuSet) : new ArrayList<>(menuSet);
     }
 
     @Override
     public List<MenuVO> getRouterMenusForUser(Long userId) {
+        if(SecurityUtils.isAdmin()){
+            return buildMenuForRouter(menuMapper.selectRouterMenus());
+        }
         return buildMenuForRouter(menuMapper.selectRouterMenusByUserId(userId));
     }
 

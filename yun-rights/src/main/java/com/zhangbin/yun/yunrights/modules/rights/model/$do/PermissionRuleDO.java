@@ -56,14 +56,14 @@ public class PermissionRuleDO extends BaseDo implements ExcelSupport, Serializab
         if (this == o) return true;
         if (!(o instanceof PermissionRuleDO)) return false;
         PermissionRuleDO that = (PermissionRuleDO) o;
-        return Objects.equals(groupCodes, that.groupCodes) &&
+        return /*Objects.equals(groupCodes, that.groupCodes) &&*/
                 Objects.equals(fromTable, that.fromTable) &&
                 Objects.equals(ruleExps, that.ruleExps);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupCodes, fromTable, ruleExps);
+        return Objects.hash(/*groupCodes,*/ fromTable, ruleExps);
     }
 
 }

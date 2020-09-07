@@ -32,6 +32,14 @@ public final class RuleManager {
     }
 
     /**
+     * 移除本地变量，使用者可以不手动清除，程序会统一清除
+     * {@link com.zhangbin.yun.yunrights.modules.common.config.filter.ThreadLocalClearFilter#doFilter}
+     */
+    public static void clearRuleMap() {
+        ruleMapThreadLocal.remove();
+    }
+
+    /**
      * 数据库加载所有的数据权限规则，并将其按照 key：groupCode --> value: Set<PermissionRuleDO>封装成 Map
      */
     private static void init() {

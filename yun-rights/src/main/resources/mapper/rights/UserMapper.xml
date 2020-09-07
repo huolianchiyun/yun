@@ -141,6 +141,7 @@
                     and u_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
+            and u_is_deleted = 0
         </trim>
     </select>
 
@@ -155,7 +156,7 @@
         u_pwd_reset_time)
         values (#{nickname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
         #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-        #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, #{deleted,jdbcType=BIT},
+        #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, ${0},
         #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
 

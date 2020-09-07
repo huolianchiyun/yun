@@ -105,6 +105,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(rollbackFor = Exception.class)
     public void createGroup(GroupDO group) {
         group.setId(null);
+        Assert.notNull(groupMapper.countByGroupCode(group.getGroupCode()), "编码已存在，请重设编码!");
         // 校验组长信息，若不存在，将创建人设置为组长
         String groupMaster = group.getGroupMaster();
         String currentUsername = SecurityUtils.getCurrentUsername();
@@ -127,6 +128,10 @@ public class GroupServiceImpl implements GroupService {
     public void updateGroup(GroupDO updatingGroup) {
         Assert.isTrue(!updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
         GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getId());
+        if (!groupDB.getGroupCode().equals(updatingGroup.getGroupCode())) {
+            Integer count = groupMapper.countByGroupCode(updatingGroup.getGroupCode());
+            Assert.isTrue(count == null || count == 0, "编码已存在，请重设编码!");
+        }
         Assert.notNull(groupDB, "修改的组不存在！");
         checkOperationalRights(updatingGroup);
         updatingGroup.setOldPid(groupDB.getPid());
@@ -233,7 +238,8 @@ public class GroupServiceImpl implements GroupService {
     /**
      * 修改组关联的菜单
      * 注意： 使用前要进行操作权限校验，参考： {@code  GroupServiceImpl#checkOperationalRights(updatingGroup)}
-     * @param group 创建或修改的组
+     *
+     * @param group   创建或修改的组
      * @param isCreat 是否是创建组
      */
     private void updateAssociatedMenu(GroupDO group, boolean isCreat) {
@@ -251,8 +257,9 @@ public class GroupServiceImpl implements GroupService {
 
     /**
      * 修改组关联的用户
-     * @param group 创建或修改的组
-     * @param isCreate  是否是创建组
+     *
+     * @param group    创建或修改的组
+     * @param isCreate 是否是创建组
      */
     private void updateAssociatedUser(GroupDO group, boolean isCreate) {
         Set<UserGroupDO> userGroups = Optional.ofNullable(group.getMenus()).orElseGet(HashSet::new)

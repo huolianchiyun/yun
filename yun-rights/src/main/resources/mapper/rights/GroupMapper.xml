@@ -89,7 +89,7 @@
         )
     </select>
 
-    <select id="countAssociatedUser" parameterType="java.util.HashSet">
+    <select id="countAssociatedUser" parameterType="java.util.HashSet" resultType="int">
         select count(*) FROM t_sys_group g, t_sys_user_group ug
         where g.g_id = ug.group_id AND ug.group_id in
         <foreach collection="groupIds" index="index" item="id" separator="," open="(" close=")">

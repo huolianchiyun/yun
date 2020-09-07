@@ -17,13 +17,13 @@ public class UserGroupDO implements Serializable {
     public UserGroupDO() {
     }
 
-    public UserGroupDO(Long userId, Long tGroupId) {
+    public UserGroupDO(Long userId, Long groupId) {
         this.userId = userId;
-        this.tGroupId = tGroupId;
+        this.groupId = groupId;
     }
 
     private Long userId;
 
-    private Long tGroupId;
+    private Long groupId;
 
 }

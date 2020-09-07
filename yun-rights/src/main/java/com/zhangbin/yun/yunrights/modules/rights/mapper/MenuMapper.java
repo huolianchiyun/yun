@@ -19,6 +19,12 @@ public interface MenuMapper extends PageMapper<MenuDO> {
 
     Set<MenuDO> selectRouterMenusByUserId(Long userId);
 
+    /**
+     * 为管理员查询路由菜单
+     * @return /
+     */
+    Set<MenuDO> selectRouterMenus();
+
     int insert(MenuDO record);
 
     int updateByPrimaryKeySelective(MenuDO record);
