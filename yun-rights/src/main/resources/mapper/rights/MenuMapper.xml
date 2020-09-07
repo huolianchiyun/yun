@@ -191,7 +191,7 @@
                 m_is_external_link = #{externalLink,jdbcType=BIT},
             </if>
             <if test="hidden != null">
-                m_is_hidden, = #{hidden,jdbcType=BIT},
+                m_is_hidden = #{hidden,jdbcType=BIT},
             </if>
             <if test="creator != null">
                 m_creator = #{creator,jdbcType=VARCHAR},

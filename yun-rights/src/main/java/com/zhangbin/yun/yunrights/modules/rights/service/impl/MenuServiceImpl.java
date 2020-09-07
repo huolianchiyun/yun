@@ -93,9 +93,9 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuDO> queryByUser(Long userId, Boolean isTree) {
         Set<MenuDO> menuSet;
         // 如果是admin，则返回所有菜单
-        if(SecurityUtils.isAdmin()){
+        if (SecurityUtils.isAdmin()) {
             menuSet = menuMapper.selectAllByCriteria(null);
-        }else {
+        } else {
             List<GroupDO> groups = groupService.queryByUserId(userId);
             if (CollectionUtils.isEmpty(groups)) {
                 return new ArrayList<>();
@@ -108,7 +108,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuVO> getRouterMenusForUser(Long userId) {
-        if(SecurityUtils.isAdmin()){
+        if (SecurityUtils.isAdmin()) {
             return buildMenuForRouter(menuMapper.selectRouterMenus());
         }
         return buildMenuForRouter(menuMapper.selectRouterMenusByUserId(userId));
@@ -116,8 +116,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void createMenu(MenuDO menu) {
+        validate(menu, true);
         menu.setId(null);  // 若创建菜单时入参menu.id不为null，默认将其设置为null
-        validateExternalLink(menu);
         menuMapper.insert(menu);
         if (Objects.nonNull(redisUtils)) {
             redisUtils.del("menu::pid:" + (menu.getPid() == null ? 0 : menu.getPid()));
@@ -127,10 +127,10 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateMenu(MenuDO updatingMenu) {
+        validate(updatingMenu, false);
         Assert.isTrue(!updatingMenu.getId().equals(updatingMenu.getPid()), "上级不能为自己!");
         MenuDO menuDb = menuMapper.selectByPrimaryKey(updatingMenu.getId());
         Assert.notNull(menuDb, "修改的菜单不存在！");
-        validateExternalLink(updatingMenu);
         updatingMenu.setOldPid(menuDb.getPid());
         menuMapper.updateByPrimaryKeySelective(updatingMenu);
         // 清理缓存
@@ -189,6 +189,18 @@ public class MenuServiceImpl implements MenuService {
         return menusSorted;
     }
 
+    private void validate(MenuDO menu, boolean isCreate) {
+        validateExternalLink(menu);
+        if(!isCreate) return;
+        if (MenuDO.MenuType.Dir == menu.getMenuType() || MenuDO.MenuType.MENU == menu.getMenuType()) {
+            Assert.isTrue(StringUtils.hasText(menu.getRouterPath()), "router path 不能为空！");
+            if (MenuDO.MenuType.MENU == menu.getMenuType()) {
+                Assert.isTrue(StringUtils.hasText(menu.getRouterName()), "router name 不能为空！");
+                Assert.isTrue(StringUtils.hasText(menu.getComponent()), "component 不能为空！");
+            }
+        }
+    }
+
     private void validateExternalLink(MenuDO menu) {
         if (menu.getExternalLink()) {
             String accessUrl = menu.getRouterPath();
@@ -223,4 +235,5 @@ public class MenuServiceImpl implements MenuService {
             redisUtils.delByKeys("role::menuId:", groups.stream().map(GroupDO::getId).collect(Collectors.toSet()));
         }
     }
+
 }

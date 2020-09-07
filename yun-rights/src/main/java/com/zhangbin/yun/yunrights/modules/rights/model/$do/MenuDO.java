@@ -23,6 +23,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 表 t_sys_menu
  *
@@ -54,6 +56,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
      * 菜单类型
      */
     @ApiModelProperty(required = true)
+    @NotNull
     private MenuType menuType;
 
     /**
