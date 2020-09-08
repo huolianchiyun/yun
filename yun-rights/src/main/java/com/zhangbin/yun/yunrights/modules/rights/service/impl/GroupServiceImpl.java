@@ -105,17 +105,11 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(rollbackFor = Exception.class)
     public void createGroup(GroupDO group) {
         group.setId(null);
-        Assert.notNull(groupMapper.countByGroupCode(group.getGroupCode()), "编码已存在，请重设编码!");
         // 校验组长信息，若不存在，将创建人设置为组长
-        String groupMaster = group.getGroupMaster();
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        if (StringUtils.isBlank(groupMaster)) {
-            group.setGroupMaster(currentUsername);
-        } else {
-            Assert.notNull(userMapper.selectByUsername(groupMaster), "指定的组长（" + groupMaster + "）不存在!");
-        }
         checkOperationalRights(group);
+        setGroupMasterForGroup(group);
         groupMapper.insert(group);
+        // 更新组编码
         groupMapper.updateGroupCodeById(generateGroupCode(group), group.getId());
         updateAssociatedMenu(group, true);
         updateAssociatedUser(group, true);
@@ -128,11 +122,10 @@ public class GroupServiceImpl implements GroupService {
     public void updateGroup(GroupDO updatingGroup) {
         Assert.isTrue(!updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
         GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getId());
-        if (!groupDB.getGroupCode().equals(updatingGroup.getGroupCode())) {
-            Integer count = groupMapper.countByGroupCode(updatingGroup.getGroupCode());
-            Assert.isTrue(count == null || count == 0, "编码已存在，请重设编码!");
-        }
         Assert.notNull(groupDB, "修改的组不存在！");
+        if (!groupDB.getGroupCode().equals(updatingGroup.getGroupCode())) {
+            groupMapper.updateGroupCodeById(generateGroupCode(updatingGroup), updatingGroup.getId());
+        }
         checkOperationalRights(updatingGroup);
         updatingGroup.setOldPid(groupDB.getPid());
         groupMapper.updateByPrimaryKeySelective(updatingGroup);
@@ -289,6 +282,16 @@ public class GroupServiceImpl implements GroupService {
             return fatherGroup.getGroupCode() + ":" + group.getId();
         } else {
             return prefix + group.getId();
+        }
+    }
+
+    private void setGroupMasterForGroup(GroupDO group) {
+        String groupMaster = group.getGroupMaster();
+        String currentUsername = SecurityUtils.getCurrentUsername();
+        if (StringUtils.isBlank(groupMaster)) {
+            group.setGroupMaster(currentUsername);
+        } else {
+            Assert.notNull(userMapper.selectByUsername(groupMaster), "指定的组长（" + groupMaster + "）不存在!");
         }
     }
 
