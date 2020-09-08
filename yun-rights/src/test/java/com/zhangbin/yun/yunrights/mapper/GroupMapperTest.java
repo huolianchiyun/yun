@@ -1,7 +1,6 @@
 package com.zhangbin.yun.yunrights.mapper;
 
 
-import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,6 @@ public class GroupMapperTest {
         groupDO.setGroupMaster("admin");
         groupDO.setCreator("admin");
         groupDO.setGroupType("group::dept");
-        service.createGroup(groupDO);
+        service.create(groupDO);
     }
 }

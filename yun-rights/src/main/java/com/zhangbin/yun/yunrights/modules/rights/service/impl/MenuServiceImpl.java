@@ -115,7 +115,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void createMenu(MenuDO menu) {
+    public void create(MenuDO menu) {
         validate(menu, true);
         menu.setId(null);  // 若创建菜单时入参menu.id不为null，默认将其设置为null
         menuMapper.insert(menu);
@@ -126,7 +126,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateMenu(MenuDO updatingMenu) {
+    public void update(MenuDO updatingMenu) {
         validate(updatingMenu, false);
         Assert.isTrue(!updatingMenu.getId().equals(updatingMenu.getPid()), "上级不能为自己!");
         MenuDO menuDb = menuMapper.selectByPrimaryKey(updatingMenu.getId());

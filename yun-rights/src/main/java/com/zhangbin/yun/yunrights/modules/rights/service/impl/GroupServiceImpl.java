@@ -80,6 +80,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Cacheable(key = "'username:' + #p0")
+    public Set<String> queryGroupCodeByUsername(String username) {
+        return Optional.ofNullable(groupMapper.selectByUsername(username)).orElseGet(HashSet::new);
+    }
+
+    @Override
     public Set<GroupDO> queryByMenuIds(Set<Long> menuIds) {
         return Optional.ofNullable(groupMapper.selectByMenuIds(menuIds)).orElseGet(HashSet::new);
     }
@@ -103,7 +109,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createGroup(GroupDO group) {
+    public void create(GroupDO group) {
         group.setId(null);
         // 校验组长信息，若不存在，将创建人设置为组长
         checkOperationalRights(group);
@@ -119,7 +125,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateGroup(GroupDO updatingGroup) {
+    public void update(GroupDO updatingGroup) {
         Assert.isTrue(!updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
         GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getId());
         Assert.notNull(groupDB, "修改的组不存在！");
@@ -269,6 +275,7 @@ public class GroupServiceImpl implements GroupService {
         if (GROUP_TYPE.equals(group.getGroupType())) {
             return generateGroupCode(group, "group::");
         } else {
+            // 部门组编码
             return generateGroupCode(group, "dept::");
         }
     }

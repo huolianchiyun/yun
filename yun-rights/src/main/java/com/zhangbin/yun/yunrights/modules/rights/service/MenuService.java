@@ -78,14 +78,14 @@ public interface MenuService {
      *
      * @param menu
      */
-    void createMenu(MenuDO menu);
+    void create(MenuDO menu);
 
     /**
      * 编辑菜单
      *
      * @param menu
      */
-    void updateMenu(MenuDO menu);
+    void update(MenuDO menu);
 
     /**
      * 批量删除菜单

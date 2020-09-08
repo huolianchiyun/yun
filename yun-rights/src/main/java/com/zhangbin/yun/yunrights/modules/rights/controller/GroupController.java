@@ -69,7 +69,7 @@ public class GroupController {
     @PostMapping
     @PreAuthorize("@el.check('group:add')")
     public ResponseEntity<ResponseData> create(@Validated @RequestBody GroupDO group) {
-        groupService.createGroup(group);
+        groupService.create(group);
         return success();
     }
 
@@ -78,7 +78,7 @@ public class GroupController {
     @PutMapping
     @PreAuthorize("@el.check('group:edit')")
     public ResponseEntity<ResponseData> update(@RequestBody GroupDO group) {
-        groupService.updateGroup(group);
+        groupService.update(group);
         return success();
     }
 

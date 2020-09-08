@@ -54,7 +54,7 @@ public class PermissionRuleController {
     @PostMapping
     @PreAuthorize("@el.check('rule:add')")
     public ResponseEntity<ResponseData> create(@Validated @RequestBody PermissionRuleDO rule) {
-        ruleService.createRule(rule);
+        ruleService.create(rule);
         return success();
     }
 
@@ -63,7 +63,7 @@ public class PermissionRuleController {
     @PutMapping
     @PreAuthorize("@el.check('rule:edit')")
     public ResponseEntity<ResponseData> update(@RequestBody PermissionRuleDO rule) {
-        ruleService.updateRule(rule);
+        ruleService.update(rule);
         return success();
     }
 

@@ -6,12 +6,6 @@
         <plugin type="com.zhangbin.yun.yunrights.generator.MybatisPlugin">
             <property name="hasLombok" value="true"/>
         </plugin>
-        <!-- 生成一对一配置 -->
-<!--        <plugin type="cc.bandaotixi.plugins.OneToOnePlugin"></plugin>-->
-<!--        &lt;!&ndash; 生成一对多配置 &ndash;&gt;-->
-<!--        <plugin type="cc.bandaotixi.plugins.OneToManyPlugin"></plugin>-->
-<!--        <plugin type="cc.bandaotixi.plugins.BatchInsertPlugin"></plugin>-->
-<!--        <plugin type="cc.bandaotixi.plugins.BatchUpdatePlugin"></plugin>-->
         <!-- 生成的pojo，将implements Serializable -->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
 
@@ -50,13 +44,13 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!--对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 -->
+       <!-- &lt;!&ndash;对应数据库表名tableName数据库表名称，domainObjectName生成model类的名称 &ndash;&gt;
         <table tableName="t_sys_user" domainObjectName="UserDO" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
             <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.common.$do.BaseDo"/>
             <generatedKey column="u_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
-            <columnRenamingRule searchString="u_" replaceString=""/> <!--移除字段前缀-->
-            <!--<ignoreColumn column="u_id"/>-->
+            <columnRenamingRule searchString="u_" replaceString=""/> &lt;!&ndash;移除字段前缀&ndash;&gt;
+            &lt;!&ndash;<ignoreColumn column="u_id"/>&ndash;&gt;
         </table>
         <table tableName="t_sys_role" domainObjectName="RoleDO" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
@@ -87,6 +81,12 @@
         </table>
         <table tableName="t_sys_role_menu" domainObjectName="RoleMenuDO" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
+        </table>-->
+        <table tableName="t_sys_dictionary" domainObjectName="DictionaryDO" enableCountByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
+            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo"/>
+            <generatedKey column="dic_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
+            <columnRenamingRule searchString="dic_" replaceString=""/>
         </table>
     </context>
 </generatorConfiguration>

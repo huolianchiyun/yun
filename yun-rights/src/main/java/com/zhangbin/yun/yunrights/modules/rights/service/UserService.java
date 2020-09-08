@@ -49,17 +49,17 @@ public interface UserService {
      *
      * @param user /
      */
-    void createUser(UserDO user);
+    void create(UserDO user);
 
     /**
      * 编辑用户
      *
      * @param user /
      */
-    void updateUser(UserDO user);
+    void update(UserDO user);
 
     /**
-     * 批量用户
+     * 批量删除用户
      *
      * @param ids /
      */

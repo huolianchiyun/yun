@@ -29,9 +29,9 @@ public interface CacheKey {
     /**
      * 组授权
      */
-    String GROUP_AUTH = "role::auth:";
+    String GROUP_AUTH = "group::auth:";
     /**
      * 组信息
      */
-    String GROUP_ID = "role::id:";
+    String GROUP_ID = "group::id:";
 }

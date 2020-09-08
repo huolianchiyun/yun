@@ -53,14 +53,14 @@ public interface DeptService {
      *
      * @param dept 部门
      */
-    void createDept(DeptDTO dept);
+    void create(DeptDTO dept);
 
     /**
      * 编辑部门
      *
      * @param dept 部门
      */
-    void updateDept(DeptDTO dept);
+    void update(DeptDTO dept);
 
     /**
      * 批量删除

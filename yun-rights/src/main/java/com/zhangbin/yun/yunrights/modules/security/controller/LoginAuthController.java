@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/yun/auth")
 @RequiredArgsConstructor
-@Api(tags = "系统：系统授权接口")
+@Api(tags = "系统：系统授权")
 public class LoginAuthController {
     private final LoginAuthService loginAuthService;
 

@@ -89,7 +89,7 @@ public class MenuController {
     @PostMapping
     @PreAuthorize("@el.check('menu:add')")
     public ResponseEntity<ResponseData> create(@RequestBody MenuDO menu) {
-        menuService.createMenu(menu);
+        menuService.create(menu);
         return success();
     }
 
@@ -98,7 +98,7 @@ public class MenuController {
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
     public ResponseEntity<ResponseData> update(@RequestBody MenuDO menu) {
-        menuService.updateMenu(menu);
+        menuService.update(menu);
         return success();
     }
 

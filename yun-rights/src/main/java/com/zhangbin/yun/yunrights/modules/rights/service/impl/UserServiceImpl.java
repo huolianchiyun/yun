@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createUser(UserDO user) {
+    public void create(UserDO user) {
         checkOperationalRights(user);
         Assert.isNull(userMapper.selectByUsername(user.getUsername()), "用户名已存在，请重新命名！");
         // 默认密码 123456
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUser(UserDO user) {
+    public void update(UserDO user) {
         checkOperationalRights(user);
         userMapper.updateByPrimaryKeySelective(user);
         updateAssociatedGroup(user, false);

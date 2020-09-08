@@ -55,13 +55,13 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public void createDept(DeptDTO dept) {
-        groupService.createGroup(dept.toGroup());
+    public void create(DeptDTO dept) {
+        groupService.create(dept.toGroup());
     }
 
     @Override
-    public void updateDept(DeptDTO dept) {
-        groupService.updateGroup(dept.toGroup());
+    public void update(DeptDTO dept) {
+        groupService.update(dept.toGroup());
     }
 
     @Override

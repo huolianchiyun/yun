@@ -57,6 +57,14 @@ public interface GroupService {
     List<GroupDO> queryByUserId(Long userId);
 
     /**
+     * 根据用户ID查询
+     *
+     * @param username 用户ID
+     * @return {@link List<String>}
+     */
+    Set<String> queryGroupCodeByUsername(String username);
+
+    /**
      * 根据菜单集合查询
      *
      * @param menuIds 菜单ID集合
@@ -85,14 +93,14 @@ public interface GroupService {
      *
      * @param group 部门
      */
-    void createGroup(GroupDO group);
+    void create(GroupDO group);
 
     /**
      * 编辑部门
      *
      * @param group 部门
      */
-    void updateGroup(GroupDO group);
+    void update(GroupDO group);
 
     /**
      * 批量删除

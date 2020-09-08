@@ -4,7 +4,6 @@ import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 
-import com.zhangbin.yun.yunrights.modules.common.utils.PageUtil;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
@@ -65,7 +64,7 @@ public class DeptController {
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity<ResponseData> create(@RequestBody DeptDTO dept) {
-        deptService.createDept(dept);
+        deptService.create(dept);
         return success();
     }
 
@@ -74,7 +73,7 @@ public class DeptController {
     @PutMapping
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<ResponseData> update(@RequestBody DeptDTO dept) {
-        deptService.updateDept(dept);
+        deptService.update(dept);
         return success();
     }
 

@@ -6,16 +6,23 @@ import com.zhangbin.yun.yunrights.modules.common.utils.SpringContextHolder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
+import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
+import org.springframework.util.StringUtils;
+
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class RuleManager {
+    // 声明该变量的目的在于规则更新那段时间中，当前线程暂时不受影响
     private final static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
     private static volatile Map<String, Set<PermissionRuleDO>> groupCodePermissionMap;
 
     public static Set<PermissionRuleDO> getRulesForCurrentUser() {
         if (groupCodePermissionMap == null) {
             init();
+        } else {
+            ruleMapThreadLocal.set(groupCodePermissionMap);
         }
         return filterByCurrentUserGroups();
     }
@@ -76,23 +83,44 @@ public final class RuleManager {
         return ruleMapper.selectAllUsableForSystem();
     }
 
+    /**
+     * 获取当前用户组及其父组的规则
+     */
     private static Set<PermissionRuleDO> filterByCurrentUserGroups() {
         String currentUsername = SecurityUtils.getCurrentUsername();
-        Set<PermissionRuleDO> filtered = new HashSet<>(10);
         if ("anonymousUser".equalsIgnoreCase(currentUsername)) {
-            return filtered;
+            return new HashSet<>(0);
         }
-        Set<String> groupCodes = SpringContextHolder.getBean(GroupMapper.class).selectByUsername(currentUsername);
+        Set<PermissionRuleDO> filtered = new HashSet<>(10);
+        GroupService groupService = SpringContextHolder.getBean(GroupService.class);
+        Set<String> groupCodes = groupService.queryGroupCodeByUsername(currentUsername);
         if (CollectionUtil.isNotEmpty(groupCodes)) {
             Map<String, Set<PermissionRuleDO>> ruleMap = ruleMapThreadLocal.get();
             if (CollectionUtil.isNotEmpty(ruleMap)) {
+                Set<String> lineageSet = new HashSet<>();
+                groupCodes.forEach(e -> lineageSet.addAll(getDirectLineage(e)));
                 ruleMap.forEach((k, v) -> {
-                    if (groupCodes.contains(k)) {
+                    if (lineageSet.contains(k)) {
                         filtered.addAll(v);
                     }
                 });
             }
         }
         return filtered;
+    }
+
+    private static Set<String> getDirectLineage(String groupCode) {
+        if (!StringUtils.hasText(groupCode)) return new HashSet<String>(0);
+        String[] codes = groupCode.split(":{1,2}");
+        if (codes.length <= 2) {
+            return CollectionUtil.newHashSet(groupCode);
+        }
+        String code = codes[0] + ":";
+        HashSet<String> collect = new HashSet<>(codes.length - 1);
+        for (int i = 1; i < codes.length; i++) {
+            code += ":" + codes[i];
+            collect.add(code);
+        }
+        return collect;
     }
 }

@@ -46,13 +46,13 @@ public class PermissionRuleServiceImpl implements PermissionRuleService {
     }
 
     @Override
-    public void createRule(PermissionRuleDO rule) {
+    public void create(PermissionRuleDO rule) {
         ruleMapper.insert(rule);
         RuleManager.refreshCache();
     }
 
     @Override
-    public void updateRule(PermissionRuleDO rule) {
+    public void update(PermissionRuleDO rule) {
         ruleMapper.updateByPrimaryKeySelective(rule);
         RuleManager.refreshCache();
     }

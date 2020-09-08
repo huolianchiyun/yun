@@ -39,14 +39,14 @@ public interface PermissionRuleService {
      *
      * @param rule /
      */
-    void createRule(PermissionRuleDO rule);
+    void create(PermissionRuleDO rule);
 
     /**
      * 编辑规则
      *
      * @param rule /
      */
-    void updateRule(PermissionRuleDO rule);
+    void update(PermissionRuleDO rule);
 
     /**
      * 删除规则
