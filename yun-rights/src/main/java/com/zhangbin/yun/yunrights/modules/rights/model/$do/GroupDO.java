@@ -21,6 +21,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.GROUP_TYPE;
+
 
 /**
  * 表 t_sys_group
@@ -50,7 +52,7 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
      * 组类型
      */
     @ApiModelProperty(notes = "组的类型，非必填字段，默认值：group，作用：可以将相同类型的组归为一类")
-    private String groupType;
+    private String groupType = GROUP_TYPE;
 
     @ApiModelProperty(required = true)
     private String groupName;

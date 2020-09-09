@@ -82,10 +82,12 @@
     </select>
 
     <select id="selectByUsername" parameterType="java.lang.String" resultType="java.lang.String">
-        select
-          g_group_code
-        from t_sys_group where g_id in (
-        select group_id from t_sys_user_group join t_sys_user on user_id = u_id and u_username = #{username}
+        select g_group_code
+        from t_sys_group
+        where g_id in (
+            select group_id
+            from t_sys_user_group
+                     join t_sys_user on user_id = u_id and u_username = #{username}
         )
     </select>
 
@@ -115,37 +117,46 @@
         <include refid="Base_Column_List"/>
         from t_sys_group
         <trim prefix="where" prefixOverrides="and | or">
-            <if test='criteria != null'>
-                <if test="criteria.pid != null">
-                    and g_pid = #{criteria.pid,jdbcType=BIGINT}
-                </if>
-                <if test='criteria.groupType != null and criteria.groupType != ""'>
-                    and g_group_type = #{groupType,jdbcType=VARCHAR}
-                </if>
-                <if test='criteria.groupName != null and criteria.groupName != ""'>
-                    and g_group_name like concat('%', #{criteria.groupName}, '%')
-                </if>
-                <if test='criteria.startTime != null and criteria.startTime != ""'>
-                    and u_create_time >= #{criteria.startTime}
-                </if>
-                <if test='criteria.endTime != null and criteria.endTime != ""'>
-                    and u_create_time <![CDATA[<=]]> #{criteria.endTime}
-                </if>
-            </if>
+            <choose>
+                <when test='criteria != null'>
+                    <if test="criteria.pid != null">
+                        and g_pid = #{criteria.pid,jdbcType=BIGINT}
+                    </if>
+                    <choose>
+                        <when test='criteria.groupType != null and criteria.groupType != ""'>
+                            and g_group_type = #{groupType,jdbcType=VARCHAR}
+                        </when>
+                        <otherwise>
+                            g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+                        </otherwise>
+                    </choose>
+                    <if test='criteria.groupName != null and criteria.groupName != ""'>
+                        and g_group_name like concat('%', #{criteria.groupName}, '%')
+                    </if>
+                    <if test='criteria.startTime != null and criteria.startTime != ""'>
+                        and u_create_time >= #{criteria.startTime}
+                    </if>
+                    <if test='criteria.endTime != null and criteria.endTime != ""'>
+                        and u_create_time <![CDATA[<=]]> #{criteria.endTime}
+                    </if>
+                </when>
+                <otherwise>
+                    and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+                </otherwise>
+            </choose>
         </trim>
     </select>
 
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_group (g_pid, g_group_code, g_group_type,
-        g_group_name, g_description, g_group_sort, g_group_master, g_creator,
-        g_updater, g_create_time, g_update_time
-        )
-        values (#{pid,jdbcType=BIGINT}, #{groupCode,jdbcType=INTEGER}, #{groupType,jdbcType=INTEGER},#{groupName,jdbcType=VARCHAR},
-        #{description,jdbcType=VARCHAR}, #{groupSort,jdbcType=INTEGER}, #{groupMaster,jdbcType=VARCHAR},
-        #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP}
-        )
+                                 g_group_name, g_description, g_group_sort, g_group_master, g_creator,
+                                 g_updater, g_create_time, g_update_time)
+        values (#{pid,jdbcType=BIGINT}, #{groupCode,jdbcType=INTEGER}, #{groupType,jdbcType=INTEGER},
+                #{groupName,jdbcType=VARCHAR},
+                #{description,jdbcType=VARCHAR}, #{groupSort,jdbcType=INTEGER}, #{groupMaster,jdbcType=VARCHAR},
+                #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
     <update id="updateByPrimaryKeySelective"
