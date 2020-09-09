@@ -1,21 +1,22 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 
-import com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DEPT_TYPE;
+
+@Getter
+@Setter
 public class DeptQueryCriteria extends GroupQueryCriteria {
 
     private String deptName;
+
+    public DeptQueryCriteria() {
+        this.groupType = DEPT_TYPE;
+    }
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
         super.setGroupName(deptName);
     }
-
-    @Override
-    public void setGroupType(String groupType) {
-        super.setGroupType(RightsConstants.DEPT_TYPE);
-    }
-
 }

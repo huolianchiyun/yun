@@ -114,7 +114,7 @@
                 <if test="criteria.pid != null">
                     and m_pid = #{criteria.pid,jdbcType=BIGINT}
                 </if>
-                <if test='criteria.blurry != null and criteria.blurry != ""'>
+                <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
                     <if test='criteria.blurryType.isMatch("menuTitle")'>
                         and m_menu_title like concat('%', #{criteria.blurry}, '%')
                     </if>

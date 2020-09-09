@@ -38,7 +38,7 @@
         from t_sys_permission_rule
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
-                <if test='criteria.blurry != null and criteria.blurry != ""'>
+                <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
                     <if test='criteria.blurryType.isMatch("ruleName")'>
                         and u_rule_name like concat('%', #{criteria.blurry}, '%')
                     </if>

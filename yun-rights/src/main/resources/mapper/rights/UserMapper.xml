@@ -117,7 +117,7 @@
         from t_sys_user
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
-                <if test='criteria.blurry != null and criteria.blurry != ""'>
+                <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
                     <if test='criteria.blurryType.isMatch("username")'>
                         and u_username like concat('%', #{criteria.blurry}, '%')
                     </if>
