@@ -69,7 +69,7 @@
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{u_id}
-        ) and g_group_type='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}'
+        ) and g_group_type ='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}'
         limit 1
     </select>
 
@@ -78,7 +78,7 @@
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{userId}
-        ) and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}'
+        ) and g_group_type ='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@GROUP_TYPE}'
     </select>
 
     <select id="selectByUsername" parameterType="java.lang.String" resultType="java.lang.String">

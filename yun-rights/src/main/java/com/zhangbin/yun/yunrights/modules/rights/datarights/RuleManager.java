@@ -47,7 +47,7 @@ public final class RuleManager {
     }
 
     /**
-     * 数据库加载所有的数据权限规则，并将其按照 key：groupCode --> value: Set<PermissionRuleDO>封装成 Map
+     * 数据库加载所有的数据权限规则，并将其按照 key：groupCode --> value: Set<PermissionRuleDO>形式封装成 Map
      */
     private static void init() {
         synchronized (RuleManager.class) {

@@ -64,10 +64,10 @@ public abstract class AbstractDialect implements Dialect {
     }
 
     /**
-     * 将规则转换为 Map<tableName : Set<PermissionRuleDO>>形式
+     * 将规则集合转换为 Map<tableName : Set<PermissionRuleDO>>形式
      *
      * @param rules 待转规则集合
-     * @return Map<String, Set < PermissionRuleDO>>
+     * @return Map<String, Set <PermissionRuleDO>>
      */
     protected static Map<String, Set<PermissionRuleDO>> toTableRuleMap(Set<PermissionRuleDO> rules) {
         Map<String, Set<PermissionRuleDO>> map = new HashMap<>(rules.size());

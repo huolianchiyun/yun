@@ -15,7 +15,7 @@ public class DeptQueryCriteria extends GroupQueryCriteria {
 
     @Override
     public void setGroupType(String groupType) {
-        super.setGroupType(RightsConstants.GROUP_TYPE);
+        super.setGroupType(RightsConstants.DEPT_TYPE);
     }
 
 }

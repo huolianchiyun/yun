@@ -6,8 +6,7 @@ import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 
-import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.GROUP_TYPE;
-
+import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DEPT_TYPE;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.*;
@@ -24,7 +23,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -129,8 +127,8 @@ public class GroupServiceImpl implements GroupService {
         Assert.isTrue(!updatingGroup.getId().equals(updatingGroup.getPid()), "上级不能为自己!");
         GroupDO groupDB = groupMapper.selectByPrimaryKey(updatingGroup.getId());
         Assert.notNull(groupDB, "修改的组不存在！");
-        if (!groupDB.getGroupCode().equals(updatingGroup.getGroupCode())) {
-            groupMapper.updateGroupCodeById(generateGroupCode(updatingGroup), updatingGroup.getId());
+        if (!groupDB.getPid().equals(updatingGroup.getPid())) {
+            updatingGroup.setGroupCode(generateGroupCode(updatingGroup));
         }
         checkOperationalRights(updatingGroup);
         updatingGroup.setOldPid(groupDB.getPid());
@@ -272,21 +270,21 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private String generateGroupCode(GroupDO group) {
-        if (GROUP_TYPE.equals(group.getGroupType())) {
-            return generateGroupCode(group, "group::");
-        } else {
+        if (DEPT_TYPE.equals(group.getGroupType())) {
             // 部门组编码
             return generateGroupCode(group, "dept::");
+        } else {
+            return generateGroupCode(group, "group::");
         }
     }
 
     private String generateGroupCode(GroupDO group, String prefix) {
-        GroupDO fatherGroup = null;
+        String pGroupCode = null;
         if (null != group.getPid() && group.getPid() != 0) {
-            fatherGroup = groupMapper.selectByIdForUpdate(group.getPid());
+            pGroupCode = groupMapper.selectGroupCodeByIdForUpdate(group.getPid());
         }
-        if (Objects.nonNull(fatherGroup)) {
-            return fatherGroup.getGroupCode() + ":" + group.getId();
+        if (StringUtils.isNotEmpty(pGroupCode)) {
+            return pGroupCode + ":" + group.getId();
         } else {
             return prefix + group.getId();
         }

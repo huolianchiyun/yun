@@ -16,7 +16,7 @@ public interface GroupMapper extends PageMapper<GroupDO> {
     GroupDO selectByPrimaryKey(Long id);
 
     @Select("select g_group_code from t_sys_group where g_id = #{id} for update")
-    GroupDO selectByIdForUpdate(Long id);
+    String selectGroupCodeByIdForUpdate(Long id);
 
     /**
      * 检查 group code 对应记录条数，用于检测 group code 唯一性

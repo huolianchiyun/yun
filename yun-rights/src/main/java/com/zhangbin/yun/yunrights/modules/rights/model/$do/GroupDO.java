@@ -20,7 +20,6 @@ import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -50,8 +49,9 @@ public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChild
     /**
      * 组类型
      */
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(notes = "组的类型，非必填字段，默认值：group，作用：可以将相同类型的组归为一类")
     private String groupType;
+
     @ApiModelProperty(required = true)
     private String groupName;
 

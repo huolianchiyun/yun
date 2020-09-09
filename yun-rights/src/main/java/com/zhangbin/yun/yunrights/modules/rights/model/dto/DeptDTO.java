@@ -40,7 +40,7 @@ public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChil
         groupDO.setGroupCode(deptCode);
         groupDO.setGroupName(deptName);
         groupDO.setGroupSort(deptSort);
-        groupDO.setGroupType(RightsConstants.GROUP_TYPE);
+        groupDO.setGroupType(RightsConstants.DEPT_TYPE);
         groupDO.setCreator(creator);
         groupDO.setDescription(description);
         groupDO.setUpdater(updater);

@@ -86,9 +86,9 @@ public class DeptServiceImpl implements DeptService {
         return groupService.isAssociatedUser(deptIds);
     }
 
-    private void checkOperationalRights(){// TODO
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        UserDO currentUser = userService.queryByUsername(currentUsername);
-        Assert.isTrue(currentUser.isAdmin(), "你没有操作权限!");
-    }
+//    private void checkOperationalRights(){// TODO
+//        String currentUsername = SecurityUtils.getCurrentUsername();
+//        UserDO currentUser = userService.queryByUsername(currentUsername);
+//        Assert.isTrue(currentUser.isAdmin(), "你没有操作权限!");
+//    }
 }

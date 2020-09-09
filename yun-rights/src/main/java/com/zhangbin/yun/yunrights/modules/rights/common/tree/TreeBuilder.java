@@ -18,7 +18,7 @@ public final class TreeBuilder<T extends BaseDo & Comparable<T> & CollectChildre
      * @return {@link List<T>}
      */
     public List<T> buildTree(Collection<T> sources) {
-        Map<Long, T> map = convertSourcesToMap((Collection<T>) sources);
+        Map<Long, T> map = convertSourcesToMap(sources);
         sources.forEach(e -> {
             T father = map.getOrDefault(e.getPid(), null);
             if (Objects.nonNull(father)) {

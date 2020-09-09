@@ -18,7 +18,7 @@ public class MySqlDialect extends AbstractDialect {
         if(CollectionUtil.isEmpty(rules)){
             return originalSql;
         }
-        Map<String, Set<PermissionRuleDO>> toTableRuleMap = toTableRuleMap(rules);
+        Map<String, Set<PermissionRuleDO>> tableRuleMap = toTableRuleMap(rules);
         StringBuilder rightsSql = new StringBuilder();
         // 获取sql中的表名
 
