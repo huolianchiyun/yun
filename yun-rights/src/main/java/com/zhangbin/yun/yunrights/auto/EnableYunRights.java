@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import({YunRightsImportSelector.class, MyBeanPostProcessor.class})
+@Import({YunRightsImportSelector.class, AutoBeanPostProcessor.class})
 public @interface EnableYunRights {
     boolean autoRegister() default true;
 }

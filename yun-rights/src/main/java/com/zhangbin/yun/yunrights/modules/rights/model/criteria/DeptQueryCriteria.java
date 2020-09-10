@@ -12,7 +12,7 @@ public class DeptQueryCriteria extends GroupQueryCriteria {
     private String deptName;
 
     public DeptQueryCriteria() {
-        this.groupType = DEPT_TYPE;
+        super.setGroupType(DEPT_TYPE);
     }
 
     public void setDeptName(String deptName) {

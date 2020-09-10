@@ -32,9 +32,9 @@ public interface Dialect {
    * 执行数据权限前
    *
    * @param ms              MappedStatement
-   * @return 返回 true 会进行数据权限查询
+   * @return 返回 true 会进行数据权限操作
    */
-  boolean beforeRightsQuery(MappedStatement ms);
+  boolean beforeExecuteDataRights(MappedStatement ms);
 
   /**
    * 生成权限 select sql

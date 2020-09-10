@@ -12,10 +12,6 @@ public interface PermissionRuleMapper extends PageMapper<PermissionRuleDO> {
 
     PermissionRuleDO selectByPrimaryKey(Long id);
 
-    /**
-     * 系统使用，不可向往暴露
-     */
-    @NotPermission
     Set<PermissionRuleDO> selectAllUsableForSystem();
 
     int insert(PermissionRuleDO permissionRuleDO);

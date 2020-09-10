@@ -14,7 +14,7 @@ public class GroupQueryCriteria extends AbstractQueryPage implements Serializabl
 
     protected Long pid;
 
-    protected String groupType;
+    private String groupType;
 
     private String groupName;
 
@@ -22,11 +22,11 @@ public class GroupQueryCriteria extends AbstractQueryPage implements Serializabl
      * 搜索范围：开始时间 （创建时间）
      */
     @ApiModelProperty("格式：2020-08-22")
-    private String startTime;
+    protected String startTime;
 
     /**
      * 搜索范围：结束时间 （创建时间）
      */
     @ApiModelProperty("格式：2020-08-25")
-    private String endTime;
+    protected String endTime;
 }

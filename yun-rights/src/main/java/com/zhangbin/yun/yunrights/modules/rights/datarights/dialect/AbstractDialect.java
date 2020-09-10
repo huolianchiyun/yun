@@ -30,7 +30,7 @@ public abstract class AbstractDialect implements Dialect {
     }
 
     @Override
-    public boolean beforeRightsQuery(MappedStatement ms) {
+    public boolean beforeExecuteDataRights(MappedStatement ms) {
         return true;
     }
 

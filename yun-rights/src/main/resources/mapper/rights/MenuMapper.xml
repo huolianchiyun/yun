@@ -123,10 +123,10 @@
                     </if>
                 </if>
                 <if test='criteria.startTime != null and criteria.startTime != ""'>
-                    and u_create_time >= #{criteria.startTime}
+                    and m_create_time >= #{criteria.startTime}
                 </if>
                 <if test='criteria.endTime != null and criteria.endTime != ""'>
-                    and u_create_time <![CDATA[<=]]> #{criteria.endTime}
+                    and m_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
         </trim>

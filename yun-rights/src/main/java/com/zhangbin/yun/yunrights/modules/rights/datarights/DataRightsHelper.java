@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ClassUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
@@ -21,8 +21,8 @@ public class DataRightsHelper implements Dialect {
 
     @Override
     public boolean skip(MappedStatement ms) {
-        if ("admin".equals(SecurityUtils.getCurrentUsername()) || isNotPermission(ms)
-                || CollectionUtil.isEmpty(RuleManager.getRulesForCurrentUser())) {
+        if (/*"admin".equals(SecurityUtils.getCurrentUsername()) || */isNotPermission(ms)
+                /*|| CollectionUtil.isEmpty(RuleManager.getRulesForCurrentUser())*/) {
             return true;
         } else {
             autoDialect.initDelegateDialect(ms);
@@ -36,8 +36,8 @@ public class DataRightsHelper implements Dialect {
     }
 
     @Override
-    public boolean beforeRightsQuery(MappedStatement ms) {
-        return false;
+    public boolean beforeExecuteDataRights(MappedStatement ms) {
+        return autoDialect.getDelegate().beforeExecuteDataRights(ms);
     }
 
     @Override
@@ -67,12 +67,15 @@ public class DataRightsHelper implements Dialect {
     }
 
     private boolean isNotPermission(MappedStatement ms) {
+        // TODO 校验有问题
         try {
             Class<?> clazz = Class.forName(ms.getId().substring(0, ms.getId().lastIndexOf(".")));
             if(clazz.isAnnotationPresent(NotPermission.class)) return true;
-            Method[] declaredMethods = clazz.getDeclaredMethods();
+            Method[] declaredMethods = ClassUtil.getDeclaredMethods(clazz);
             for (Method method : declaredMethods) {
-                if (method.isAnnotationPresent(NotPermission.class)) return true;
+
+                if (method.getName().equals("") && method.isAnnotationPresent(NotPermission.class)) return true;
+
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

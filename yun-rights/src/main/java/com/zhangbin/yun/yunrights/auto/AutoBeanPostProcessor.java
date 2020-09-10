@@ -1,14 +1,15 @@
 package com.zhangbin.yun.yunrights.auto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-
 import java.util.Objects;
 
-public class MyBeanPostProcessor implements BeanPostProcessor {
+@Slf4j
+public class AutoBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
-        if(bean instanceof MybatisProperties){
-            MybatisProperties  properties = (MybatisProperties) bean;
+        if (bean instanceof MybatisProperties) {
+            MybatisProperties properties = (MybatisProperties) bean;
             String[] mapperLocations = properties.getMapperLocations();
             if (Objects.isNull(mapperLocations)) {
                 properties.setConfigLocation("classpath:mybatis-config.xml");

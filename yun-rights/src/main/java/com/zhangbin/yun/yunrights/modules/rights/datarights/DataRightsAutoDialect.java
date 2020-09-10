@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class DataRightsAutoDialect {
 
-    private static Map<String, Class<? extends Dialect>> dialectAliasMap = new HashMap<String, Class<? extends Dialect>>();
+    private static Map<String, Class<? extends Dialect>> dialectAliasMap = new HashMap<>();
 
     public static void registerDialectAlias(String alias, Class<? extends Dialect> dialectClass){
         dialectAliasMap.put(alias, dialectClass);
@@ -46,7 +46,7 @@ public class DataRightsAutoDialect {
     private Map<String, AbstractDialect> urlDialectMap = new ConcurrentHashMap<>();
     private ReentrantLock lock = new ReentrantLock();
     private AbstractDialect delegate;
-    private ThreadLocal<AbstractDialect> dialectThreadLocal = new ThreadLocal<AbstractDialect>();
+    private ThreadLocal<AbstractDialect> dialectThreadLocal = new ThreadLocal<>();
 
     //多数据动态获取时，每次需要初始化
     public void initDelegateDialect(MappedStatement ms) {

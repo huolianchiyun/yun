@@ -35,7 +35,7 @@ public class DataRightsInterceptor implements Interceptor {
             MappedStatement mappedStatement = getMappedStatement(statementHandler);
             SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
             if (SqlCommandType.SELECT.equals(sqlCommandType)) {
-//                processForSelectSql(statementHandler, mappedStatement);
+                processForSelectSql(statementHandler, mappedStatement);
             } else if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
                 // TODO 先不做处理，update权限在rights业务代码中控制，无法是控制系统权限修改等操作，真正业务暂不考虑
                 // processForUpdateOrDeleteSql(statementHandler, mappedStatement);

@@ -1,30 +1,35 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
-import com.zhangbin.yun.yunrights.modules.common.utils.SpringContextHolder;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
+import cn.hutool.db.handler.BeanListHandler;
+import cn.hutool.db.sql.SqlExecutor;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
-import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-public final class RuleManager {
+@Slf4j
+@Component
+@RequiredArgsConstructor
+@CacheConfig(cacheNames = "rule")
+public class RuleManager {
     // 声明该变量的目的在于规则更新那段时间中，当前线程暂时不受影响
     private final static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
-    private static volatile Map<String, Set<PermissionRuleDO>> groupCodePermissionMap;
+    private static Map<String, Set<PermissionRuleDO>> groupCodePermissionMap;
+    private static DataSource dataSource;
 
-    public static Set<PermissionRuleDO> getRulesForCurrentUser() {
-        if (groupCodePermissionMap == null) {
-            init();
-        } else {
-            ruleMapThreadLocal.set(groupCodePermissionMap);
-        }
-        return filterByCurrentUserGroups();
+    @Cacheable(key = "'username:' + #p0")
+    public Set<PermissionRuleDO> getRulesForCurrentUser(String currentUsername) {
+        ruleMapThreadLocal.set(groupCodePermissionMap);
+        return filterByCurrentUserGroups(currentUsername);
     }
 
     /**
@@ -49,6 +54,7 @@ public final class RuleManager {
     /**
      * 数据库加载所有的数据权限规则，并将其按照 key：groupCode --> value: Set<PermissionRuleDO>形式封装成 Map
      */
+    @PostConstruct
     private static void init() {
         synchronized (RuleManager.class) {
             if (groupCodePermissionMap == null) {
@@ -79,21 +85,24 @@ public final class RuleManager {
     }
 
     private static Set<PermissionRuleDO> getRules() {
-        PermissionRuleMapper ruleMapper = SpringContextHolder.getBean(PermissionRuleMapper.class);
-        return ruleMapper.selectAllUsableForSystem();
+        // 为了避免不必要的递归拦截造成堆溢出或栈溢出，此处采用原始jdbc获取数据权限规则
+        String sql = "select pr_rule_name, pr_group_codes, pr_from_table, pr_rule_exps from t_sys_permission_rule where pr_is_enabled = true";
+        return query(sql, new HashMap<>(0), PermissionRuleDO.class, "数据权限规则加载失败！！！");
     }
 
     /**
      * 获取当前用户组及其父组的规则
      */
-    private static Set<PermissionRuleDO> filterByCurrentUserGroups() {
-        String currentUsername = SecurityUtils.getCurrentUsername();
+
+    private Set<PermissionRuleDO> filterByCurrentUserGroups(String currentUsername) {
         if ("anonymousUser".equalsIgnoreCase(currentUsername)) {
             return new HashSet<>(0);
         }
+        String sql = "select g_group_code from t_sys_group where g_id in (select group_id from t_sys_user_group join t_sys_user on user_id = u_id and u_username = :username)";
+        HashMap<String, Object> paramMap = new HashMap<>(1);
+        paramMap.put("username", currentUsername);
+        Set<String> groupCodes = query(sql, paramMap, String.class, String.format("数据权限处理，%s : group code 加载失败", currentUsername));
         Set<PermissionRuleDO> filtered = new HashSet<>(10);
-        GroupService groupService = SpringContextHolder.getBean(GroupService.class);
-        Set<String> groupCodes = groupService.queryGroupCodeByUsername(currentUsername);
         if (CollectionUtil.isNotEmpty(groupCodes)) {
             Map<String, Set<PermissionRuleDO>> ruleMap = ruleMapThreadLocal.get();
             if (CollectionUtil.isNotEmpty(ruleMap)) {
@@ -122,5 +131,15 @@ public final class RuleManager {
             collect.add(code);
         }
         return collect;
+    }
+
+    private static <T> Set<T> query(String sql, Map<String, Object> paramMap, Class<T> resultType, String errorMsg) {
+        try (Connection conn = dataSource.getConnection()) {
+            return new HashSet<>(SqlExecutor.query(conn, sql, new BeanListHandler<>(resultType), paramMap));
+        } catch (Exception e) {
+            log.error(errorMsg, e);
+            e.printStackTrace();
+        }
+        return new HashSet<>(0);
     }
 }

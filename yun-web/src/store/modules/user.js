@@ -69,7 +69,6 @@ const user = {
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         $login.getInfo().then(res => {
-          debugger
           if (res.meta.status !== 200) {
             reject(res.meta)
             return

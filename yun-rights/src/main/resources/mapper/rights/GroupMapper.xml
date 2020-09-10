@@ -134,10 +134,10 @@
                         and g_group_name like concat('%', #{criteria.groupName}, '%')
                     </if>
                     <if test='criteria.startTime != null and criteria.startTime != ""'>
-                        and u_create_time >= #{criteria.startTime}
+                        and g_create_time >= #{criteria.startTime}
                     </if>
                     <if test='criteria.endTime != null and criteria.endTime != ""'>
-                        and u_create_time <![CDATA[<=]]> #{criteria.endTime}
+                        and g_create_time <![CDATA[<=]]> #{criteria.endTime}
                     </if>
                 </when>
                 <otherwise>

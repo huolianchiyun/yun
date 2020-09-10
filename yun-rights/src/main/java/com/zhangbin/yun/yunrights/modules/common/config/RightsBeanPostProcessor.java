@@ -1,0 +1,45 @@
+package com.zhangbin.yun.yunrights.modules.common.config;
+
+import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Field;
+
+@Slf4j
+@Component
+public class RightsBeanPostProcessor implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent> {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
+        if (bean instanceof DataSource) {
+            setClassStaticField(RuleManager.class, "dataSource", bean);
+        }
+        return bean;  // you can return any other object as well
+    }
+
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
+        return bean;  // you can return any other object as well
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        // Set RuleManager proxy for StatementHandlerUtil's  ruleManager field.
+        setClassStaticField(StatementHandlerUtil.class, "ruleManager", event.getApplicationContext().getBean(RuleManager.class));
+    }
+
+    private void setClassStaticField(Class<?> forClass, String fieldName, Object fieldValue) {
+        try {
+            Field field = forClass.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(null, fieldValue);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            log.error("inject static field:<{}> for {}", fieldName, RuleManager.class.getName());
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+}

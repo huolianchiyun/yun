@@ -2,7 +2,10 @@ package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+
+import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
@@ -47,7 +50,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
     public ResponseEntity<ResponseData> queryByCriteria(UserQueryCriteria criteria) {// 不加注解，默认从url拿数据封装成controller参数对象，加 @RequestBody 注解 spring mvc才会从http body里去拿数据。
-        return success(userService.queryAllByCriteria(criteria));
+       return success(userService.queryAllByCriteria(criteria));
     }
 
     @Logging("新增用户")

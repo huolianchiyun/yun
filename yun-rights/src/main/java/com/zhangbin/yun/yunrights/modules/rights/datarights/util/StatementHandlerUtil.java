@@ -8,8 +8,10 @@ import org.apache.ibatis.mapping.MappedStatement;
 
 import java.lang.reflect.Field;
 
-public abstract class StatementHandlerUtil {
+import static com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils.getCurrentUsername;
 
+public abstract class StatementHandlerUtil {
+    private static RuleManager ruleManager;
     /**
      * 权限查询
      *
@@ -17,16 +19,16 @@ public abstract class StatementHandlerUtil {
      * @param boundSql /
      */
     public static void dataRightsQuery(Dialect dialect, BoundSql boundSql, MappedStatement ms) {
-        if (dialect.beforeRightsQuery(ms)) {
-            String rightsSql = dialect.getPermissionSqlForSelect(boundSql, RuleManager.getRulesForCurrentUser());
+        if (dialect.beforeExecuteDataRights(ms)) {
+            String rightsSql = dialect.getPermissionSqlForSelect(boundSql, ruleManager.getRulesForCurrentUser(getCurrentUsername()));
             setRightsSql(boundSql, rightsSql);
         }
     }
 
     public static void dataRightsUpdate(Dialect dialect, BoundSql boundSql, MappedStatement ms) {
-        if (dialect.beforeRightsQuery(ms)) {
+        if (dialect.beforeExecuteDataRights(ms)) {
             //获取到原始sql语句
-            String rightsSql = dialect.getPermissionSqlForUpdate(boundSql, RuleManager.getRulesForCurrentUser());
+            String rightsSql = dialect.getPermissionSqlForUpdate(boundSql, ruleManager.getRulesForCurrentUser(getCurrentUsername()));
             setRightsSql(boundSql, rightsSql);
         }
     }
@@ -38,7 +40,7 @@ public abstract class StatementHandlerUtil {
             field.set(boundSql, rightsSql);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
-            throw new DataRightsException("", e);
+            throw new DataRightsException("Set rights sql failed.", e);
         }
     }
 }
