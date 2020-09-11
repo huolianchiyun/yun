@@ -1,5 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
@@ -7,9 +9,9 @@ import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+
 import java.lang.reflect.Method;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Mybatis - 通用数据权限拦截器<br/>
@@ -21,8 +23,8 @@ public class DataRightsHelper implements Dialect {
 
     @Override
     public boolean skip(MappedStatement ms) {
-        if (/*"admin".equals(SecurityUtils.getCurrentUsername()) || */isNotPermission(ms)
-                /*|| CollectionUtil.isEmpty(RuleManager.getRulesForCurrentUser())*/) {
+        if (/*"admin".equals(SecurityUtils.getCurrentUsername()) || */hasNotPermissionAnnotation(ms)
+            /*|| CollectionUtil.isEmpty(RuleManager.getRulesForCurrentUser())*/) {
             return true;
         } else {
             autoDialect.initDelegateDialect(ms);
@@ -32,7 +34,7 @@ public class DataRightsHelper implements Dialect {
 
     @Override
     public boolean skipForUpdate(MappedStatement ms) {
-        return "admin".equals(SecurityUtils.getCurrentUsername()) || isNotPermission(ms);
+        return "admin".equals(SecurityUtils.getCurrentUsername()) || hasNotPermissionAnnotation(ms);
     }
 
     @Override
@@ -66,21 +68,22 @@ public class DataRightsHelper implements Dialect {
         autoDialect.setProperties(properties);
     }
 
-    private boolean isNotPermission(MappedStatement ms) {
-        // TODO 校验有问题
-        try {
-            Class<?> clazz = Class.forName(ms.getId().substring(0, ms.getId().lastIndexOf(".")));
-            if(clazz.isAnnotationPresent(NotPermission.class)) return true;
-            Method[] declaredMethods = ClassUtil.getDeclaredMethods(clazz);
-            for (Method method : declaredMethods) {
-
-                if (method.getName().equals("") && method.isAnnotationPresent(NotPermission.class)) return true;
-
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return false;
+    private boolean hasNotPermissionAnnotation(MappedStatement ms) {
+//        try {
+//            List<String> splitMethodId = Arrays.asList(ms.getId().split("\\."));
+//            Class<?> clazz = Class.forName(String.join(".", splitMethodId.subList(0, splitMethodId.size() - 1)));
+//            if (clazz.isAnnotationPresent(NotPermission.class)) return true;
+//
+//            String methodName = splitMethodId.get(splitMethodId.size() - 1);
+//            Class<?> type = ms.getParameterMap().getType();
+////            Class<?>[] parameterTypes = type == null ? new Class<?>[0] : ArrayUtil.a;
+//            Method targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, parameterTypes);
+//            if (targetMethod != null && targetMethod.isAnnotationPresent(NotPermission.class)) return true;
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+        return true;
     }
 
 }

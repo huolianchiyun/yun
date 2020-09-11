@@ -42,7 +42,7 @@ public class LogController {
     }
 
     @GetMapping
-    @ApiOperation("日志查询")
+    @ApiOperation("根据条件分页查询日志")
     @PreAuthorize("@el.check()")
     public ResponseEntity<ResponseData> query(LogQueryCriteria criteria) {
         return success(logService.queryAllByCriteria(criteria.setLogLevel(INFO)));

@@ -36,7 +36,7 @@
         from t_sys_log
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
-                <if test='criteria.blurry != ""'>
+                <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
                     <if test='criteria.blurryType.isMatch("operator")'>
                         and l_operator like concat('%', #{criteria.blurry}, '%')
                     </if>
@@ -56,14 +56,14 @@
                         and l_request_params like concat('%', #{criteria.blurry}, '%')
                     </if>
                 </if>
-                <if test='criteria.logLevel != null and criteria.logLevel != ""'>
-                    and l_log_level in (${criteria.logLevel})
+                <if test='criteria.logLevel != null'>
+                    and l_log_level = #{criteria.logLevel.level}
                 </if>
-                <if test='criteria.createTimes != null and criteria.createTimes > 0'>
-                    and l_create_time
-                    <foreach collection="createTimes" item="createTime" open=" between " separator=" and " close="">
-                        #{createTime}
-                    </foreach>
+                <if test='criteria.startTime != null and criteria.startTime != ""'>
+                    and m_create_time >= #{criteria.startTime}
+                </if>
+                <if test='criteria.endTime != null and criteria.endTime != ""'>
+                    and m_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
         </trim>

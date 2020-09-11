@@ -1,13 +1,9 @@
 package com.zhangbin.yun.yunrights.modules.logging.aspect;
 
-import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.utils.IPUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.RequestHolder;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.common.utils.ThrowableUtil;
-
 import static com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel.*;
-
 import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
 import com.zhangbin.yun.yunrights.modules.logging.service.LogService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +49,7 @@ public final class LogAspect {
         LogDO log = new LogDO(INFO.getLevel(), System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.saveLog(getUsername(), IPUtil.getBrowser(request), IPUtil.getIp(request), joinPoint, log);
+        logService.saveLog(IPUtil.getBrowser(request), IPUtil.getIp(request), joinPoint, log);
         return result;
     }
 
@@ -69,14 +65,6 @@ public final class LogAspect {
         currentTime.remove();
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        logService.saveLog(getUsername(), IPUtil.getBrowser(request), IPUtil.getIp(request), (ProceedingJoinPoint) joinPoint, log);
-    }
-
-    private String getUsername() {
-        try {
-            return SecurityUtils.getCurrentUsername();
-        } catch (Exception e) {
-            return Constants.EMPTY_STR;
-        }
+        logService.saveLog(IPUtil.getBrowser(request), IPUtil.getIp(request), (ProceedingJoinPoint) joinPoint, log);
     }
 }

@@ -86,7 +86,7 @@
           and u.u_id = #{userId}
     </select>
 
-    <select id="selectRouterMenus" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectRouterMenus" resultMap="BaseResultMap">
         select m_id,
                m_pid,
                m_menu_icon,

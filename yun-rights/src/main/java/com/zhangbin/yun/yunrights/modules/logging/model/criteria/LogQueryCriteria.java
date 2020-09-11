@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 日志查询类
@@ -22,7 +20,17 @@ public final class LogQueryCriteria extends AbstractQueryPage {
 
     private LogLevel logLevel;
 
-    private List<LocalDateTime> createTimes;
+    /**
+     * 搜索范围：开始时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-22")
+    private String startTime;
+
+    /**
+     * 搜索范围：结束时间 （创建时间）
+     */
+    @ApiModelProperty("格式：2020-08-25")
+    private String endTime;
 
     public LogQueryCriteria setLogLevel(LogLevel logLevel) {
         this.logLevel = logLevel;
@@ -34,13 +42,13 @@ public final class LogQueryCriteria extends AbstractQueryPage {
         return this;
     }
 
-    public LogQueryCriteria setCreateTimes(List<LocalDateTime> createTime) {
-        this.createTimes = createTime;
+    public LogQueryCriteria setStartTime(String startTime) {
+        this.startTime = startTime;
         return this;
     }
 
-    public LogQueryCriteria setBlurryType(BlurryType blurryType) {
-        this.blurryType = blurryType;
+    public LogQueryCriteria setEndTime(String endTime) {
+        this.endTime = endTime;
         return this;
     }
 

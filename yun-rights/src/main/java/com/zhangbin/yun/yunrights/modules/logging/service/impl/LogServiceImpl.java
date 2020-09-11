@@ -61,8 +61,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void saveLog(String username, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
-        fillSomeValues2LogDo(username, browser, ip, joinPoint, log);
+    public void saveLog( String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
+        fillSomeValues2LogDo(browser, ip, joinPoint, log);
         logMapper.insert(log);
     }
 
@@ -105,7 +105,7 @@ public class LogServiceImpl implements LogService {
         logMapper.deleteByLogLevel(LogLevel.INFO.getLevel());
     }
 
-    private void fillSomeValues2LogDo(String userName, String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
+    private void fillSomeValues2LogDo(String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Logging aopLog = signature.getMethod().getAnnotation(Logging.class);
         // 描述
@@ -116,23 +116,14 @@ public class LogServiceImpl implements LogService {
         log.setClientIp(ip);
         //参数值
         Object[] args = joinPoint.getArgs();
-        if(args != null && args.length >= 1){
+        if (args != null && args.length >= 1) {
             String params = JSON.toJSONString(args[0], SerializerFeature.DisableCircularReferenceDetect,
                     SerializerFeature.IgnoreNonFieldGetter);
-            String loginPath = "login";
-            if (loginPath.equals(signature.getName())) {
-                try {
-                    userName = new JSONObject(params).getStr("userName");
-                } catch (Exception e) {
-                    LogServiceImpl.log.error(e.getMessage(), e);
-                }
-            }
             log.setRequestParams(params);
         }
         log.setAddress(IPUtil.getCityInfo(log.getClientIp()));
         String methodName = joinPoint.getTarget().getClass().getName() + Constants.POINT + signature.getName() + Constants.PARENTHESES;
         log.setRequestMethod(methodName);
-        log.setOperator(userName);
         log.setBrowser(browser);
     }
 
