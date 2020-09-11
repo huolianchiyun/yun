@@ -1,7 +1,7 @@
 
 数据权限
 
-缓存spring、redis
+缓存spring、com.zhangbin.yun.yunrights.redis
 
 可插拔redis
 

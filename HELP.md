@@ -16,7 +16,7 @@ For further reference, please consider the following sections:
 * [WebSocket](https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/htmlsingle/#boot-features-websockets)
 * [Spring Boot Admin (Server)](https://codecentric.github.io/spring-boot-admin/current/#getting-started)
 * [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/htmlsingle/#using-boot-devtools)
-* [Spring Data Redis (Access+Driver)](https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/htmlsingle/#boot-features-redis)
+* [Spring Data Redis (Access+Driver)](https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/htmlsingle/#boot-features-com.zhangbin.yun.yunrights.redis)
 * [Validation](https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/htmlsingle/#boot-features-validation)
 
 ### Guides
@@ -32,6 +32,6 @@ The following guides illustrate how to use some features concretely:
 * [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
 * [Using WebSocket to build an interactive web application](https://spring.io/guides/gs/messaging-stomp-websocket/)
 * [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-* [Messaging with Redis](https://spring.io/guides/gs/messaging-redis/)
+* [Messaging with Redis](https://spring.io/guides/gs/messaging-com.zhangbin.yun.yunrights.redis/)
 
 mvn dependency:get -Dartifact=groupId:artifactId:version:jar:sources

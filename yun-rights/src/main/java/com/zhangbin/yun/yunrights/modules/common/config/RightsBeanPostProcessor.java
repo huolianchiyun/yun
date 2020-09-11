@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
+import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,9 @@ public class RightsBeanPostProcessor implements BeanPostProcessor, ApplicationLi
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         if (bean instanceof DataSource) {
             setClassStaticField(RuleManager.class, "dataSource", bean);
+        }
+        if (bean instanceof RedisUtils) {
+            setClassStaticField(RuleManager.class, "redisUtils", bean);
         }
         return bean;  // you can return any other object as well
     }

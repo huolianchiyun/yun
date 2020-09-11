@@ -3,6 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.datarights;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.sql.SqlExecutor;
+import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class RuleManager {
     private final static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
     private static Map<String, Set<PermissionRuleDO>> groupCodePermissionMap;
     private static DataSource dataSource;
+    private static RedisUtils redisUtils;
 
     @Cacheable(key = "'username:' + #p0")
     public Set<PermissionRuleDO> getRulesForCurrentUser(String currentUsername) {
@@ -40,6 +42,8 @@ public class RuleManager {
             groupCodePermissionMap.clear();
             groupCodePermissionMap = null;
             init();
+            // 清理缓存
+            redisUtils.delKeysWithSomePrefixByLua("rule::*");
         }
     }
 
@@ -93,7 +97,6 @@ public class RuleManager {
     /**
      * 获取当前用户组及其父组的规则
      */
-
     private Set<PermissionRuleDO> filterByCurrentUserGroups(String currentUsername) {
         if ("anonymousUser".equalsIgnoreCase(currentUsername)) {
             return new HashSet<>(0);

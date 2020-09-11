@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.utils;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,24 +11,27 @@ import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 
 @Component
 @SuppressWarnings({"unchecked", "all"})
+@RequiredArgsConstructor
 @ConditionalOnProperty(value = {"host", "port"}, prefix = "spring.redis")
 public class RedisUtils {
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
+    private final RedisScript<Long> redisScript;
+
     @Value("${jwt.online-key}")
     private String onlineKey;
 
-    public RedisUtils(RedisTemplate<Object, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     /**
      * 指定缓存失效时间
@@ -165,10 +169,10 @@ public class RedisUtils {
                 log.debug(new StringBuilder("删除缓存：").append(keys[0]).append("，结果：").append(result).toString());
                 log.debug("--------------------------------------------");
             } else {
-                Set<Object> keySet = new HashSet<>();
-                for (String key : keys) {
-                    keySet.addAll(redisTemplate.keys(key));
-                }
+                Set<Object> keySet = new HashSet<>(Arrays.asList(keys));
+//                for (String key : keys) {
+//                    keySet.addAll(redisTemplate.keys(key));
+//                }
                 long count = redisTemplate.delete(keySet);
                 log.debug("--------------------------------------------");
                 log.debug("成功删除缓存：" + keySet.toString());
@@ -690,5 +694,17 @@ public class RedisUtils {
         log.debug("成功删除缓存：" + keys.toString());
         log.debug("缓存删除数量：" + count + "个");
         log.debug("--------------------------------------------");
+    }
+
+    public void delKeysWithSomePrefixByLua(String prefix){
+        if(StringUtils.isNotBlank(prefix)){
+            if(!prefix.endsWith("*")){
+                prefix = prefix.concat("*");
+            }
+            Long count = redisTemplate.execute(redisScript, Collections.singletonList(prefix), 20);
+            log.debug("--------------------------------------------");
+            log.debug("成功删除缓存：delete keys with the prefix {} , the number of deletions is {}", prefix, count);
+            log.debug("--------------------------------------------");
+        }
     }
 }

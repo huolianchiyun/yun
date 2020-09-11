@@ -18,12 +18,15 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.scripting.support.ResourceScriptSource;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -39,7 +42,7 @@ import java.util.Map;
 public class RedisConfig extends CachingConfigurerSupport {
 
     /**
-     * 设置 redis 数据默认过期时间，默认2小时
+     * 设置 com.zhangbin.yun.yunrights.redis 数据默认过期时间，默认2小时
      * 设置@cacheable 序列化方式
      */
     @Bean
@@ -125,6 +128,13 @@ public class RedisConfig extends CachingConfigurerSupport {
         };
     }
 
+    @Bean
+    public DefaultRedisScript<Long> redisScript() {// 返回值要是Long，不支持Integer
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/del_keys_with_same_prefix.lua")));
+        redisScript.setResultType(Long.class);
+        return redisScript;
+    }
 }
 
 /**
