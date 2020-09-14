@@ -6,6 +6,9 @@ public class PageInfo<T> {
     private Long total;
     private T data;
 
+    public PageInfo() {
+    }
+
     public PageInfo(Integer pageNum, Integer pageSize) {
         this.pageNum = pageNum;
         this.pageSize = pageSize;

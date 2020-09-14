@@ -17,6 +17,11 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ *  数据权限规则管理类
+ * Assign a value to variable dataSource and redisUtils
+ * @See {@link com.zhangbin.yun.yunrights.modules.common.config.RightsBeanPostProcessor}
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

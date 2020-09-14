@@ -10,8 +10,14 @@ import java.lang.reflect.Field;
 
 import static com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils.getCurrentUsername;
 
+/**
+ *  StatementHandler 工具类
+ *  Assign a value to variable ruleManager
+ * @See {@link com.zhangbin.yun.yunrights.modules.common.config.RightsBeanPostProcessor}
+ */
 public abstract class StatementHandlerUtil {
     private static RuleManager ruleManager;
+
     /**
      * 权限查询
      *

@@ -1,6 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
 import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsHelper;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,9 @@ public class RightsBeanPostProcessor implements BeanPostProcessor, ApplicationLi
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // Set RuleManager proxy for StatementHandlerUtil's  ruleManager field.
-        setClassStaticField(StatementHandlerUtil.class, "ruleManager", event.getApplicationContext().getBean(RuleManager.class));
+        RuleManager ruleManager = event.getApplicationContext().getBean(RuleManager.class);
+        setClassStaticField(StatementHandlerUtil.class, "ruleManager", ruleManager);
+        setClassStaticField(DataRightsHelper.class, "ruleManager", ruleManager);
     }
 
     private void setClassStaticField(Class<?> forClass, String fieldName, Object fieldValue) {

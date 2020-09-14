@@ -17,7 +17,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    l_id, l_operation_desc, l_log_level, l_request_method, l_request_params, l_client_ip,
+        l_id, l_operation_desc, l_log_level, l_request_method, l_request_params, l_client_ip,
     l_request_time_consuming, l_operator, l_address, l_browser, l_exception_detail,
     l_create_time
     </sql>
@@ -29,7 +29,8 @@
         where l_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectAllByCriteria" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria"
+    <select id="selectAllByCriteria"
+            parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -60,10 +61,10 @@
                     and l_log_level = #{criteria.logLevel.level}
                 </if>
                 <if test='criteria.startTime != null and criteria.startTime != ""'>
-                    and m_create_time >= #{criteria.startTime}
+                    and l_create_time >= #{criteria.startTime}
                 </if>
                 <if test='criteria.endTime != null and criteria.endTime != ""'>
-                    and m_create_time <![CDATA[<=]]> #{criteria.endTime}
+                    and l_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
         </trim>
@@ -86,12 +87,14 @@
     </insert>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from t_sys_log
+        delete
+        from t_sys_log
         where l_id = #{id,jdbcType=BIGINT}
     </delete>
 
     <delete id="deleteByLogLevel" parameterType="java.lang.String">
-        delete from t_sys_log
+        delete
+        from t_sys_log
         where l_log_level = #{logLevel,jdbcType=VARCHAR}
     </delete>
 </mapper>

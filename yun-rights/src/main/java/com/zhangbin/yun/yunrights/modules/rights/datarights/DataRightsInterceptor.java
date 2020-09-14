@@ -12,6 +12,7 @@ import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.util.StringUtils;
+
 import java.sql.Connection;
 import java.util.Properties;
 
@@ -31,15 +32,7 @@ public class DataRightsInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         try {
-            StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
-            MappedStatement mappedStatement = getMappedStatement(statementHandler);
-            SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
-            if (SqlCommandType.SELECT.equals(sqlCommandType)) {
-                processForSelectSql(statementHandler, mappedStatement);
-            } else if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
-                // TODO 先不做处理，update权限在rights业务代码中控制，无法是控制系统权限修改等操作，真正业务暂不考虑
-                // processForUpdateOrDeleteSql(statementHandler, mappedStatement);
-            }
+            processDataRights((StatementHandler) invocation.getTarget());
             return invocation.proceed();
         } finally {
             if (dialect != null) {
@@ -86,6 +79,17 @@ public class DataRightsInterceptor implements Interceptor {
         }
     }
 
+    private void processDataRights(StatementHandler statementHandler) {
+        MappedStatement mappedStatement = getMappedStatement(statementHandler);
+        SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
+        if (SqlCommandType.SELECT.equals(sqlCommandType)) {
+            processForSelectSql(statementHandler, mappedStatement);
+        } else if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
+            // TODO 先不做处理，update权限在rights业务代码中控制，无法是控制系统权限修改等操作，真正业务暂不考虑
+            // processForUpdateOrDeleteSql(statementHandler, mappedStatement);
+        }
+    }
+
     /**
      * 数据查询权限
      *
@@ -94,7 +98,7 @@ public class DataRightsInterceptor implements Interceptor {
      */
     private void processForSelectSql(StatementHandler statementHandler, MappedStatement ms) {
         checkDialectExists();
-        if (!dialect.skip(ms)) {
+        if (!dialect.skip(ms, statementHandler)) {
             StatementHandlerUtil.dataRightsQuery(dialect, statementHandler.getBoundSql(), ms);
         }
     }
@@ -103,10 +107,10 @@ public class DataRightsInterceptor implements Interceptor {
      * 非数据创建本人和管理员则不能对数据进行 update、delete操作
      *
      * @param statementHandler /
-     * @param ms  /
+     * @param ms               /
      */
     private void processForUpdateOrDeleteSql(StatementHandler statementHandler, MappedStatement ms) {
-        if (dialect.skipForUpdate(ms)) {
+        if (dialect.skipForUpdate(ms, statementHandler)) {
             StatementHandlerUtil.dataRightsUpdate(dialect, statementHandler.getBoundSql(), ms);
         }
     }

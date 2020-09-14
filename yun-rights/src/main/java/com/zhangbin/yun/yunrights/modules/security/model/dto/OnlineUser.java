@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.security.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,7 @@ public class OnlineUser {
     /**
      * 登录时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     private Date loginTime;
 
 

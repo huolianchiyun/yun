@@ -1,8 +1,11 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+
+import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
@@ -23,6 +26,7 @@ import java.util.*;
 public class GroupController {
 
     private final GroupService groupService;
+    private final GroupMapper groupManager;
 
     @Logging("导出组数据")
     @ApiOperation("导出组数据")

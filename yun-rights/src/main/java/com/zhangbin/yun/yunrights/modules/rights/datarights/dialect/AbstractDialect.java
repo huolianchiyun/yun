@@ -2,6 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.datarights.dialect;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
+import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -11,28 +12,6 @@ import java.util.regex.Pattern;
 
 public abstract class AbstractDialect implements Dialect {
     private final static Pattern pattern = Pattern.compile("(\\w+_\\w+)");
-
-    /**
-     * 该方法不会被调用
-     * 查看 {@link com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsHelper#skip}
-     *
-     * @param ms MappedStatement
-     * @return
-     */
-    @Override
-    public boolean skip(MappedStatement ms) {
-        return true;
-    }
-
-    @Override
-    public boolean skipForUpdate(MappedStatement ms) {
-        return true;
-    }
-
-    @Override
-    public boolean beforeExecuteDataRights(MappedStatement ms) {
-        return true;
-    }
 
     @Override
     public String getPermissionSqlForUpdate(BoundSql boundSql, Set<PermissionRuleDO> rules) {
@@ -67,7 +46,7 @@ public abstract class AbstractDialect implements Dialect {
      * 将规则集合转换为 Map<tableName : Set<PermissionRuleDO>>形式
      *
      * @param rules 待转规则集合
-     * @return Map<String, Set <PermissionRuleDO>>
+     * @return Map<String, Set < PermissionRuleDO>>
      */
     protected static Map<String, Set<PermissionRuleDO>> toTableRuleMap(Set<PermissionRuleDO> rules) {
         Map<String, Set<PermissionRuleDO>> map = new HashMap<>(rules.size());
