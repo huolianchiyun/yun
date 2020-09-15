@@ -93,8 +93,7 @@ public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildre
     /**
      * 是否是外部链接
      */
-    @ApiModelProperty(required = true)
-    private Boolean externalLink;
+    private Boolean externalLink = false;
 
     private Boolean hidden;
 

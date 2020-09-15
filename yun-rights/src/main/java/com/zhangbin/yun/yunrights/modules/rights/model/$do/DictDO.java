@@ -1,10 +1,11 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,16 +17,22 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class DictionaryDO extends BaseDo implements  Comparable<DictionaryDO>, ExcelSupport, Serializable {
+public class DictDO extends BaseDo implements  Comparable<DictDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
-    /**
-     */
+
     private Long id;
 
     /**
-     * 字典编码，用于字典记录归类
+     * 字典类型编码
      */
-    private String code;
+    private String typeCode;
+
+    /**
+     * 字典类型显示名
+     * --非表字段--
+     */
+    @ApiModelProperty(hidden = true)
+    private Long typeName;
 
     /**
      * 显示名
@@ -35,24 +42,24 @@ public class DictionaryDO extends BaseDo implements  Comparable<DictionaryDO>, E
     /**
      * 字典值
      */
-    private String value;
+    private String code;
 
     /**
      * 排序码
      */
     private Integer sort;
 
-    /**
-     */
     private String description;
+
+    private Boolean status;
 
 
     @Override
     public LinkedHashMap<String, Object> toLinkedMap() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("字典编码", code);
         map.put("显示名", name);
-        map.put("字典值", value);
+        map.put("字典编码", code);
+        map.put("字典类型", typeName);
         map.put("排序码", sort);
         map.put("描述", description);
         map.put("创建人", creator);
@@ -63,7 +70,11 @@ public class DictionaryDO extends BaseDo implements  Comparable<DictionaryDO>, E
     }
 
     @Override
-    public int compareTo(DictionaryDO o) {
+    public int compareTo(DictDO o) {
         return Integer.compare(sort == null ? 0 : sort, o.sort == null ? 0 : o.sort);
+    }
+
+    public NameValue<String> toNameValue(){
+        return new NameValue<>(name, code);
     }
 }

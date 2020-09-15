@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.DictionaryMapper">
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictionaryDO">
+<mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.DictMapper">
+    <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO">
         <result column="dic_id" jdbcType="BIGINT" property="id"/>
-        <result column="dic_code" jdbcType="VARCHAR" property="code"/>
+        <result column="dic_type_code" jdbcType="VARCHAR" property="typeCode"/>
         <result column="dic_name" jdbcType="VARCHAR" property="name"/>
-        <result column="dic_value" jdbcType="VARCHAR" property="value"/>
+        <result column="dic_code" jdbcType="VARCHAR" property="code"/>
         <result column="dic_sort" jdbcType="INTEGER" property="sort"/>
         <result column="dic_description" jdbcType="VARCHAR" property="description"/>
+        <result column="dic_status" jdbcType="BIT" property="status"/>
         <result column="dic_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="dic_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="dic_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -15,22 +16,34 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        dic_id, dic_code, dic_name, dic_value, dic_sort, dic_description, dic_creator, dic_updater, dic_create_time, dic_update_time
+        dic_id, dic_name, dic_type_code, dic_code, dic_sort, dic_description, dic_status, dic_creator, dic_updater, dic_create_time, dic_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
+        select dt.dt_name,
         <include refid="Base_Column_List"/>
-        from t_sys_dictionary
+        from t_sys_dict d left join t_sys_dict_type dt on d.dic_type_code = dt.dt_code
         where dic_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectStatusById" parameterType="java.lang.Long" resultType="java.lang.Boolean">
+        select dic_status
+        from t_sys_dict
+        where dic_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByTypeCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select dic_name, dic_code, dic_sort
+        from t_sys_dict
+        where dic_type_code = #{typeCode,jdbcType=VARCHAR}
     </select>
 
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria"
             resultMap="BaseResultMap">
-        select
+        select dt.dt_name,
         <include refid="Base_Column_List"/>
-        from t_sys_dictionary
+        from t_sys_dict d left join t_sys_dict_type dt on d.dic_type_code = dt.dt_code
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
                 <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
@@ -41,56 +54,59 @@
                         and dic_code like concat('%', #{criteria.blurry}, '%')
                     </if>
                 </if>
+                <if test='criteria.dictTypeCode != null'>
+                    and dic_type_code = #{criteria.dictTypeCode}
+                </if>
+                <if test='criteria.dictStatus != null'>
+                    and dic_status = #{criteria.dictStatus}
+                </if>
                 <if test='criteria.startTime != null and criteria.startTime != ""'>
-                    and u_create_time >= #{criteria.startTime}
+                    and dic_create_time >= #{criteria.startTime}
                 </if>
                 <if test='criteria.endTime != null and criteria.endTime != ""'>
-                    and u_create_time <![CDATA[<=]]> #{criteria.endTime}
+                    and dic_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
         </trim>
+        order by dic_create_time
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictionaryDO">
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into t_sys_dictionary (dic_id, dic_code, dic_name,
-        dic_value, dic_sort, dic_description,
-        dic_creator, dic_updater, dic_create_time,
-        dic_update_time)
-        values (#{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
-        #{value,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR},
+        insert into t_sys_dict (dic_id, dic_name, dic_type_code, dic_code, dic_sort, dic_description, dic_status,
+        dic_creator, dic_updater, dic_create_time, dic_update_time)
+        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR},
+        #{code,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, ${0},
         #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictionaryDO">
-        update t_sys_dictionary
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO">
+        update t_sys_dict
         <set>
-            <if test="nickname != null">
-                dic_code = #{nickname,jdbcType=VARCHAR},
+            <if test="typeCode != null">
+                dic_type_code= #{typeCode,jdbcType=VARCHAR},
             </if>
-            <if test="gender != null">
-                dic_name = #{gender,jdbcType=TINYINT},
+            <if test="name != null">
+                dic_name = #{name,jdbcType=VARCHAR},
             </if>
-            <if test="pwd != null">
-                dic_value = #{pwd,jdbcType=VARCHAR},
+            <if test="code != null">
+                dic_code = #{code,jdbcType=VARCHAR},
             </if>
-            <if test="phone != null">
-                dic_sort = #{phone,jdbcType=VARCHAR},
+            <if test="sort != null">
+                dic_sort = #{sort,jdbcType=VARCHAR},
             </if>
-            <if test="email != null">
-                dic_description = #{email,jdbcType=VARCHAR},
+            <if test="description != null">
+                dic_description = #{description,jdbcType=VARCHAR},
             </if>
-            <if test="creator != null">
-                dic_creator = #{creator,jdbcType=VARCHAR},
+            <if test="status != null">
+                dic_status = #{status,jdbcType=BIT},
             </if>
             <if test="updater != null">
                 dic_updater = #{updater,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                dic_create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateTime != null">
                 dic_update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -101,7 +117,8 @@
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
-        from t_sys_dictionary
+        from t_sys_dict
         where dic_id = #{id,jdbcType=BIGINT}
+          and dic_status = 0
     </delete>
 </mapper>

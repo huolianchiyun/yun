@@ -18,6 +18,9 @@ public class DictQueryCriteria extends AbstractQueryPage implements Serializable
 
     private BlurryType blurryType;
 
+    private Integer dictTypeCode;
+
+    private Integer dictStatus;
     /**
      * 搜索范围：开始时间 （创建时间）
      */

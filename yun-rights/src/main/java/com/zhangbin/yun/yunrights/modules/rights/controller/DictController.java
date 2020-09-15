@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictionaryDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.DictService;
 import io.swagger.annotations.Api;
@@ -40,6 +40,22 @@ public class DictController {
         return success(dictService.queryById(id));
     }
 
+    @Logging("查询字典类型列表")
+    @ApiOperation("查询字典类型列表")
+    @GetMapping("/type")
+    @PreAuthorize("@el.check('dict:list')")
+    public ResponseEntity<ResponseData> queryDictType() {
+        return success(dictService.queryDictType());
+    }
+
+    @Logging("查询字典类型列表")
+    @ApiOperation("查询字典类型列表")
+    @GetMapping("/type/{dictType}")
+    @PreAuthorize("@el.check('dict:list')")
+    public ResponseEntity<ResponseData> queryByDictType(@PathVariable String dictType) {
+        return success(dictService.queryByDictType(dictType));
+    }
+
     @Logging("根据条件查询分页")
     @ApiOperation("根据条件查询分页")
     @GetMapping
@@ -52,7 +68,7 @@ public class DictController {
     @ApiOperation("新增字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<ResponseData> create(@Validated @RequestBody DictionaryDO dict) {
+    public ResponseEntity<ResponseData> create(@Validated @RequestBody DictDO dict) {
         dictService.create(dict);
         return success();
     }
@@ -61,7 +77,7 @@ public class DictController {
     @ApiOperation("修改字典")
     @PutMapping
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody DictionaryDO dict) {
+    public ResponseEntity<ResponseData> update(@RequestBody DictDO dict) {
         dictService.update(dict);
         return success();
     }
