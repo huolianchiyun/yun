@@ -30,6 +30,6 @@ public interface UserMapper extends PageMapper<UserDO> {
 
     int deleteByPrimaryKey(Long id);
 
-    int deleteByIds(@Param("userIds") Set<Long> userIds);
+    int deleteByIds(@Param("ids") Set<Long> ids);
 
 }

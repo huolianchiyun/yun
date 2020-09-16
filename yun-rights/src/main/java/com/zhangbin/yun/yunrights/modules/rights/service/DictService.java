@@ -8,6 +8,7 @@ import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public interface DictService {
 
@@ -66,9 +67,9 @@ public interface DictService {
     /**
      * 删除
      *
-     * @param id
+     * @param ids
      */
-    void deleteById(Long id);
+    void deleteByIds(Set<Long> ids);
 
     /**
      * 导出数据

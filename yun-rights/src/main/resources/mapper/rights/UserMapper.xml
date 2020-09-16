@@ -221,7 +221,7 @@
         update t_sys_user
         set u_is_deleted = 1
         where u_id in
-        <foreach collection="userIds" index="index" item="id" separator="," open="(" close=")">
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
             #{id,jdbcType=INTEGER}
         </foreach>
     </update>

@@ -86,9 +86,11 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        Assert.isTrue(!dictMapper.selectStatusById(id), "该字典已经激活，不能删除！");
-        dictMapper.deleteByPrimaryKey(id);
+    public void deleteByIds(Set<Long> ids) {
+        for (Long id : ids) {
+            Assert.isTrue(!dictMapper.selectStatusById(id), "该字典已经激活，不能删除！");
+        }
+        dictMapper.deleteByIds(ids);
     }
 
     @Override

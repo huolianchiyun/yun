@@ -4,6 +4,7 @@ import com.zhangbin.yun.yunrights.modules.common.page.PageMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Set;
 
@@ -19,5 +20,5 @@ public interface DictMapper extends PageMapper<DictDO> {
 
     int updateByPrimaryKeySelective(DictDO record);
 
-    int deleteByPrimaryKey(Long id);
+    int deleteByIds(@Param("ids") Set<Long> ids);
 }

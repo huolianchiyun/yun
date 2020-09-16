@@ -14,6 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
+
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 
 @Api(tags = "系统：字典管理")
@@ -86,8 +88,8 @@ public class DictController {
     @ApiOperation("删除字典")
     @DeleteMapping
     @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity<ResponseData> deleteByIds(@RequestBody Long id) {
-        dictService.deleteById(id);
+    public ResponseEntity<ResponseData> deleteByIds(@RequestBody Set<Long> ids) {
+        dictService.deleteByIds(ids);
         return success();
     }
 }

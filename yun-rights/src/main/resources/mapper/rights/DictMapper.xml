@@ -115,10 +115,13 @@
         where dic_id = #{id,jdbcType=BIGINT}
     </update>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <delete id="deleteByIds" parameterType="java.util.Set">
         delete
         from t_sys_dict
-        where dic_id = #{id,jdbcType=BIGINT}
-          and dic_status = 0
+        where dic_id = in
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+        and dic_status = 0
     </delete>
 </mapper>
