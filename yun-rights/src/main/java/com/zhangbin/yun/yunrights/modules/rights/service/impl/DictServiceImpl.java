@@ -6,9 +6,7 @@ import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.DictMapper;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.DictTypeMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import com.zhangbin.yun.yunrights.modules.rights.service.DictService;
@@ -29,22 +27,11 @@ import java.util.stream.Collectors;
 public class DictServiceImpl implements DictService {
 
     private final DictMapper dictMapper;
-    private final DictTypeMapper dictTypeMapper;
 
     @Override
     @Cacheable(key = "'id:' + #p0")
     public DictDO queryById(Long id) {
         return dictMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    @Cacheable(key = "'type'")
-    public List<NameValue> queryDictType() {
-        return dictTypeMapper.selectAll()
-                .stream()
-                .sorted((Comparator.comparing(DictTypeDO::getSort)))
-                .map(DictTypeDO::toNameValue)
-                .collect(Collectors.toList());
     }
 
     @Override

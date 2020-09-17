@@ -7,6 +7,8 @@ import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DEPT_TYPE;
+import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
+
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.*;
@@ -270,15 +272,6 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private String generateGroupCode(GroupDO group) {
-        if (DEPT_TYPE.equals(group.getGroupType())) {
-            // 部门组编码
-            return generateGroupCode(group, "dept::");
-        } else {
-            return generateGroupCode(group, "group::");
-        }
-    }
-
-    private String generateGroupCode(GroupDO group, String prefix) {
         String pGroupCode = null;
         if (null != group.getPid() && group.getPid() != 0) {
             pGroupCode = groupMapper.selectGroupCodeByIdForUpdate(group.getPid());
@@ -286,6 +279,9 @@ public class GroupServiceImpl implements GroupService {
         if (StringUtils.isNotEmpty(pGroupCode)) {
             return pGroupCode + ":" + group.getId();
         } else {
+            String groupType = group.getGroupType();
+            Assert.isTrue(StringUtils.isNotBlank(groupType) && !groupType.trim().equals(DICT_SUFFIX) , "组类型必填，不能为空！");
+            String prefix = groupType.endsWith(DICT_SUFFIX) ? groupType.substring(0, groupType.lastIndexOf(DICT_SUFFIX)) : groupType + "::";
             return prefix + group.getId();
         }
     }

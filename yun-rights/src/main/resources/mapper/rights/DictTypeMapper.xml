@@ -24,6 +24,12 @@
         where dt_id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="selectUsedCount" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        count('*')
+        from t_sys_dict_type td inner join t_sys_dict d on td.dt_code = d.dic_type_code and td.dt_id = #{id,jdbcType=BIGINT}
+    </select>
+
     <select id="selectAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -70,10 +76,12 @@
         where dt_id = #{id,jdbcType=BIGINT}
     </update>
 
-    <delete id="deleteByPrimaryKey">
+    <delete id="deleteByIds" parameterType="java.util.Set">
         delete
         from t_sys_dict_type
-        where dt_id = #{id,jdbcType=BIGINT}
+        where dt_id in
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
     </delete>
-
 </mapper>

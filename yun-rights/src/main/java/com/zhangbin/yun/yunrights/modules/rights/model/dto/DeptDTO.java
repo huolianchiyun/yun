@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DEPT_TYPE;
+
 @Getter
 @Setter
 public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChildren.ChildrenSupport<DeptDTO>, ExcelSupport, Serializable {
@@ -40,7 +42,7 @@ public class DeptDTO extends BaseDo implements  Comparable<DeptDTO>, CollectChil
         groupDO.setGroupCode(deptCode);
         groupDO.setGroupName(deptName);
         groupDO.setGroupSort(deptSort);
-        groupDO.setGroupType(RightsConstants.DEPT_TYPE);
+        groupDO.setGroupType(DEPT_TYPE);
         groupDO.setCreator(creator);
         groupDO.setDescription(description);
         groupDO.setUpdater(updater);

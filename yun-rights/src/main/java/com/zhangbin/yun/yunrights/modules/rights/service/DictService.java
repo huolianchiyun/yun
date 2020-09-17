@@ -21,13 +21,6 @@ public interface DictService {
     DictDO queryById(Long id);
 
     /**
-     * 查询字典类型
-     *
-     * @return 子类类型集合
-     */
-    List<NameValue> queryDictType();
-
-    /**
      * 根据字典类型查询
      * @param typeCode /
      * @return 子类类型集合

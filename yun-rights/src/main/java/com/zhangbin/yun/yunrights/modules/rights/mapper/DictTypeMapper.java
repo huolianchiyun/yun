@@ -2,17 +2,21 @@ package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.Set;
 
 @Mapper
 public interface DictTypeMapper {
-    Set<DictTypeDO> selectByPrimaryKey();
+    DictTypeDO selectByPrimaryKey(Long id);
 
     Set<DictTypeDO> selectAll();
+
+    int selectUsedCount(Long id);
 
     int insert(DictTypeDO record);
 
     int updateByPrimaryKeySelective(DictTypeDO record);
 
-    int deleteByPrimaryKey(Long id);
+    int deleteByIds(@Param("ids") Set<Long> ids);
 }

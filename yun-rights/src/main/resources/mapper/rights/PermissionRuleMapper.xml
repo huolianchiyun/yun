@@ -91,14 +91,8 @@
             <if test="enabled != null">
                 pr_is_enabled = #{enabled,jdbcType=BIT},
             </if>
-            <if test="creator != null">
-                pr_creator = #{creator,jdbcType=VARCHAR},
-            </if>
             <if test="updater != null">
                 pr_updater = #{updater,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                pr_create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateTime != null">
                 pr_update_time = #{updateTime,jdbcType=TIMESTAMP},

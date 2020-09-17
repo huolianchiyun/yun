@@ -193,14 +193,8 @@
             <if test="hidden != null">
                 m_is_hidden = #{hidden,jdbcType=BIT},
             </if>
-            <if test="creator != null">
-                m_creator = #{creator,jdbcType=VARCHAR},
-            </if>
             <if test="updater != null">
                 m_updater = #{updater,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                m_create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateTime != null">
                 m_update_time = #{updateTime,jdbcType=TIMESTAMP},

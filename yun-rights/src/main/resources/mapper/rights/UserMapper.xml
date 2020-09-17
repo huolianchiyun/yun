@@ -192,14 +192,8 @@
             <if test="deleted != null">
                 u_is_deleted = #{deleted,jdbcType=BIT},
             </if>
-            <if test="creator != null">
-                u_creator = #{creator,jdbcType=VARCHAR},
-            </if>
             <if test="updater != null">
                 u_updater = #{updater,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                u_create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateTime != null">
                 u_update_time = #{updateTime,jdbcType=TIMESTAMP},

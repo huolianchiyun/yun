@@ -118,7 +118,7 @@
     <delete id="deleteByIds" parameterType="java.util.Set">
         delete
         from t_sys_dict
-        where dic_id = in
+        where dic_id in
         <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
             #{id,jdbcType=INTEGER}
         </foreach>

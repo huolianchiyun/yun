@@ -2,6 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
@@ -9,15 +10,18 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
+
 /**
  * 系统字典表
  * 表 t_sys_dictionary
+ *
  * @author ASUS
  * @date 2020-09-08 13:53:40
  */
 @Getter
 @Setter
-public class DictDO extends BaseDo implements  Comparable<DictDO>, ExcelSupport, Serializable {
+public class DictDO extends BaseDo implements Comparable<DictDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -44,10 +48,17 @@ public class DictDO extends BaseDo implements  Comparable<DictDO>, ExcelSupport,
      */
     private String code;
 
+    public void setCode(String code) {
+        if (!code.endsWith(DICT_SUFFIX)) {
+            code += DICT_SUFFIX;
+        }
+        this.code = code;
+    }
+
     /**
      * 排序码
      */
-    private Integer sort;
+    private int sort = 0;
 
     private String description;
 
@@ -71,10 +82,10 @@ public class DictDO extends BaseDo implements  Comparable<DictDO>, ExcelSupport,
 
     @Override
     public int compareTo(DictDO o) {
-        return Integer.compare(sort == null ? 0 : sort, o.sort == null ? 0 : o.sort);
+        return Integer.compare(sort, o.sort);
     }
 
-    public NameValue<String> toNameValue(){
+    public NameValue<String> toNameValue() {
         return new NameValue<>(name, code);
     }
 }
