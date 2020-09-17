@@ -1,6 +1,5 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
@@ -100,7 +99,7 @@ public class DictController {
 
     @Logging("根据条件查询分页")
     @ApiOperation("根据条件查询分页")
-    @GetMapping("/type")
+    @GetMapping("/type/page")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<ResponseData> queryByCriteria(DictTypeQueryCriteria criteria) {
         return success(dictTypeService.queryAllByCriteria(criteria));
