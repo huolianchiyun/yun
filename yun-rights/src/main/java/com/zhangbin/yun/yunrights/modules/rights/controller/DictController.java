@@ -1,10 +1,12 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
+import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictTypeQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.DictService;
 import com.zhangbin.yun.yunrights.modules.rights.service.DictTypeService;
 import io.swagger.annotations.Api;
@@ -12,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +67,7 @@ public class DictController {
     @ApiOperation("新增字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<ResponseData> create(@Validated @RequestBody DictDO dict) {
+    public ResponseEntity<ResponseData> create(@Validated @RequestBody DictDO dict, BindingResult bindingResult) {
         dictService.create(dict);
         return success();
     }
@@ -95,8 +98,16 @@ public class DictController {
         return success(dictTypeService.queryDictType());
     }
 
-    @Logging("新增字典")
-    @ApiOperation("新增字典")
+    @Logging("根据条件查询分页")
+    @ApiOperation("根据条件查询分页")
+    @GetMapping("/type")
+    @PreAuthorize("@el.check('dict:list')")
+    public ResponseEntity<ResponseData> queryByCriteria(DictTypeQueryCriteria criteria) {
+        return success(dictTypeService.queryAllByCriteria(criteria));
+    }
+
+    @Logging("新增字典类型")
+    @ApiOperation("新增字典类型")
     @PostMapping("/type")
     @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity<ResponseData> createDictType(@Validated @RequestBody DictTypeDO dictType) {
@@ -104,8 +115,8 @@ public class DictController {
         return success();
     }
 
-    @Logging("修改字典")
-    @ApiOperation("修改字典")
+    @Logging("修改字典类型")
+    @ApiOperation("修改字典类型")
     @PutMapping("/type")
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<ResponseData> updateDictType(@RequestBody DictTypeDO dictType) {
@@ -113,8 +124,8 @@ public class DictController {
         return success();
     }
 
-    @Logging("删除字典")
-    @ApiOperation("删除字典")
+    @Logging("删除字典类型")
+    @ApiOperation("删除字典类型")
     @DeleteMapping("/type")
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<ResponseData> deleteDictTypeByIds(@RequestBody Set<Long> ids) {

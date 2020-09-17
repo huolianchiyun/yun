@@ -10,6 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
 
 /**
@@ -46,6 +49,8 @@ public class DictDO extends BaseDo implements Comparable<DictDO>, ExcelSupport, 
     /**
      * 字典值
      */
+    @ApiModelProperty(required = true)
+    @NotEmpty(message = "字典值不能为空！")
     private String code;
 
     public void setCode(String code) {

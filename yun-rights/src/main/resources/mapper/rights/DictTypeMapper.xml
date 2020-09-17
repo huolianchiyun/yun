@@ -24,7 +24,7 @@
         where dt_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectUsedCount" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectUsedCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
         select
         count('*')
         from t_sys_dict_type td inner join t_sys_dict d on td.dt_code = d.dic_type_code and td.dt_id = #{id,jdbcType=BIGINT}
@@ -34,6 +34,15 @@
         select
         <include refid="Base_Column_List"/>
         from t_sys_dict_type
+    </select>
+
+    <select id="selectAllByCriteria"
+            parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictTypeQueryCriteria"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_dict_type
+        order by dt_create_time
     </select>
 
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO">
@@ -69,7 +78,7 @@
             <if test="updater != null">
                 dt_updater = #{updater,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null">t
+            <if test="updateTime != null">
                 dt_update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>

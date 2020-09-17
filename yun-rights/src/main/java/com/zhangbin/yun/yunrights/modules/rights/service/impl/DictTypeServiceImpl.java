@@ -1,12 +1,18 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
+import com.github.pagehelper.Page;
+import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.DictTypeMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictTypeQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.DictTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -39,11 +45,23 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
+    public PageInfo<List<DictTypeDO>> queryAllByCriteria(DictTypeQueryCriteria criteria) {
+        Page<DictTypeDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, dictTypeMapper);
+        PageInfo<List<DictTypeDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
+        pageInfo.setTotal(page.getTotal());
+        List<DictTypeDO> result = page.getResult();
+        pageInfo.setData(result);
+        return pageInfo;
+    }
+
+    @Override
+    @CacheEvict(key = "'type'")
     public void create(DictTypeDO dictType) {
         dictTypeMapper.insert(dictType);
     }
 
     @Override
+    @CacheEvict(key = "'type'")
     public void update(DictTypeDO dictType) {
         DictTypeDO dictTypeDB = dictTypeMapper.selectByPrimaryKey(dictType.getId());
         Assert.isTrue(!(dictTypeMapper.selectUsedCount(dictType.getId()) > 0 && !dictType.getCode().equals(dictTypeDB.getCode())),

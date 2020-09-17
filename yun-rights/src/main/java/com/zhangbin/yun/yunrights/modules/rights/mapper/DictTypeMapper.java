@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
+import com.zhangbin.yun.yunrights.modules.common.page.PageMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -7,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Set;
 
 @Mapper
-public interface DictTypeMapper {
+public interface DictTypeMapper extends PageMapper<DictTypeDO> {
     DictTypeDO selectByPrimaryKey(Long id);
 
     Set<DictTypeDO> selectAll();

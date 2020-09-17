@@ -1,8 +1,11 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
+import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictTypeQueryCriteria;
 
 import java.util.List;
 import java.util.Set;
@@ -23,6 +26,13 @@ public interface DictTypeService {
      */
     List<NameValue> queryDictType();
 
+    /**
+     * 分页查询满足条件的数据
+     *
+     * @param criteria 条件
+     * @return /
+     */
+    PageInfo<List<DictTypeDO>> queryAllByCriteria(DictTypeQueryCriteria criteria);
     /**
      * 新增
      *

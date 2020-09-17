@@ -32,7 +32,7 @@ public class DictTypeDO extends BaseDo implements Serializable {
 
     /**
      */
-    private Integer sort;
+    private int sort;
 
     public NameValue<String> toNameValue(){
         return new NameValue<>(name, code);

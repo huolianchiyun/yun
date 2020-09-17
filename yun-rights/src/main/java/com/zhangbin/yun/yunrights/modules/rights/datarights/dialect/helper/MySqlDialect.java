@@ -1,34 +1,40 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.helper;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.util.JdbcConstants;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.parser.DruidSQLParserProcessor;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.poi.hssf.record.DVALRecord;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MySqlDialect extends AbstractDialect {
 
     @Override
     public String getPermissionSqlForSelect(BoundSql boundSql, Set<PermissionRuleDO> rules) {
-        // TODO mysql 数据权限处理逻辑  根据权限修改原有sql --难点在于解析sql
         String originalSql = boundSql.getSql();
-        if(CollectionUtil.isEmpty(rules)){
+        if (CollectionUtil.isEmpty(rules)) {
             return originalSql;
         }
         Map<String, Set<PermissionRuleDO>> tableRuleMap = toTableRuleMap(rules);
-        StringBuilder rightsSql = new StringBuilder();
-        // 获取sql中的表名
-
-
-
-
-
-        // 根据表名应用相应的rule
-
-        return rightsSql.toString();
+        // 单表处理
+        String[] tableNames = DruidSQLParserProcessor.getTableNamesForm(originalSql, JdbcConstants.MYSQL);
+        if (tableNames.length == 1) {
+            Set<PermissionRuleDO> set = tableRuleMap.get(tableNames[0]);
+            if (CollectionUtil.isNotEmpty(set)) {
+                String condition = String.join(" and ", set.stream().map(PermissionRuleDO::getRuleExps).collect(Collectors.toSet()));
+                return DruidSQLParserProcessor.addConditionForSingleTableSQL(originalSql, condition, JdbcConstants.MYSQL);
+            }
+        }
+        //TODO 非单表，复杂 SQL处理
+        return originalSql;
     }
 
 
