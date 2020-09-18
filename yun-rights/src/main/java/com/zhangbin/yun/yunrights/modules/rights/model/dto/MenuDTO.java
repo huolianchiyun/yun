@@ -1,8 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.dto;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import java.io.Serializable;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class MenuDTO extends BaseDo implements Serializable {
+public class MenuDTO extends BaseDO implements Serializable {
 
     private Long id;
 

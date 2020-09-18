@@ -1,12 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.common.page;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
-import com.zhangbin.yun.yunrights.modules.rights.datarights.NotPermission;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import org.apache.ibatis.annotations.Param;
 import java.util.Set;
 
-public interface PageMapper<R extends BaseDo> {
+public interface PageMapper<R extends BaseDO> {
    /**
     * 根据条件分页查询
     * @param criteria 条件

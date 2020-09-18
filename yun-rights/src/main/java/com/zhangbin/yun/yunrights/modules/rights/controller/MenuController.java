@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -88,7 +89,7 @@ public class MenuController {
     @ApiOperation("新增菜单")
     @PostMapping
     @PreAuthorize("@el.check('menu:add')")
-    public ResponseEntity<ResponseData> create(@RequestBody MenuDO menu) {
+    public ResponseEntity<ResponseData> create(@Validated(MenuDO.Create.class) @RequestBody MenuDO menu) {
         menuService.create(menu);
         return success();
     }
@@ -97,7 +98,7 @@ public class MenuController {
     @ApiOperation("修改菜单")
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody MenuDO menu) {
+    public ResponseEntity<ResponseData> update(@Validated(MenuDO.Update.class)@RequestBody MenuDO menu) {
         menuService.update(menu);
         return success();
     }

@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.email.model.$do;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
  */
 @Getter
 @Setter
-public class EmailConfigDO extends BaseDo implements Serializable {
+public class EmailConfigDO extends BaseDO implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 邮件服务器 SMTP 服务器域名

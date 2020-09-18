@@ -12,10 +12,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+
 /**
  * 子类不要加 lombok.Data注解，其会导致子类重写 toString()，从而导致父类 toString失效
  */
-public abstract class BaseDo {
+public abstract class BaseDO {
+    @Null(groups = {Create.class}, message = "id 必须为 null 或不需要！")
+    @NotNull(groups = {Update.class}, message = "id 不能为空！")
     protected Long id;
     @CreatedBy
     @ApiModelProperty(hidden = true)

@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuMetaVO;
@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
  */
 @Getter
 @Setter
-public class MenuDO extends BaseDo implements Comparable<MenuDO>, CollectChildren.ChildrenSupport<MenuDO>, ExcelSupport, Serializable {
+public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildren.ChildrenSupport<MenuDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

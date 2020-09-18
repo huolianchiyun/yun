@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import java.io.Serializable;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class DictTypeDO extends BaseDo implements Serializable {
+public class DictTypeDO extends BaseDO implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 显示名

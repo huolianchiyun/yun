@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PermissionRuleDO extends BaseDo implements ExcelSupport, Serializable {
+public class PermissionRuleDO extends BaseDO implements ExcelSupport, Serializable {
 
     @ApiModelProperty(required = true)
     private String ruleName;

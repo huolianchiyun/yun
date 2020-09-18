@@ -110,7 +110,6 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(GroupDO group) {
-        group.setId(null);
         // 校验组长信息，若不存在，将创建人设置为组长
         checkOperationalRights(group);
         setGroupMasterForGroup(group);

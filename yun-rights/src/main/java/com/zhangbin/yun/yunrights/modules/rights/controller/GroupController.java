@@ -72,7 +72,7 @@ public class GroupController {
     @ApiOperation("新增组")
     @PostMapping
     @PreAuthorize("@el.check('group:add')")
-    public ResponseEntity<ResponseData> create(@Validated @RequestBody GroupDO group) {
+    public ResponseEntity<ResponseData> create(@Validated(GroupDO.Create.class) @RequestBody GroupDO group) {
         groupService.create(group);
         return success();
     }
@@ -81,7 +81,7 @@ public class GroupController {
     @ApiOperation("修改组")
     @PutMapping
     @PreAuthorize("@el.check('group:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody GroupDO group) {
+    public ResponseEntity<ResponseData> update(@Validated(GroupDO.Update.class) @RequestBody GroupDO group) {
         groupService.update(group);
         return success();
     }

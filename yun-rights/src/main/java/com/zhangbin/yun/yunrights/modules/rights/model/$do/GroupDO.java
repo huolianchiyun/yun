@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
@@ -32,7 +32,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties("handler")
-public class GroupDO extends BaseDo implements Comparable<GroupDO>, CollectChildren.ChildrenSupport<GroupDO>, ExcelSupport, Serializable {
+public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChildren.ChildrenSupport<GroupDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 父组id

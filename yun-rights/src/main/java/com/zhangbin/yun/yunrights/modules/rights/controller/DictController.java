@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;

@@ -117,7 +117,6 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public void create(MenuDO menu) {
         validate(menu, true);
-        menu.setId(null);  // 若创建菜单时入参menu.id不为null，默认将其设置为null
         menuMapper.insert(menu);
         if (Objects.nonNull(redisUtils)) {
             redisUtils.del("menu::pid:" + (menu.getPid() == null ? 0 : menu.getPid()));

@@ -6,6 +6,7 @@ import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.su
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
@@ -59,7 +60,7 @@ public class UserController {
     @ApiOperation("新增用户")
     @PostMapping
     @PreAuthorize("@el.check('user:add')")
-    public ResponseEntity<ResponseData> create(@Validated @RequestBody UserDO user) {
+    public ResponseEntity<ResponseData> create(@Validated(UserDO.Create.class) @RequestBody UserDO user) {
         userService.create(user);
         return success();
     }
@@ -68,7 +69,7 @@ public class UserController {
     @ApiOperation("修改用户")
     @PutMapping
     @PreAuthorize("@el.check('user:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody UserDO user) {
+    public ResponseEntity<ResponseData> update(@Validated(UserDO.Update.class) @RequestBody UserDO user) {
         userService.update(user);
         return success();
     }

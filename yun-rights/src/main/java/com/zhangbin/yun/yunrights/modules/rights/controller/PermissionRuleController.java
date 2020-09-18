@@ -5,7 +5,9 @@ import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.PermissionRuleService;
+
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -53,7 +56,7 @@ public class PermissionRuleController {
     @ApiOperation("新增规则")
     @PostMapping
     @PreAuthorize("@el.check('rule:add')")
-    public ResponseEntity<ResponseData> create(@Validated @RequestBody PermissionRuleDO rule) {
+    public ResponseEntity<ResponseData> create(@Validated(PermissionRuleDO.Create.class) @RequestBody PermissionRuleDO rule) {
         ruleService.create(rule);
         return success();
     }
@@ -62,7 +65,7 @@ public class PermissionRuleController {
     @ApiOperation("修改规则")
     @PutMapping
     @PreAuthorize("@el.check('rule:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody PermissionRuleDO rule) {
+    public ResponseEntity<ResponseData> update(@Validated(PermissionRuleDO.Update.class) @RequestBody PermissionRuleDO rule) {
         ruleService.update(rule);
         return success();
     }

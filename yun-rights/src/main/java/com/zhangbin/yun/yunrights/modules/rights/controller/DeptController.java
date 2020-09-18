@@ -5,6 +5,7 @@ import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
 import com.zhangbin.yun.yunrights.modules.rights.service.DeptService;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +65,7 @@ public class DeptController {
     @ApiOperation("新增部门")
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<ResponseData> create(@RequestBody DeptDTO dept) {
+    public ResponseEntity<ResponseData> create(@Validated(DeptDTO.Create.class) @RequestBody DeptDTO dept) {
         deptService.create(dept);
         return success();
     }
@@ -72,7 +74,7 @@ public class DeptController {
     @ApiOperation("修改部门")
     @PutMapping
     @PreAuthorize("@el.check('dept:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody DeptDTO dept) {
+    public ResponseEntity<ResponseData> update(@Validated(DeptDTO.Update.class) @RequestBody DeptDTO dept) {
         deptService.update(dept);
         return success();
     }

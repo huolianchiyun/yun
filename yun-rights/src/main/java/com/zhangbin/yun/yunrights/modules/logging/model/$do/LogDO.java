@@ -6,9 +6,8 @@ import java.util.LinkedHashMap;
 import cn.hutool.core.util.ObjectUtil;
 import com.zhangbin.yun.yunrights.modules.common.audit.annotation.CreatedBy;
 import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -23,7 +22,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class LogDO extends BaseDo implements ExcelSupport, Serializable {
+public class LogDO extends BaseDO implements ExcelSupport, Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -3,7 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
@@ -12,9 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
 
@@ -27,12 +24,8 @@ import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsCo
  */
 @Getter
 @Setter
-public class DictDO extends BaseDo implements Comparable<DictDO>, ExcelSupport, Serializable {
+public class DictDO extends BaseDO implements Comparable<DictDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
-
-    @Null(groups = {Create.class}, message = "id 必须为 null 或不需要！")
-    @NotNull(groups = {Update.class}, message = "id 不能为空！")
-    private Long id;
 
     /**
      * 字典类型编码

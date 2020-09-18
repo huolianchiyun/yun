@@ -1,14 +1,14 @@
 package com.zhangbin.yun.yunrights.modules.rights.common.tree;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class TreeBuilder<T extends BaseDo & Comparable<T> & CollectChildren.ChildrenSupport<T>> {
+public final class TreeBuilder<T extends BaseDO & Comparable<T> & CollectChildren.ChildrenSupport<T>> {
 
     /**
      * 构建树结构

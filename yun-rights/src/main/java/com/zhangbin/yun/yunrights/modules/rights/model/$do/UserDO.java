@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties("handler")
-public class UserDO extends BaseDo implements ExcelSupport, Serializable {
+public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(required = true)

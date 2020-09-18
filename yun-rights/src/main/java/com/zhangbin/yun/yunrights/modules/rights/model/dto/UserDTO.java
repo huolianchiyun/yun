@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class UserDTO extends BaseDo implements Serializable {
+public class UserDTO extends BaseDO implements Serializable {
 
     private String nickName;
 

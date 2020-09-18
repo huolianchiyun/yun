@@ -2,11 +2,11 @@ package com.zhangbin.yun.yunrights.modules.common.page;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 
 public final class PageQueryHelper {
 
-    public static <R extends BaseDo> Page<R> queryAllByCriteriaWithPage(AbstractQueryPage criteria, PageMapper<R> mapper) {
+    public static <R extends BaseDO> Page<R> queryAllByCriteriaWithPage(AbstractQueryPage criteria, PageMapper<R> mapper) {
         prepareCriteria(criteria);
         return PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize(), true)
                 .doSelectPage(() -> mapper.selectAllByCriteria(criteria));
