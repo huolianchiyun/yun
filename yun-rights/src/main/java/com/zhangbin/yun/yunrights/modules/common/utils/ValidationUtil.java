@@ -4,6 +4,8 @@ package com.zhangbin.yun.yunrights.modules.common.utils;
 import cn.hutool.core.util.ObjectUtil;
 import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 /**
  * 验证工具
@@ -25,5 +27,16 @@ public class ValidationUtil{
      */
     public static boolean isEmail(String email) {
         return new EmailValidator().isValid(email, null);
+    }
+
+    public static void validateRequestParams(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String messages = bindingResult.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .reduce((m1, m2) -> m1 + "；" + m2)
+                    .orElse("参数输入有误！");
+            throw new IllegalArgumentException(messages);
+        }
     }
 }

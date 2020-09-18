@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Set;
 
@@ -49,7 +50,8 @@ public class UserController {
     @ApiOperation("根据条件查询用户")
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<ResponseData> queryByCriteria(UserQueryCriteria criteria) {// 不加注解，默认从url拿数据封装成controller参数对象，加 @RequestBody 注解 spring mvc才会从http body里去拿数据。
+    // 不加注解，默认从url拿数据封装成controller参数对象，加 @RequestBody 注解 spring mvc才会从http body里去拿数据。
+    public ResponseEntity<ResponseData> queryByCriteria(@Validated UserQueryCriteria criteria) {
        return success(userService.queryAllByCriteria(criteria));
     }
 

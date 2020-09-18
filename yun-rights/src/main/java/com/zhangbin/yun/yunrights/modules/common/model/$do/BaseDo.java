@@ -32,6 +32,14 @@ public abstract class BaseDo {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     protected LocalDateTime updateTime;
 
+    /* 分组校验 */
+    public @interface Create {
+    }
+
+    /* 分组校验 */
+    public @interface Update {
+    }
+
     public Long getId() {
         return id;
     }

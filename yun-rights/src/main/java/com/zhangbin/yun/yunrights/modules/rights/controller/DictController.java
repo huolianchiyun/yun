@@ -1,6 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
@@ -14,12 +15,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
+
+import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.error;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil.validateRequestParams;
 
 @Api(tags = "系统：字典管理")
 @RestController
@@ -58,7 +65,12 @@ public class DictController {
     @ApiOperation("根据条件查询分页")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<ResponseData> queryByCriteria(DictQueryCriteria criteria) {
+    public ResponseEntity<ResponseData> queryByCriteria(@Validated DictQueryCriteria criteria, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                return error(error.getDefaultMessage());
+            }
+        }
         return success(dictService.queryAllByCriteria(criteria));
     }
 
@@ -66,7 +78,7 @@ public class DictController {
     @ApiOperation("新增字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity<ResponseData> create(@Validated @RequestBody DictDO dict, BindingResult bindingResult) {
+    public ResponseEntity<ResponseData> create(@Validated(DictDO.Create.class) @RequestBody DictDO dict) {
         dictService.create(dict);
         return success();
     }
@@ -75,7 +87,7 @@ public class DictController {
     @ApiOperation("修改字典")
     @PutMapping
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity<ResponseData> update(@RequestBody DictDO dict) {
+    public ResponseEntity<ResponseData> update(@Validated(DictDO.Update.class) @RequestBody DictDO dict) {
         dictService.update(dict);
         return success();
     }

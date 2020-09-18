@@ -30,6 +30,11 @@ public interface CacheKey {
      * 组授权
      */
     String GROUP_AUTH = "group::auth:";
+
+    /**
+     * 组授权
+     */
+    String GROUP_MENU = "menu::group:";
     /**
      * 组信息
      */

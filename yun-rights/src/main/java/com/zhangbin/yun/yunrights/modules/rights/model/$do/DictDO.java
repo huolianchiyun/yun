@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
+import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +13,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
 
@@ -27,11 +30,14 @@ import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsCo
 public class DictDO extends BaseDo implements Comparable<DictDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Null(groups = {Create.class}, message = "id 必须为 null 或不需要！")
+    @NotNull(groups = {Update.class}, message = "id 不能为空！")
     private Long id;
 
     /**
      * 字典类型编码
      */
+    @NotBlank(groups = {Create.class}, message = "typeCode 不能为空！")
     private String typeCode;
 
     /**
@@ -44,17 +50,18 @@ public class DictDO extends BaseDo implements Comparable<DictDO>, ExcelSupport, 
     /**
      * 显示名
      */
+    @NotBlank(groups = {Create.class}, message = "name 不能为空！")
     private String name;
 
     /**
      * 字典值
      */
     @ApiModelProperty(required = true)
-    @NotEmpty(message = "字典值不能为空！")
+    @NotBlank(groups = {Create.class}, message = "code 不能为空！")
     private String code;
 
     public void setCode(String code) {
-        if (!code.endsWith(DICT_SUFFIX)) {
+        if (StringUtils.isNotBlank(code) && !code.endsWith(DICT_SUFFIX)) {
             code += DICT_SUFFIX;
         }
         this.code = code;

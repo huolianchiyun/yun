@@ -10,12 +10,15 @@ public final class Meta {
     private Status status;
     private String message;
 
-    public static Meta ok() {
+    static Meta ok() {
         return new Meta(Status.OK);
     }
 
     public static Meta Error(String errMsg) {
-        return new Meta(Status.Error, errMsg);
+        return new Meta(Status.ServerError, errMsg);
+    }
+    public static Meta RequestError(String errMsg) {
+        return new Meta(Status.RequestError, errMsg);
     }
 
     private Meta(Status status) {
@@ -44,7 +47,7 @@ public final class Meta {
     }
 
     public enum Status {
-        OK(200), Error(500);
+        OK(200), RequestError(400), ServerError(500);
         @JsonValue
         private int code;
 

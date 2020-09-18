@@ -2,10 +2,13 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDo;
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -14,6 +17,7 @@ import java.io.Serializable;
 @Data
 public class DictQueryCriteria extends AbstractQueryPage implements Serializable {
 
+    @NotNull(groups = {BaseDo.Update.class}, message = "id 不能为空！")
     private String blurry;
 
     private BlurryType blurryType;

@@ -14,9 +14,13 @@
         <result column="g_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <collection column="r_id" property="users"
+        <collection column="g_id" property="users"
                     javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO"
                     select="com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper.selectByGroupId">
+        </collection>
+        <collection column="g_id" property="menus"
+                    javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO"
+                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper.selectByGroupId">
         </collection>
     </resultMap>
 
@@ -46,13 +50,6 @@
         where g_id = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="select22"  resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from t_sys_group
-        where g_id = #{id,jdbcType=INTEGER}
-    </select>
-
     <select id="selectByPrimaryKeys" parameterType="java.util.HashSet" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -71,12 +68,12 @@
         where g_pid = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="selectDeptByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectDeptByUserId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{u_id}
-        ) and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+        ) and g_group_type ='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
         limit 1
     </select>
 

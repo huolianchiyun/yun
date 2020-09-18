@@ -13,7 +13,4 @@ public interface PageMapper<R extends BaseDo> {
     * @return Set<R>
     */
    Set<R> selectAllByCriteria(@Param("criteria") AbstractQueryPage criteria);
-
-   @NotPermission
-   Set<GroupDO> select22(String name);
 }

@@ -280,7 +280,7 @@ public class GroupServiceImpl implements GroupService {
             return pGroupCode + ":" + group.getId();
         } else {
             String groupType = group.getGroupType();
-            Assert.isTrue(StringUtils.isNotBlank(groupType) && !groupType.trim().equals(DICT_SUFFIX) , "组类型必填，不能为空！");
+            Assert.isTrue(StringUtils.isNotBlank(groupType) && !groupType.trim().equals(DICT_SUFFIX), "组类型必填，不能为空！");
             String prefix = groupType.endsWith(DICT_SUFFIX) ? groupType.substring(0, groupType.lastIndexOf(DICT_SUFFIX)) : groupType + "::";
             return prefix + group.getId();
         }
@@ -310,6 +310,8 @@ public class GroupServiceImpl implements GroupService {
             redisUtils.del("group::pid:" + e.getOldPid());
             redisUtils.del("group::pid:" + e.getPid());
             redisUtils.del(CacheKey.GROUP_ID + groupId);
+            redisUtils.del(CacheKey.GROUP_MENU + groupId + true);
+            redisUtils.del(CacheKey.GROUP_MENU + groupId + false);
         });
         if (CollectionUtil.isNotEmpty(users)) {
             redisUtils.delByKeys("data::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
@@ -318,6 +320,7 @@ public class GroupServiceImpl implements GroupService {
             redisUtils.delByKeys(CacheKey.DATE_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
             redisUtils.delByKeys(CacheKey.GROUP_AUTH, userIds);
+
         }
     }
 }

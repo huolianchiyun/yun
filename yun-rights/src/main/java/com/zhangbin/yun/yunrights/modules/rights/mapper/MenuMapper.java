@@ -17,6 +17,8 @@ public interface MenuMapper extends PageMapper<MenuDO> {
 
     Set<MenuDO> selectByGroupIds(@Param("groupIds") Set<Long> groupIds);
 
+    Set<MenuDO> selectByGroupId(Long groupId);
+
     Set<MenuDO> selectRouterMenusByUserId(Long userId);
 
     /**

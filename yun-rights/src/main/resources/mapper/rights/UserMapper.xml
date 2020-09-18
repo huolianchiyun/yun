@@ -111,7 +111,7 @@
 
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria"
-            resultMap="SmallBaseResultMap">
+            resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user

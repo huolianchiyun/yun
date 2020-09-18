@@ -62,6 +62,13 @@
         and m_id = menu_id
     </select>
 
+    <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_menu, t_sys_group_menu
+        where group_id = #{groupId,jdbcType=INTEGER} and m_id = menu_id
+    </select>
+
     <select id="selectRouterMenusByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select m_id,
                m_pid,

@@ -16,5 +16,8 @@ public final class ResponseUtil {
     public static org.springframework.http.ResponseEntity<ResponseData> error(String errMsg) {
         return new org.springframework.http.ResponseEntity<>(new ResponseData(Meta.Error(errMsg)), HttpStatus.OK);
     }
+    public static org.springframework.http.ResponseEntity<ResponseData> requestError(String errMsg) {
+        return new org.springframework.http.ResponseEntity<>(new ResponseData(Meta.RequestError(errMsg)), HttpStatus.OK);
+    }
 
 }
