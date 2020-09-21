@@ -3,7 +3,7 @@ package com.zhangbin.yun.yunrights.modules.security.security;
 import cn.hutool.core.util.StrUtil;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.service.OnlineUserService;
-import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
+import com.zhangbin.yun.yunrights.modules.security.cache.UserInfoCache;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
@@ -27,19 +27,16 @@ public class TokenFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
     private final OnlineUserService onlineUserService;
-    private final UserCacheClean userCacheClean;
 
     /**
      * @param tokenProvider     Token
      * @param properties        JWT
      * @param onlineUserService 用户在线
-     * @param userCacheClean    用户缓存清理工具
      */
-    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, OnlineUserService onlineUserService, UserCacheClean userCacheClean) {
+    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, OnlineUserService onlineUserService) {
         this.properties = properties;
         this.onlineUserService = onlineUserService;
         this.tokenProvider = tokenProvider;
-        this.userCacheClean = userCacheClean;
     }
 
     @Override
@@ -58,7 +55,7 @@ public class TokenFilter extends GenericFilterBean {
                 cleanUserCache = true;
             } finally {
                 if (cleanUserCache || Objects.isNull(onlineUser)) {
-                    userCacheClean.cleanUserCache(String.valueOf(tokenProvider.getClaims(token).get(TokenProvider.AUTHORITIES_KEY)));
+                    UserInfoCache.cleanCacheFor(String.valueOf(tokenProvider.getClaims(token).get(TokenProvider.AUTHORITIES_KEY)));
                 }
             }
             if (onlineUser != null && StringUtils.hasText(token)) {

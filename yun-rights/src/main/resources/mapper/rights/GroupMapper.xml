@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper">
+
     <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
         <id column="g_id" jdbcType="BIGINT" property="id"/>
         <result column="g_pid" jdbcType="BIGINT" property="pid"/>
@@ -14,43 +15,34 @@
         <result column="g_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <collection column="g_id" property="users"
-                    javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO"
-                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper.selectByGroupId">
-        </collection>
+    </resultMap>
+
+    <resultMap id="CascadeResultMap0" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO" extends="BaseResultMap">
         <collection column="g_id" property="menus"
                     javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO"
                     select="com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper.selectByGroupId">
         </collection>
     </resultMap>
 
-    <resultMap id="SmallBaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO">
-        <id column="g_id" jdbcType="BIGINT" property="id"/>
-        <result column="g_pid" jdbcType="BIGINT" property="pid"/>
-        <result column="g_group_code" jdbcType="INTEGER" property="groupCode"/>
-        <result column="g_group_type" jdbcType="VARCHAR" property="groupType"/>
-        <result column="g_group_name" jdbcType="VARCHAR" property="groupName"/>
-        <result column="g_description" jdbcType="VARCHAR" property="description"/>
-        <result column="g_group_sort" jdbcType="INTEGER" property="groupSort"/>
-        <result column="g_group_master" jdbcType="VARCHAR" property="groupMaster"/>
-        <result column="g_creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="g_updater" jdbcType="VARCHAR" property="updater"/>
-        <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <resultMap id="CascadeResultMap1" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO" extends="CascadeResultMap0">
+        <collection column="g_id" property="users"
+                    javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO"
+                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper.selectByGroupId">
+        </collection>
     </resultMap>
 
     <sql id="Base_Column_List">
         g_id, g_pid, g_group_code, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_creator, g_updater, g_create_time, g_update_time
     </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="CascadeResultMap1">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group
         where g_id = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="selectByPrimaryKeys" parameterType="java.util.HashSet" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKeys" parameterType="java.util.HashSet" resultMap="CascadeResultMap1">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group
@@ -61,14 +53,14 @@
         )
     </select>
 
-    <select id="selectByPid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByPid" parameterType="java.lang.Long" resultMap="CascadeResultMap1">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group
         where g_pid = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="selectDeptByUserId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
+    <select id="selectDeptByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
@@ -77,7 +69,15 @@
         limit 1
     </select>
 
-    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="CascadeResultMap0">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group where g_id in (
+        select group_id from t_sys_user_group where user_id = #{userId}
+        ) and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+    </select>
+
+    <select id="selectByUserIdForUserMapper" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
@@ -103,7 +103,7 @@
         </foreach>
     </select>
 
-    <select id="selectByMenuIds" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
+    <select id="selectByMenuIds" parameterType="java.util.HashSet" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group, t_sys_group_menu

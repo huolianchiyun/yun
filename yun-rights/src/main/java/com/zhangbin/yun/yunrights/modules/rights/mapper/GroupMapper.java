@@ -36,6 +36,8 @@ public interface GroupMapper extends PageMapper<GroupDO>{
      */
     Set<GroupDO> selectByUserId(Long userId);
 
+    Set<GroupDO> selectByUserIdForUserMapper(Long userId);
+
     /**
      * 根据用户名查询用户所属组 groupCode
      * @param username /

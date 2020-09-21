@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+
     <settings>
         <!-- 开启全局延迟加载 -->
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false"/>
         <!--配置全局默认枚举类型处理器 defaultEnumTypeHandler, 3.4.5版本新增-->
-        <setting name="defaultEnumTypeHandler" value="com.zhangbin.yun.yunrights.modules.common.enums.handler.MyEnumTypeHandler"/>
+        <setting name="defaultEnumTypeHandler"
+                 value="com.zhangbin.yun.yunrights.modules.common.enums.handler.MyEnumTypeHandler"/>
     </settings>
+
     <plugins>
         <!-- com.github.pagehelper为PageHelper类所在包名 -->
         <plugin interceptor="com.github.pagehelper.PageInterceptor">
@@ -37,6 +40,7 @@
         </plugin>
         <plugin interceptor="com.zhangbin.yun.yunrights.modules.common.audit.MybatisAuditInterceptor"/>
         <!--由于mybatis拦截器的拦截顺序是从下到上，所有应将DataRightsInterceptor配置在最后，使其被最先拦截。-->
-        <plugin interceptor="com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsInterceptor" />
+        <plugin interceptor="com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsInterceptor"/>
     </plugins>
+
 </configuration>

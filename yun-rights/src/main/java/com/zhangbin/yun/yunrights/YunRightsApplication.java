@@ -30,7 +30,7 @@ public class YunRightsApplication {
      */
     @AnonymousGetMapping("/")
     public String index() {
-        return "Backend service started successfully";
+        return "Yun Backend service started successfully";
     }
 
 }

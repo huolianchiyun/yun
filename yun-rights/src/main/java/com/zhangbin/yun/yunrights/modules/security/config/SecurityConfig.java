@@ -8,7 +8,7 @@ import com.zhangbin.yun.yunrights.modules.security.security.JwtAuthenticationEnt
 import com.zhangbin.yun.yunrights.modules.security.security.TokenConfigurer;
 import com.zhangbin.yun.yunrights.modules.security.security.TokenProvider;
 import com.zhangbin.yun.yunrights.modules.security.service.OnlineUserService;
-import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
+import com.zhangbin.yun.yunrights.modules.security.cache.UserInfoCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -48,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ApplicationContext applicationContext;
     private final SecurityProperties properties;
     private final OnlineUserService onlineUserService;
-    private final UserCacheClean userCacheClean;
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -172,6 +171,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider, properties, onlineUserService, userCacheClean);
+        return new TokenConfigurer(tokenProvider, properties, onlineUserService);
     }
 }

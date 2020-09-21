@@ -6,6 +6,7 @@ import com.zhangbin.yun.yunrights.modules.common.constant.Constants;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
+import com.zhangbin.yun.yunrights.modules.security.cache.UserInfoCache;
 import com.zhangbin.yun.yunrights.modules.security.config.bean.SecurityProperties;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.MyUserDetails;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;
@@ -111,6 +112,8 @@ public class OnlineUserService {
      */
     public void logout(String token) {
         String key = properties.getOnlineKey() + token;
+        OnlineUser onlineUser = (OnlineUser) redisUtils.get(key);
+        UserInfoCache.cleanCacheFor(onlineUser.getUserName());
         redisUtils.del(key);
     }
 

@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -40,6 +41,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
      * 菜单标题，显示名
      */
     @ApiModelProperty(required = true)
+    @NotBlank(groups = Create.class, message = "menuTitle 不能为空！")
     private String menuTitle;
 
     /**
@@ -56,7 +58,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
      * 菜单类型
      */
     @ApiModelProperty(required = true)
-    @NotNull
+    @NotNull(groups = Create.class, message = "menuType 不能为空！")
     private MenuType menuType;
 
     /**
@@ -97,7 +99,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
 
     private Boolean hidden;
 
-    private Integer menuSort;
+    private int menuSort;
 
     /**
      * 子菜单（非表字段）
@@ -137,7 +139,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
 
     @Override
     public int compareTo(MenuDO o) {
-        return Integer.compare(menuSort == null ? 0 : menuSort, o.menuSort == null ? 0 : o.menuSort);
+        return Integer.compare(menuSort, o.menuSort);
     }
 
     @Override

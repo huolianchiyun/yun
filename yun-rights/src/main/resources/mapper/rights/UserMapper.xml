@@ -18,6 +18,9 @@
         <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime"/>
+    </resultMap>
+
+    <resultMap id="CascadeBaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO" extends="BaseResultMap">
         <!-- 多对一关联映射:association -->
         <association property="dept"
                      javaType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
@@ -27,27 +30,8 @@
         <!-- 多对多映射的关键:collection -->
         <collection property="groups" javaType="java.util.HashSet"
                     column="u_id" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
-                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper.selectByUserId">
+                    select="com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper.selectByUserIdForUserMapper">
         </collection>
-    </resultMap>
-
-    <resultMap id="SmallBaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
-        <id column="u_id" jdbcType="BIGINT" property="id"/>
-        <result column="u_nickname" jdbcType="VARCHAR" property="nickname"/>
-        <result column="u_username" jdbcType="VARCHAR" property="username"/>
-        <result column="u_gender" jdbcType="TINYINT" property="gender"/>
-        <result column="u_pwd" jdbcType="VARCHAR" property="pwd"/>
-        <result column="u_phone" jdbcType="VARCHAR" property="phone"/>
-        <result column="u_email" jdbcType="VARCHAR" property="email"/>
-        <result column="u_is_admin" jdbcType="BIT" property="admin"/>
-        <result column="u_dept_id" jdbcType="BIGINT" property="deptId"/>
-        <result column="u_status" jdbcType="BIT" property="status"/>
-        <result column="u_is_deleted" jdbcType="BIT" property="deleted"/>
-        <result column="u_creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="u_updater" jdbcType="VARCHAR" property="updater"/>
-        <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="u_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -55,14 +39,14 @@
         u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
     </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="CascadeBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
         where u_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectByIds" parameterType="java.util.HashSet" resultMap="BaseResultMap">
+    <select id="selectByIds" parameterType="java.util.HashSet" resultMap="CascadeBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
@@ -72,14 +56,14 @@
         </foreach>
     </select>
 
-    <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByUsername" parameterType="java.lang.String" resultMap="CascadeBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
         where u_username = #{userName,jdbcType=BIGINT}
     </select>
 
-    <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="SmallBaseResultMap">
+    <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user
@@ -88,7 +72,7 @@
         )
     </select>
 
-    <select id="selectByMenuIs" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
+    <select id="selectByMenuIs" parameterType="java.util.HashSet" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user u, t_sys_user_group ug, t_sys_group_menu gm
@@ -100,7 +84,7 @@
         and ug.group_id = gm.group_id
     </select>
 
-    <select id="selectByGroupIds" parameterType="java.util.HashSet" resultMap="SmallBaseResultMap">
+    <select id="selectByGroupIds" parameterType="java.util.HashSet" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user left join t_sys_user_group on u_id = user_id and group_id in
@@ -111,7 +95,7 @@
 
     <select id="selectAllByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria"
-            resultMap="BaseResultMap">
+            resultMap="CascadeBaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_user

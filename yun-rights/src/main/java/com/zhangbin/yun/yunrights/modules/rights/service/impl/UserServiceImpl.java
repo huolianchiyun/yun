@@ -10,14 +10,13 @@ import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupMenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserGroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;
-import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
+import com.zhangbin.yun.yunrights.modules.security.cache.UserInfoCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -44,7 +43,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserGroupMapper userGroupMapper;
     private final PasswordEncoder passwordEncoder;
-    private final UserCacheClean userCacheClean;
     private final CaptchaService verificationCodeService;
     private RedisUtils redisUtils;
 
@@ -89,6 +87,7 @@ public class UserServiceImpl implements UserService {
         user.setPwd(passwordEncoder.encode("123456"));
         userMapper.insert(user);
         updateAssociatedGroup(user, true);
+        throw new RuntimeException();
     }
 
     @Override
@@ -130,7 +129,7 @@ public class UserServiceImpl implements UserService {
     public void deleteByIds(Set<Long> ids) {
         Set<UserDO> users = userMapper.selectByIds(ids);
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
-        users.forEach(e -> checkOperationalRights(e, currentUser));
+        users.forEach(e -> doCheckOperationalRights(e, currentUser));
         userMapper.deleteByIds(ids);
         // TODO　考虑是否删除该用户创建的组及该用户为组长的组？？
 
@@ -169,10 +168,10 @@ public class UserServiceImpl implements UserService {
     private void checkOperationalRights(UserDO operatingUser) {
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         Assert.notNull(currentUser, "修改的用户不存在！");
-        checkOperationalRights(operatingUser, currentUser);
+        doCheckOperationalRights(operatingUser, currentUser);
     }
 
-    private void checkOperationalRights(UserDO operatingUser, UserDO currentUser) {
+    private void doCheckOperationalRights(UserDO operatingUser, UserDO currentUser) {
         if (currentUser.isAdmin()) {
             return;
         }
@@ -202,6 +201,6 @@ public class UserServiceImpl implements UserService {
      * @param userName 用户名
      */
     private void flushCache(String userName) {
-        userCacheClean.cleanUserCache(userName);
+        UserInfoCache.cleanCacheFor(userName);
     }
 }

@@ -3,16 +3,16 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import javax.validation.constraints.*;
+import static com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil.REGEX_MOBILE;
 
 /**
  * 表 t_sys_user
@@ -27,21 +27,28 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(required = true)
+    @NotBlank(groups = Create.class, message = "username 不能为空！")
     private String username;
 
+    @NotBlank(groups = Create.class, message = "nickname 不能为空！")
     private String nickname;
 
     /**
      * 性別：1 男， 2 女
      */
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = true, notes = "性別：1 -> 男， 2 -> 女", example = "2")
+    @Size(max = 2, min = 1, message = "1 -> 男， 2 -> 女")
+    @NotNull(groups = Create.class, message = "gender 不能为空！")
     private Byte gender;
 
     @ApiModelProperty(required = true)
+    @NotBlank(groups = Create.class, message = "pwd 不能为空！")
     private String pwd;
 
+    @Pattern(regexp = REGEX_MOBILE, message = "电话号码格式错误！")
     private String phone;
 
+    @Email
     private String email;
 
     private Long deptId;
@@ -61,7 +68,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     /**
      * 是否是管理员，管理员全局唯一，即系统中只有一个
      */
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(hidden = true)
     private boolean admin;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")

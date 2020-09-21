@@ -6,7 +6,6 @@ import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 
-import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DEPT_TYPE;
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
 
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
@@ -15,7 +14,7 @@ import com.zhangbin.yun.yunrights.modules.rights.mapper.*;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.*;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
-import com.zhangbin.yun.yunrights.modules.security.service.UserCacheClean;
+import com.zhangbin.yun.yunrights.modules.security.cache.UserInfoCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -40,7 +39,6 @@ public class GroupServiceImpl implements GroupService {
     private final UserMapper userMapper;
     private final UserGroupMapper userGroupMapper;
     private final GroupMenuMapper groupMenuMapper;
-    private final UserCacheClean userCacheClean;
     private RedisUtils redisUtils;
 
     @Autowired(required = false)
@@ -184,7 +182,9 @@ public class GroupServiceImpl implements GroupService {
         } else {
             List<GroupDO> roles = new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(user.getId()))
                     .orElseGet(HashSet::new));
-            permissions = roles.stream().flatMap(role -> role.getMenus().stream())
+            permissions = roles.stream()
+                    .filter(group -> CollectionUtil.isNotEmpty(group.getMenus()))
+                    .flatMap(group -> group.getMenus().stream())
                     .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
                     .map(MenuDO::getPermission).collect(Collectors.toSet());
         }
@@ -314,7 +314,7 @@ public class GroupServiceImpl implements GroupService {
         });
         if (CollectionUtil.isNotEmpty(users)) {
             redisUtils.delByKeys("data::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
-            users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
+            users.forEach(item -> UserInfoCache.cleanCacheFor(item.getUsername()));
             Set<Long> userIds = users.stream().map(UserDO::getId).collect(Collectors.toSet());
             redisUtils.delByKeys(CacheKey.DATE_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);

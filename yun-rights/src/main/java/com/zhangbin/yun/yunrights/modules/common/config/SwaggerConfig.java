@@ -75,6 +75,8 @@ public class SwaggerConfig {
                         .title(title)
                         .version(version)
                         .build())
+                //修正Byte转string的Bug
+                .directModelSubstitute(Byte.class, Integer.class)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant(baseUrl))

@@ -47,6 +47,7 @@ public class UserMapperTest {
         user.setNickname("李四");
         user.setPhone("12345678991");
         user.setPwd("12345678991");
+
         userMapper.insert(user);
         System.out.println("user:" + user.toString());
 
