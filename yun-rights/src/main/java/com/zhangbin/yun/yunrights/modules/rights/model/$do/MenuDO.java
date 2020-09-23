@@ -166,9 +166,9 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     }
 
     public enum MenuType implements BaseEnumValue<Integer> {
-        Dir(1, "directory", "目录"),
-        MENU(2, "menu", "菜单"),
-        BUTTON(3, "button", "按钮");
+        Dir(0, "directory", "目录"),
+        MENU(1, "menu", "菜单"),
+        BUTTON(2, "button", "按钮");
 
         @JsonValue
         private Integer code;

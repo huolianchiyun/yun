@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.common.config.filter;
 
 import com.github.pagehelper.PageHelper;
-import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;

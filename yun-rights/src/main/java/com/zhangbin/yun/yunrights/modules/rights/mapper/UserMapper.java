@@ -6,6 +6,7 @@ import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupMenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Set;
 
@@ -13,6 +14,9 @@ import java.util.Set;
 public interface UserMapper extends PageMapper<UserDO> {
     @NotPermission
     UserDO selectByPrimaryKey(Long id);
+    @NotPermission
+    @Select("select u_username from t_sys_user where u_id = #{id}")
+    String selectUsernameById(Long id);
     @NotPermission
     UserDO selectByUsername(String username);
     @NotPermission

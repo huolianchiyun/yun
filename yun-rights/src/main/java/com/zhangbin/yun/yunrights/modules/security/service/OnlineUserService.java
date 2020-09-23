@@ -13,11 +13,12 @@ import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+
+import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.BIND_USER_HASH_KEY_PREFIX;
 
 @Service
 @Slf4j
@@ -39,8 +40,8 @@ public class OnlineUserService {
      * 保存在线用户信息
      *
      * @param myUserDetails /
-     * @param token   /
-     * @param request /
+     * @param token         /
+     * @param request       /
      */
     public void save(MyUserDetails myUserDetails, String token, HttpServletRequest request) {
         GroupDO dept = myUserDetails.getUser().getDept();
@@ -113,8 +114,12 @@ public class OnlineUserService {
     public void logout(String token) {
         String key = properties.getOnlineKey() + token;
         OnlineUser onlineUser = (OnlineUser) redisUtils.get(key);
-        UserInfoCache.cleanCacheFor(onlineUser.getUserName());
+        if (StringUtils.isNotEmpty(onlineUser.getUserName())) {
+            UserInfoCache.cleanCacheFor(onlineUser.getUserName());
+            redisUtils.del(BIND_USER_HASH_KEY_PREFIX + onlineUser.getUserName());
+        }
         redisUtils.del(key);
+
     }
 
     /**

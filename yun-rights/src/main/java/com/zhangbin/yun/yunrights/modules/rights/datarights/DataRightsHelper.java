@@ -5,6 +5,7 @@ import cn.hutool.core.util.ClassUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.statement.StatementHandler;

@@ -39,7 +39,7 @@ public class UserInfoCache {
 
     /**
      * 清理所有用户的缓存信息<br>
-     * ,如发生角色授权信息变化，可以简便的全部失效缓存
+     * 如发生角色授权信息变化，可以简便的全部失效缓存
      */
     public static void cleanAll() {
         userInfoMap.clear();

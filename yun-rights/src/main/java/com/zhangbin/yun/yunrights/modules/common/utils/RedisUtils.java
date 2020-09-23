@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -681,30 +683,34 @@ public class RedisUtils {
 
     /**
      * @param prefix 前缀
-     * @param ids    id
+     * @param keySet key集合
      */
-    public void delByKeys(String prefix, Set<Long> ids) {
-        Set<Object> keys = new HashSet<>();
-        for (Long id : ids) {
-            keys.addAll(redisTemplate.keys(new StringBuffer(prefix).append(id).toString()));
-        }
+    public <T> void delByKeys(String prefix, Set<T> keySet) {
+        if (CollectionUtil.isEmpty(keySet)) return;
+        List<Object> keys = redisTemplate.opsForValue().multiGet(
+                keySet.stream().map(key -> new StringBuffer(prefix).append(key).toString())
+                        .collect(Collectors.toSet()));
         long count = redisTemplate.delete(keys);
         // 此处提示可自行删除
-        log.debug("--------------------------------------------");
-        log.debug("成功删除缓存：" + keys.toString());
-        log.debug("缓存删除数量：" + count + "个");
-        log.debug("--------------------------------------------");
+        if (log.isDebugEnabled()) {
+            log.debug("--------------------------------------------");
+            log.debug("成功删除缓存：" + keys.toString());
+            log.debug("缓存删除数量：" + count + "个");
+            log.debug("--------------------------------------------");
+        }
     }
 
-    public void delKeysWithSomePrefixByLua(String prefix){
-        if(StringUtils.isNotBlank(prefix)){
-            if(!prefix.endsWith("*")){
+    public void delKeysWithSomePrefixByLua(String prefix) {
+        if (StringUtils.isNotBlank(prefix)) {
+            if (!prefix.endsWith("*")) {
                 prefix = prefix.concat("*");
             }
             Long count = redisTemplate.execute(redisScript, Collections.singletonList(prefix), 20);
-            log.debug("--------------------------------------------");
-            log.debug("成功删除缓存：delete keys with the prefix {} , the number of deletions is {}", prefix, count);
-            log.debug("--------------------------------------------");
+            if (log.isDebugEnabled()) {
+                log.debug("--------------------------------------------");
+                log.debug("成功删除缓存：delete keys with the prefix {} , the number of deletions is {}", prefix, count);
+                log.debug("--------------------------------------------");
+            }
         }
     }
 }

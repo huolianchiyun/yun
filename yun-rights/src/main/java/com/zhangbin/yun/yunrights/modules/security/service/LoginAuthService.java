@@ -54,7 +54,7 @@ public class LoginAuthService {
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
         final MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        // 保存在线信息
+        // save online user information to redis
         onlineUserService.save(myUserDetails, token, request);
         if (loginProperties.isSingleLogin()) {
             //踢掉之前已经登录的token

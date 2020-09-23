@@ -1,9 +1,13 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
+import cn.hutool.core.util.ReflectUtil;
+import com.zhangbin.yun.yunrights.modules.common.config.cache.MyRedisCacheWriter;
 import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsHelper;
-import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;
+import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationListener;
@@ -16,12 +20,16 @@ import java.lang.reflect.Field;
 @Slf4j
 @Component
 public class RightsBeanPostProcessor implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent> {
+    @SneakyThrows
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         if (bean instanceof DataSource) {
             setClassStaticField(RuleManager.class, "dataSource", bean);
         }
         if (bean instanceof RedisUtils) {
             setClassStaticField(RuleManager.class, "redisUtils", bean);
+        }
+        if (bean instanceof UserService) {
+            setClassStaticField(MyRedisCacheWriter.class, "userService", bean);
         }
         return bean;  // you can return any other object as well
     }

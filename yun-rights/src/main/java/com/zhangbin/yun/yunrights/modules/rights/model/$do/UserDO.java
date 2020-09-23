@@ -27,7 +27,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(required = true)
-    @NotBlank(groups = Create.class, message = "username 不能为空！")
+    @NotBlank(groups = {Create.class, Update.class}, message = "username 不能为空！")
     private String username;
 
     @NotBlank(groups = Create.class, message = "nickname 不能为空！")
@@ -42,7 +42,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     private Byte gender;
 
     @ApiModelProperty(required = true)
-    @NotBlank(groups = Create.class, message = "pwd 不能为空！")
+    @Null(groups = Update.class, message = "此接口不允许修改密码！")
     private String pwd;
 
     @Pattern(regexp = REGEX_MOBILE, message = "电话号码格式错误！")
@@ -83,14 +83,14 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     public UserDO() {
     }
 
-    public UserDO(String username, String pwd, LocalDateTime pwdResetTime) {
-        this.username = username;
+    public UserDO(Long id, String pwd, LocalDateTime pwdResetTime) {
+        this.id = id;
         this.pwd = pwd;
         this.pwdResetTime = pwdResetTime;
     }
 
-    public UserDO(String username, String email) {
-        this.username = username;
+    public UserDO(Long id, String email) {
+        this.id = id;
         this.email = email;
     }
 

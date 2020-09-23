@@ -3,6 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.service;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserEmailVO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,14 @@ public interface UserService {
      * @return /
      */
     UserDO queryById(Long id);
+
+    /**
+     * 根据ID查询用户名
+     *
+     * @param id ID
+     * @return /
+     */
+    String queryUsernameById(Long id);
 
     /**
      * 根据登录名查询
@@ -76,10 +85,9 @@ public interface UserService {
     /**
      * 修改邮箱
      *
-     * @param code  验证码
-     * @param user
+     * @param userEmail
      */
-    void updateEmail(String code, UserDO user) throws Exception;
+    void updateEmail(UserEmailVO userEmail) throws Exception;
 
     /**
      * 导出数据

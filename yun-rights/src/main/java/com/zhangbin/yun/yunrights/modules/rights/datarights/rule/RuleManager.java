@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.rights.datarights;
+package com.zhangbin.yun.yunrights.modules.rights.datarights.rule;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.db.handler.BeanListHandler;
@@ -11,21 +11,26 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.BIND_USER_FLAG;
+import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.RULE;
+
 /**
- *  数据权限规则管理类
+ * 数据权限规则管理类
  * Assign a value to variable dataSource and redisUtils
+ *
  * @See {@link com.zhangbin.yun.yunrights.modules.common.config.RightsBeanPostProcessor}
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "rule")
+@CacheConfig(cacheNames = RULE)
 public class RuleManager {
     // 声明该变量的目的在于规则更新那段时间中，当前线程暂时不受影响
     private final static ThreadLocal<Map<String, Set<PermissionRuleDO>>> ruleMapThreadLocal = new ThreadLocal<>();
@@ -33,7 +38,7 @@ public class RuleManager {
     private static DataSource dataSource;
     private static RedisUtils redisUtils;
 
-    @Cacheable(key = "'username:' + #p0")
+    @Cacheable(value = BIND_USER_FLAG + RULE, key = "'rule:username:' + #p0")
     public Set<PermissionRuleDO> getRulesForCurrentUser(String currentUsername) {
         ruleMapThreadLocal.set(groupCodePermissionMap);
         return filterByCurrentUserGroups(currentUsername);

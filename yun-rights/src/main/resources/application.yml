@@ -22,6 +22,9 @@ spring:
     password: 123456
     #连接超时时间
     timeout: 5000
+    my:
+      #设置 redis 数据默认过期时间，默认2小时
+      expiration-time: 7200000
 
 #task:
 #  pool:

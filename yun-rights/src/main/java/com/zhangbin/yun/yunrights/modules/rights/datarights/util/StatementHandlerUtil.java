@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights.util;
 
-import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.exception.DataRightsException;
 import org.apache.ibatis.mapping.BoundSql;

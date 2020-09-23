@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
+import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.*;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTP;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTPS;
 
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "menu")
+@CacheConfig(cacheNames = MENU)
 public class MenuServiceImpl implements MenuService {
 
     private final MenuMapper menuMapper;
@@ -89,7 +90,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(key = "'user:' + #p0")  // eg. key-> menu::user:1
+    @Cacheable(value = BIND_USER_FLAG + MENU, key = "'user:' + #p0 + #p1")
     public List<MenuDO> queryByUser(Long userId, Boolean isTree) {
         Set<MenuDO> menuSet;
         // 如果是admin，则返回所有菜单
@@ -107,6 +108,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable(value = BIND_USER_FLAG + MENU, key = "'router:user:' + #p0")  // // + MENU 目的是避免 redis Hash中 field重名
     public List<MenuVO> getRouterMenusForUser(Long userId) {
         if (SecurityUtils.isAdmin()) {
             return buildMenuForRouter(menuMapper.selectRouterMenus());
@@ -190,7 +192,7 @@ public class MenuServiceImpl implements MenuService {
 
     private void validate(MenuDO menu, boolean isCreate) {
         validateExternalLink(menu);
-        if(!isCreate) return;
+        if (!isCreate) return;
         if (MenuDO.MenuType.Dir == menu.getMenuType() || MenuDO.MenuType.MENU == menu.getMenuType()) {
             Assert.isTrue(StringUtils.hasText(menu.getRouterPath()), "router path 不能为空！");
             if (MenuDO.MenuType.MENU == menu.getMenuType()) {
@@ -234,5 +236,4 @@ public class MenuServiceImpl implements MenuService {
             redisUtils.delByKeys("role::menuId:", groups.stream().map(GroupDO::getId).collect(Collectors.toSet()));
         }
     }
-
 }

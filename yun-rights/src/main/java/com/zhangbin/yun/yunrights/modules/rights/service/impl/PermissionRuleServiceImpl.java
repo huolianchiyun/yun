@@ -5,7 +5,7 @@ import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
-import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
+import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteria;

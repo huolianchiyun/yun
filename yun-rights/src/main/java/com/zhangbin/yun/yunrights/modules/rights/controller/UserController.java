@@ -1,14 +1,12 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
+import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
-
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
-import com.zhangbin.yun.yunrights.modules.rights.datarights.RuleManager;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
+import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserEmailVO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import io.swagger.annotations.Api;
@@ -19,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Set;
 
@@ -85,16 +82,16 @@ public class UserController {
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/update/pwd")
-    public ResponseEntity<ResponseData> updatePwd(@RequestBody UserPwdVO pwdVo) throws Exception {
+    public ResponseEntity<ResponseData> updatePwd(@Validated(BaseDO.Update.class) @RequestBody UserPwdVO pwdVo) throws Exception {
         userService.updatePwd(pwdVo);
         return success();
     }
 
     @Logging("修改邮箱")
     @ApiOperation("修改邮箱")
-    @PostMapping(value = "/update/email/{code}")
-    public ResponseEntity<ResponseData> updateEmail(@PathVariable String code, @RequestBody UserDO user) throws Exception {
-        userService.updateEmail(code, user);
+    @PostMapping(value = "/update/email")
+    public ResponseEntity<ResponseData> updateEmail(@Validated(BaseDO.Update.class) @RequestBody UserEmailVO userEmail) throws Exception {
+        userService.updateEmail(userEmail);
         return success();
     }
 }

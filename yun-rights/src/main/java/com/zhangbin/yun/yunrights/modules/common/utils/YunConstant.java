@@ -3,7 +3,7 @@ package com.zhangbin.yun.yunrights.modules.common.utils;
 /**
  * 常用静态常量
  */
-public class ElAdminConstant {
+public class YunConstant {
 
     /**
      * 用于IP定位转换

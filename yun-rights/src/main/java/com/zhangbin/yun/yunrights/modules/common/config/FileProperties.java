@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
-import com.zhangbin.yun.yunrights.modules.common.utils.ElAdminConstant;
+import com.zhangbin.yun.yunrights.modules.common.utils.YunConstant;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +24,9 @@ public class FileProperties {
 
     public ElPath getPath(){
         String os = System.getProperty("os.name");
-        if(os.toLowerCase().startsWith(ElAdminConstant.WIN)) {
+        if(os.toLowerCase().startsWith(YunConstant.WIN)) {
             return windows;
-        } else if(os.toLowerCase().startsWith(ElAdminConstant.MAC)){
+        } else if(os.toLowerCase().startsWith(YunConstant.MAC)){
             return mac;
         }
         return linux;

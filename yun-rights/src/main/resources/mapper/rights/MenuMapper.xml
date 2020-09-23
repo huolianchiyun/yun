@@ -86,7 +86,7 @@
              t_sys_group_menu gm,
              t_sys_user_group ug,
              t_sys_user u
-        where m.m_menu_type in (1, 2)
+        where m.m_menu_type in (0, 1)
           and m.m_id = gm.menu_id
           and gm.group_id = ug.group_id
           and ug.user_id = u.u_id
@@ -107,7 +107,7 @@
                m_is_external_link,
                m_is_hidden
         from t_sys_menu
-        where m_menu_type in (1, 2)
+        where m_menu_type in (0, 1)
     </select>
 
     <select id="selectAllByCriteria"
