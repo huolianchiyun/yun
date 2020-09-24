@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.BIND_USER_HASH_KEY_PREFIX;
+import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.BIND_USER_HASH_KEY_PREFIX;
 
 @Service
 @Slf4j

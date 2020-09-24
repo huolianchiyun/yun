@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.config.cache;
+package com.zhangbin.yun.yunrights.modules.common.xcache;
 
 import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson.JSON;
@@ -20,10 +20,9 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -47,17 +46,16 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Value("${spring.redis.my.expiration-time:7200000}")
     private long expirationTime;
 
+    @Primary
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
-        //缓存配置对象
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
                         .fromSerializer(fastJsonRedisSerializer))
                 .entryTtl(Duration.ofMillis(expirationTime)); //设置 redis 数据默认过期时间，默认2小时
-
         return RedisCacheManager
-                .builder(MyRedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+                .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
                 .cacheDefaults(configuration).build();
     }
 

@@ -18,8 +18,8 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.BIND_USER_FLAG;
-import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.RULE;
+import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.BIND_USER;
+import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.RULE;
 
 /**
  * 数据权限规则管理类
@@ -38,7 +38,7 @@ public class RuleManager {
     private static DataSource dataSource;
     private static RedisUtils redisUtils;
 
-    @Cacheable(value = BIND_USER_FLAG + RULE, key = "'rule:username:' + #p0")
+    @Cacheable(value = BIND_USER + RULE, key = "'rule:username:' + #p0")
     public Set<PermissionRuleDO> getRulesForCurrentUser(String currentUsername) {
         ruleMapThreadLocal.set(groupCodePermissionMap);
         return filterByCurrentUserGroups(currentUsername);

@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
-import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.*;
+import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.*;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTP;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTPS;
 
@@ -90,7 +90,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(value = BIND_USER_FLAG + MENU, key = "'user:' + #p0 + #p1")
+    @Cacheable(value = BIND_USER + MENU, key = "'" + UserIdKey + "' + #p0 +'" + ":" + "'+ #p1")
     public List<MenuDO> queryByUser(Long userId, Boolean isTree) {
         Set<MenuDO> menuSet;
         // 如果是admin，则返回所有菜单
@@ -108,7 +108,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(value = BIND_USER_FLAG + MENU, key = "'router:user:' + #p0")  // // + MENU 目的是避免 redis Hash中 field重名
+    @Cacheable(value = BIND_USER + MENU, key = "'router:" + UserIdKey + "' + #p0")
+    //  + MENU 目的是避免 redis Hash的 key重名冲突
     public List<MenuVO> getRouterMenusForUser(Long userId) {
         if (SecurityUtils.isAdmin()) {
             return buildMenuForRouter(menuMapper.selectRouterMenus());

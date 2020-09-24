@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.config.cache;
+package com.zhangbin.yun.yunrights.modules.common.xcache;
 
 
 import java.nio.charset.StandardCharsets;
@@ -7,13 +7,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
-import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.PessimisticLockingFailureException;
-import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStringCommands.SetOption;
@@ -21,12 +15,7 @@ import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.*;
-
-public final class MyRedisCacheWriter implements RedisCacheWriter {
-    public static final Logger log = LoggerFactory.getLogger(MyRedisCacheWriter.class);
-    private static StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-    private static UserService userService;
+public final class HRedisCacheWriter implements RedisCacheWriter {
     private final RedisConnectionFactory connectionFactory;
     private final Duration sleepTime;
 
@@ -34,32 +23,32 @@ public final class MyRedisCacheWriter implements RedisCacheWriter {
      * Create new {@link RedisCacheWriter} without locking behavior.
      *
      * @param connectionFactory must not be {@literal null}.
-     * @return new instance of {@link MyRedisCacheWriter}.
+     * @return new instance of {@link HRedisCacheWriter}.
      */
     static RedisCacheWriter nonLockingRedisCacheWriter(RedisConnectionFactory connectionFactory) {
 
         Assert.notNull(connectionFactory, "ConnectionFactory must not be null!");
 
-        return new MyRedisCacheWriter(connectionFactory);
+        return new HRedisCacheWriter(connectionFactory);
     }
 
     /**
      * Create new {@link RedisCacheWriter} with locking behavior.
      *
      * @param connectionFactory must not be {@literal null}.
-     * @return new instance of {@link MyRedisCacheWriter}.
+     * @return new instance of {@link HRedisCacheWriter}.
      */
     static RedisCacheWriter lockingRedisCacheWriter(RedisConnectionFactory connectionFactory) {
 
         Assert.notNull(connectionFactory, "ConnectionFactory must not be null!");
 
-        return new MyRedisCacheWriter(connectionFactory, Duration.ofMillis(50));
+        return new HRedisCacheWriter(connectionFactory, Duration.ofMillis(50));
     }
 
     /**
      * @param connectionFactory must not be {@literal null}.
      */
-    private MyRedisCacheWriter(RedisConnectionFactory connectionFactory) {
+    HRedisCacheWriter(RedisConnectionFactory connectionFactory) {
         this(connectionFactory, Duration.ZERO);
     }
 
@@ -68,7 +57,7 @@ public final class MyRedisCacheWriter implements RedisCacheWriter {
      * @param sleepTime         sleep time between lock request attempts. Must not be {@literal null}. Use {@link Duration#ZERO}
      *                          to disable locking.
      */
-    private MyRedisCacheWriter(RedisConnectionFactory connectionFactory, Duration sleepTime) {
+    HRedisCacheWriter(RedisConnectionFactory connectionFactory, Duration sleepTime) {
 
         Assert.notNull(connectionFactory, "ConnectionFactory must not be null!");
         Assert.notNull(sleepTime, "SleepTime must not be null!");
@@ -86,22 +75,6 @@ public final class MyRedisCacheWriter implements RedisCacheWriter {
         Assert.notNull(name, "Name must not be null!");
         Assert.notNull(key, "Key must not be null!");
         Assert.notNull(value, "Value must not be null!");
-        String keyStr = stringRedisSerializer.deserialize(key);
-        if (keyStr.contains(BIND_USER_FLAG)) {
-            String username = extractUsernameForm(keyStr);
-            // 如果未提取到，则不缓存
-            if (!StringUtils.isNotEmpty(username)) return;
-            byte[] hKey = stringRedisSerializer.serialize(BIND_USER_HASH_KEY_PREFIX + username);
-            execute(name, connection -> {
-                connection.hSet(hKey, key, value);
-                if (shouldExpireWithin(ttl)) {
-                    connection.expire(hKey, Expiration.from(ttl.toMillis(), TimeUnit.MILLISECONDS).getExpirationTimeInSeconds());
-                }
-                return "OK";
-            });
-            return;
-        }
-
         execute(name, connection -> {
             if (shouldExpireWithin(ttl)) {
                 connection.set(key, value, Expiration.from(ttl.toMillis(), TimeUnit.MILLISECONDS), SetOption.upsert());
@@ -112,6 +85,24 @@ public final class MyRedisCacheWriter implements RedisCacheWriter {
         });
     }
 
+    @Override
+    public void hset(String name, byte[] key, byte[] field, byte[] value, Duration ttl) {
+        Assert.notNull(name, "Name must not be null!");
+        Assert.notNull(key, "Key must not be null!");
+        Assert.notNull(field, "Field must not be null!");
+        Assert.notNull(value, "Value must not be null!");
+
+        execute(name, connection -> {
+            connection.hSet(key, field, value);
+            if (shouldExpireWithin(ttl)) {
+                connection.expire(key, Expiration.from(ttl.toMillis(), TimeUnit.MILLISECONDS).getExpirationTimeInSeconds());
+            }
+            return "OK";
+        });
+        return;
+    }
+
+
     /* 扩展了用户关联 hash 获取
      * (non-Javadoc)
      * @see org.springframework.data.redis.cache.RedisCacheWriter#get(java.lang.String, byte[])
@@ -120,16 +111,14 @@ public final class MyRedisCacheWriter implements RedisCacheWriter {
     public byte[] get(String name, byte[] key) {
         Assert.notNull(name, "Name must not be null!");
         Assert.notNull(key, "Key must not be null!");
-        String keyStr = stringRedisSerializer.deserialize(key);
-        if (keyStr.contains(BIND_USER_FLAG)) {
-            String username = extractUsernameForm(keyStr);
-            // 如果未提取到，则不缓存
-            if (StringUtils.isNotEmpty(username)) {
-                byte[] hKey = stringRedisSerializer.serialize(BIND_USER_HASH_KEY_PREFIX + username);
-                return execute(name, connection -> connection.hGet(hKey, key));
-            }
-        }
         return execute(name, connection -> connection.get(key));
+    }
+
+    @Override
+    public byte[] hget(String name, byte[] key, byte[] field) {
+        Assert.notNull(name, "Name must not be null!");
+        Assert.notNull(key, "Key must not be null!");
+        return execute(name, connection -> connection.hGet(key, field));
     }
 
     /*
@@ -288,27 +277,5 @@ public final class MyRedisCacheWriter implements RedisCacheWriter {
 
     private static byte[] createCacheLockKey(String name) {
         return (name + "~lock").getBytes(StandardCharsets.UTF_8);
-    }
-
-    private static String extractUsernameForm(String key) {
-        String username = null;
-        try {
-            String[] splitKeys = key.split(":+");
-            if (splitKeys.length >= 2) {
-                for (int i = splitKeys.length - 2; i >= 0; i--) {
-                    if (Username.equalsIgnoreCase(splitKeys[i])) {
-                        username = splitKeys[++i];
-                        break;
-                    } else if (UserId.equalsIgnoreCase(splitKeys[i])) {
-                        username = userService.queryUsernameById(Long.valueOf(splitKeys[++i]));
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.warn("*** *** MyRedisCacheWriter#extractUserIdForm({}) 执行异常：", key);
-            e.printStackTrace();
-        }
-        return username;
     }
 }

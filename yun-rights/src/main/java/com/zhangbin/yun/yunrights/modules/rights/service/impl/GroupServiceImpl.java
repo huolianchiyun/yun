@@ -2,12 +2,12 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
-import com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey;
+import com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 
-import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.*;
+import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.*;
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
 
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
@@ -75,13 +75,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    @Cacheable(value = BIND_USER_FLAG + GROUP, key = "'user:' + #p0")
+    @Cacheable(value = BIND_USER + GROUP, key = "'" + UserIdKey + "' + #p0")
     public List<GroupDO> queryByUserId(Long userId) {
         return new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(userId)).orElseGet(HashSet::new));
     }
 
     @Override
-    @Cacheable(value = BIND_USER_FLAG + GROUP, key = "'username:' + #p0")
+    @Cacheable(value = BIND_USER + GROUP, key = "'" + UsernameKey + "' + #p0")
     public Set<String> queryGroupCodeByUsername(String username) {
         return Optional.ofNullable(groupMapper.selectByUsername(username)).orElseGet(HashSet::new);
     }
@@ -177,7 +177,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    @Cacheable(value = BIND_USER_FLAG + GROUP, key = "'auth:' + #p0.id")
+    @Cacheable(value = BIND_USER + GROUP, key = "'auth:" + UserIdKey + "' + #user.id")
     public List<GrantedAuthority> getGrantedAuthorities(UserDO user) {
         Set<String> permissions = new HashSet<>(1);
         if (user.isAdmin()) {  // 如果是管理员直接返回
@@ -263,14 +263,14 @@ public class GroupServiceImpl implements GroupService {
      * @param isCreate 是否是创建组
      */
     private void updateAssociatedUser(GroupDO group, boolean isCreate) {
-        if(CollectionUtil.isNotEmpty(group.getUsers())){
+        if (CollectionUtil.isNotEmpty(group.getUsers())) {
             Set<UserGroupDO> userGroups = group.getUsers().stream()
-                    .map(e -> new UserGroupDO(e.getId(),group.getId()))
+                    .map(e -> new UserGroupDO(e.getId(), group.getId()))
                     .collect(Collectors.toSet());
-                if (!isCreate) {
-                    userGroupMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
-                }
-                userGroupMapper.batchInsert(userGroups);
+            if (!isCreate) {
+                userGroupMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
+            }
+            userGroupMapper.batchInsert(userGroups);
         }
     }
 

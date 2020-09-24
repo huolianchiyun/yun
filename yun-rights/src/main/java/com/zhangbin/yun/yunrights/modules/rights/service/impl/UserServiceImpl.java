@@ -34,7 +34,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.zhangbin.yun.yunrights.modules.common.config.cache.CacheKey.*;
+import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.*;
 
 
 @Service
@@ -52,23 +52,19 @@ public class UserServiceImpl implements UserService {
     private final RedisUtils redisUtils;
 
     @Override
-    @Cacheable(key = "'" + UserIdKey_BIND + "'+ #p0")
+    @Cacheable(value = BIND_USER + USER, key = "'" + UserIdKey + "'+ #p0")
     public UserDO queryById(Long id) {
         return userMapper.selectByPrimaryKey(id);
     }
 
     @Override
+    @Cacheable(value = HSet + "H:ID->USERNAME", key = "'" + UserIdKey + "'+ #p0")
     public String queryUsernameById(Long id) {
-        String username = (String) redisUtils.hget(USERNAME_HASH_KEY_PREFIX, String.valueOf(id));
-        if (!StringUtils.hasText(username)) {
-            username = userMapper.selectUsernameById(id);
-            redisUtils.hset(USERNAME_HASH_KEY_PREFIX, String.valueOf(id), username, expirationTime / 1000);
-        }
-        return username;
+        return userMapper.selectUsernameById(id);
     }
 
     @Override
-    @Cacheable(key = "'" + UsernameKey_BIND + "'+ #p0")
+    @Cacheable(value = BIND_USER + USER, key = "'" + UsernameKey + "'+ #p0")
     public UserDO queryByUsername(String username) {
         return userMapper.selectByUsername(username);
     }
