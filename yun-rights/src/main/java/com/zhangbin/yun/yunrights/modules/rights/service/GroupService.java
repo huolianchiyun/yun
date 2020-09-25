@@ -141,4 +141,10 @@ public interface GroupService {
      * @return 权限信息
      */
     List<GrantedAuthority> getGrantedAuthorities(UserDO user);
+
+    /**
+     * 清理与组相关的缓存
+     * @param groups
+     */
+    void clearCaches(Set<GroupDO> groups);
 }

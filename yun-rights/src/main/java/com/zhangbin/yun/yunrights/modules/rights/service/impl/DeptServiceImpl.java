@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
@@ -26,9 +27,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "dept")
 public class DeptServiceImpl implements DeptService {
-
-    private final GroupService groupService;  // 对组的操作委派给 GroupService 处理
-    private final UserService userService;
+    // 对组的操作委派给 GroupService 处理
+    private final GroupService groupService;
 
     @Override
     public List<DeptDTO> queryAllByCriteriaWithNoPage(DeptQueryCriteria criteria) {
@@ -39,7 +39,8 @@ public class DeptServiceImpl implements DeptService {
     @Override
     @Cacheable(key = "'id:' + #p0")
     public DeptDTO queryById(Long id) {
-        return groupService.queryById(id).toDept();
+        GroupDO group = groupService.queryById(id);
+        return group == null ? null : group.toDept();
     }
 
     @Override

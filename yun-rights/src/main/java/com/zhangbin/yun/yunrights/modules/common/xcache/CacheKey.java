@@ -5,27 +5,18 @@ package com.zhangbin.yun.yunrights.modules.common.xcache;
  */
 public interface CacheKey {
 
-    /**
-     * 数据
-     */
-    String DATE_USER = "data::user:";
-    /**
-     * 菜单
-     */
-    String MENU_USER = "menu::user:";
-    /**
-     * 组授权
-     */
-    String GROUP_AUTH = "group::auth:";
 
-    /**
-     * 组授权
-     */
-    String GROUP_MENU = "menu::group:";
     /**
      * 组信息
      */
     String GROUP_ID = "group::id:";
+    String GROUP_PID = "group::pid:";
+    String GROUP_BIND_MENU = "menu::group:";
+    /**
+     * 菜单信息
+     */
+    String MENU_ID = "menu::id:";
+    String MENU_PID = "menu::pid:";
 
     // cacheNames
     String USER = "user";
@@ -39,14 +30,11 @@ public interface CacheKey {
     String BIND_USER = HSet+ "+U:";
     String BIND_USER_HASH_KEY_PREFIX0 = "H:USER";
     String BIND_USER_HASH_KEY_PREFIX = BIND_USER_HASH_KEY_PREFIX0 + "::";
-    String USERNAME_HASH_KEY_PREFIX = "H:USERNAME::";
     /**
      * 用户
      */
     String UserId = "userId";
     String UserIdKey = UserId + ":";
-    String UserIdKey_BIND =  BIND_USER + UserIdKey;
     String USERNAME = "username";
     String UsernameKey = USERNAME + ":";
-    String UsernameKey_BIND = BIND_USER + UsernameKey;
 }

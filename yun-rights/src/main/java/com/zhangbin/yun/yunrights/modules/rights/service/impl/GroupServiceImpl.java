@@ -20,7 +20,9 @@ import com.zhangbin.yun.yunrights.modules.security.cache.UserInfoCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -66,7 +68,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Cacheable(key = "'id:' + #p0")
     public GroupDO queryById(Long id) {
-        return Optional.ofNullable(groupMapper.selectByPrimaryKey(id)).orElseGet(GroupDO::new);
+        return groupMapper.selectByPrimaryKey(id);
     }
 
     @Override
@@ -92,6 +94,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Cacheable(key = "'pid:' + #p0")
     public List<GroupDO> queryByPid(Long pid) {
         return SetUtils.toListWithSorted(groupMapper.selectByPid(pid), GroupDO::compareTo);
     }
@@ -110,17 +113,16 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {@CacheEvict(key = "'id:' + #p0.pid"), @CacheEvict(key = "'pid:' + #p0.pid")})
     public void create(GroupDO group) {
         // 校验组长信息，若不存在，将创建人设置为组长
         checkOperationalRights(group);
-        setGroupMasterForGroup(group);
+        setGroupMasterFor(group);
         groupMapper.insert(group);
         // 更新组编码
         groupMapper.updateGroupCodeById(generateGroupCode(group), group.getId());
         updateAssociatedMenu(group, true);
         updateAssociatedUser(group, true);
-        // 清理缓存
-        redisUtils.del("group::pid:" + (group.getPid()));
     }
 
     @Override
@@ -193,6 +195,16 @@ public class GroupServiceImpl implements GroupService {
         }
         return permissions.stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void clearCaches(Set<GroupDO> groups) {
+        if (CollectionUtil.isEmpty(groups)) return;
+        groups.forEach(e -> {
+            redisUtils.del(GROUP_ID + e.getId(),
+                    GROUP_PID + e.getOldPid(), GROUP_PID + e.getPid(),
+                    GROUP_BIND_MENU + e.getId() + true, GROUP_BIND_MENU + e.getId() + false);
+        });
     }
 
     private void checkOperationalRights(GroupDO group) {
@@ -289,40 +301,13 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
-    private void setGroupMasterForGroup(GroupDO group) {
+    private void setGroupMasterFor(GroupDO group) {
         String groupMaster = group.getGroupMaster();
         String currentUsername = SecurityUtils.getCurrentUsername();
         if (StringUtils.isBlank(groupMaster)) {
             group.setGroupMaster(currentUsername);
         } else {
             Assert.notNull(userMapper.selectByUsername(groupMaster), "指定的组长（" + groupMaster + "）不存在!");
-        }
-    }
-
-    /**
-     * 清理缓存
-     */
-    private void clearCaches(Set<GroupDO> groups) {
-        if (CollectionUtil.isEmpty(groups)) return;
-        Set<Long> groupIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
-        Set<UserDO> users = userMapper.selectByGroupIds(groupIds);
-        // 删除数据权限
-        groups.forEach(e -> {
-            Long groupId = e.getId();
-            redisUtils.del("group::id:" + groupId);
-            redisUtils.del("group::pid:" + e.getOldPid());
-            redisUtils.del("group::pid:" + e.getPid());
-            redisUtils.del(CacheKey.GROUP_ID + groupId);
-            redisUtils.del(CacheKey.GROUP_MENU + groupId + true);
-            redisUtils.del(CacheKey.GROUP_MENU + groupId + false);
-        });
-        if (CollectionUtil.isNotEmpty(users)) {
-            redisUtils.delByKeys("data::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
-            users.forEach(item -> UserInfoCache.cleanCacheFor(item.getUsername()));
-            Set<Long> userIds = users.stream().map(UserDO::getId).collect(Collectors.toSet());
-            redisUtils.delByKeys(CacheKey.DATE_USER, userIds);
-            redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
-            redisUtils.delByKeys(CacheKey.GROUP_AUTH, userIds);
         }
     }
 }

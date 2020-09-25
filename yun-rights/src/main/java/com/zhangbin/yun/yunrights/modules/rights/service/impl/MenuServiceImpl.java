@@ -21,7 +21,9 @@ import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -40,7 +42,6 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl implements MenuService {
 
     private final MenuMapper menuMapper;
-    private final UserMapper userMapper;
     private final GroupMenuMapper groupMenuMapper;
     private final GroupService groupService;
     private RedisUtils redisUtils;
@@ -118,12 +119,10 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(key = "'id:' + #p0.pid"), @CacheEvict(key = "'pid:' + #p0.pid")})
     public void create(MenuDO menu) {
         validate(menu, true);
         menuMapper.insert(menu);
-        if (Objects.nonNull(redisUtils)) {
-            redisUtils.del("menu::pid:" + (menu.getPid() == null ? 0 : menu.getPid()));
-        }
     }
 
     @Override
@@ -219,22 +218,17 @@ public class MenuServiceImpl implements MenuService {
      *
      * @param menuSet 不能为 empty或 null
      */
-    private void clearCaches(@NotEmpty Set<MenuDO> menuSet) {
-        if (Objects.nonNull(redisUtils)) {
+    private void clearCaches(Set<MenuDO> menuSet) {
+        if (Objects.nonNull(redisUtils) && CollectionUtil.isNotEmpty(menuSet)) {
             Set<Long> menuIds = menuSet.stream().map(MenuDO::getId).collect(Collectors.toSet());
-            List<UserDO> users = CollectionUtil.list(false, userMapper.selectByMenuIs(menuIds));
-            redisUtils.delByKeys("menu::user:", users.stream().map(UserDO::getId).collect(Collectors.toSet()));
-
             menuSet.forEach(menu -> {
-                redisUtils.del("menu::menuId:" + menu.getId());
-                redisUtils.del("menu::pid:" + (menu.getPid()));
-                redisUtils.del("menu::pid:" + (menu.getOldPid()));
+                redisUtils.del(MENU_ID + menu.getId(), MENU_PID + menu.getOldPid(), MENU_PID + menu.getPid());
                 menuIds.add(menu.getPid());  // 后续清除角色缓存时， 也要清除其父菜单对应的角色缓存
             });
-
-            // 清除 Role 缓存
             Set<GroupDO> groups = groupService.queryByMenuIds(menuIds);
-            redisUtils.delByKeys("role::menuId:", groups.stream().map(GroupDO::getId).collect(Collectors.toSet()));
+            if(CollectionUtil.isNotEmpty(groups)){
+                groupService.clearCaches(groups);
+            }
         }
     }
 }
