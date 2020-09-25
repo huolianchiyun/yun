@@ -66,12 +66,7 @@ public class DictController {
     @ApiOperation("根据条件查询分页")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<ResponseData> queryByCriteria(@Validated DictQueryCriteria criteria, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            for (ObjectError error : bindingResult.getAllErrors()) {
-                return error(error.getDefaultMessage());
-            }
-        }
+    public ResponseEntity<ResponseData> queryByCriteria(@Validated DictQueryCriteria criteria) {
         return success(dictService.queryAllByCriteria(criteria));
     }
 

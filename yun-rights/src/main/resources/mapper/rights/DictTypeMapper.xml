@@ -45,10 +45,8 @@
         order by dt_create_time
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO"
+            useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_dict_type (dt_id, dt_name, dt_code,
         dt_description, dt_sort, dt_creator,
         dt_updater, dt_create_time, dt_update_time

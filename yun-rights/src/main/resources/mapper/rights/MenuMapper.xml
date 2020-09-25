@@ -139,10 +139,7 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
         m_description, m_menu_sort, m_pid, m_permission, m_router_name, m_router_path, m_component, m_is_external_link,
         m_is_hidden,

@@ -59,10 +59,7 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_permission_rule (pr_rule_name, pr_group_codes, pr_from_table, pr_rule_exps, pr_description,
         pr_is_enabled, pr_creator,pr_updater, pr_create_time, pr_update_time)
         values (#{pr_rule_name,jdbcType=VARCHAR}, #{pr_group_codes,jdbcType=VARCHAR},

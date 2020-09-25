@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -59,8 +61,10 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void create(DictDO dict) {
         dictMapper.insert(dict);
+        dictMapper.updateByPrimaryKeySelective(new DictDO(dict.getId(), dict.getCode() + ":" + dict.getId()));
     }
 
     @Override
@@ -73,6 +77,7 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteByIds(Set<Long> ids) {
         for (Long id : ids) {
             Assert.isTrue(!dictMapper.selectStatusById(id), "该字典已经激活，不能删除！");

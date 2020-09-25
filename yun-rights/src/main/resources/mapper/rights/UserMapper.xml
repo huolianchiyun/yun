@@ -129,10 +129,7 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user (u_nickname, u_username,
         u_gender, u_pwd, u_phone, u_email, u_is_admin,
         u_dept_id, u_status, u_is_deleted, u_creator,

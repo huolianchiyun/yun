@@ -9,6 +9,7 @@ import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -24,6 +25,7 @@ import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsCo
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class DictDO extends BaseDO implements Comparable<DictDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -52,6 +54,16 @@ public class DictDO extends BaseDO implements Comparable<DictDO>, ExcelSupport, 
     @ApiModelProperty(required = true)
     @NotBlank(groups = {Create.class}, message = "code 不能为空！")
     private String code;
+
+    public DictDO(String code) {
+        this.code = code;
+    }
+
+    public DictDO(Long id, String code) {
+        this.id = id;
+        this.code = code;
+    }
+
 
     public void setCode(String code) {
         if (StringUtils.isNotBlank(code) && !code.endsWith(DICT_SUFFIX)) {

@@ -71,16 +71,15 @@
         order by dic_create_time
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO">
-        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO"
+            useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_dict (dic_id, dic_name, dic_type_code, dic_code, dic_sort, dic_description, dic_status,
-        dic_creator, dic_updater, dic_create_time, dic_update_time)
+                                dic_creator, dic_updater, dic_create_time, dic_update_time)
         values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR},
-        #{code,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, ${0},
-        #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP})
+                #{code,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
+                #{description,jdbcType=VARCHAR}, ${0},
+                #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
     <update id="updateByPrimaryKeySelective"
