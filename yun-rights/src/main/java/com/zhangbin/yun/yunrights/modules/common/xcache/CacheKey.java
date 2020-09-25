@@ -5,7 +5,6 @@ package com.zhangbin.yun.yunrights.modules.common.xcache;
  */
 public interface CacheKey {
 
-
     /**
      * 组信息
      */

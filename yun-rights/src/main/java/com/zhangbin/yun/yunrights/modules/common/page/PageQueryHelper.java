@@ -19,7 +19,7 @@ public final class PageQueryHelper {
      * @param criteria
      */
     private static void prepareCriteria(AbstractQueryPage criteria) {
-        if (criteria.getPageNum() < 0) criteria.setPageNum(0);
+        if (criteria.getPageNum() < 0) criteria.setPageNum(1);
         if (criteria.getPageSize() <= 0) criteria.setPageSize(10);
     }
 }

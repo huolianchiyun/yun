@@ -27,7 +27,5 @@ https://www.cnblogs.com/pluto4596/p/11005417.html
 
   
 works：
-参数关联验证！
 为前端提供配置url访问权限选项列表
-编辑菜单 清除权限缓存
 字典值引用添加type 因不同字典类型 字典值可能相同

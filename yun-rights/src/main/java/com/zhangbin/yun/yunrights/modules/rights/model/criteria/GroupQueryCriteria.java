@@ -1,6 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import com.zhangbin.yun.yunrights.modules.rights.model.validation.ValidateBlurry;
+import com.zhangbin.yun.yunrights.modules.rights.model.validation.ValidateDateRange;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import java.io.Serializable;
  * 組公共查询类
  */
 @Data
+@ValidateDateRange(message = "开始时间不能大于结束时间！")
 public class GroupQueryCriteria extends AbstractQueryPage implements Serializable {
 
     protected Long pid;

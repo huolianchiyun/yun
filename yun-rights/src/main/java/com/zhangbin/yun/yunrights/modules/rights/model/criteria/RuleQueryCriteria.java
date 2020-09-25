@@ -3,6 +3,8 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import com.zhangbin.yun.yunrights.modules.rights.model.validation.ValidateBlurry;
+import com.zhangbin.yun.yunrights.modules.rights.model.validation.ValidateDateRange;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.io.Serializable;
@@ -11,6 +13,8 @@ import java.io.Serializable;
  * 数据权限规则公共查询类
  */
 @Data
+@ValidateBlurry(message = "请选择搜索类型！")
+@ValidateDateRange(message = "开始时间不能大于结束时间！")
 public class RuleQueryCriteria extends AbstractQueryPage implements Serializable {
 
     private String blurry;
