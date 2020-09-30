@@ -13,12 +13,13 @@ import java.io.Serializable;
 @Setter
 public class ApiRightsQueryCriteria extends AbstractQueryPage implements Serializable {
 
+    private String group;
+
     private String blurry;
 
     private BlurryType blurryType;
 
     public enum BlurryType {
-        GROUP(1, "group"),
         TAG(2, "tag"),
         URL(3, "url"),
         DESCRIPTION(4, "description");

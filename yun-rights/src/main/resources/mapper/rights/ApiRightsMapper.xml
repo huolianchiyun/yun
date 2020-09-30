@@ -23,9 +23,6 @@
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
                 <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
-                    <if test='criteria.blurryType.isMatch("group")'>
-                        and api_group like concat('%', #{criteria.blurry}, '%')
-                    </if>
                     <if test='criteria.blurryType.isMatch("tag")'>
                         and api_tag like concat('%', #{criteria.blurry}, '%')
                     </if>
@@ -36,6 +33,9 @@
                         and api_url like concat('%', #{criteria.blurry}, '%')
                     </if>
                 </if>
+            </if>
+            <if test='criteria.group != null'>
+                and api_group = ${criteria.group}
             </if>
         </trim>
     </select>
