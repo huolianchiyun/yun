@@ -12,7 +12,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class ApiRightsQueryCriteria extends AbstractQueryPage implements Serializable {
-    private String group;
+
+    private String blurry;
 
     private BlurryType blurryType;
 

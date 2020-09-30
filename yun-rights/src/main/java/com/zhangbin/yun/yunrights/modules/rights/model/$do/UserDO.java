@@ -68,8 +68,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     /**
      * 是否是管理员，管理员全局唯一，即系统中只有一个
      */
-    @ApiModelProperty(hidden = true)
-    private boolean admin;
+    private Boolean admin;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(hidden = true)

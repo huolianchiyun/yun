@@ -2,10 +2,10 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
+import com.sun.el.parser.BooleanNode;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
-import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper;
@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(UserDO user) {
+        user.setAdmin(false);
         checkOperationalRights(user);
         Assert.isNull(userMapper.selectByUsername(user.getUsername()), "用户名已存在，请重新命名！");
         // 默认密码 123456
@@ -180,16 +181,20 @@ public class UserServiceImpl implements UserService {
     /**
      * 检查当前用户操作权限，权限不够，抛异常提示
      *
-     * @param operatingUser 将要被操作的用户
+     * @param editingUser 将要被操作的用户
      */
-    private void checkOperationalRights(UserDO operatingUser) {
+    private void checkOperationalRights(UserDO editingUser) {
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         Assert.notNull(currentUser, "修改的用户不存在！");
-        doCheckOperationalRights(operatingUser, currentUser);
+        if (currentUser.getAdmin() && currentUser.getId().equals(editingUser.getId())
+                && !Optional.ofNullable(editingUser.getAdmin()).orElse(Boolean.TRUE)) {
+            editingUser.setAdmin(true);
+        }
+        doCheckOperationalRights(editingUser, currentUser);
     }
 
     private void doCheckOperationalRights(UserDO operatingUser, UserDO currentUser) {
-        if (currentUser.isAdmin()) {
+        if (currentUser.getAdmin()) {
             return;
         }
         // 部门权限校验：检查操作人所在部门是否高于或等于被操作用户所属部门，满足yes，不满足no

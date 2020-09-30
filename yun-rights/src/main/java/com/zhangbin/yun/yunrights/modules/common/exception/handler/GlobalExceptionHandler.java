@@ -4,14 +4,10 @@ import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.exception.EntityExistException;
 import com.zhangbin.yun.yunrights.modules.common.exception.EntityNotFoundException;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
-
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.error;
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.requestError;
-
 import com.zhangbin.yun.yunrights.modules.common.utils.ThrowableUtil;
-import com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -19,9 +15,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import javax.validation.ConstraintViolationException;
-import java.util.Objects;
+import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.*;
 
 
 @Slf4j
@@ -107,6 +102,15 @@ public class GlobalExceptionHandler {
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return requestError(e.getLocalizedMessage());
+    }
+    /**
+     * 处理接口验证失败异常
+     */
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<ResponseData> handleAccessDeniedException(AccessDeniedException e) {
+        // 打印堆栈信息
+        log.error(ThrowableUtil.getStackTrace(e));
+        return noApiRights(e.getLocalizedMessage());
     }
 
     private static String getErrMessage(BindingResult bindingResult) {

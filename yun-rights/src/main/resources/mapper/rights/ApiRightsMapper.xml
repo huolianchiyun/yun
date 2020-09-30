@@ -19,7 +19,7 @@
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_sys_user
+        from t_sys_api_rights
         <trim prefix="where" prefixOverrides="and | or">
             <if test='criteria != null'>
                 <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>

@@ -189,7 +189,7 @@
     <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
         update t_sys_user
         set u_is_deleted = 1
-        where u_id = #{id,jdbcType=BIGINT}
+        where u_id = #{id,jdbcType=BIGINT} and u_username != 'admin'
     </update>
 
     <update id="deleteByIds" parameterType="java.util.Set">
@@ -199,5 +199,6 @@
         <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
             #{id,jdbcType=INTEGER}
         </foreach>
+        and u_username != 'admin'
     </update>
 </mapper>

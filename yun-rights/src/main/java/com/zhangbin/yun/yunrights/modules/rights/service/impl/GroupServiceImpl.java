@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
-import com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
@@ -16,7 +15,6 @@ import com.zhangbin.yun.yunrights.modules.rights.mapper.*;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.*;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
-import com.zhangbin.yun.yunrights.modules.security.cache.UserInfoCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -79,7 +77,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Cacheable(value = BIND_USER + GROUP, key = "'" + UserIdKey + "' + #p0")
     public List<GroupDO> queryByUserId(Long userId) {
-        return new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(userId)).orElseGet(HashSet::new));
+        return new ArrayList<>(Optional.ofNullable(groupMapper.selectGroupByUserId(userId)).orElseGet(HashSet::new));
     }
 
     @Override
@@ -185,13 +183,12 @@ public class GroupServiceImpl implements GroupService {
         if (user.isAdmin()) {  // 如果是管理员直接返回
             permissions.add("all");
         } else {
-            List<GroupDO> roles = new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(user.getId()))
+            List<GroupDO> groups = new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(user.getId()))
                     .orElseGet(HashSet::new));
-            permissions = roles.stream()
-                    .filter(group -> CollectionUtil.isNotEmpty(group.getMenus()))
-                    .flatMap(group -> group.getMenus().stream())
-                    .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
-                    .map(MenuDO::getPermission).collect(Collectors.toSet());
+            permissions = groups.stream()
+                    .filter(group -> StringUtils.isNoneBlank(group.getApiRights()))
+                    .flatMap(group -> Arrays.stream(group.getApiRights().contains(",") ? group.getApiRights().split(",") : new String[]{group.getApiRights()}))
+                    .collect(Collectors.toSet());
         }
         return permissions.stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -216,7 +213,7 @@ public class GroupServiceImpl implements GroupService {
         if (currentUser.isAdmin()) {  // 管理员直接放行
             return;
         }
-        Set<GroupDO> currentUserGroups = groupMapper.selectByUserId(currentUser.getId());
+        Set<GroupDO> currentUserGroups = groupMapper.selectGroupByUserId(currentUser.getId());
         String groupCode = group.getGroupCode();
         if (Objects.nonNull(group.getId())) {
             // 修改组

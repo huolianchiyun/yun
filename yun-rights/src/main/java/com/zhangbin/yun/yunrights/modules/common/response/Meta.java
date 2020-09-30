@@ -14,11 +14,14 @@ public final class Meta {
         return new Meta(Status.OK);
     }
 
-    public static Meta Error(String errMsg) {
+    public static Meta error(String errMsg) {
         return new Meta(Status.ServerError, errMsg);
     }
-    public static Meta RequestError(String errMsg) {
+    public static Meta requestError(String errMsg) {
         return new Meta(Status.RequestError, errMsg);
+    }
+    public static Meta noApiRights(String errMsg) {
+        return new Meta(Status.NoApiRights, errMsg);
     }
 
     private Meta(Status status) {
@@ -47,7 +50,7 @@ public final class Meta {
     }
 
     public enum Status {
-        OK(200), RequestError(400), ServerError(500);
+        OK(200), RequestError(400), NoApiRights(401), ServerError(500);
         @JsonValue
         private int code;
 

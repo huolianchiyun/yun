@@ -66,6 +66,11 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
     private String groupMaster;
 
     /**
+     * API 权限
+     */
+    private String apiRights;
+
+    /**
      * 非表字段
      */
     @JsonIgnore
@@ -105,6 +110,7 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         deptDTO.setDeptName(groupName);
         deptDTO.setDeptSort(groupSort);
         deptDTO.setDescription(description);
+        deptDTO.setApiRights(apiRights);
         deptDTO.setCreator(creator);
         deptDTO.setUpdater(updater);
         deptDTO.setCreateTime(createTime);
@@ -119,6 +125,8 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("组名称", groupName);
         map.put("组长", groupMaster);
+        map.put("API权限", groupMaster);
+        map.put("创建人", creator);
         map.put("创建日期", createTime);
         return map;
     }

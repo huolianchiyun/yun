@@ -8,7 +8,6 @@ import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import com.zhangbin.yun.yunrights.modules.rights.service.impl.ApiRightsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +32,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
 import springfox.documentation.spring.web.plugins.SpringIntegrationPluginNotPresentInClassPathCondition;
 import springfox.documentation.spring.web.scanners.ApiDocumentationScanner;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -116,7 +114,6 @@ public class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper {
             });
         }
     }
-
 
     @Override
     protected void bootstrapDocumentationPlugins() {

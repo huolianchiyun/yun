@@ -10,7 +10,6 @@
         <result column="m_description" jdbcType="VARCHAR" property="description"/>
         <result column="m_menu_sort" jdbcType="INTEGER" property="menuSort"/>
         <result column="m_pid" jdbcType="BIGINT" property="pid"/>
-        <result column="m_permission" jdbcType="VARCHAR" property="permission"/>
         <result column="m_router_name" jdbcType="VARCHAR" property="routerName"/>
         <result column="m_router_path" jdbcType="VARCHAR" property="routerPath"/>
         <result column="m_component" jdbcType="VARCHAR" property="component"/>
@@ -23,7 +22,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_permission, m_router_name, m_router_path, m_component,
+        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_component,
         m_is_external_link, m_is_hidden, m_creator, m_updater, m_create_time, m_update_time
     </sql>
 
@@ -76,7 +75,6 @@
                m_menu_title,
                m_menu_type,
                m_menu_sort,
-               m_permission,
                m_router_name,
                m_router_path,
                m_component,
@@ -100,7 +98,6 @@
                m_menu_title,
                m_menu_type,
                m_menu_sort,
-               m_permission,
                m_router_name,
                m_router_path,
                m_component,
@@ -141,14 +138,14 @@
 
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
-        m_description, m_menu_sort, m_pid, m_permission, m_router_name, m_router_path, m_component, m_is_external_link,
+        m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_component, m_is_external_link,
         m_is_hidden,
         m_creator, m_updater, m_create_time,
         m_update_time)
         values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR},
         #{menuType,jdbcType=INTEGER},
         #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
-        #{permission,jdbcType=VARCHAR}, #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR},
+        #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR},
         #{component,jdbcType=VARCHAR},
         #{externalLink,jdbcType=BIT},#{hidden,jdbcType=BIT},
         #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
@@ -178,9 +175,6 @@
             </if>
             <if test="pid != null">
                 m_pid = #{pid,jdbcType=BIGINT},
-            </if>
-            <if test="permission != null">
-                m_permission = #{permission,jdbcType=VARCHAR},
             </if>
             <if test="routerName != null">
                 m_router_name = #{routerName,jdbcType=VARCHAR},

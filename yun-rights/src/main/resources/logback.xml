@@ -13,7 +13,7 @@
     </appender>
 
     <!--普通日志输出到控制台-->
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="console" />
     </root>
 

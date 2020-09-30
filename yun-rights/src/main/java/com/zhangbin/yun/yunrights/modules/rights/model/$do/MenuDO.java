@@ -73,11 +73,6 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     private Long pid;
 
     /**
-     * Spring Security使用Spring EL表达式对URL或方法进行权限控制
-     */
-    private String permission;
-
-    /**
      * 菜单路由名称
      */
     private String routerName;
@@ -147,7 +142,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("菜单标题", menuTitle);
         map.put("菜单类型", menuType.getZhName());
-        map.put("权限标识", permission);
+        map.put("创建人", creator);
         map.put("创建日期", createTime);
         return map;
     }

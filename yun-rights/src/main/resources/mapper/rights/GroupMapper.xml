@@ -11,20 +11,23 @@
         <result column="g_description" jdbcType="VARCHAR" property="description"/>
         <result column="g_group_sort" jdbcType="INTEGER" property="groupSort"/>
         <result column="g_group_master" jdbcType="VARCHAR" property="groupMaster"/>
+        <result column="g_api_rights" jdbcType="VARCHAR" property="apiRights"/>
         <result column="g_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="g_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-    <resultMap id="CascadeResultMap0" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO" extends="BaseResultMap">
+    <resultMap id="CascadeResultMap0" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
+               extends="BaseResultMap">
         <collection column="g_id" property="menus"
                     javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO"
                     select="com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper.selectByGroupId">
         </collection>
     </resultMap>
 
-    <resultMap id="CascadeResultMap1" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO" extends="CascadeResultMap0">
+    <resultMap id="CascadeResultMap1" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
+               extends="CascadeResultMap0">
         <collection column="g_id" property="users"
                     javaType="java.util.HashSet" ofType="com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO"
                     select="com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper.selectByGroupId">
@@ -32,7 +35,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        g_id, g_pid, g_group_code, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_creator, g_updater, g_create_time, g_update_time
+        g_id, g_pid, g_group_code, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_api_rights, g_creator, g_updater, g_create_time, g_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="CascadeResultMap1">
@@ -69,12 +72,20 @@
         limit 1
     </select>
 
-    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="CascadeResultMap0">
+    <select id="selectGroupByUserId" parameterType="java.lang.Long" resultMap="CascadeResultMap0">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{userId}
         ) and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+    </select>
+
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="CascadeResultMap0">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group where g_id in (
+        select group_id from t_sys_user_group where user_id = #{userId}
+        )
     </select>
 
     <select id="selectByUserIdForUserMapper" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -131,7 +142,8 @@
                             and g_group_type = #{criteria.groupType,jdbcType=VARCHAR}
                         </when>
                         <otherwise>
-                            g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+                            g_group_type
+                            !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
                         </otherwise>
                     </choose>
                     <if test='criteria.groupName != null and criteria.groupName != ""'>
@@ -145,7 +157,8 @@
                     </if>
                 </when>
                 <otherwise>
-                    and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+                    and g_group_type
+                    !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
                 </otherwise>
             </choose>
         </trim>
@@ -154,11 +167,11 @@
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_group (g_pid, g_group_code, g_group_type,
-                                 g_group_name, g_description, g_group_sort, g_group_master, g_creator,
+                                 g_group_name, g_description, g_group_sort, g_group_master, g_api_rights, g_creator,
                                  g_updater, g_create_time, g_update_time)
         values (#{pid,jdbcType=BIGINT}, #{groupCode,jdbcType=INTEGER}, #{groupType,jdbcType=INTEGER},
-                #{groupName,jdbcType=VARCHAR},
-                #{description,jdbcType=VARCHAR}, #{groupSort,jdbcType=INTEGER}, #{groupMaster,jdbcType=VARCHAR},
+                #{groupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{groupSort,jdbcType=INTEGER},
+                #{groupMaster,jdbcType=VARCHAR}, #{apiRights,jdbcType=VARCHAR},
                 #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
                 #{updateTime,jdbcType=TIMESTAMP})
     </insert>
@@ -187,6 +200,9 @@
             </if>
             <if test="groupMaster != null">
                 g_group_master = #{groupMaster,jdbcType=VARCHAR},
+            </if>
+            <if test="apiRights != null">
+                g_api_rights = #{apiRights,jdbcType=VARCHAR},
             </if>
             <if test="updater != null">
                 g_updater = #{updater,jdbcType=VARCHAR},

@@ -97,7 +97,13 @@ generator:
 
 #是否开启 swagger-ui
 swagger:
-  enable: false
+  enable: true
+
+yun:
+  api:
+    rights:
+      update: false
+
 
 # IP 本地解析
 ip:
