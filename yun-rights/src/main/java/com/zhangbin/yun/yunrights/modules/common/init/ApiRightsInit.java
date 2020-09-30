@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import springfox.documentation.PathProvider;
@@ -32,10 +34,6 @@ import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
 import springfox.documentation.spring.web.plugins.SpringIntegrationPluginNotPresentInClassPathCondition;
 import springfox.documentation.spring.web.scanners.ApiDocumentationScanner;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -44,7 +42,6 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.toList;
 import static springfox.documentation.builders.BuilderDefaults.nullToEmptyList;
 import static springfox.documentation.builders.BuilderDefaults.nullToEmptyMap;
@@ -54,7 +51,7 @@ import static springfox.documentation.spi.service.contexts.Orderings.pluginOrder
 @Configuration
 @ConditionalOnProperty(prefix = "yun.api.rights", name = "update", havingValue = "true")
 @Conditional(SpringIntegrationPluginNotPresentInClassPathCondition.class)
-public class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper  {
+public class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper {
 
     @Autowired
     public ApiRightsInit(
@@ -78,7 +75,7 @@ public class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper  {
         RequestMappingHandlerMapping handlerMapping = null;
         if (CollectionUtil.isNotEmpty(handlerMappings)) {
             for (RequestMappingInfoHandlerMapping mapping : handlerMappings) {
-                if (RequestMappingHandlerMapping.class.isAssignableFrom(mapping.getClass())) {
+                if (RequestMappingHandlerMapping.class == mapping.getClass()) {
                     handlerMapping = (RequestMappingHandlerMapping) mapping;
                     break;
                 }
@@ -137,20 +134,26 @@ public class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper  {
             return;
         }
         List<Object[]> batchArgs = apiRights.stream()
-                .map(e -> new Object[]{e.getGroup(), e.getTag(), e.getUrl(), e.getAuthorization(), e.getDescription()}).collect(toList());
-        Connection connection = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection();
+                .map(e -> new Object[]{e.getGroup(), e.getTag(), e.getUrl(), e.getAuthorization(), e.getDescription(), e.getCreateTime()}).collect(toList());
+
+        TransactionSynchronizationManager.initSynchronization();
+        Connection connection = DataSourceUtils.getConnection(Objects.requireNonNull(jdbcTemplate.getDataSource()));
         connection.setAutoCommit(false);
         try {
             jdbcTemplate.update("delete from t_sys_api_rights");
-            jdbcTemplate.batchUpdate("insert t_sys_api_rights (api_group, api_tag, api_url, api_authorization, api_description) values (?, ?, ?, ?, ?)", batchArgs);
-//            connection.commit();
+            jdbcTemplate.batchUpdate("insert into t_sys_api_rights (api_group, api_tag, api_url, api_authorization, api_description, api_create_time) values (?, ?, ?, ?, ?, ?)", batchArgs);
+            connection.commit();
             log.info("*** update API access rights to database successfully ***");
         } catch (Exception e) {
-            log.error("*** update API access rights into database failed ***");
             connection.rollback();
+            log.error("*** update API access rights into database failed ***");
             e.printStackTrace();
         } finally {
-            connection.setAutoCommit(true);
+            try {
+                TransactionSynchronizationManager.clearSynchronization();
+            } finally {
+                connection.setAutoCommit(true);
+            }
         }
     }
 
@@ -167,6 +170,7 @@ public class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper  {
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             String group = matcher.group(1);
+            group = group.replaceAll("'\\s*,\\s*'", ",");
             return StringUtils.hasText(group) ? group : "";
         }
         return "";
