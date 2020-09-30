@@ -28,7 +28,6 @@ https://www.cnblogs.com/pluto4596/p/11005417.html
   
 works：
 
-为前端提供配置url访问权限选项列表: 仿swagger 动态搜集api，提供天台，可以永久存储redis中
-url_rights应该和组编订
+1. alarm push system
 
 

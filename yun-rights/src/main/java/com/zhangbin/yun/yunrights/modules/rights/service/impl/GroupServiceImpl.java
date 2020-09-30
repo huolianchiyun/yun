@@ -180,7 +180,7 @@ public class GroupServiceImpl implements GroupService {
     @Cacheable(value = BIND_USER + GROUP, key = "'auth:" + UserIdKey + "' + #user.id")
     public List<GrantedAuthority> getGrantedAuthorities(UserDO user) {
         Set<String> permissions = new HashSet<>(1);
-        if (user.isAdmin()) {  // 如果是管理员直接返回
+        if (user.getAdmin()) {  // 如果是管理员直接返回
             permissions.add("all");
         } else {
             List<GroupDO> groups = new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(user.getId()))
@@ -210,7 +210,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private void checkOperationalRights(GroupDO group, UserDO currentUser) {
-        if (currentUser.isAdmin()) {  // 管理员直接放行
+        if (currentUser.getAdmin()) {  // 管理员直接放行
             return;
         }
         Set<GroupDO> currentUserGroups = groupMapper.selectGroupByUserId(currentUser.getId());
