@@ -1,6 +1,5 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteria;
 import javax.servlet.http.HttpServletResponse;
@@ -8,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public interface PermissionRuleService {
+public interface PermissionRuleService extends PageService<RuleQueryCriteria, PermissionRuleDO>{
 
     /**
      * 根据ID查询
@@ -17,14 +16,6 @@ public interface PermissionRuleService {
      * @return /
      */
     PermissionRuleDO queryById(Long id);
-
-    /**
-     * 分页查询满足条件的数据
-     *
-     * @param criteria 条件
-     * @return /
-     */
-    PageInfo<List<PermissionRuleDO>> queryAllByCriteria(RuleQueryCriteria criteria);
 
     /**
      * 不分页查询满足条件的数据

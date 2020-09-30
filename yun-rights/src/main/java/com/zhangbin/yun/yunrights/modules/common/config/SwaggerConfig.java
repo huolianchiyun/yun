@@ -46,7 +46,7 @@ public class SwaggerConfig {
     /**
      * 业务系统组名
      */
-    @Value("${swagger.groupName:'业务接口: 接口文档V1.0'}")
+    @Value("${swagger.groupName:业务接口: 接口文档V1.0}")
     private String groupName;
 
     /**
@@ -63,7 +63,7 @@ public class SwaggerConfig {
 
     @Bean
     public Docket yunrights_api() {
-        return getDocket("/yun/**", "系统权限: yun-rights-接口文档V1.0", "业务接口",
+        return getDocket("/yun/**", "系统权限: yun-rights-接口文档V1.0", "权限接口",
                 "一个简单且易上手的 Spring boot 权限框架", "1.0", enable);
     }
 

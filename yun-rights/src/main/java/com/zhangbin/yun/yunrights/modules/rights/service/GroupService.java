@@ -1,18 +1,16 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
 import org.springframework.security.core.GrantedAuthority;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public interface GroupService {
+public interface GroupService extends PageService<GroupQueryCriteria, GroupDO>{
 
     /**
      * 根据ID查询
@@ -29,13 +27,6 @@ public interface GroupService {
      * @return {@link List<GroupDO>}
      */
     List<GroupDO> queryByIds(Set<Long> ids);
-
-    /**
-     * 分页查询满足条件的组
-     *
-     * @return {@link PageInfo<List<GroupDO>> }
-     */
-    PageInfo<List<GroupDO>> queryAllByCriteria(GroupQueryCriteria criteria);
 
     /**
      * 不分页查询满足条件的数据

@@ -4,6 +4,7 @@ package com.zhangbin.yun.yunrights.modules.common.xcache;
  * 关于缓存的Key集合
  */
 public interface CacheKey {
+    String API_RIGHTS = "api-rights";
 
     /**
      * 组信息

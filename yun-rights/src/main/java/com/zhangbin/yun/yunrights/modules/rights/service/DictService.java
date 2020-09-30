@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public interface DictService {
+public interface DictService extends PageService<DictQueryCriteria, DictDO>{
 
     /**
      * 根据ID查询
@@ -26,14 +26,6 @@ public interface DictService {
      * @return 子类类型集合
      */
     List<NameValue> queryByDictType(String typeCode);
-
-    /**
-     * 分页查询满足条件的数据
-     *
-     * @param criteria 条件
-     * @return /
-     */
-    PageInfo<List<DictDO>> queryAllByCriteria(DictQueryCriteria criteria);
 
     /**
      * 不分页查询满足条件的数据

@@ -1,17 +1,15 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserEmailVO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserPwdVO;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public interface UserService {
+public interface UserService extends PageService<UserQueryCriteria, UserDO> {
 
     /**
      * 根据ID查询
@@ -36,14 +34,6 @@ public interface UserService {
      * @return /
      */
     UserDO queryByUsername(String username);
-
-    /**
-     * 分页查询满足条件的数据
-     *
-     * @param criteria 条件
-     * @return /
-     */
-    PageInfo<List<UserDO>> queryAllByCriteria(UserQueryCriteria criteria);
 
     /**
      * 不分页查询满足条件的数据

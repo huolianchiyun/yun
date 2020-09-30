@@ -97,7 +97,7 @@ generator:
 
 #是否开启 swagger-ui
 swagger:
-  enable: true
+  enable: false
 
 # IP 本地解析
 ip:

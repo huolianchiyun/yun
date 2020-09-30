@@ -88,11 +88,16 @@
 <!--            <generatedKey column="dic_id" sqlStatement="SELECT LAST_INSERT_ID()"/>-->
 <!--            <columnRenamingRule searchString="dic_" replaceString=""/>-->
 <!--        </table>-->
-        <table tableName="t_sys_dict_type" domainObjectName="DictTypeDO" enableCountByExample="false"
+<!--        <table tableName="t_sys_dict_type" domainObjectName="DictTypeDO" enableCountByExample="false"-->
+<!--               enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">-->
+<!--            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO"/>-->
+<!--            <generatedKey column="dt_id" sqlStatement="SELECT LAST_INSERT_ID()"/>-->
+<!--            <columnRenamingRule searchString="dt_" replaceString=""/>-->
+<!--        </table>-->
+        <table tableName="t_sys_api_rights" domainObjectName="ApiRightsDO" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
-            <property name="rootClass" value="com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO"/>
-            <generatedKey column="dt_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
-            <columnRenamingRule searchString="dt_" replaceString=""/>
+            <generatedKey column="api_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
+            <columnRenamingRule searchString="api_" replaceString=""/>
         </table>
     </context>
 </generatorConfiguration>

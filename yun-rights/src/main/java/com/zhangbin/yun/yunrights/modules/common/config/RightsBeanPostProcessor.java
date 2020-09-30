@@ -12,7 +12,6 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 
@@ -40,6 +39,7 @@ public class RightsBeanPostProcessor implements BeanPostProcessor, ApplicationLi
         RuleManager ruleManager = event.getApplicationContext().getBean(RuleManager.class);
         setClassStaticField(StatementHandlerUtil.class, "ruleManager", ruleManager);
         setClassStaticField(DataRightsHelper.class, "ruleManager", ruleManager);
+
         UserService userService = event.getApplicationContext().getBean(UserService.class);
         setClassStaticField(RedisCache.class, "userService", userService);
     }

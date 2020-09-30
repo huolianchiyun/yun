@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper;
@@ -207,4 +208,5 @@ public class UserServiceImpl implements UserService {
             usernameSet.forEach(UserInfoCache::cleanCacheFor);
         }
     }
+
 }
