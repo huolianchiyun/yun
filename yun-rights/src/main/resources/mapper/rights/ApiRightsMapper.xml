@@ -35,7 +35,7 @@
                 </if>
             </if>
             <if test='criteria.group != null'>
-                and api_group = ${criteria.group}
+                and api_group = #{criteria.group,jdbcType=VARCHAR}
             </if>
         </trim>
     </select>
