@@ -34,8 +34,8 @@ public class MvcConfigure implements WebMvcConfigurer {
                         if (source.length() == 0) {
                             return null;
                         }
-                        if (source.endsWith(DICT_SUFFIX)) {
-                            source = source.substring(0, source.lastIndexOf(DICT_SUFFIX));
+                        if (source.contains(DICT_SUFFIX)) {
+                            source = source.substring(0, source.indexOf(DICT_SUFFIX));
                         }
                         String finalSource = source;
                         Optional<E> first = Arrays.stream(enumType.getEnumConstants()).filter(e -> e.toString().equals(finalSource)).findFirst();

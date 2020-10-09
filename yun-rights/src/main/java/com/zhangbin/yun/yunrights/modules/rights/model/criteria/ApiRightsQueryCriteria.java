@@ -3,6 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import com.zhangbin.yun.yunrights.modules.rights.model.validation.ValidateBlurry;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
+@ValidateBlurry(message = "请选择搜索类型！")
 public class ApiRightsQueryCriteria extends AbstractQueryPage implements Serializable {
 
     private String group;

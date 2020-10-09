@@ -3,9 +3,6 @@ package com.zhangbin.yun.yunrights.modules.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * @website https://el-admin.vip
- */
 @Getter
 @AllArgsConstructor
 public enum RequestMethodEnum {

@@ -13,6 +13,7 @@ import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -114,12 +115,11 @@ public class OnlineUserService {
     public void logout(String token) {
         String key = properties.getOnlineKey() + token;
         OnlineUser onlineUser = (OnlineUser) redisUtils.get(key);
-        if (StringUtils.isNotEmpty(onlineUser.getUserName())) {
+        if (onlineUser != null && StringUtils.isNotEmpty(onlineUser.getUserName())) {
             UserInfoCache.cleanCacheFor(onlineUser.getUserName());
             redisUtils.del(BIND_USER_HASH_KEY_PREFIX + onlineUser.getUserName());
         }
         redisUtils.del(key);
-
     }
 
     /**
