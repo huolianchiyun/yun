@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.validation;
 
+import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -24,6 +25,6 @@ public class BlurryValidator implements ConstraintValidator<ValidateBlurry, Obje
         BeanWrapper beanWrapper = new BeanWrapperImpl(value);
         Object blurry = beanWrapper.getPropertyValue(this.blurry);
         Object blurryType = beanWrapper.getPropertyValue(this.blurryType);
-        return blurry == null || blurryType != null;
+        return !StringUtils.isNotBlank((CharSequence) blurry)  || blurryType != null;
     }
 }
