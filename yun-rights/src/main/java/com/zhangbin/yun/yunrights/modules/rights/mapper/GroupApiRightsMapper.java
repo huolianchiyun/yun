@@ -15,7 +15,7 @@ public interface GroupApiRightsMapper {
     int batchInsert(@Param("groupMenus") Set<GroupApiRightsDO> groupMenus);
 
     @NotPermission
-    int deleteByApiRightsIds(@Param("menuIds") Set<Long> menuIds);
+    int deleteByApiUrls(@Param("apiUrls") Set<String> apiUrls);
 
     @NotPermission
     int deleteByGroupIds(@Param("groupIds")Set<Long> groupIds);

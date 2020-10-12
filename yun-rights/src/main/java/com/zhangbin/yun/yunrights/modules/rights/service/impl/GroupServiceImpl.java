@@ -292,9 +292,9 @@ public class GroupServiceImpl implements GroupService {
      * @param isCreate 是否是创建组
      */
     private void updateAssociatedApiRights(GroupDO group, boolean isCreate) {
-        if (CollectionUtil.isNotEmpty(group.getApiRightsIds())) {
-            Set<GroupApiRightsDO> groupApiRightsSet = group.getApiRightsIds().stream()
-                    .map(apiRightsId -> new GroupApiRightsDO(group.getId(), apiRightsId))
+        if (CollectionUtil.isNotEmpty(group.getApiUrls())) {
+            Set<GroupApiRightsDO> groupApiRightsSet = group.getApiUrls().stream()
+                    .map(apiUrl -> new GroupApiRightsDO(group.getId(), apiUrl))
                     .collect(Collectors.toSet());
             if (!isCreate) {
                 groupApiRightsMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));

@@ -45,6 +45,6 @@
         from t_sys_user u
                  inner join t_sys_user_group ug on u.u_id = ug.user_id and u.u_id = #{userId,jdbcType=BIGINT}
                  join t_sys_group_api_rights gapi on ug.group_id = gapi.group_id
-                 join t_sys_api_rights api on gapi.api_rights_id = api.api_id;
+                 join t_sys_api_rights api on gapi.api_url = api.api_url;
     </select>
 </mapper>

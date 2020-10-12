@@ -4,28 +4,28 @@
 
   <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupApiRightsDO">
     <result column="group_id" jdbcType="BIGINT" property="groupId" />
-    <result column="api_rights_id" jdbcType="BIGINT" property="apiRightsId" />
+    <result column="api_url" jdbcType="VARCHAR" property="apiUrl" />
   </resultMap>
 
   <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupApiRightsDO">
-    insert into t_sys_group_api_rights (group_id, api_rights_id)
-    values (#{groupId,jdbcType=BIGINT}, #{apiRightsId,jdbcType=BIGINT})
+    insert into t_sys_group_api_rights (group_id, api_url)
+    values (#{groupId,jdbcType=BIGINT}, #{apiUrl,jdbcType=VARCHAR})
   </insert>
 
   <insert id="batchInsert" parameterType="java.util.HashSet">
-    insert into t_sys_group_api_rights (group_id, api_rights_id)
+    insert into t_sys_group_api_rights (group_id, api_url)
     values
     <foreach collection="groupMenus" item="groupMenu" separator=",">
-      (#{groupId,jdbcType=BIGINT}, #{apiRightsId,jdbcType=BIGINT})
+      (#{groupId,jdbcType=BIGINT}, #{apiUrl,jdbcType=VARCHAR})
     </foreach>
   </insert>
 
-  <delete id="deleteByApiRightsIds" parameterType="java.util.HashSet">
+  <delete id="deleteByApiUrls" parameterType="java.util.HashSet">
     delete
     from t_sys_group_api_rights
-    where api_rights_id in
-    <foreach collection="apiRightsIds" item="apiRightsId" open="(" separator=", " close=")">
-      #{apiRightsId, jdbcType=INTEGER}
+    where api_url in
+    <foreach collection="apiUrls" item="apiUrl" open="(" separator=", " close=")">
+      #{apiUrl, jdbcType=VARCHAR}
     </foreach>
   </delete>
 

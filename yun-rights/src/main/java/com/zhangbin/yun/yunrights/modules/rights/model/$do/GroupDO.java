@@ -91,7 +91,7 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
     /**
      * 非表字段
      */
-    private List<Long> apiRightsIds;
+    private List<String> apiUrls;
 
     @Transient
     public Long getOldPid() {
@@ -113,7 +113,7 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         deptDTO.setDeptName(groupName);
         deptDTO.setDeptSort(groupSort);
         deptDTO.setDescription(description);
-        deptDTO.setApiRightsIds(apiRightsIds);
+        deptDTO.setApiUrls(apiUrls);
         deptDTO.setCreator(creator);
         deptDTO.setUpdater(updater);
         deptDTO.setCreateTime(createTime);

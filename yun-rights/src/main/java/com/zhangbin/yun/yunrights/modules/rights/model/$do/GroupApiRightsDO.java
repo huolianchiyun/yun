@@ -24,10 +24,10 @@ public class GroupApiRightsDO implements Serializable {
     /**
      * ApiRightsId
      */
-    private Long apiRightsId;
+    private String apiUrl;
 
-    public GroupApiRightsDO(Long groupId, Long apiRightsId) {
+    public GroupApiRightsDO(Long groupId, String apiUrl) {
         this.groupId = groupId;
-        this.apiRightsId = apiRightsId;
+        this.apiUrl = apiUrl;
     }
 }
