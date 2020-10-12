@@ -11,7 +11,6 @@
         <result column="g_description" jdbcType="VARCHAR" property="description"/>
         <result column="g_group_sort" jdbcType="INTEGER" property="groupSort"/>
         <result column="g_group_master" jdbcType="VARCHAR" property="groupMaster"/>
-        <result column="g_api_rights" jdbcType="VARCHAR" property="apiRights"/>
         <result column="g_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="g_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -35,7 +34,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        g_id, g_pid, g_group_code, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_api_rights, g_creator, g_updater, g_create_time, g_update_time
+        g_id, g_pid, g_group_code, g_group_type, g_group_name, g_description, g_group_sort, g_group_master, g_creator, g_updater, g_create_time, g_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="CascadeResultMap1">
@@ -96,7 +95,7 @@
         ) and g_group_type !='${@com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
     </select>
 
-    <select id="selectByUsername" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="selectGroupCodesByUsername" parameterType="java.lang.String" resultType="java.lang.String">
         select g_group_code
         from t_sys_group
         where g_id in (
@@ -167,13 +166,12 @@
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_group (g_pid, g_group_code, g_group_type,
-                                 g_group_name, g_description, g_group_sort, g_group_master, g_api_rights, g_creator,
+                                 g_group_name, g_description, g_group_sort, g_group_master, g_creator,
                                  g_updater, g_create_time, g_update_time)
         values (#{pid,jdbcType=BIGINT}, #{groupCode,jdbcType=INTEGER}, #{groupType,jdbcType=INTEGER},
                 #{groupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{groupSort,jdbcType=INTEGER},
-                #{groupMaster,jdbcType=VARCHAR}, #{apiRights,jdbcType=VARCHAR},
-                #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-                #{updateTime,jdbcType=TIMESTAMP})
+                #{groupMaster,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
     <update id="updateByPrimaryKeySelective"
@@ -200,9 +198,6 @@
             </if>
             <if test="groupMaster != null">
                 g_group_master = #{groupMaster,jdbcType=VARCHAR},
-            </if>
-            <if test="apiRights != null">
-                g_api_rights = #{apiRights,jdbcType=VARCHAR},
             </if>
             <if test="updater != null">
                 g_updater = #{updater,jdbcType=VARCHAR},

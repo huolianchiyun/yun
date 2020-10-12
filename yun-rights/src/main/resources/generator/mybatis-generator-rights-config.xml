@@ -94,10 +94,13 @@
 <!--            <generatedKey column="dt_id" sqlStatement="SELECT LAST_INSERT_ID()"/>-->
 <!--            <columnRenamingRule searchString="dt_" replaceString=""/>-->
 <!--        </table>-->
-        <table tableName="t_sys_api_rights" domainObjectName="ApiRightsDO" enableCountByExample="false"
+<!--        <table tableName="t_sys_api_rights" domainObjectName="ApiRightsDO" enableCountByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
             <generatedKey column="api_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
             <columnRenamingRule searchString="api_" replaceString=""/>
-        </table>
+        </table>-->
+<!--        <table tableName="t_sys_group_api_rights" domainObjectName="GroupApiRightsDO" enableCountByExample="false"-->
+<!--               enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>

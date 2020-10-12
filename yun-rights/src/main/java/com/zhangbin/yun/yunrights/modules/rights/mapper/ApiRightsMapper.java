@@ -11,4 +11,6 @@ import java.util.Set;
 
 @Mapper
 public interface ApiRightsMapper extends PageMapper<ApiRightsDO> {
+
+    Set<String> selectAuthorizationsByUserId(Long userId);
 }

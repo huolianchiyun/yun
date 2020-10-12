@@ -66,11 +66,6 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
     private String groupMaster;
 
     /**
-     * API 权限
-     */
-    private String apiRights;
-
-    /**
      * 非表字段
      */
     @JsonIgnore
@@ -87,13 +82,21 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
      */
     protected Set<MenuDO> menus;
 
+    /**
+     * 非表字段
+     */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<GroupDO> children;
+
+    /**
+     * 非表字段
+     */
+    private List<Long> apiRightsIds;
+
     @Transient
     public Long getOldPid() {
         return oldPid;
     }
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<GroupDO> children;
 
     public Long getPid() {
         if (null == pid) {
@@ -110,7 +113,7 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         deptDTO.setDeptName(groupName);
         deptDTO.setDeptSort(groupSort);
         deptDTO.setDescription(description);
-        deptDTO.setApiRights(apiRights);
+        deptDTO.setApiRightsIds(apiRightsIds);
         deptDTO.setCreator(creator);
         deptDTO.setUpdater(updater);
         deptDTO.setCreateTime(createTime);

@@ -50,7 +50,7 @@ public interface GroupMapper extends PageMapper<GroupDO>{
      * @return {@link Set<String>}
      */
     @NotPermission
-    Set<String> selectByUsername(String username);
+    Set<String> selectGroupCodesByUsername(String username);
 
     Set<GroupDO> selectByPid(Long Pid);
 

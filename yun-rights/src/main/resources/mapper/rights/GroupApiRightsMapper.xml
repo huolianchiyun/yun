@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangbin.yun.yunrights.modules.rights.mapper.GroupApiRightsMapper">
+
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupApiRightsDO">
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="api_rights_id" jdbcType="BIGINT" property="apiRightsId" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupApiRightsDO">
+    insert into t_sys_group_api_rights (group_id, api_rights_id)
+    values (#{groupId,jdbcType=BIGINT}, #{apiRightsId,jdbcType=BIGINT})
+  </insert>
+
+  <insert id="batchInsert" parameterType="java.util.HashSet">
+    insert into t_sys_group_api_rights (group_id, api_rights_id)
+    values
+    <foreach collection="groupMenus" item="groupMenu" separator=",">
+      (#{groupId,jdbcType=BIGINT}, #{apiRightsId,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+
+  <delete id="deleteByApiRightsIds" parameterType="java.util.HashSet">
+    delete
+    from t_sys_group_api_rights
+    where api_rights_id in
+    <foreach collection="apiRightsIds" item="apiRightsId" open="(" separator=", " close=")">
+      #{apiRightsId, jdbcType=INTEGER}
+    </foreach>
+  </delete>
+
+  <delete id="deleteByGroupIds" parameterType="java.util.HashSet">
+    delete
+    from t_sys_group_api_rights
+    where group_id in
+    <foreach collection="groupIds" item="groupId" open="(" separator=", " close=")">
+      #{groupId, jdbcType=INTEGER}
+    </foreach>
+  </delete>
+</mapper>

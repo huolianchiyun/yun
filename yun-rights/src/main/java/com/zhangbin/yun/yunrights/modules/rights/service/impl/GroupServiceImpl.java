@@ -41,6 +41,8 @@ public class GroupServiceImpl implements GroupService {
     private final UserMapper userMapper;
     private final UserGroupMapper userGroupMapper;
     private final GroupMenuMapper groupMenuMapper;
+    private final GroupApiRightsMapper groupApiRightsMapper;
+    private final ApiRightsMapper apiRightsMapper;
     private RedisUtils redisUtils;
 
     @Autowired(required = false)
@@ -82,8 +84,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Cacheable(value = BIND_USER + GROUP, key = "'" + UsernameKey + "' + #p0")
-    public Set<String> queryGroupCodeByUsername(String username) {
-        return Optional.ofNullable(groupMapper.selectByUsername(username)).orElseGet(HashSet::new);
+    public Set<String> queryGroupCodesByUsername(String username) {
+        return Optional.ofNullable(groupMapper.selectGroupCodesByUsername(username)).orElseGet(HashSet::new);
     }
 
     @Override
@@ -121,6 +123,7 @@ public class GroupServiceImpl implements GroupService {
         groupMapper.updateGroupCodeById(generateGroupCode(group), group.getId());
         updateAssociatedMenu(group, true);
         updateAssociatedUser(group, true);
+        updateAssociatedApiRights(group, true);
     }
 
     @Override
@@ -137,6 +140,7 @@ public class GroupServiceImpl implements GroupService {
         groupMapper.updateByPrimaryKeySelective(updatingGroup);
         updateAssociatedMenu(updatingGroup, false);
         updateAssociatedUser(updatingGroup, false);
+        updateAssociatedApiRights(updatingGroup, false);
         // 清理缓存
         clearCaches(CollectionUtil.newHashSet(updatingGroup));
     }
@@ -183,11 +187,9 @@ public class GroupServiceImpl implements GroupService {
         if (user.getAdmin()) {  // 如果是管理员直接返回
             permissions.add("all");
         } else {
-            List<GroupDO> groups = new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(user.getId()))
-                    .orElseGet(HashSet::new));
-            permissions = groups.stream()
-                    .filter(group -> StringUtils.isNoneBlank(group.getApiRights()))
-                    .flatMap(group -> Arrays.stream(group.getApiRights().contains(",") ? group.getApiRights().split(",") : new String[]{group.getApiRights()}))
+            permissions = new ArrayList<>(Optional.ofNullable(apiRightsMapper.selectAuthorizationsByUserId(user.getId())).orElseGet(HashSet::new)).stream()
+                    .filter(StringUtils::isNotEmpty)
+                    .flatMap(authorization -> Arrays.stream(authorization.contains(",") ? authorization.split(",") : new String[]{authorization}))
                     .collect(Collectors.toSet());
         }
         return permissions.stream().map(SimpleGrantedAuthority::new)
@@ -280,6 +282,24 @@ public class GroupServiceImpl implements GroupService {
                 userGroupMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
             }
             userGroupMapper.batchInsert(userGroups);
+        }
+    }
+
+    /**
+     * 修改组关联的API访问权限
+     *
+     * @param group    创建或修改的组
+     * @param isCreate 是否是创建组
+     */
+    private void updateAssociatedApiRights(GroupDO group, boolean isCreate) {
+        if (CollectionUtil.isNotEmpty(group.getApiRightsIds())) {
+            Set<GroupApiRightsDO> groupApiRightsSet = group.getApiRightsIds().stream()
+                    .map(apiRightsId -> new GroupApiRightsDO(group.getId(), apiRightsId))
+                    .collect(Collectors.toSet());
+            if (!isCreate) {
+                groupApiRightsMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
+            }
+            groupApiRightsMapper.batchInsert(groupApiRightsSet);
         }
     }
 

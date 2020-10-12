@@ -53,7 +53,7 @@ public interface GroupService extends PageService<GroupQueryCriteria, GroupDO>{
      * @param username 用户ID
      * @return {@link List<String>}
      */
-    Set<String> queryGroupCodeByUsername(String username);
+    Set<String> queryGroupCodesByUsername(String username);
 
     /**
      * 根据菜单集合查询
