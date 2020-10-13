@@ -71,6 +71,7 @@ public class ApiRightsConfig {
         private final  List<Docket> dockets;
         private final  List<RequestMappingInfoHandlerMapping> handlerMappings;
         private final  JdbcTemplate jdbcTemplate;
+
         @Autowired
         public ApiRightsInit(
                 DocumentationPluginsManager documentationPluginsManager,
@@ -105,13 +106,13 @@ public class ApiRightsConfig {
         public void start() {
             if (initialized.compareAndSet(false, true)) {
                 init();
+                getScanned().clear();
             }
         }
 
         @Override
         public void stop() {
             initialized.getAndSet(false);
-            getScanned().clear();
         }
 
         @Override
