@@ -3,17 +3,16 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.*;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTP;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTPS;
-
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.*;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
+import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuApiRightsMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMenuMapper;
-import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
+import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuApiRightsDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuVO;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
@@ -29,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,9 +38,10 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = MENU)
 public class MenuServiceImpl implements MenuService {
 
+    private final GroupService groupService;
     private final MenuMapper menuMapper;
     private final GroupMenuMapper groupMenuMapper;
-    private final GroupService groupService;
+    private final MenuApiRightsMapper menuApiRightsMapper;
     private RedisUtils redisUtils;
 
     @Autowired(required = false)
@@ -123,6 +121,7 @@ public class MenuServiceImpl implements MenuService {
     public void create(MenuDO menu) {
         validate(menu, true);
         menuMapper.insert(menu);
+        updateAssociatedApiRights(menu, true);
     }
 
     @Override
@@ -134,6 +133,7 @@ public class MenuServiceImpl implements MenuService {
         Assert.notNull(menuDb, "修改的菜单不存在！");
         updatingMenu.setOldPid(menuDb.getPid());
         menuMapper.updateByPrimaryKeySelective(updatingMenu);
+        updateAssociatedApiRights(updatingMenu, false);
         // 清理缓存
         clearCaches(CollectionUtil.newHashSet(updatingMenu));
     }
@@ -147,6 +147,8 @@ public class MenuServiceImpl implements MenuService {
         menuMapper.batchDeleteByIds(deletingMenuIds);
         // 将要删除的菜单与角色解绑
         groupMenuMapper.deleteByMenuIds(deletingMenuIds);
+        // 将要删除的菜单与 api-rights 解绑
+        menuApiRightsMapper.deleteByMenuIds(deletingMenuIds);
         // 清理缓存
         clearCaches(posterityMenuWithSelf);
     }
@@ -188,6 +190,24 @@ public class MenuServiceImpl implements MenuService {
         List<MenuDO> menusSorted = new ArrayList<>();
         tree.forEach(new CollectChildren<>(menusSorted));
         return menusSorted;
+    }
+
+    /**
+     * 修改菜单关联的API访问权限
+     *
+     * @param menu    创建或修改的菜单
+     * @param isCreate 是否是创建菜单
+     */
+    private void updateAssociatedApiRights(MenuDO menu, boolean isCreate) {
+        if (CollectionUtil.isNotEmpty(menu.getApiUrls())) {
+            Set<MenuApiRightsDO> menuApiRightsSet = menu.getApiUrls().stream()
+                    .map(apiUrl -> new MenuApiRightsDO(menu.getId(), apiUrl))
+                    .collect(Collectors.toSet());
+            if (!isCreate) {
+                menuApiRightsMapper.deleteByMenuIds(CollectionUtil.newHashSet(menu.getId()));
+            }
+            menuApiRightsMapper.batchInsert(menuApiRightsSet);
+        }
     }
 
     private void validate(MenuDO menu, boolean isCreate) {

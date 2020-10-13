@@ -14,20 +14,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GroupApiRightsDO implements Serializable {
+public class MenuApiRightsDO implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
-     * 组ID
+     * 菜单ID
      */
-    private Long groupId;
+    private Long menuId;
 
     /**
      * ApiRightsId
      */
     private String apiUrl;
 
-    public GroupApiRightsDO(Long groupId, String apiUrl) {
-        this.groupId = groupId;
+    public MenuApiRightsDO(Long menuId, String apiUrl) {
+        this.menuId = menuId;
         this.apiUrl = apiUrl;
     }
 }

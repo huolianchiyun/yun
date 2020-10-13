@@ -109,6 +109,11 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     @ApiModelProperty(hidden = true)
     private Long oldPid;
 
+    /**
+     * 非表字段
+     */
+    private List<String> apiUrls;
+
     @Transient
     public Long getOldPid() {
         return oldPid;

@@ -88,11 +88,6 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<GroupDO> children;
 
-    /**
-     * 非表字段
-     */
-    private List<String> apiUrls;
-
     @Transient
     public Long getOldPid() {
         return oldPid;
@@ -113,7 +108,6 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         deptDTO.setDeptName(groupName);
         deptDTO.setDeptSort(groupSort);
         deptDTO.setDescription(description);
-        deptDTO.setApiUrls(apiUrls);
         deptDTO.setCreator(creator);
         deptDTO.setUpdater(updater);
         deptDTO.setCreateTime(createTime);

@@ -7,6 +7,8 @@ import com.zhangbin.yun.yunrights.modules.rights.model.$do.ApiRightsDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import com.zhangbin.yun.yunrights.modules.rights.service.impl.ApiRightsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.Lifecycle;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -36,6 +38,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +66,11 @@ public class ApiRightsConfig {
     @Configuration
     @ConditionalOnProperty(prefix = "yun.api.rights", name = "update", havingValue = "true")
     @Conditional(SpringIntegrationPluginNotPresentInClassPathCondition.class)
-    static class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper {
+    static class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper implements SmartLifecycle {
+        private final AtomicBoolean initialized = new AtomicBoolean(false);
+        private final  List<Docket> dockets;
+        private final  List<RequestMappingInfoHandlerMapping> handlerMappings;
+        private final  JdbcTemplate jdbcTemplate;
         @Autowired
         public ApiRightsInit(
                 DocumentationPluginsManager documentationPluginsManager,
@@ -72,17 +79,47 @@ public class ApiRightsConfig {
                 TypeResolver typeResolver,
                 Defaults defaults,
                 PathProvider pathProvider,
+
                 List<Docket> dockets,
                 List<RequestMappingInfoHandlerMapping> handlerMappings,
                 JdbcTemplate jdbcTemplate) {
-            super(
-                    documentationPluginsManager,
-                    handlerProviders,
-                    new DocumentationCache(),
-                    resourceListing,
-                    defaults,
-                    typeResolver,
-                    pathProvider);
+            super(documentationPluginsManager, handlerProviders, new DocumentationCache(),
+                    resourceListing, defaults, typeResolver, pathProvider);
+            this.dockets = dockets;
+            this.handlerMappings = handlerMappings;
+            this.jdbcTemplate = jdbcTemplate;
+        }
+
+        @Override
+        protected void bootstrapDocumentationPlugins() {
+            List<DocumentationPlugin> plugins = getDocumentationPluginsManager().documentationPlugins()
+                    .stream()
+                    .sorted(pluginOrdering())
+                    .collect(toList());
+            for (DocumentationPlugin each : plugins) {
+                scanDocumentation(buildContext(each));
+            }
+        }
+
+        @Override
+        public void start() {
+            if (initialized.compareAndSet(false, true)) {
+                init();
+            }
+        }
+
+        @Override
+        public void stop() {
+            initialized.getAndSet(false);
+            getScanned().clear();
+        }
+
+        @Override
+        public boolean isRunning() {
+            return initialized.get();
+        }
+
+        private void init() {
             RequestMappingHandlerMapping handlerMapping = null;
             if (CollectionUtil.isNotEmpty(handlerMappings)) {
                 for (RequestMappingInfoHandlerMapping mapping : handlerMappings) {
@@ -125,17 +162,6 @@ public class ApiRightsConfig {
                         }
                     }
                 });
-            }
-        }
-
-        @Override
-        protected void bootstrapDocumentationPlugins() {
-            List<DocumentationPlugin> plugins = getDocumentationPluginsManager().documentationPlugins()
-                    .stream()
-                    .sorted(pluginOrdering())
-                    .collect(toList());
-            for (DocumentationPlugin each : plugins) {
-                scanDocumentation(buildContext(each));
             }
         }
 

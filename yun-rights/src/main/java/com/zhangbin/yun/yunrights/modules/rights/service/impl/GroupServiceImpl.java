@@ -41,7 +41,6 @@ public class GroupServiceImpl implements GroupService {
     private final UserMapper userMapper;
     private final UserGroupMapper userGroupMapper;
     private final GroupMenuMapper groupMenuMapper;
-    private final GroupApiRightsMapper groupApiRightsMapper;
     private final ApiRightsMapper apiRightsMapper;
     private RedisUtils redisUtils;
 
@@ -123,7 +122,6 @@ public class GroupServiceImpl implements GroupService {
         groupMapper.updateGroupCodeById(generateGroupCode(group), group.getId());
         updateAssociatedMenu(group, true);
         updateAssociatedUser(group, true);
-        updateAssociatedApiRights(group, true);
     }
 
     @Override
@@ -140,7 +138,6 @@ public class GroupServiceImpl implements GroupService {
         groupMapper.updateByPrimaryKeySelective(updatingGroup);
         updateAssociatedMenu(updatingGroup, false);
         updateAssociatedUser(updatingGroup, false);
-        updateAssociatedApiRights(updatingGroup, false);
         // 清理缓存
         clearCaches(CollectionUtil.newHashSet(updatingGroup));
     }
@@ -282,24 +279,6 @@ public class GroupServiceImpl implements GroupService {
                 userGroupMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
             }
             userGroupMapper.batchInsert(userGroups);
-        }
-    }
-
-    /**
-     * 修改组关联的API访问权限
-     *
-     * @param group    创建或修改的组
-     * @param isCreate 是否是创建组
-     */
-    private void updateAssociatedApiRights(GroupDO group, boolean isCreate) {
-        if (CollectionUtil.isNotEmpty(group.getApiUrls())) {
-            Set<GroupApiRightsDO> groupApiRightsSet = group.getApiUrls().stream()
-                    .map(apiUrl -> new GroupApiRightsDO(group.getId(), apiUrl))
-                    .collect(Collectors.toSet());
-            if (!isCreate) {
-                groupApiRightsMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
-            }
-            groupApiRightsMapper.batchInsert(groupApiRightsSet);
         }
     }
 

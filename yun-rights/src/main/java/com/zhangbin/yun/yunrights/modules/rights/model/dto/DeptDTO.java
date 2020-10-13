@@ -31,11 +31,6 @@ public class DeptDTO extends BaseDO implements  Comparable<DeptDTO>, CollectChil
 
     private String description;
 
-    /**
-     * API 权限
-     */
-    private List<String> apiUrls;
-
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DeptDTO> children;
 
@@ -47,7 +42,6 @@ public class DeptDTO extends BaseDO implements  Comparable<DeptDTO>, CollectChil
         groupDO.setGroupName(deptName);
         groupDO.setGroupSort(deptSort);
         groupDO.setGroupType(DEPT_TYPE);
-        groupDO.setApiUrls(apiUrls);
         groupDO.setCreator(creator);
         groupDO.setDescription(description);
         groupDO.setUpdater(updater);
