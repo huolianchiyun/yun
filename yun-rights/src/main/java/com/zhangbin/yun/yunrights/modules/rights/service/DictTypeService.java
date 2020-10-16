@@ -1,10 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
-import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictTypeQueryCriteria;
 
 import java.util.List;

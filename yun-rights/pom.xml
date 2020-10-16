@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.zhangbin.yun</groupId>
-            <artifactId>yun-antlr</artifactId>
+            <artifactId>yun-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

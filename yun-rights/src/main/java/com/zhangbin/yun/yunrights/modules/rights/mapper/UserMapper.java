@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
 import com.zhangbin.yun.yunrights.modules.common.page.PageMapper;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.NotPermission;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupMenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

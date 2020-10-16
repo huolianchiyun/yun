@@ -1,16 +1,13 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.helper;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.util.JdbcConstants;
 import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.parser.DruidSQLParserProcessor;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import org.apache.ibatis.mapping.BoundSql;
-import org.apache.poi.hssf.record.DVALRecord;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;

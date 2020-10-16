@@ -7,7 +7,6 @@ import com.zhangbin.yun.yunrights.modules.rights.model.$do.ApiRightsDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import com.zhangbin.yun.yunrights.modules.rights.service.impl.ApiRightsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.Lifecycle;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.jdbc.core.JdbcTemplate;

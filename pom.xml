@@ -22,6 +22,7 @@
         <module>yun-antlr</module>
         <module>yun-workflow</module>
         <module>yun-monitor</module>
+        <module>yun-common</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

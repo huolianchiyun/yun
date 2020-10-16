@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.common.config;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.classmate.TypeResolver;
-import com.google.common.base.Predicates;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,20 +14,14 @@ import springfox.documentation.builders.*;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
-import springfox.documentation.schema.property.ModelSpecificationFactory;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
-import static springfox.documentation.service.ParameterType.HEADER;
 
 @Configuration
 @EnableOpenApi

@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
-import com.sun.el.parser.BooleanNode;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
 import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;

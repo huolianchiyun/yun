@@ -1,22 +1,17 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
 import com.zhangbin.yun.yunrights.modules.rights.service.DeptService;
 import com.zhangbin.yun.yunrights.modules.rights.service.GroupService;
-import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

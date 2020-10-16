@@ -1,8 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
-import com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
@@ -15,9 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.error;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
-import static com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil.validateRequestParams;
 
 @Api(tags = "系统：字典管理")
 @RestController

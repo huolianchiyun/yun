@@ -5,7 +5,6 @@ import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
-import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
 import com.zhangbin.yun.yunrights.modules.rights.service.DeptService;

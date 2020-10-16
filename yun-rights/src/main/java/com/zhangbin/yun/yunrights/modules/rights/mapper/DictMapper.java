@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.rights.mapper;
 
 import com.zhangbin.yun.yunrights.modules.common.page.PageMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
-import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

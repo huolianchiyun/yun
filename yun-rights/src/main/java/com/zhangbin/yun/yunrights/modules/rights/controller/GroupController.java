@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
