@@ -3,7 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.common.page.PageInfo;
-import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
+import com.zhangbin.yun.common.mybatis.page.PageQueryHelper;
 import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;

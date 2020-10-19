@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 
-import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import com.zhangbin.yun.common.mybatis.page.AbstractQueryPage;
 
 import java.io.Serializable;
 

@@ -1,8 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.*;
-import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTP;
-import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.HTTPS;
+import static com.zhangbin.yun.common.constant.Constants.HTTP;
+import static com.zhangbin.yun.common.constant.Constants.HTTPS;
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.common.spring.redis.RedisUtils;
 import com.zhangbin.yun.common.spring.security.SecurityUtils;

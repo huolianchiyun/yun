@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
 import com.zhangbin.yun.common.page.PageInfo;
-import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import com.zhangbin.yun.common.mybatis.page.AbstractQueryPage;
 
 import java.util.List;
 

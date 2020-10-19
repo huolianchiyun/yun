@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.page;
+package com.zhangbin.yun.common.mybatis.page;
 
 import com.zhangbin.yun.common.model.BaseDO;
 import org.apache.ibatis.annotations.Param;

@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.exception.handler;
+package com.zhangbin.yun.yunrights.modules.common.handler;
 
 import com.zhangbin.yun.common.exception.BadRequestException;
 import com.zhangbin.yun.common.exception.EntityExistException;

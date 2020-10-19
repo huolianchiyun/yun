@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.config.filter;
+package com.zhangbin.yun.common.filter;
 
 import org.springframework.stereotype.Component;
 

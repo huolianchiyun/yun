@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.common.page.PageInfo;
-import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
+import com.zhangbin.yun.common.mybatis.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.DictMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria;

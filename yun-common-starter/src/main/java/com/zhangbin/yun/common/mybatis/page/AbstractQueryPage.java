@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.page;
+package com.zhangbin.yun.common.mybatis.page;
 
 import lombok.Data;
 

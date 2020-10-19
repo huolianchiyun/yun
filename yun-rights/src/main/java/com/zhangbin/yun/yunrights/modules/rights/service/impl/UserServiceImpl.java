@@ -9,7 +9,7 @@ import com.zhangbin.yun.common.utils.encodec.RsaUtils;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
 import com.zhangbin.yun.common.page.PageInfo;
-import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
+import com.zhangbin.yun.common.mybatis.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserGroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.UserMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;

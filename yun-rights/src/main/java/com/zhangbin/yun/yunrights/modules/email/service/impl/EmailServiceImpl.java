@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.email.service.impl;
 
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
-import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.*;
+import static com.zhangbin.yun.common.constant.Constants.*;
 
 import com.zhangbin.yun.common.exception.BadRequestException;
 import com.zhangbin.yun.common.utils.encodec.EncryptUtils;

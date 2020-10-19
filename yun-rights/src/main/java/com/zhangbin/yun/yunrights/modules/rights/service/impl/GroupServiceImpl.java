@@ -8,7 +8,7 @@ import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.common.utils.collect.SetUtils;
 import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.common.page.PageInfo;
-import com.zhangbin.yun.yunrights.modules.common.page.PageQueryHelper;
+import com.zhangbin.yun.common.mybatis.page.PageQueryHelper;
 
 import static com.zhangbin.yun.yunrights.modules.common.xcache.CacheKey.*;
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;

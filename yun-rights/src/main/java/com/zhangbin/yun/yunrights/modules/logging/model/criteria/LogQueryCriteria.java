@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.logging.model.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import com.zhangbin.yun.common.mybatis.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

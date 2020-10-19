@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.zhangbin.yun.yunrights.modules.common.page.AbstractQueryPage;
+import com.zhangbin.yun.common.mybatis.page.AbstractQueryPage;
 import com.zhangbin.yun.yunrights.modules.rights.model.validation.ValidateBlurry;
 import com.zhangbin.yun.yunrights.modules.rights.model.validation.ValidateDateRange;
 import io.swagger.annotations.ApiModelProperty;

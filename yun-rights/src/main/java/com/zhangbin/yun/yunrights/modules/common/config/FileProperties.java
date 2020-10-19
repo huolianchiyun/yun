@@ -16,13 +16,13 @@ public class FileProperties {
     /** 头像大小限制 */
     private Long avatarMaxSize;
 
-    private ElPath mac;
+    private YunPath mac;
 
-    private ElPath linux;
+    private YunPath linux;
 
-    private ElPath windows;
+    private YunPath windows;
 
-    public ElPath getPath(){
+    public YunPath getPath(){
         String os = System.getProperty("os.name");
         if(os.toLowerCase().startsWith(YunConstant.WIN)) {
             return windows;
@@ -33,7 +33,7 @@ public class FileProperties {
     }
 
     @Data
-    public static class ElPath{
+    public static class YunPath {
 
         private String path;
 

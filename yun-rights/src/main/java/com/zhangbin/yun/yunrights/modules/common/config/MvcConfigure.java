@@ -1,17 +1,56 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
 
+/**
+ * WebMvcConfigurer
+ */
 @Configuration
+@EnableWebMvc
 public class MvcConfigure implements WebMvcConfigurer {
+
+    /** 文件配置 */
+    private final FileProperties properties;
+
+    public MvcConfigure(FileProperties properties) {
+        this.properties = properties;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        FileProperties.YunPath path = properties.getPath();
+        String avatarUtl = "file:" + path.getAvatar().replace("\\","/");
+        String pathUtl = "file:" + path.getPath().replace("\\","/");
+        registry.addResourceHandler("/avatar/**").addResourceLocations(avatarUtl).setCachePeriod(0);
+        registry.addResourceHandler("/file/**").addResourceLocations(pathUtl).setCachePeriod(0);
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
+    }
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
@@ -46,5 +85,4 @@ public class MvcConfigure implements WebMvcConfigurer {
             }
         });
     }
-
 }

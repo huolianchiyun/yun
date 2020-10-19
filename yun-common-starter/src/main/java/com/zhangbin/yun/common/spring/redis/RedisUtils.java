@@ -22,17 +22,12 @@ import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings({"unchecked", "all"})
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @ConditionalOnProperty(value = {"host", "port"}, prefix = "spring.redis")
 public class RedisUtils {
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
     private final RedisTemplate<Object, Object> redisTemplate;
     private final RedisScript<Long> redisScript;
-
-    public RedisUtils(RedisTemplate<Object, Object> redisTemplate, RedisScript<Long> redisScript) {
-        this.redisTemplate = redisTemplate;
-        this.redisScript = redisScript;
-    }
 
     /**
      * 指定缓存失效时间
