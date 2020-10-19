@@ -3,7 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

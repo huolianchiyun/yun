@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

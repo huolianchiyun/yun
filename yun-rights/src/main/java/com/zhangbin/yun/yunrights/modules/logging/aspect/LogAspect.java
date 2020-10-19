@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.logging.aspect;
 
 import com.zhangbin.yun.yunrights.modules.common.utils.IPUtil;
-import com.zhangbin.yun.yunrights.modules.common.utils.RequestHolder;
+import com.zhangbin.yun.common.spring.RequestHolder;
 import com.zhangbin.yun.yunrights.modules.common.utils.ThrowableUtil;
 import static com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel.*;
 import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;

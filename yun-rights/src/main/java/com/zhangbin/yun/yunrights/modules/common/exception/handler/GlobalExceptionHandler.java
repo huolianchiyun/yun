@@ -1,11 +1,12 @@
 package com.zhangbin.yun.yunrights.modules.common.exception.handler;
 
-import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
-import com.zhangbin.yun.yunrights.modules.common.exception.EntityExistException;
-import com.zhangbin.yun.yunrights.modules.common.exception.EntityNotFoundException;
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.common.exception.BadRequestException;
+import com.zhangbin.yun.common.exception.EntityExistException;
+import com.zhangbin.yun.common.exception.EntityNotFoundException;
+import com.zhangbin.yun.common.web.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.common.utils.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,10 +17,22 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.*;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
+/**
+ * 权限模块全局异常处理
+ *
+ * 多个全局异常处理器时，先加载的 @ControllerAdvice类里，如果有 @ExceptionHandler(xxException.class)是需要捕获的异常或其父类，
+ * 则将使用先加载的类中的异常处理方式。如果没有，则看下一个 @ControllerAdvice类里是否有，以此类推。
+ * 异常处理入口：入口 ExceptionHandlerExceptionResolver#doResolveHandlerMethodException。
+ * 多个全局异常处理器排序：
+ * @see org.springframework.web.method.ControllerAdviceBean#findAnnotatedBeans(org.springframework.context.ApplicationContext)
+ * 可以使用 @Order来决定加载优先级
+ */
 
 @Slf4j
+@Order(HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

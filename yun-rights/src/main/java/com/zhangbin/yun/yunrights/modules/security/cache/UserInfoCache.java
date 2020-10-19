@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.security.cache;
 
-import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
+import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.MyUserDetails;
 
 import java.util.Map;

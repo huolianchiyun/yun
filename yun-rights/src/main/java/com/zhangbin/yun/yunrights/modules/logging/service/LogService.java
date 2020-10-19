@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.logging.service;
 
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.common.page.PageInfo;
 import com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO;
 import com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuMetaVO;

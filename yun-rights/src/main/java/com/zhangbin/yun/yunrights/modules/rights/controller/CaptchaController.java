@@ -2,8 +2,8 @@ package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import com.zhangbin.yun.yunrights.modules.common.enums.BizCodeEnum;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
+import com.zhangbin.yun.common.web.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.email.model.Email;
 import com.zhangbin.yun.yunrights.modules.email.service.EmailService;
 import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;

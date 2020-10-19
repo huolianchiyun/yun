@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.page;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import org.apache.ibatis.annotations.Param;
 import java.util.Set;
 

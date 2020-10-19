@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.common.config;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.classmate.TypeResolver;
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.common.page.PageInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

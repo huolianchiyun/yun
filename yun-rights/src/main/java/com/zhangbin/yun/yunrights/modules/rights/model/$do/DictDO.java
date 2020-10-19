@@ -3,8 +3,8 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
-import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
+import com.zhangbin.yun.common.model.BaseDO;
+import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import io.swagger.annotations.ApiModelProperty;

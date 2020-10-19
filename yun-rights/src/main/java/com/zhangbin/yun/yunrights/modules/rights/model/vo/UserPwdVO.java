@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.vo;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

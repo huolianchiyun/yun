@@ -7,7 +7,7 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
-import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
+import com.zhangbin.yun.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.email.model.Email;
 import com.zhangbin.yun.yunrights.modules.rights.service.CaptchaService;

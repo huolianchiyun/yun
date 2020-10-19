@@ -102,7 +102,7 @@ swagger:
 yun:
   api:
     rights:
-      update: true
+      update: false
 
 
 # IP 本地解析

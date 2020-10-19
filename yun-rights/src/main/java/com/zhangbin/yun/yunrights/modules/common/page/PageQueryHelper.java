@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.common.page;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 
 public final class PageQueryHelper {
 

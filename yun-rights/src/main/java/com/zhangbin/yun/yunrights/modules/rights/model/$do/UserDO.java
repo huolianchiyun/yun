@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.*;
-import static com.zhangbin.yun.yunrights.modules.common.utils.ValidationUtil.REGEX_MOBILE;
+import static com.zhangbin.yun.common.utils.validator.ValidationUtil.REGEX_MOBILE;
 
 /**
  * 表 t_sys_user

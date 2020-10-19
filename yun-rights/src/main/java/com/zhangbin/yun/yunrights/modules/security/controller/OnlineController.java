@@ -1,10 +1,10 @@
 package com.zhangbin.yun.yunrights.modules.security.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
-import com.zhangbin.yun.yunrights.modules.common.utils.EncryptUtils;
+import com.zhangbin.yun.common.page.PageInfo;
+import com.zhangbin.yun.common.web.response.ResponseData;
+import com.zhangbin.yun.common.utils.encodec.EncryptUtils;
 
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.security.model.dto.OnlineUser;

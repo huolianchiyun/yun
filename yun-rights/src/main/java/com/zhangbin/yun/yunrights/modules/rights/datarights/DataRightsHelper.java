@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ClassUtil;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
+import com.zhangbin.yun.common.spring.security.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.AbstractDialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
@@ -14,7 +14,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils.getCurrentUsername;
+import static com.zhangbin.yun.common.spring.security.SecurityUtils.getCurrentUsername;
 import static com.zhangbin.yun.yunrights.modules.rights.common.constant.RightsConstants.ADMINISTRATOR;
 
 /**

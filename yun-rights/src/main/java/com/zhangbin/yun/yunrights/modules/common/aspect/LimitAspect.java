@@ -2,10 +2,10 @@ package com.zhangbin.yun.yunrights.modules.common.aspect;
 
 import com.google.common.collect.*;
 import com.zhangbin.yun.yunrights.modules.common.annotation.Limit;
-import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
+import com.zhangbin.yun.common.exception.BadRequestException;
 import com.zhangbin.yun.yunrights.modules.common.utils.IPUtil;
-import com.zhangbin.yun.yunrights.modules.common.utils.RequestHolder;
-import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
+import com.zhangbin.yun.common.spring.RequestHolder;
+import com.zhangbin.yun.common.utils.str.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

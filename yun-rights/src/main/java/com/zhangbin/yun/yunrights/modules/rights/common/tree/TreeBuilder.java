@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.common.tree;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import org.springframework.util.CollectionUtils;
 

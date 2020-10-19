@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import lombok.Getter;
 import lombok.Setter;

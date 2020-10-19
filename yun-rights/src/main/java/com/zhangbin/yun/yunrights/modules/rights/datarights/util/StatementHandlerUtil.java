@@ -8,7 +8,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 
 import java.lang.reflect.Field;
 
-import static com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils.getCurrentUsername;
+import static com.zhangbin.yun.common.spring.security.SecurityUtils.getCurrentUsername;
 
 /**
  *  StatementHandler 工具类

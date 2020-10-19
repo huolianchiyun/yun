@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.datarights;
 
-import com.zhangbin.yun.yunrights.modules.common.exception.BadConfigurationException;
+import com.zhangbin.yun.common.exception.BadConfigurationException;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.dialect.Dialect;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;
 import org.apache.ibatis.executor.Executor;

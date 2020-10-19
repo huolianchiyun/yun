@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
-import com.zhangbin.yun.yunrights.modules.common.utils.FileUtil;
+import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.yunrights.modules.rights.common.tree.TreeBuilder;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;

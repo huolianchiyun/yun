@@ -1,8 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.common.web.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.GroupMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;

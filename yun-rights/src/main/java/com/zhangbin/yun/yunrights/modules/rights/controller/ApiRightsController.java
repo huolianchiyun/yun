@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.common.web.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.ApiRightsQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.ApiRightsService;
@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
 @Api(tags = "系统：API 访问权限")
 @RestController

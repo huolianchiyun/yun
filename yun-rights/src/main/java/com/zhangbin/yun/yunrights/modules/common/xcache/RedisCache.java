@@ -15,7 +15,7 @@
  */
 package com.zhangbin.yun.yunrights.modules.common.xcache;
 
-import com.zhangbin.yun.yunrights.modules.common.utils.StringUtils;
+import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.yunrights.modules.rights.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

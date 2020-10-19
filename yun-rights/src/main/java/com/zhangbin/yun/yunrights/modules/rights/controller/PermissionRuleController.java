@@ -1,12 +1,12 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.common.web.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.PermissionRuleService;
 
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -4,8 +4,8 @@ import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import static com.zhangbin.yun.yunrights.modules.common.constant.Constants.*;
 
-import com.zhangbin.yun.yunrights.modules.common.exception.BadRequestException;
-import com.zhangbin.yun.yunrights.modules.common.utils.EncryptUtils;
+import com.zhangbin.yun.common.exception.BadRequestException;
+import com.zhangbin.yun.common.utils.encodec.EncryptUtils;
 import com.zhangbin.yun.yunrights.modules.email.mapper.EmailConfigMapper;
 import com.zhangbin.yun.yunrights.modules.email.model.$do.EmailConfigDO;
 import com.zhangbin.yun.yunrights.modules.email.model.Email;

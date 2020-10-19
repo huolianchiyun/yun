@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.common.web.response.ResponseData;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
 @Api(tags = "系统：字典管理")
 @RestController

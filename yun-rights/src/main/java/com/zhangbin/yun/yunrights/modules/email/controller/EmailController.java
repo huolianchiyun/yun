@@ -1,8 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.email.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
+import com.zhangbin.yun.common.web.response.ResponseData;
 
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
 import com.zhangbin.yun.yunrights.modules.email.model.$do.EmailConfigDO;
 import com.zhangbin.yun.yunrights.modules.email.model.Email;

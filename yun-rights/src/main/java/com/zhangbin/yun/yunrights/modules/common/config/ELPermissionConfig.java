@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
+import com.zhangbin.yun.common.spring.security.SecurityUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 

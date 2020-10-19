@@ -1,13 +1,13 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
-import com.zhangbin.yun.yunrights.modules.common.utils.SecurityUtils;
+import com.zhangbin.yun.common.web.response.ResponseData;
+import com.zhangbin.yun.common.spring.security.SecurityUtils;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.service.MenuService;
 
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

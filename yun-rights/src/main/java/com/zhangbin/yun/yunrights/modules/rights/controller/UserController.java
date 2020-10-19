@@ -1,8 +1,8 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
-import com.zhangbin.yun.yunrights.modules.common.response.ResponseData;
-import static com.zhangbin.yun.yunrights.modules.common.response.ResponseUtil.success;
+import com.zhangbin.yun.common.model.BaseDO;
+import com.zhangbin.yun.common.web.response.ResponseData;
+import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;

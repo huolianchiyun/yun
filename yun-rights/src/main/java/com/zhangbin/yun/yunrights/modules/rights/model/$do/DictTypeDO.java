@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
-import com.zhangbin.yun.yunrights.modules.common.model.$do.BaseDO;
+import com.zhangbin.yun.common.model.BaseDO;
 import java.io.Serializable;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import lombok.Getter;

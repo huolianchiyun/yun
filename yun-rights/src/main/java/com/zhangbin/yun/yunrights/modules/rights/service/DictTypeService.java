@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
-import com.zhangbin.yun.yunrights.modules.common.model.vo.PageInfo;
+import com.zhangbin.yun.common.page.PageInfo;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictTypeDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictTypeQueryCriteria;

@@ -38,7 +38,7 @@
             <!-- always总是返回PageInfo类型,check检查返回类型是否为PageInfo,none返回Page -->
             <property name="returnPageInfo" value="none"/>
         </plugin>
-        <plugin interceptor="com.zhangbin.yun.yunrights.modules.common.audit.MybatisAuditInterceptor"/>
+        <plugin interceptor="com.zhangbin.yun.common.mybatis.audit.plugin.AuditInterceptor"/>
         <!--由于mybatis拦截器的拦截顺序是从下到上，所有应将DataRightsInterceptor配置在最后，使其被最先拦截。-->
         <plugin interceptor="com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsInterceptor"/>
     </plugins>

@@ -1,6 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.common.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.zhangbin.yun.common.utils.str.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
