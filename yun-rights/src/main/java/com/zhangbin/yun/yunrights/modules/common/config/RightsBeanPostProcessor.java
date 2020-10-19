@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.common.config;
 
-import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
+import com.zhangbin.yun.common.spring.redis.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.DataRightsHelper;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.util.StatementHandlerUtil;

@@ -1,11 +1,10 @@
-package com.zhangbin.yun.yunrights.modules.common.utils;
+package com.zhangbin.yun.common.spring.redis;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.zhangbin.yun.common.utils.str.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -23,16 +22,17 @@ import java.util.stream.Collectors;
 
 @Component
 @SuppressWarnings({"unchecked", "all"})
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @ConditionalOnProperty(value = {"host", "port"}, prefix = "spring.redis")
 public class RedisUtils {
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
     private final RedisTemplate<Object, Object> redisTemplate;
     private final RedisScript<Long> redisScript;
 
-    @Value("${jwt.online-key}")
-    private String onlineKey;
-
+    public RedisUtils(RedisTemplate<Object, Object> redisTemplate, RedisScript<Long> redisScript) {
+        this.redisTemplate = redisTemplate;
+        this.redisScript = redisScript;
+    }
 
     /**
      * 指定缓存失效时间
@@ -171,12 +171,9 @@ public class RedisUtils {
                 log.debug("--------------------------------------------");
             } else {
                 Set<Object> keySet = new HashSet<>(Arrays.asList(keys));
-//                for (String key : keys) {
-//                    keySet.addAll(redisTemplate.keys(key));
-//                }
                 long count = redisTemplate.delete(keySet);
                 log.debug("--------------------------------------------");
-                log.debug("成功删除缓存：" + keySet.toString());
+                log.debug("删除缓存：" + keySet.toString());
                 log.debug("缓存删除数量：" + count + "个");
                 log.debug("--------------------------------------------");
             }

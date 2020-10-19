@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.zhangbin.yun.common.autoconfigure.CommonAutoConfigure

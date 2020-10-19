@@ -3,7 +3,7 @@ package com.zhangbin.yun.yunrights.modules.rights.datarights.rule;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.sql.SqlExecutor;
-import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
+import com.zhangbin.yun.common.spring.redis.RedisUtils;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

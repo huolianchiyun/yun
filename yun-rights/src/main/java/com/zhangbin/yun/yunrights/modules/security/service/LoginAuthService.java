@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.modules.security.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.wf.captcha.base.Captcha;
-import com.zhangbin.yun.yunrights.modules.common.utils.RedisUtils;
+import com.zhangbin.yun.common.spring.redis.RedisUtils;
 import com.zhangbin.yun.common.utils.encodec.RsaUtils;
 import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
