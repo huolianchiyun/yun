@@ -34,7 +34,7 @@ public class MenuController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
     public void download(HttpServletResponse response, MenuQueryCriteria criteria) throws Exception {
-        menuService.download(menuService.queryAllByCriteriaWithNoPage(criteria.setPid(null)), response);
+        menuService.downloadExcel(menuService.queryAllByCriteriaWithNoPage(criteria.setPid(null)), response);
     }
 
     @GetMapping(value = "/user/{isTree}")

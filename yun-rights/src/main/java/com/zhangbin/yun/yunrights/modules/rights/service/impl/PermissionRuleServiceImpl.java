@@ -62,9 +62,4 @@ public class PermissionRuleServiceImpl implements PermissionRuleService {
         ruleMapper.deleteByPrimaryKey(id);
         RuleManager.refreshCache();
     }
-
-    @Override
-    public void download(List<PermissionRuleDO> permissionRuleList, HttpServletResponse response) throws IOException {
-        FileUtil.downloadExcel(Optional.ofNullable(permissionRuleList).orElseGet(ArrayList::new).stream().map(PermissionRuleDO::toLinkedMap).collect(Collectors.toList()), response);
-    }
 }

@@ -170,9 +170,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void download(List<GroupDO> depts, HttpServletResponse response) throws IOException {
+    public void downloadExcel(Collection<GroupDO> collection, HttpServletResponse response){
         List<GroupDO> groupSorted = new ArrayList<>();
-        buildGroupTree(depts).forEach(new CollectChildren<>(groupSorted));
+        buildGroupTree(collection).forEach(new CollectChildren<>(groupSorted));
         FileUtil.downloadExcel(groupSorted.stream().map(GroupDO::toLinkedMap).collect(Collectors.toList()), response);
     }
 

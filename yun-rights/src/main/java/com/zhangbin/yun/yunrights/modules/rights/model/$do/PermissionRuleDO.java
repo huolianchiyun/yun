@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import com.zhangbin.yun.common.model.BaseDO;
-import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

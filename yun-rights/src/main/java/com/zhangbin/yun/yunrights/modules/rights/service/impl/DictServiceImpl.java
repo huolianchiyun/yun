@@ -84,9 +84,4 @@ public class DictServiceImpl implements DictService {
         }
         dictMapper.deleteByIds(ids);
     }
-
-    @Override
-    public void download(List<DictDO> userDOList, HttpServletResponse response) throws IOException {
-        FileUtil.downloadExcel(Optional.ofNullable(userDOList).orElseGet(ArrayList::new).stream().map(DictDO::toLinkedMap).collect(Collectors.toList()), response);
-    }
 }

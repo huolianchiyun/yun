@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
 import com.zhangbin.yun.common.model.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
-import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuMetaVO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuVO;
 import io.swagger.annotations.ApiModelProperty;

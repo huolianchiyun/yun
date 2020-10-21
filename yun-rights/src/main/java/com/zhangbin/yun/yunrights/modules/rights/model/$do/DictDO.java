@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 
 import com.zhangbin.yun.common.model.BaseDO;
 import com.zhangbin.yun.common.utils.str.StringUtils;
-import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

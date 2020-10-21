@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
+import com.zhangbin.yun.common.utils.download.DownLoadSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.UserEmailVO;
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public interface UserService extends PageService<UserQueryCriteria, UserDO> {
+public interface UserService extends PageService<UserQueryCriteria, UserDO>, DownLoadSupport<UserDO> {
 
     /**
      * 根据ID查询
@@ -78,14 +79,5 @@ public interface UserService extends PageService<UserQueryCriteria, UserDO> {
      * @param userEmail
      */
     void updateEmail(UserEmailVO userEmail) throws Exception;
-
-    /**
-     * 导出数据
-     *
-     * @param userDOList 待导出的数据
-     * @param response   /
-     * @throws IOException /
-     */
-    void download(List<UserDO> userDOList, HttpServletResponse response) throws IOException;
 
 }

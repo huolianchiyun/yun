@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
+import com.zhangbin.yun.common.utils.download.DownLoadSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +12,7 @@ import java.util.Set;
 /**
  * 在本系统设计中，部门本质是组，是一种特殊的组
  */
-public interface DeptService {
+public interface DeptService extends DownLoadSupport<DeptDTO> {
 
     /**
      * 根据ID查询
@@ -76,15 +77,6 @@ public interface DeptService {
      * @return {@link List<DeptDTO>}
      */
     List<DeptDTO> buildDeptTree(Collection<DeptDTO> depts);
-
-    /**
-     * 导出部门数据
-     *
-     * @param depts 待导出的数据
-     * @param response 客户端响应
-     * @throws IOException /
-     */
-    void download(List<DeptDTO> depts, HttpServletResponse response) throws IOException;
 
     /**
      * 验证是否被用户关联

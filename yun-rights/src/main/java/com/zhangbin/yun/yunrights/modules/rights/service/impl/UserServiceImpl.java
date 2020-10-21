@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.common.spring.redis.RedisUtils;
 import com.zhangbin.yun.common.spring.security.SecurityUtils;
+import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.common.utils.encodec.RsaUtils;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
@@ -149,13 +150,6 @@ public class UserServiceImpl implements UserService {
         cleanUserCache(userMapper.selectByIds(ids));
     }
 
-    @Override
-    public void download(List<UserDO> userDOList, HttpServletResponse response) throws IOException {
-        FileUtil.downloadExcel(Optional.ofNullable(userDOList).orElseGet(ArrayList::new)
-                .stream().map(UserDO::toLinkedMap)
-                .collect(Collectors.toList()), response);
-    }
-
     /**
      * 关联部门和组
      *
@@ -215,5 +209,4 @@ public class UserServiceImpl implements UserService {
             usernameSet.forEach(UserInfoCache::cleanCacheFor);
         }
     }
-
 }

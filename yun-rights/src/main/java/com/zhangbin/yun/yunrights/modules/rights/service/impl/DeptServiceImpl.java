@@ -71,9 +71,9 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public void download(List<DeptDTO> depts, HttpServletResponse response) throws IOException {
+    public void downloadExcel(Collection<DeptDTO> collection, HttpServletResponse response) {
         List<DeptDTO> deptsSorted = new ArrayList<>();
-        buildDeptTree(depts).forEach(new CollectChildren<>(deptsSorted));
+        buildDeptTree(collection).forEach(new CollectChildren<>(deptsSorted));
         FileUtil.downloadExcel(deptsSorted.stream().map(DeptDTO::toLinkedMap).collect(Collectors.toList()), response);
     }
 

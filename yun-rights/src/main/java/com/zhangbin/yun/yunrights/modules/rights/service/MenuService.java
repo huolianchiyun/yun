@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
+import com.zhangbin.yun.common.utils.download.DownLoadSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.vo.MenuVO;
@@ -10,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public interface MenuService {
+public interface MenuService extends DownLoadSupport<MenuDO> {
 
     /**
      * 根据ID查询
@@ -101,13 +102,4 @@ public interface MenuService {
      * @return {@link  List<MenuDO>}
      */
     List<MenuDO> buildMenuTree(Collection<MenuDO> menus);
-
-    /**
-     * 导出菜单
-     *
-     * @param menus    待导出的数据
-     * @param response
-     * @throws IOException
-     */
-    void download(List<MenuDO> menus, HttpServletResponse response) throws IOException;
 }

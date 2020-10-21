@@ -157,9 +157,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void download(List<MenuDO> menus, HttpServletResponse response) throws IOException {
+    public void downloadExcel(Collection<MenuDO> collection, HttpServletResponse response) {
         List<MenuDO> menuSorted = new ArrayList<>();
-        buildMenuTree(menus).forEach(new CollectChildren<>(menuSorted));
+        buildMenuTree(collection).forEach(new CollectChildren<>(menuSorted));
         FileUtil.downloadExcel(menuSorted.stream().map(MenuDO::toLinkedMap).collect(Collectors.toList()), response);
     }
 

@@ -31,7 +31,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
-            <optional>true</optional>
             <scope>compile</scope>
         </dependency>
         <dependency>

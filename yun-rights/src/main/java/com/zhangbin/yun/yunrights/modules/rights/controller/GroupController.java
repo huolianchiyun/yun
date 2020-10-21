@@ -33,7 +33,7 @@ public class GroupController {
     @PreAuthorize("@el.check('group:list')")
     public void download(HttpServletResponse response, GroupQueryCriteria criteria) throws Exception {
         criteria.setPid(null);
-        groupService.download(groupService.queryAllByCriteriaWithNoPage(criteria), response);
+        groupService.downloadExcel(groupService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
     @Logging("根据ID查询组")

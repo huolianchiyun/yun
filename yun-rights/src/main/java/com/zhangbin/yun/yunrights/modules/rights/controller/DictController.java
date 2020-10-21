@@ -36,7 +36,7 @@ public class DictController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
     public void download(@RequestParam DictQueryCriteria criteria, HttpServletResponse response) throws IOException {
-        dictService.download(dictService.queryAllByCriteriaWithNoPage(criteria), response);
+        dictService.downloadExcel(dictService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
     @Logging("根据ID查询")

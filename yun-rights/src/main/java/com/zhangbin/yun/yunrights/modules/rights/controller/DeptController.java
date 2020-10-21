@@ -1,9 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.controller;
 
 import com.zhangbin.yun.common.web.response.ResponseData;
-
 import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
-
 import com.zhangbin.yun.yunrights.modules.logging.annotation.Logging;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DeptQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -33,7 +30,7 @@ public class DeptController {
     @PreAuthorize("@el.check('dept:list')")
     public void download(HttpServletResponse response, DeptQueryCriteria criteria) throws Exception {
         criteria.setPid(null);
-        deptService.download(deptService.queryAllByCriteriaWithNoPage(criteria), response);
+        deptService.downloadExcel(deptService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
     @Logging("根据ID查询部门")

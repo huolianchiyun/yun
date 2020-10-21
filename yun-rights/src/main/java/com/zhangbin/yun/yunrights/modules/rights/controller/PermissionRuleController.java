@@ -33,7 +33,7 @@ public class PermissionRuleController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('rule:list')")
     public void download(RuleQueryCriteria criteria, HttpServletResponse response) throws IOException {
-        ruleService.download(ruleService.queryAllByCriteriaWithNoPage(criteria), response);
+        ruleService.downloadExcel(ruleService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
     @Logging("根据ID查询规则")

@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
+import com.zhangbin.yun.common.utils.download.DownLoadSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.UserDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.GroupQueryCriteria;
@@ -10,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public interface GroupService extends PageService<GroupQueryCriteria, GroupDO>{
+public interface GroupService extends PageService<GroupQueryCriteria, GroupDO>, DownLoadSupport<GroupDO> {
 
     /**
      * 根据ID查询
@@ -107,15 +108,6 @@ public interface GroupService extends PageService<GroupQueryCriteria, GroupDO>{
      * @return {@link List<GroupDO>}
      */
     List<GroupDO> buildGroupTree(Collection<GroupDO> depts);
-
-    /**
-     * 导出部门数据
-     *
-     * @param depts    待导出的数据
-     * @param response 客户端响应
-     * @throws IOException /
-     */
-    void download(List<GroupDO> depts, HttpServletResponse response) throws IOException;
 
     /**
      * 验证是否被用户关联

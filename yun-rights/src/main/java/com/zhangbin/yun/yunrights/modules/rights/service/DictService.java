@@ -1,5 +1,6 @@
 package com.zhangbin.yun.yunrights.modules.rights.service;
 
+import com.zhangbin.yun.common.utils.download.DownLoadSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.DictDO;
 import com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public interface DictService extends PageService<DictQueryCriteria, DictDO>{
+public interface DictService extends PageService<DictQueryCriteria, DictDO>, DownLoadSupport<DictDO> {
 
     /**
      * 根据ID查询
@@ -54,14 +55,4 @@ public interface DictService extends PageService<DictQueryCriteria, DictDO>{
      * @param ids
      */
     void deleteByIds(Set<Long> ids);
-
-    /**
-     * 导出数据
-     *
-     * @param dictionaryList 待导出的数据
-     * @param response       /
-     * @throws IOException /
-     */
-    void download(List<DictDO> dictionaryList, HttpServletResponse response) throws IOException;
-
 }

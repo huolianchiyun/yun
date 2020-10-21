@@ -3,15 +3,19 @@ package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zhangbin.yun.common.model.BaseDO;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import com.zhangbin.yun.yunrights.modules.rights.common.excel.ExcelSupport;
+
+import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+
 import javax.validation.constraints.*;
+
 import static com.zhangbin.yun.common.utils.validator.ValidationUtil.REGEX_MOBILE;
 
 /**
@@ -113,13 +117,13 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
         map.put("显示名", nickname);
         map.put("用户名", username);
         map.put("所属组", String.join(",", groups));
-        map.put("所属部门", dept.getGroupName());
+        map.put("所属部门", dept == null ? "" : dept.getGroupName());
         map.put("手机号码", phone);
         map.put("邮箱", email);
         map.put("状态", status ? "已激活" : "未激活");
         map.put("是否删除", deleted ? "已删除" : "未删除");
-        map.put("修改密码时间", pwdResetTime);
-        map.put("创建日期", createTime);
+        map.put("修改密码时间", pwdResetTime == null ? "" : pwdResetTime.toString());
+        map.put("创建日期", createTime == null ? "" : createTime.toString());
         return map;
     }
 }

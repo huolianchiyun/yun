@@ -1,14 +1,15 @@
 package com.zhangbin.yun.common.utils.io;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +25,7 @@ import java.util.Map;
  * File工具类，扩展 hutool 工具包
  */
 public class FileUtil extends cn.hutool.core.io.FileUtil {
-    private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
     /**
      * 系统临时目录
      * <br>
@@ -71,7 +72,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             // MultipartFile to File
             multipartFile.transferTo(file);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return file;
     }
@@ -166,30 +167,26 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             file.transferTo(dest);
             return dest;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
     }
 
     /**
-     * 导出excel
+     *  直接导出 excel，不产生临时文件
      */
-    public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
-        String tempPath = SYS_TEM_DIR + IdUtil.fastSimpleUUID() + ".xlsx";
-        File file = new File(tempPath);
-        BigExcelWriter writer = ExcelUtil.getBigWriter(file);
+    public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) {
+        ExcelWriter writer = ExcelUtil.getBigWriter();
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list, true);
-        //response为HttpServletResponse对象
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
         response.setHeader("Content-Disposition", "attachment;filename=file.xlsx");
-        ServletOutputStream out = response.getOutputStream();
-        // 终止后删除临时文件
-        file.deleteOnExit();
-        writer.flush(out, true);
-        //此处记得关闭输出Servlet流
-        IoUtil.close(out);
+        try (ServletOutputStream out = response.getOutputStream();) {
+            writer.flush(out, true);
+        }catch (IOException e) {
+            LOGGER.info("导出excel异常", e);
+        }
     }
 
     public static String getFileType(String type) {
@@ -240,10 +237,10 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             try {
                 System.out.println(in.read(b));
             } catch (IOException e) {
-                log.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         } catch (FileNotFoundException e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
         return b;
@@ -266,7 +263,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             }
             return new String(str);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
     }
@@ -288,7 +285,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             IOUtils.copy(fis, response.getOutputStream());
             response.flushBuffer();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (fis != null) {
                 try {
@@ -297,7 +294,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
                         file.deleteOnExit();
                     }
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }
