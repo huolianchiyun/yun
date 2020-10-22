@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.common.page.PageInfo;
 import com.zhangbin.yun.common.mybatis.page.PageQueryHelper;
-import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.yunrights.modules.rights.datarights.rule.RuleManager;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.PermissionRuleMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.PermissionRuleDO;
@@ -12,12 +11,7 @@ import com.zhangbin.yun.yunrights.modules.rights.model.criteria.RuleQueryCriteri
 import com.zhangbin.yun.yunrights.modules.rights.service.PermissionRuleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +26,7 @@ public class PermissionRuleServiceImpl implements PermissionRuleService {
 
     @Override
     public PageInfo<List<PermissionRuleDO>> queryAllByCriteria(RuleQueryCriteria criteria) {
-        Page<PermissionRuleDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, ruleMapper);
+        Page<PermissionRuleDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, ruleMapper);
         PageInfo<List<PermissionRuleDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());
         List<PermissionRuleDO> result = page.getResult();
@@ -42,7 +36,7 @@ public class PermissionRuleServiceImpl implements PermissionRuleService {
 
     @Override
     public List<PermissionRuleDO> queryAllByCriteriaWithNoPage(RuleQueryCriteria criteria) {
-        return CollectionUtil.list(false, ruleMapper.selectAllByCriteria(criteria));
+        return CollectionUtil.list(false, ruleMapper.selectByCriteria(criteria));
     }
 
     @Override

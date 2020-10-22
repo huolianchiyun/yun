@@ -35,7 +35,7 @@ public class UserMapperTest {
 //        criteria.setPageSize(5);
 //        criteria.setBlurryType(UserQueryCriteria.BlurryType.NICKNAME);
 //        criteria.setBlurry("张三");
-        List<UserDO> userDOS = CollectionUtil.list(false, userMapper.selectAllByCriteria(criteria));
+        List<UserDO> userDOS = CollectionUtil.list(false, userMapper.selectByCriteria(criteria));
         System.out.println("----------------------------");
         System.out.println(userDOS);
     }

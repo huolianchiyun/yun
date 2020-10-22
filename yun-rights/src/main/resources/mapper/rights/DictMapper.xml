@@ -38,7 +38,7 @@
         where dic_type_code = #{typeCode,jdbcType=VARCHAR}
     </select>
 
-    <select id="selectAllByCriteria"
+    <select id="selectByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictQueryCriteria"
             resultMap="BaseResultMap">
         select dt.dt_name,

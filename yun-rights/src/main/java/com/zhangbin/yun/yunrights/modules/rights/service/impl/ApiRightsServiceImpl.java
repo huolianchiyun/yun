@@ -26,7 +26,7 @@ public class ApiRightsServiceImpl implements ApiRightsService {
 
     @Override
     public PageInfo<List<ApiRightsDO>> queryAllByCriteria(ApiRightsQueryCriteria criteria) {
-        Page<ApiRightsDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, apiRightsMapper);
+        Page<ApiRightsDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, apiRightsMapper);
         PageInfo<List<ApiRightsDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());
         List<ApiRightsDO> result = page.getResult();

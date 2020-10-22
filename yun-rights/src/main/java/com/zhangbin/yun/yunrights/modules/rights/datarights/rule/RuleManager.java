@@ -59,7 +59,7 @@ public class RuleManager {
 
     /**
      * 移除本地变量，使用者可以不手动清除，程序会统一清除
-     * {@link com.zhangbin.yun.yunrights.modules.common.config.filter.ThreadLocalClearFilter#doFilter}
+     * {@link com.zhangbin.yun.yunrights.modules.common.filter.ThreadLocalClearFilter#doFilter}
      */
     public static void clearRuleMap() {
         ruleMapThreadLocal.remove();

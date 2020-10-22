@@ -32,7 +32,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,7 +53,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDO> queryAllByCriteriaWithNoPage(MenuQueryCriteria criteria) {
-        return SetUtils.toListWithSorted(menuMapper.selectAllByCriteria(criteria), MenuDO::compareTo);
+        return SetUtils.toListWithSorted(menuMapper.selectByCriteria(criteria), MenuDO::compareTo);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class MenuServiceImpl implements MenuService {
             return queryByPid(null);
         }
         // 获取所有菜单
-        Set<MenuDO> allMenus = menuMapper.selectAllByCriteria(null);
+        Set<MenuDO> allMenus = menuMapper.selectByCriteria(null);
         // 删掉 menuIds 的直接子菜单，使其连接断路
         List<MenuDO> menus = allMenus.stream().filter(e -> !menuIds.contains(e.getPid())).collect(Collectors.toList());
         return buildMenuTree(menus);
@@ -97,7 +96,7 @@ public class MenuServiceImpl implements MenuService {
         Set<MenuDO> menuSet;
         // 如果是admin，则返回所有菜单
         if (SecurityUtils.isAdmin()) {
-            menuSet = menuMapper.selectAllByCriteria(null);
+            menuSet = menuMapper.selectByCriteria(null);
         } else {
             List<GroupDO> groups = groupService.queryByUserId(userId);
             if (CollectionUtils.isEmpty(groups)) {
@@ -188,7 +187,7 @@ public class MenuServiceImpl implements MenuService {
      * @param menuIds 菜单集合
      */
     private List<MenuDO> getPosterityMenusWithSelf(Set<Long> menuIds) {
-        Set<MenuDO> allMenus = menuMapper.selectAllByCriteria(null);
+        Set<MenuDO> allMenus = menuMapper.selectByCriteria(null);
         List<MenuDO> tree = new TreeBuilder<MenuDO>().buildTree(allMenus, menuIds);
         List<MenuDO> menusSorted = new ArrayList<>();
         tree.forEach(new CollectChildren<>(menusSorted));

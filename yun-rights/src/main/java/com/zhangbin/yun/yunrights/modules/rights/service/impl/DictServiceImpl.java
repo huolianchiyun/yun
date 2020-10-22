@@ -2,7 +2,6 @@ package com.zhangbin.yun.yunrights.modules.rights.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
-import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.common.page.PageInfo;
 import com.zhangbin.yun.common.mybatis.page.PageQueryHelper;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.DictMapper;
@@ -16,9 +15,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,7 +43,7 @@ public class DictServiceImpl implements DictService {
 
     @Override
     public PageInfo<List<DictDO>> queryAllByCriteria(DictQueryCriteria criteria) {
-        Page<DictDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, dictMapper);
+        Page<DictDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, dictMapper);
         PageInfo<List<DictDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());
         List<DictDO> result = page.getResult();
@@ -57,7 +53,7 @@ public class DictServiceImpl implements DictService {
 
     @Override
     public List<DictDO> queryAllByCriteriaWithNoPage(DictQueryCriteria criteria) {
-        return CollectionUtil.list(false, dictMapper.selectAllByCriteria(criteria));
+        return CollectionUtil.list(false, dictMapper.selectByCriteria(criteria));
     }
 
     @Override

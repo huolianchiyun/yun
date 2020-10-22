@@ -1,6 +1,9 @@
 package com.zhangbin.yun.common.filter;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -10,6 +13,7 @@ import java.io.IOException;
 
 @Component
 @WebFilter(urlPatterns = "/*")
+@ConditionalOnBean(DispatcherServlet.class)
 public class CrossDomainFilter implements Filter {
 
     @Override

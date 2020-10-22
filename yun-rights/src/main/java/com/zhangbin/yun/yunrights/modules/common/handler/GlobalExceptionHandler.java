@@ -4,7 +4,7 @@ import com.zhangbin.yun.common.exception.BadRequestException;
 import com.zhangbin.yun.common.exception.EntityExistException;
 import com.zhangbin.yun.common.exception.EntityNotFoundException;
 import com.zhangbin.yun.common.web.response.ResponseData;
-import com.zhangbin.yun.yunrights.modules.common.utils.ThrowableUtil;
+import com.zhangbin.yun.common.exception.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;

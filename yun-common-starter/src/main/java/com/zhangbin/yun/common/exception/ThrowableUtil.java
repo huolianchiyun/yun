@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.utils;
+package com.zhangbin.yun.common.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

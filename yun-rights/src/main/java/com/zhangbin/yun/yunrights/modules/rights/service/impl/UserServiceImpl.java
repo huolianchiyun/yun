@@ -4,8 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
 import com.zhangbin.yun.common.spring.redis.RedisUtils;
 import com.zhangbin.yun.common.spring.security.SecurityUtils;
-import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
-import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.common.utils.encodec.RsaUtils;
 import com.zhangbin.yun.yunrights.modules.common.config.RsaProperties;
 import com.zhangbin.yun.yunrights.modules.common.enums.CodeEnum;
@@ -31,9 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageInfo<List<UserDO>> queryAllByCriteria(UserQueryCriteria criteria) {
-        Page<UserDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, userMapper);
+        Page<UserDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, userMapper);
         PageInfo<List<UserDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());
         List<UserDO> result = page.getResult();
@@ -85,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDO> queryAllByCriteriaWithNoPage(UserQueryCriteria criteria) {
-        return CollectionUtil.list(false, userMapper.selectAllByCriteria(criteria));
+        return CollectionUtil.list(false, userMapper.selectByCriteria(criteria));
     }
 
     @Override

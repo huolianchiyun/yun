@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.modules.common.utils;
+package com.zhangbin.yun.common.utils.translation;
 
 import cn.hutool.json.JSONArray;
 

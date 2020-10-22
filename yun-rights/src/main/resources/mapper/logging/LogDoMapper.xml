@@ -29,7 +29,7 @@
         where l_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectAllByCriteria"
+    <select id="selectByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.logging.model.criteria.LogQueryCriteria"
             resultMap="BaseResultMap">
         select
@@ -68,6 +68,7 @@
                 </if>
             </if>
         </trim>
+        order by l_create_time desc
     </select>
 
     <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.logging.model.$do.LogDO">

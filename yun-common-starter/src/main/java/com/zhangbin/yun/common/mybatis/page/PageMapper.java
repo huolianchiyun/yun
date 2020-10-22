@@ -10,5 +10,5 @@ public interface PageMapper<R extends BaseDO> {
     * @param criteria 条件
     * @return Set<R>
     */
-   Set<R> selectAllByCriteria(@Param("criteria") AbstractQueryPage criteria);
+   Set<R> selectByCriteria(@Param("criteria") AbstractQueryPage criteria);
 }

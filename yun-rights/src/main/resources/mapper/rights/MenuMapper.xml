@@ -107,7 +107,7 @@
         where m_menu_type in (0, 1)
     </select>
 
-    <select id="selectAllByCriteria"
+    <select id="selectByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.MenuQueryCriteria"
             resultMap="BaseResultMap">
         select

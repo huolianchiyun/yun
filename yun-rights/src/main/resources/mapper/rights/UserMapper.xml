@@ -93,7 +93,7 @@
         </foreach>
     </select>
 
-    <select id="selectAllByCriteria"
+    <select id="selectByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.UserQueryCriteria"
             resultMap="CascadeBaseResultMap">
         select

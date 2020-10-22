@@ -32,7 +32,7 @@ public class UserController {
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('user:list')")
-    public void download(@RequestParam(required = false) UserQueryCriteria criteria, HttpServletResponse response) throws IOException {
+    public void download(UserQueryCriteria criteria, HttpServletResponse response) {
         userService.downloadExcel(userService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 

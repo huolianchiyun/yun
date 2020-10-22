@@ -1,9 +1,15 @@
 package com.zhangbin.yun.common.utils.io;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.github.pagehelper.Page;
+import com.zhangbin.yun.common.model.BaseDO;
+import com.zhangbin.yun.common.mybatis.page.AbstractQueryPage;
+import com.zhangbin.yun.common.mybatis.page.PageQuery;
+import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +23,9 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * File工具类，扩展 hutool 工具包
@@ -173,18 +179,42 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     *  直接导出 excel，不产生临时文件
+     * 直接导出 excel，不产生临时文件
+     * 适合小数据量下载
      */
     public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) {
-        ExcelWriter writer = ExcelUtil.getBigWriter();
-        // 一次性写出内容，使用默认样式，强制输出标题
-        writer.write(list, true);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
         response.setHeader("Content-Disposition", "attachment;filename=file.xlsx");
-        try (ServletOutputStream out = response.getOutputStream();) {
-            writer.flush(out, true);
-        }catch (IOException e) {
+        try (ServletOutputStream out = response.getOutputStream(); ExcelWriter writer = ExcelUtil.getBigWriter()) {
+            // 一次性写出内容，使用默认样式，强制输出标题
+            writer.write(list, true).flush(out);
+        } catch (IOException e) {
+            LOGGER.info("导出excel异常", e);
+        }
+    }
+
+    /**
+     * 直接导出 excel，不产生临时文件
+     * 以分页的方式下载，防止数据过大，撑爆内存
+     */
+    public static void downloadExcelWithPage(HttpServletResponse response, PageQuery<AbstractQueryPage, BaseDO> pageQuery) {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=file.xlsx");
+        final AbstractQueryPage queryPage = pageQuery.getQueryPage();
+        queryPage.setPageNum(1);
+        queryPage.setPageSize(5);
+        Page<? extends BaseDO> page = pageQuery.queryByCriteriaWithPage(pageQuery.getQueryPage(), pageQuery.getMapper());
+        try (ServletOutputStream out = response.getOutputStream(); ExcelWriter writer = ExcelUtil.getBigWriter()) {
+            writer.write(Optional.ofNullable(page.getResult()).orElseGet(ArrayList::new).stream().map(BaseDO::toLinkedMap).collect(Collectors.toList()), true);
+            int pages = page.getPages();
+            for (int i = 2; i <= pages; i++) {
+                queryPage.setPageNum(i);
+                page = pageQuery.queryByCriteriaWithPage(pageQuery.getQueryPage(), pageQuery.getMapper());
+                writer.write(Optional.ofNullable(page.getResult()).orElseGet(ArrayList::new).stream().map(BaseDO::toLinkedMap).collect(Collectors.toList()));
+            }
+            writer.flush(out);
+        } catch (IOException e) {
             LOGGER.info("导出excel异常", e);
         }
     }

@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,7 +54,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public PageInfo<List<GroupDO>> queryAllByCriteria(GroupQueryCriteria criteria) {
-        Page<GroupDO> page = PageQueryHelper.queryAllByCriteriaWithPage(criteria, groupMapper);
+        Page<GroupDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, groupMapper);
         PageInfo<List<GroupDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());
         List<GroupDO> result = page.getResult();
@@ -65,7 +64,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDO> queryAllByCriteriaWithNoPage(GroupQueryCriteria criteria) {
-        return SetUtils.toListWithSorted(groupMapper.selectAllByCriteria(criteria), GroupDO::compareTo);
+        return SetUtils.toListWithSorted(groupMapper.selectByCriteria(criteria), GroupDO::compareTo);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class GroupServiceImpl implements GroupService {
             return queryByPid(null);
         }
         // 获取所有组
-        Set<GroupDO> allGroups = groupMapper.selectAllByCriteria(null);
+        Set<GroupDO> allGroups = groupMapper.selectByCriteria(null);
         // 删掉 groupIds 的直接子组，使其连接断路
         List<GroupDO> groups = allGroups.stream().filter(e -> !groupIds.contains(e.getPid())).collect(Collectors.toList());
         return buildGroupTree((groups));
@@ -241,7 +240,7 @@ public class GroupServiceImpl implements GroupService {
      * @param groupIds 组集合
      */
     private List<GroupDO> getPosterityMenusWithSelf(Set<Long> groupIds) {
-        Set<GroupDO> allGroups = groupMapper.selectAllByCriteria(null);
+        Set<GroupDO> allGroups = groupMapper.selectByCriteria(null);
         List<GroupDO> tree = new TreeBuilder<GroupDO>().buildTree(allGroups, groupIds);
         List<GroupDO> groupsSorted = new ArrayList<>();
         tree.forEach(new CollectChildren<>(groupsSorted));

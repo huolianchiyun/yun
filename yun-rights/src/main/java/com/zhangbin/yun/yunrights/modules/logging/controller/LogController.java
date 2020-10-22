@@ -28,7 +28,7 @@ public class LogController {
     @Logging("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@el.check('all')")
     public void download(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
         logService.download(criteria.setLogLevel(INFO), response);
     }
@@ -36,34 +36,34 @@ public class LogController {
     @Logging("导出错误数据")
     @ApiOperation("导出错误数据")
     @GetMapping(value = "/download/error")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@el.check('all')")
     public void downloadErrorLog(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
         logService.download(criteria.setLogLevel(ERROR), response);
     }
 
     @GetMapping
     @ApiOperation("根据条件分页查询日志")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData> query(LogQueryCriteria criteria) {
-        return success(logService.queryAllByCriteria(criteria.setLogLevel(INFO)));
+        return success(logService.queryByCriteria(criteria.setLogLevel(INFO)));
     }
 
     @GetMapping(value = "/user")
     @ApiOperation("用户日志查询")
     public ResponseEntity<ResponseData> queryUserLog(LogQueryCriteria criteria) {
-        return success(logService.queryAllByCriteria(criteria.setBlurry(SecurityUtils.getCurrentUsername()).setLogLevel(INFO)));
+        return success(logService.queryByCriteria(criteria.setBlurry(SecurityUtils.getCurrentUsername()).setLogLevel(INFO)));
     }
 
     @GetMapping(value = "/error")
     @ApiOperation("错误日志查询")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData> queryErrorLog(LogQueryCriteria criteria) {
-        return success(logService.queryAllByCriteria(criteria.setLogLevel(ERROR)));
+        return success(logService.queryByCriteria(criteria.setLogLevel(ERROR)));
     }
 
     @GetMapping(value = "/error/{id}")
     @ApiOperation("日志异常详情查询")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData> queryErrorLogs(@PathVariable Long id) {
         return success(logService.queryExceptionalDetailById(id));
     }
@@ -71,7 +71,7 @@ public class LogController {
     @DeleteMapping(value = "/del/error")
     @Logging("删除所有ERROR日志")
     @ApiOperation("删除所有ERROR日志")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData> delAllErrorLog() {
         logService.deleteAllLogsByErrorLevel();
         return success();
@@ -80,7 +80,7 @@ public class LogController {
     @DeleteMapping(value = "/del/info")
     @Logging("删除所有INFO日志")
     @ApiOperation("删除所有INFO日志")
-    @PreAuthorize("@el.check()")
+    @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData> delAllInfoLog() {
         logService.delAllLogsByInfoLevel();
         return success();

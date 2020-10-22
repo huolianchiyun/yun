@@ -98,7 +98,7 @@ public class LogDO extends BaseDO implements ExcelSupport, Serializable {
         map.put("浏览器", browser);
         map.put("请求耗时/毫秒", requestTimeConsuming);
         map.put("异常详情", new String(ObjectUtil.isNotNull(exceptionDetail) ? exceptionDetail : Constants.EMPTY_STR.getBytes()));
-        map.put("创建日期", createTime);
+        map.put("创建日期", createTime == null ? Constants.EMPTY_STR : createTime.toString());
         return map;
     }
 }

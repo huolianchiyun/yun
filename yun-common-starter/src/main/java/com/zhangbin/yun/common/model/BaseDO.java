@@ -1,12 +1,14 @@
 package com.zhangbin.yun.common.model;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zhangbin.yun.common.mybatis.audit.annotation.CreatedBy;
 import com.zhangbin.yun.common.mybatis.audit.annotation.CreatedDate;
 import com.zhangbin.yun.common.mybatis.audit.annotation.LastModifiedBy;
 import com.zhangbin.yun.common.mybatis.audit.annotation.LastModifiedDate;
+import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,7 +18,7 @@ import javax.validation.constraints.Null;
 /**
  * 子类不要加 lombok.Data注解，其会导致子类重写 toString()，从而导致父类 toString失效
  */
-public abstract class BaseDO {
+public abstract class BaseDO implements ExcelSupport {
     @Null(groups = {Create.class}, message = "id 必须为 null 或不需要！")
     @NotNull(groups = {Update.class}, message = "id 不能为空！")
     protected Long id;
@@ -86,5 +88,10 @@ public abstract class BaseDO {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+    }
+
+    @Override
+    public LinkedHashMap<String, Object> toLinkedMap() {
+        return new LinkedHashMap<>(0);
     }
 }

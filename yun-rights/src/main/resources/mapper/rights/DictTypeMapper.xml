@@ -36,7 +36,7 @@
         from t_sys_dict_type
     </select>
 
-    <select id="selectAllByCriteria"
+    <select id="selectByCriteria"
             parameterType="com.zhangbin.yun.yunrights.modules.rights.model.criteria.DictTypeQueryCriteria"
             resultMap="BaseResultMap">
         select

@@ -6,12 +6,11 @@ import com.zhangbin.yun.common.model.BaseDO;
 
 public final class PageQueryHelper {
 
-    public static <R extends BaseDO> Page<R> queryAllByCriteriaWithPage(AbstractQueryPage criteria, PageMapper<R> mapper) {
+    public static <R extends BaseDO> Page<R> queryByCriteriaWithPage(AbstractQueryPage criteria, PageMapper<R> mapper) {
         prepareCriteria(criteria);
         return PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize(), true)
-                .doSelectPage(() -> mapper.selectAllByCriteria(criteria));
+                .doSelectPage(() -> mapper.selectByCriteria(criteria));
     }
-
 
     /**
      * 预处理 criteria， 主要检测 pageNum、pageSize 合法性， 若不合法，则修正为合法值

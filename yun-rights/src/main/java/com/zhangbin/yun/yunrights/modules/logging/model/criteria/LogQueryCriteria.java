@@ -7,6 +7,7 @@ import com.zhangbin.yun.yunrights.modules.logging.enums.LogLevel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+
 /**
  * 日志查询类
  */

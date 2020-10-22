@@ -3,7 +3,6 @@ package com.zhangbin.yun.yunrights.mapper;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.zhangbin.yun.yunrights.modules.rights.mapper.MenuMapper;
 import com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO;
@@ -89,13 +88,13 @@ public class MenuMapperTest {
 
     @Test
     public void testSelectAllByCriteria(){
-        Set<MenuDO> set = menuMapper.selectAllByCriteria(null);
+        Set<MenuDO> set = menuMapper.selectByCriteria(null);
         System.out.println(set);
     }
 
     @Test
     public void testMenuTree(){
-        Set<MenuDO> set = menuMapper.selectAllByCriteria(null);
+        Set<MenuDO> set = menuMapper.selectByCriteria(null);
         System.out.println(JSON.toJSONString(menuService.buildMenuTree(set), SerializerFeature.WriteNullListAsEmpty));
 
     }
