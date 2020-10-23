@@ -16,7 +16,7 @@
     insert into t_sys_menu_api_rights (menu_id, api_url)
     values
     <foreach collection="menuApiRightsSet" item="item" separator=",">
-      (#{menuApiRights.menuId,jdbcType=BIGINT}, #{menuApiRights.apiUrl,jdbcType=VARCHAR})
+      (#{item.menuId,jdbcType=BIGINT}, #{item.apiUrl,jdbcType=VARCHAR})
     </foreach>
   </insert>
 
