@@ -40,11 +40,6 @@ axios.interceptors.response.use(async response => {
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject('error')
   } else {
-    const { data: res } = response
-    if (res.meta.message !== undefined && res.meta.message === 'Authorization失效，请重新登录') {
-      await router.push('/login')
-      return
-    }
     return response.data
   }
 },
