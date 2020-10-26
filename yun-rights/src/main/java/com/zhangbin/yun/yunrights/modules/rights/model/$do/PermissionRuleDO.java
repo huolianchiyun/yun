@@ -1,6 +1,7 @@
 package com.zhangbin.yun.yunrights.modules.rights.model.$do;
 
 import com.zhangbin.yun.common.model.BaseDO;
+import com.zhangbin.yun.common.utils.date.DateUtil;
 import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -45,9 +46,9 @@ public class PermissionRuleDO extends BaseDO implements ExcelSupport, Serializab
         map.put("规则描述", description);
         map.put("是否可用", enabled ? "可用" : "不可用");
         map.put("创建人", creator);
-        map.put("创建日期", createTime);
+        map.put("创建日期", DateUtil.format2MdHms(createTime));
         map.put("修改人", updater);
-        map.put("修改时间", updateTime);
+        map.put("修改时间", DateUtil.format2MdHms(updateTime));
         return map;
     }
 

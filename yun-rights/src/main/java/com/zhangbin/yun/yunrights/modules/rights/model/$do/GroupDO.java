@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.zhangbin.yun.common.model.BaseDO;
+import com.zhangbin.yun.common.utils.date.DateUtil;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
 import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.dto.DeptDTO;
@@ -124,7 +125,7 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         map.put("组长", groupMaster);
         map.put("API权限", groupMaster);
         map.put("创建人", creator);
-        map.put("创建日期", createTime);
+        map.put("创建日期", DateUtil.format2MdHms(createTime));
         return map;
     }
 

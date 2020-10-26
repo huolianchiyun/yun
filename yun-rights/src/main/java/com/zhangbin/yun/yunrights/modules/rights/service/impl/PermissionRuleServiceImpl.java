@@ -25,7 +25,7 @@ public class PermissionRuleServiceImpl implements PermissionRuleService {
     }
 
     @Override
-    public PageInfo<List<PermissionRuleDO>> queryAllByCriteria(RuleQueryCriteria criteria) {
+    public PageInfo<List<PermissionRuleDO>> queryByCriteria(RuleQueryCriteria criteria) {
         Page<PermissionRuleDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, ruleMapper);
         PageInfo<List<PermissionRuleDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());

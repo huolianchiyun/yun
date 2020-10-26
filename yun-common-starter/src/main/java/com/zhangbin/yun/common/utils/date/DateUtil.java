@@ -76,6 +76,9 @@ public final class DateUtil {
      * @return /
      */
     public static String format(LocalDateTime localDateTime, String patten) {
+        if (localDateTime == null) {
+            return "";
+        }
         DateTimeFormatter df = DateTimeFormatter.ofPattern(patten);
         return df.format(localDateTime);
     }
@@ -98,6 +101,9 @@ public final class DateUtil {
      * @return /
      */
     public static String format2MdHms(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return "";
+        }
         return DFY_MD_HMS.format(localDateTime);
     }
 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 import com.zhangbin.yun.common.model.BaseDO;
+import com.zhangbin.yun.common.utils.date.DateUtil;
 import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.common.utils.download.excel.ExcelSupport;
 import com.zhangbin.yun.yunrights.modules.rights.model.common.NameValue;
@@ -91,9 +92,9 @@ public class DictDO extends BaseDO implements Comparable<DictDO>, ExcelSupport, 
         map.put("排序码", sort);
         map.put("描述", description);
         map.put("创建人", creator);
-        map.put("创建时间", createTime);
+        map.put("创建时间", DateUtil.format2MdHms(createTime));
         map.put("修改人", updater);
-        map.put("修改时间", updateTime);
+        map.put("修改时间", DateUtil.format2MdHms(updateTime));
         return map;
     }
 

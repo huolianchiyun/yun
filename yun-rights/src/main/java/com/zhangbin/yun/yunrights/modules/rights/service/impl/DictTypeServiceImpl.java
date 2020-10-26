@@ -43,7 +43,7 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    public PageInfo<List<DictTypeDO>> queryAllByCriteria(DictTypeQueryCriteria criteria) {
+    public PageInfo<List<DictTypeDO>> queryByCriteria(DictTypeQueryCriteria criteria) {
         Page<DictTypeDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, dictTypeMapper);
         PageInfo<List<DictTypeDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());

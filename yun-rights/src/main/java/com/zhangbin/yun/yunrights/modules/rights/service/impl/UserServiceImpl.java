@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<List<UserDO>> queryAllByCriteria(UserQueryCriteria criteria) {
+    public PageInfo<List<UserDO>> queryByCriteria(UserQueryCriteria criteria) {
         Page<UserDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, userMapper);
         PageInfo<List<UserDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());

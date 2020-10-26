@@ -49,7 +49,7 @@ public class UserController {
     @PreAuthorize("@el.check('user:list')")
     // 不加注解，默认从url拿数据封装成controller参数对象，加 @RequestBody 注解 spring mvc才会从http body里去拿数据。
     public ResponseEntity<ResponseData> queryByCriteria(@Validated UserQueryCriteria criteria) {
-       return success(userService.queryAllByCriteria(criteria));
+       return success(userService.queryByCriteria(criteria));
     }
 
     @Logging("新增用户")

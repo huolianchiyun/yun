@@ -53,7 +53,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public PageInfo<List<GroupDO>> queryAllByCriteria(GroupQueryCriteria criteria) {
+    public PageInfo<List<GroupDO>> queryByCriteria(GroupQueryCriteria criteria) {
         Page<GroupDO> page = PageQueryHelper.queryByCriteriaWithPage(criteria, groupMapper);
         PageInfo<List<GroupDO>> pageInfo = new PageInfo<>(criteria.getPageNum(), criteria.getPageSize());
         pageInfo.setTotal(page.getTotal());

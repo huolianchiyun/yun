@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.zhangbin.yun.common.utils.date.DateUtil;
 import com.zhangbin.yun.yunrights.modules.common.enums.handler.BaseEnumValue;
 import com.zhangbin.yun.common.model.BaseDO;
 import com.zhangbin.yun.yunrights.modules.rights.common.excel.CollectChildren;
@@ -147,8 +148,10 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("菜单标题", menuTitle);
         map.put("菜单类型", menuType.getZhName());
+        map.put("菜单编码", menuCode);
+        map.put("菜单图标", menuIcon);
         map.put("创建人", creator);
-        map.put("创建日期", createTime);
+        map.put("创建日期",  DateUtil.format2MdHms(createTime));
         return map;
     }
 

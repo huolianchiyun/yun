@@ -136,20 +136,22 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO"
+            useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
-        m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_component, m_is_external_link,
-        m_is_hidden,
-        m_creator, m_updater, m_create_time,
-        m_update_time)
+                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_component,
+                                m_is_external_link,
+                                m_is_hidden,
+                                m_creator, m_updater, m_create_time,
+                                m_update_time)
         values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR},
-        #{menuType,jdbcType=INTEGER},
-        #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
-        #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR},
-        #{component,jdbcType=VARCHAR},
-        #{externalLink,jdbcType=BIT},#{hidden,jdbcType=BIT},
-        #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP})
+                #{menuType,jdbcType=INTEGER},
+                #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
+                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR},
+                #{component,jdbcType=VARCHAR},
+                #{externalLink,jdbcType=BIT}, #{hidden,jdbcType=BIT},
+                #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.yunrights.modules.rights.model.$do.MenuDO">

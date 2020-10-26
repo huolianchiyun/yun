@@ -33,7 +33,7 @@ public class MenuController {
     @ApiOperation("导出菜单数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('menu:list')")
-    public void download(HttpServletResponse response, MenuQueryCriteria criteria) throws Exception {
+    public void download(HttpServletResponse response, MenuQueryCriteria criteria) {
         menuService.downloadExcel(menuService.queryAllByCriteriaWithNoPage(criteria.setPid(null)), response);
     }
 

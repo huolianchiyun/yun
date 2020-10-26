@@ -60,7 +60,7 @@ public class DictController {
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<ResponseData> queryByCriteria(@Validated DictQueryCriteria criteria) {
-        return success(dictService.queryAllByCriteria(criteria));
+        return success(dictService.queryByCriteria(criteria));
     }
 
     @Logging("新增字典")
@@ -103,7 +103,7 @@ public class DictController {
     @GetMapping("/type/page")
     @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity<ResponseData> queryByCriteria(DictTypeQueryCriteria criteria) {
-        return success(dictTypeService.queryAllByCriteria(criteria));
+        return success(dictTypeService.queryByCriteria(criteria));
     }
 
     @Logging("新增字典类型")

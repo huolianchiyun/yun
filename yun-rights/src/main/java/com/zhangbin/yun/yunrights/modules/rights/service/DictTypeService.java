@@ -30,7 +30,7 @@ public interface DictTypeService {
      * @param criteria 条件
      * @return /
      */
-    PageInfo<List<DictTypeDO>> queryAllByCriteria(DictTypeQueryCriteria criteria);
+    PageInfo<List<DictTypeDO>> queryByCriteria(DictTypeQueryCriteria criteria);
     /**
      * 新增
      *

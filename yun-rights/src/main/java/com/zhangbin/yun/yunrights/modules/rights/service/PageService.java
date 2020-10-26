@@ -14,6 +14,6 @@ public interface PageService<T extends AbstractQueryPage, R> {
      * @param criteria 条件
      * @return /
      */
-    PageInfo<List<R>> queryAllByCriteria(T criteria);
+    PageInfo<List<R>> queryByCriteria(T criteria);
 
 }

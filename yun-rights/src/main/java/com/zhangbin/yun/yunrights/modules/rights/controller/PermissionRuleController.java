@@ -49,7 +49,7 @@ public class PermissionRuleController {
     @GetMapping
     @PreAuthorize("@el.check('rule:list')")
     public ResponseEntity<ResponseData> queryByCriteria(RuleQueryCriteria criteria) {
-        return success(ruleService.queryAllByCriteria(criteria));
+        return success(ruleService.queryByCriteria(criteria));
     }
 
     @Logging("新增规则")

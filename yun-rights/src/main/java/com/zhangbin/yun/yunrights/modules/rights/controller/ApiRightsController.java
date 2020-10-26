@@ -28,7 +28,7 @@ public class ApiRightsController {
     @GetMapping("/rights")
     @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData> queryByCriteria(@Validated ApiRightsQueryCriteria criteria) {
-        return success(apiRightsService.queryAllByCriteria(criteria));
+        return success(apiRightsService.queryByCriteria(criteria));
     }
 
     @Logging("查询 API 访问权限")
