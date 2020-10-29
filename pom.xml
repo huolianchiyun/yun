@@ -17,11 +17,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>yun-rights</module>
+        <module>yun-sys</module>
         <module>yun-test</module>
         <module>yun-antlr</module>
         <module>yun-workflow</module>
-        <module>yun-monitor</module>
         <module>yun-common-starter</module>
     </modules>
     <properties>
@@ -55,6 +54,17 @@
                 <artifactId>guava</artifactId>
                 <version>20.0</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.2</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>3.0.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

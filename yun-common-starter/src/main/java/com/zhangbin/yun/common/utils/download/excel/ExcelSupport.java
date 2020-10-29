@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 @FunctionalInterface
 public interface ExcelSupport {
     /**
-     * Demo: {@code com.zhangbin.yun.yunrights.modules.rights.model.$do.GroupDO}
+     * Demo: {@code com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO}
      */
     LinkedHashMap<String, Object> toLinkedMap();
 }

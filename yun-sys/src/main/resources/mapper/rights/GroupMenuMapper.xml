@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.GroupMenuMapper">
+    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.GroupMenuDO">
+        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
+        <result column="menu_id" jdbcType="INTEGER" property="menuId"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.GroupMenuDO">
+        insert into t_sys_group_menu (group_id, menu_id)
+        values (#{groupId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.HashSet">
+        insert into t_sys_group_menu (group_id, menu_id)
+        values
+        <foreach collection="groupMenus" item="groupMenu" separator=",">
+            (#{groupMenu.groupId,jdbcType=INTEGER}, #{groupMenu.menuId,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByMenuIds" parameterType="java.util.HashSet">
+        delete
+        from t_sys_group_menu
+        where menu_id in
+        <foreach collection="menuIds" item="menuId" open="(" separator=", " close=")">
+            #{menuId, jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByGroupIds" parameterType="java.util.HashSet">
+        delete
+        from t_sys_group_menu
+        where group_id in
+        <foreach collection="groupIds" item="groupId" open="(" separator=", " close=")">
+            #{groupId, jdbcType=INTEGER}
+        </foreach>
+    </delete>
+</mapper>

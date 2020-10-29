@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.MenuMapper">
+    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.MenuDO">
+        <id column="m_id" jdbcType="BIGINT" property="id"/>
+        <result column="m_menu_code" jdbcType="VARCHAR" property="menuCode"/>
+        <result column="m_menu_icon" jdbcType="VARCHAR" property="menuIcon"/>
+        <result column="m_menu_title" jdbcType="VARCHAR" property="menuTitle"/>
+        <result column="m_menu_type" jdbcType="INTEGER" property="menuType"/>
+        <result column="m_description" jdbcType="VARCHAR" property="description"/>
+        <result column="m_menu_sort" jdbcType="INTEGER" property="menuSort"/>
+        <result column="m_pid" jdbcType="BIGINT" property="pid"/>
+        <result column="m_router_name" jdbcType="VARCHAR" property="routerName"/>
+        <result column="m_router_path" jdbcType="VARCHAR" property="routerPath"/>
+        <result column="m_component" jdbcType="VARCHAR" property="component"/>
+        <result column="m_is_external_link" jdbcType="BIT" property="externalLink"/>
+        <result column="m_is_hidden" jdbcType="BIT" property="hidden"/>
+        <result column="m_creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="m_updater" jdbcType="VARCHAR" property="updater"/>
+        <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_component,
+        m_is_external_link, m_is_hidden, m_creator, m_updater, m_create_time, m_update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_menu
+        where m_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="batchSelectById" parameterType="java.util.HashSet" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_menu
+        where m_id in
+        <foreach collection="menuIds" item="id" open="(" separator=", " close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </select>
+
+    <select id="selectByPid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_menu
+        where m_pid = #{pid,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByGroupIds" parameterType="java.util.HashSet" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_menu, t_sys_group_menu
+        where group_id in
+        <foreach collection="groupIds" item="groupId" open="(" separator=", " close=")">
+            #{groupId,jdbcType=INTEGER}
+        </foreach>
+        and m_id = menu_id
+    </select>
+
+    <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_menu, t_sys_group_menu
+        where group_id = #{groupId,jdbcType=INTEGER} and m_id = menu_id
+    </select>
+
+    <select id="selectRouterMenusByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select m_id,
+               m_pid,
+               m_menu_icon,
+               m_menu_title,
+               m_menu_type,
+               m_menu_sort,
+               m_router_name,
+               m_router_path,
+               m_component,
+               m_is_external_link,
+               m_is_hidden
+        from t_sys_menu m,
+             t_sys_group_menu gm,
+             t_sys_user_group ug,
+             t_sys_user u
+        where m.m_menu_type in (0, 1)
+          and m.m_id = gm.menu_id
+          and gm.group_id = ug.group_id
+          and ug.user_id = u.u_id
+          and u.u_id = #{userId}
+    </select>
+
+    <select id="selectRouterMenus" resultMap="BaseResultMap">
+        select m_id,
+               m_pid,
+               m_menu_icon,
+               m_menu_title,
+               m_menu_type,
+               m_menu_sort,
+               m_router_name,
+               m_router_path,
+               m_component,
+               m_is_external_link,
+               m_is_hidden
+        from t_sys_menu
+        where m_menu_type in (0, 1)
+    </select>
+
+    <select id="selectByCriteria"
+            parameterType="com.zhangbin.yun.sys.modules.rights.model.criteria.MenuQueryCriteria"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_menu
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test='criteria != null'>
+                <if test="criteria.pid != null">
+                    and m_pid = #{criteria.pid,jdbcType=BIGINT}
+                </if>
+                <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
+                    <if test='criteria.blurryType.isMatch("menuTitle")'>
+                        and m_menu_title like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                    <if test='criteria.blurryType.isMatch("description")'>
+                        and m_description like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                </if>
+                <if test='criteria.startTime != null and criteria.startTime != ""'>
+                    and m_create_time >= #{criteria.startTime}
+                </if>
+                <if test='criteria.endTime != null and criteria.endTime != ""'>
+                    and m_create_time <![CDATA[<=]]> #{criteria.endTime}
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.MenuDO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
+                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_component,
+                                m_is_external_link,
+                                m_is_hidden,
+                                m_creator, m_updater, m_create_time,
+                                m_update_time)
+        values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR},
+                #{menuType,jdbcType=INTEGER},
+                #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
+                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR},
+                #{component,jdbcType=VARCHAR},
+                #{externalLink,jdbcType=BIT}, #{hidden,jdbcType=BIT},
+                #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.MenuDO">
+        update t_sys_menu
+        <set>
+            <if test="menuCode != null">
+                m_menu_code = #{menuCode,jdbcType=VARCHAR},
+            </if>
+            <if test="menuIcon != null">
+                m_menu_icon = #{menuIcon,jdbcType=VARCHAR},
+            </if>
+            <if test="menuTitle != null">
+                m_menu_title = #{menuTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="menuType != null">
+                m_menu_type = #{menuType,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                m_description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="menuSort != null">
+                m_menu_sort = #{menuSort,jdbcType=INTEGER},
+            </if>
+            <if test="pid != null">
+                m_pid = #{pid,jdbcType=BIGINT},
+            </if>
+            <if test="routerName != null">
+                m_router_name = #{routerName,jdbcType=VARCHAR},
+            </if>
+            <if test="routerPath != null">
+                m_router_path = #{routerPath,jdbcType=VARCHAR},
+            </if>
+            <if test="component != null">
+                m_component = #{component,jdbcType=VARCHAR},
+            </if>
+            <if test="externalLink != null">
+                m_is_external_link = #{externalLink,jdbcType=BIT},
+            </if>
+            <if test="hidden != null">
+                m_is_hidden = #{hidden,jdbcType=BIT},
+            </if>
+            <if test="updater != null">
+                m_updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                m_update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where m_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from t_sys_menu
+        where m_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="batchDeleteByIds" parameterType="java.util.Set">
+        delete from t_sys_menu
+        where m_id in
+        <foreach collection="menuIds" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+</mapper>

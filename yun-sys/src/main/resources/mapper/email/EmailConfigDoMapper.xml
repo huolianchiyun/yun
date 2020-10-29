@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangbin.yun.sys.modules.email.mapper.EmailConfigMapper">
+  <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.email.model.$do.EmailConfigDO">
+    <id column="ec_id" jdbcType="BIGINT" property="id" />
+    <result column="ec_host" jdbcType="VARCHAR" property="host" />
+    <result column="ec_port" jdbcType="VARCHAR" property="port" />
+    <result column="ec_password" jdbcType="VARCHAR" property="password" />
+    <result column="ec_sender" jdbcType="VARCHAR" property="sender" />
+    <result column="ec_recipients" jdbcType="VARCHAR" property="recipients" />
+    <result column="ec_creator" jdbcType="VARCHAR" property="creator" />
+    <result column="ec_updater" jdbcType="VARCHAR" property="updater" />
+    <result column="ec_create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="ec_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    ec_id, ec_host, ec_port, ec_password, ec_sender, ec_recipients, ec_creator, ec_updater,
+    ec_create_time, ec_update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_email_config
+    where ec_id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.email.model.$do.EmailConfigDO">
+    insert into t_sys_email_config (ec_host, ec_port,
+      ec_password, ec_user, ec_sender,
+      ec_creator, ec_updater, ec_create_time,
+      ec_update_time)
+    values (#{host,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{sender,jdbcType=VARCHAR}, #{recipients,jdbcType=VARCHAR},
+      #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.sys.modules.email.model.$do.EmailConfigDO">
+    update t_sys_email_config
+    <set>
+      <if test="host != null">
+        ec_host = #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        ec_port = #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        ec_password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="sender != null">
+        ec_sender = #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="recipients != null">
+        ec_recipients = #{recipients,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        ec_creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        ec_updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        ec_create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        ec_update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ec_id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_sys_email_config
+    where ec_id = #{id,jdbcType=BIGINT}
+  </delete>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.PermissionRuleMapper">
+    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.PermissionRuleDO">
+        <id column="pr_id" jdbcType="BIGINT" property="id"/>
+        <result column="pr_rule_name" jdbcType="VARCHAR" property="ruleName"/>
+        <result column="pr_group_codes" jdbcType="VARCHAR" property="groupCodes"/>
+        <result column="pr_from_table" jdbcType="VARCHAR" property="fromTable"/>
+        <result column="pr_rule_exps" jdbcType="VARCHAR" property="ruleExps"/>
+        <result column="pr_description" jdbcType="VARCHAR" property="description"/>
+        <result column="u_is_enabled" jdbcType="BIT" property="enabled"/>
+        <result column="pr_creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="pr_updater" jdbcType="VARCHAR" property="updater"/>
+        <result column="pr_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="pr_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pr_id, pr_rule_name, pr_group_codes, pr_from_table, pr_rule_exps, pr_description, pr_is_enabled, pr_creator, pr_updater, pr_create_time, pr_update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_permission_rule
+        where pr_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectAllUsableForSystem" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select pr_rule_name, pr_group_codes, pr_from_table, pr_rule_exps from t_sys_permission_rule where pr_is_enabled = true
+    </select>
+
+    <select id="selectByCriteria"
+            parameterType="com.zhangbin.yun.sys.modules.rights.model.criteria.RuleQueryCriteria"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_permission_rule
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test='criteria != null'>
+                <if test='criteria.blurry != null and criteria.blurry != "" and criteria.blurryType != null'>
+                    <if test='criteria.blurryType.isMatch("ruleName")'>
+                        and pr_rule_name like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                    <if test='criteria.blurryType.isMatch("groupCode")'>
+                        and pr_group_codes like concat('%', #{criteria.blurry}, '%')
+                    </if>
+                </if>
+                <if test='criteria.enabled != null'>
+                    and pr_enabled = ${criteria.enabled}
+                </if>
+                <if test='criteria.startTime != null and criteria.startTime != ""'>
+                    and pr_create_time >= #{criteria.startTime}
+                </if>
+                <if test='criteria.endTime != null and criteria.endTime != ""'>
+                    and pr_create_time <![CDATA[<=]]> #{criteria.endTime}
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.PermissionRuleDO" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_permission_rule (pr_rule_name, pr_group_codes, pr_from_table, pr_rule_exps, pr_description,
+        pr_is_enabled, pr_creator,pr_updater, pr_create_time, pr_update_time)
+        values (#{pr_rule_name,jdbcType=VARCHAR}, #{pr_group_codes,jdbcType=VARCHAR},
+        #{pr_from_table,jdbcType=TINYINT}, #{pr_rule_exps,jdbcType=VARCHAR}, #{pr_description,jdbcType=VARCHAR},
+        #{u_is_enabled,jdbcType=BIT},#{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.PermissionRuleDO">
+        update t_sys_permission_rule
+        <set>
+            <if test="ruleName != null">
+                pr_rule_name = #{ruleName,jdbcType=VARCHAR},
+            </if>
+            <if test="groupCodes != null">
+                pr_group_codes = #{groupCodes,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleExps != null">
+                pr_rule_exps = #{ruleExps,jdbcType=TINYINT},
+            </if>
+            <if test="description != null">
+                pr_description = #{description,jdbcType=BIGINT},
+            </if>
+            <if test="enabled != null">
+                pr_is_enabled = #{enabled,jdbcType=BIT},
+            </if>
+            <if test="updater != null">
+                pr_updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                pr_update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where pr_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from t_sys_permission_rule
+        where pr_id = #{id,jdbcType=BIGINT}
+    </delete>
+</mapper>
