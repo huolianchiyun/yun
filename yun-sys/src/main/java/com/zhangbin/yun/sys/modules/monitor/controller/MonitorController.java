@@ -22,7 +22,7 @@ public class MonitorController {
     private final MonitorService monitorService;
 
     @GetMapping
-    @ApiOperation("查询本地服务监控信息")
+    @ApiOperation("查询服务机器监控信息")
     @PreAuthorize("@el.check('monitor')")
     public ResponseEntity<ResponseData<MachineInfo>> query() {
         return success(monitorService.getLocalMachineInfo());

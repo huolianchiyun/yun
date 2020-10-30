@@ -25,7 +25,7 @@ public class YunRightsAutoConfig implements ApplicationContextAware {
                 webServerFactory.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
 }

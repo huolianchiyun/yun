@@ -104,6 +104,9 @@ yun:
     rights:
       update: false
 
+websocket:
+  netty:
+    port: 8888
 
 # IP 本地解析
 ip:
