@@ -1,4 +1,4 @@
-package com.zhangbin.yun.common.websocket;
+package com.zhangbin.yun.common.web.websocket;
 
 public interface Sender {
     /**

@@ -1,4 +1,4 @@
-package com.zhangbin.yun.common.websocket.netty;
+package com.zhangbin.yun.common.web.websocket.netty;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

@@ -1,7 +1,7 @@
-package com.zhangbin.yun.common.websocket.netty;
+package com.zhangbin.yun.common.web.websocket.netty;
 
 import cn.hutool.core.util.ReflectUtil;
-import com.zhangbin.yun.common.websocket.WebsocketSender;
+import com.zhangbin.yun.common.web.websocket.WebsocketSender;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

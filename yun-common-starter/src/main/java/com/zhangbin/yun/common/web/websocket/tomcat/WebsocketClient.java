@@ -1,11 +1,10 @@
-package com.zhangbin.yun.common.websocket.tomcat;
+package com.zhangbin.yun.common.web.websocket.tomcat;
 
 import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.zhangbin.yun.common.websocket.Sender;
-import com.zhangbin.yun.common.websocket.SocketMsg;
-import com.zhangbin.yun.common.websocket.WebsocketSender;
-import com.zhangbin.yun.common.websocket.netty.TextWebsocketFrameHandler;
+import com.zhangbin.yun.common.web.websocket.Sender;
+import com.zhangbin.yun.common.web.websocket.SocketMsg;
+import com.zhangbin.yun.common.web.websocket.WebsocketSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 

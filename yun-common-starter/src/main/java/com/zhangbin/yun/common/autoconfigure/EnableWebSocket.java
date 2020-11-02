@@ -1,6 +1,6 @@
 package com.zhangbin.yun.common.autoconfigure;
 
-import com.zhangbin.yun.common.websocket.WebsocketSelector;
+import com.zhangbin.yun.common.web.websocket.WebsocketSelector;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

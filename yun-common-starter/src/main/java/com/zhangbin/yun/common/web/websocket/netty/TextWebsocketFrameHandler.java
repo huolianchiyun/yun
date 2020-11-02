@@ -1,8 +1,8 @@
-package com.zhangbin.yun.common.websocket.netty;
+package com.zhangbin.yun.common.web.websocket.netty;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zhangbin.yun.common.websocket.Sender;
-import com.zhangbin.yun.common.websocket.SocketMsg;
+import com.zhangbin.yun.common.web.websocket.Sender;
+import com.zhangbin.yun.common.web.websocket.SocketMsg;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;

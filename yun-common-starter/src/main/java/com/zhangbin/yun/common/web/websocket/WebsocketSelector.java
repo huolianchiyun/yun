@@ -1,8 +1,8 @@
-package com.zhangbin.yun.common.websocket;
+package com.zhangbin.yun.common.web.websocket;
 
 import com.zhangbin.yun.common.autoconfigure.EnableWebSocket;
-import com.zhangbin.yun.common.websocket.netty.WebsocketServer;
-import com.zhangbin.yun.common.websocket.tomcat.WebsocketClient;
+import com.zhangbin.yun.common.web.websocket.netty.WebsocketServer;
+import com.zhangbin.yun.common.web.websocket.tomcat.WebsocketClient;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
