@@ -34,8 +34,7 @@ https://www.cnblogs.com/pluto4596/p/11005417.html
 
 works：
 
-1. alarm push system
-2. monitor  11
+1. alarm push system 11
 3. code generator
 4. auto-deploy
 

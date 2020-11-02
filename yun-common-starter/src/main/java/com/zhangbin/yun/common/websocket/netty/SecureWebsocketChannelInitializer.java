@@ -7,10 +7,10 @@ import io.netty.handler.ssl.SslHandler;
 
 import javax.net.ssl.SSLEngine;
 
-public class SecureMessageServerInitializer extends MessageServerInitializer {
+public class SecureWebsocketChannelInitializer extends WebsocketChannelInitializer {
     private final SslContext context;
 
-    public SecureMessageServerInitializer(ChannelGroup group, SslContext context) {
+    public SecureWebsocketChannelInitializer(ChannelGroup group, SslContext context) {
         super(group);
         this.context = context;
     }

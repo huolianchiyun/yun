@@ -10,7 +10,8 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RestController;
 
-@EnableWebSocket(EnableWebSocket.WebSocketType.Netty)
+//@EnableWebSocket(EnableWebSocket.WebSocketType.Netty)
+@EnableWebSocket
 @RestController
 @Api(hidden = true)
 @SpringBootApplication

@@ -1,7 +1,13 @@
 package com.zhangbin.yun.common.websocket.tomcat;
 
+import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.zhangbin.yun.common.websocket.Sender;
+import com.zhangbin.yun.common.websocket.SocketMsg;
+import com.zhangbin.yun.common.websocket.WebsocketSender;
+import com.zhangbin.yun.common.websocket.netty.TextWebsocketFrameHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -21,13 +27,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 @ServerEndpoint("/webSocket/{sid}")
-public class WebSocketClient {
+public class WebsocketClient implements Sender, InitializingBean {
 
     private static final AtomicInteger onlineCount = new AtomicInteger();
     /**
      * 存放每个客户端对应的 WebSocket 对象。
      */
-    private static final Map<String, WebSocketClient> WEB_SOCKET_CLIENT_MAP = new ConcurrentHashMap<>(5);
+    private static final Map<String, WebsocketClient> WEB_SOCKET_CLIENT_MAP = new ConcurrentHashMap<>(5);
 
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -45,11 +51,12 @@ public class WebSocketClient {
      * @param sid       若 sid 为 null 或空，则广播，即群发
      * @param socketMsg 自定义消息
      */
-    public static void sendMsg(@PathParam("sid") String sid, SocketMsg socketMsg) {
+    @Override
+    public void sendMsg(String sid, SocketMsg socketMsg) {
         if (WEB_SOCKET_CLIENT_MAP.isEmpty()) return;
         String message = JSONObject.toJSONString(socketMsg);
         log.info("推送消息到 {}，推送内容: {}", sid, message);
-        final WebSocketClient client = WEB_SOCKET_CLIENT_MAP.get(sid);
+        final WebsocketClient client = WEB_SOCKET_CLIENT_MAP.get(sid);
         if (client != null) {
             client.sendMessage(message);
             return;
@@ -95,11 +102,11 @@ public class WebSocketClient {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("收到来" + sid + "的信息: " + message);
+        log.info("收到来 {} 的信息: {}", sid, message);
         //群发消息
-        for (Map.Entry<String, WebSocketClient> item : WEB_SOCKET_CLIENT_MAP.entrySet()) {
-            item.getValue().sendMessage(message);
-        }
+//        for (Map.Entry<String, WebSocketClient> item : WEB_SOCKET_CLIENT_MAP.entrySet()) {
+//            item.getValue().sendMessage(message);
+//        }
     }
 
     @OnError
@@ -127,12 +134,17 @@ public class WebSocketClient {
         if (this == o) {
             return true;
         }
-        WebSocketClient other = (WebSocketClient) o;
+        WebsocketClient other = (WebsocketClient) o;
         return Objects.equals(sid, other.sid);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(sid);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        ReflectUtil.setFieldValue(WebsocketSender.class, "sender", this);
     }
 }

@@ -10,16 +10,16 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 import java.net.InetSocketAddress;
 
-public class SecureMessageServer extends MessageServer {
+public class SecureWebsocketServer extends WebsocketServer {
     private final SslContext context;
 
-    public SecureMessageServer(SslContext context) {
+    public SecureWebsocketServer(SslContext context) {
         this.context = context;
     }
 
     @Override
     protected ChannelInitializer<Channel> createInitializer(ChannelGroup group) {
-        return new SecureMessageServerInitializer(group, context);
+        return new SecureWebsocketChannelInitializer(group, context);
     }
 
     public static void main(String[] args) throws Exception {
@@ -30,7 +30,7 @@ public class SecureMessageServer extends MessageServer {
         int port = Integer.parseInt(args[0]);
         SelfSignedCertificate certificate = new SelfSignedCertificate();
         SslContextBuilder builder = SslContextBuilder.forServer(certificate.privateKey(), certificate.certificate());
-        final SecureMessageServer endpoint = new SecureMessageServer(builder.build());
+        final SecureWebsocketServer endpoint = new SecureWebsocketServer(builder.build());
         ChannelFuture future = endpoint.start(new InetSocketAddress(port));
         Runtime.getRuntime().addShutdownHook(new Thread(endpoint::destroy));
         future.channel().closeFuture().syncUninterruptibly();

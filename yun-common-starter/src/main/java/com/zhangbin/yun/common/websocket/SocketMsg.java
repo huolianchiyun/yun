@@ -1,4 +1,4 @@
-package com.zhangbin.yun.common.websocket.tomcat;
+package com.zhangbin.yun.common.websocket;
 
 import lombok.Data;
 

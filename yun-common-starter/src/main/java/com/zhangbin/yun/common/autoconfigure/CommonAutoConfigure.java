@@ -3,7 +3,6 @@ package com.zhangbin.yun.common.autoconfigure;
 import com.zhangbin.yun.common.filter.CrossDomainFilter;
 import com.zhangbin.yun.common.filter.PageHelperFilter;
 import com.zhangbin.yun.common.spring.redis.RedisUtils;
-import com.zhangbin.yun.common.websocket.tomcat.WebSocketClient;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 

@@ -1,5 +1,7 @@
 package com.zhangbin.yun.common.websocket.netty;
 
+import cn.hutool.core.util.ReflectUtil;
+import com.zhangbin.yun.common.websocket.WebsocketSender;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -13,9 +15,10 @@ import io.netty.util.concurrent.ImmediateEventExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
+
 import java.net.InetSocketAddress;
 
-public class MessageServer implements ApplicationListener<ApplicationStartedEvent> {
+public class WebsocketServer implements ApplicationListener<ApplicationStartedEvent> {
     private final ChannelGroup channelGroup = new DefaultChannelGroup(ImmediateEventExecutor.INSTANCE);
     private final EventLoopGroup group = new NioEventLoopGroup();
     private Channel channel;
@@ -45,12 +48,13 @@ public class MessageServer implements ApplicationListener<ApplicationStartedEven
     }
 
     protected ChannelInitializer<Channel> createInitializer(ChannelGroup group) {
-        return new MessageServerInitializer(group);
+        return new WebsocketChannelInitializer(group);
     }
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         ChannelFuture future = this.start(new InetSocketAddress(port));
+        ReflectUtil.setFieldValue(WebsocketSender.class, "sender", new TextWebsocketFrameHandler(channelGroup));
         Runtime.getRuntime().addShutdownHook(new Thread(this::destroy));
         future.channel().closeFuture().syncUninterruptibly();
     }
