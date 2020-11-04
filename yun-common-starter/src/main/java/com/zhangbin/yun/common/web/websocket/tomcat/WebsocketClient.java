@@ -4,6 +4,7 @@ import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.zhangbin.yun.common.web.websocket.Sender;
 import com.zhangbin.yun.common.web.websocket.SocketMsg;
+import com.zhangbin.yun.common.web.websocket.WebsocketConst;
 import com.zhangbin.yun.common.web.websocket.WebsocketSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,6 +18,8 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.zhangbin.yun.common.web.websocket.WebsocketConst.WEBSOCKET_BASE_URL;
+
 /**
  * WebSocket客户端连接
  * 每来一个新连接会该连接创建一个 WebSocketClient
@@ -25,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @see org.springframework.web.socket.server.standard.ServerEndpointExporter
  */
 @Slf4j
-@ServerEndpoint("/webSocket/{sid}")
+@ServerEndpoint(WEBSOCKET_BASE_URL + "/{sid}")
 public class WebsocketClient implements Sender, InitializingBean {
 
     private static final AtomicInteger onlineCount = new AtomicInteger();
@@ -145,5 +148,6 @@ public class WebsocketClient implements Sender, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         ReflectUtil.setFieldValue(WebsocketSender.class, "sender", this);
+        log.info("*** *** tomcat-websocket started *** ***");
     }
 }

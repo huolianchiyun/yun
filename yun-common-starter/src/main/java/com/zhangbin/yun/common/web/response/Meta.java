@@ -1,5 +1,6 @@
 package com.zhangbin.yun.common.web.response;
 
+import com.alibaba.fastjson.annotation.JSONCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public final class Meta {
@@ -13,9 +14,11 @@ public final class Meta {
     public static Meta error(String errMsg) {
         return new Meta(Status.ServerError, errMsg);
     }
+
     public static Meta requestError(String errMsg) {
         return new Meta(Status.RequestError, errMsg);
     }
+
     public static Meta noApiRights(String errMsg) {
         return new Meta(Status.NoApiRights, errMsg);
     }
@@ -49,7 +52,6 @@ public final class Meta {
         OK(200), RequestError(400), NoApiRights(401), ServerError(500);
         @JsonValue
         private int code;
-
         Status(int code) {
             this.code = code;
         }

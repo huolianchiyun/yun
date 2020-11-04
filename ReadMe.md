@@ -33,9 +33,12 @@ https://www.cnblogs.com/pluto4596/p/11005417.html
 ```
 
 works：
-
 1. alarm push system 11
 3. code generator
 4. auto-deploy
 
+分布式事务 alibaba Seate
 
+websocket 连接添加头信息，头带token
+只有满足security校验，才能连接成功
+tomcat-socket支持，netty需适配支持

@@ -9,11 +9,12 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 
+import static com.zhangbin.yun.common.web.websocket.WebsocketConst.WEBSOCKET_BASE_URL;
+
 public class WebsocketChannelInitializer extends ChannelInitializer<Channel> {
-    public static final String websocketPath = "/ws";
     private final ChannelGroup group;
 
-    public WebsocketChannelInitializer(ChannelGroup group) {
+    WebsocketChannelInitializer(ChannelGroup group) {
         this.group = group;
     }
 
@@ -25,7 +26,5 @@ public class WebsocketChannelInitializer extends ChannelInitializer<Channel> {
         pipeline.addLast(new ChunkedWriteHandler());
         pipeline.addLast(new HttpObjectAggregator(1024 * 1024));
         pipeline.addLast(new HttpRequestHandler());
-        pipeline.addLast(new WebSocketServerProtocolHandler(websocketPath, true));
-        pipeline.addLast(new TextWebsocketFrameHandler(group));
     }
 }

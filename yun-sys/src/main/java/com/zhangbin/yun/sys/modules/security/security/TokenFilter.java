@@ -18,6 +18,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Objects;
 
 public class TokenFilter extends GenericFilterBean {
@@ -43,7 +45,7 @@ public class TokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        String token = resolveToken(httpServletRequest);
+        String token = getTokenFrom(httpServletRequest);
         // 对于 Token 为空的不需要去查 Redis
         if (StrUtil.isNotBlank(token)) {
             OnlineUser onlineUser = null;
@@ -68,6 +70,10 @@ public class TokenFilter extends GenericFilterBean {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
+    private String getTokenFrom(HttpServletRequest httpServletRequest) {
+        return resolveToken(httpServletRequest);
+    }
+
     /**
      * 初步检测Token
      *
@@ -75,7 +81,14 @@ public class TokenFilter extends GenericFilterBean {
      * @return /
      */
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(properties.getHeader());
+        String bearerToken = null;
+        try {
+            bearerToken = request.getRequestURI().startsWith("/ws")
+                    ? URLDecoder.decode(request.getHeader("Sec-WebSocket-Protocol"), "UTF-8")
+                    : request.getHeader(properties.getHeader());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(properties.getTokenStartWith())) {
             // 去掉令牌前缀
             return bearerToken.replace(properties.getTokenStartWith(), "");

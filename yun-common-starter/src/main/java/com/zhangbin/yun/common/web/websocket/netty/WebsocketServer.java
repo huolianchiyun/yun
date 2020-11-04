@@ -12,18 +12,21 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.ImmediateEventExecutor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
-
 import java.net.InetSocketAddress;
 
+@Slf4j
 public class WebsocketServer implements ApplicationListener<ApplicationStartedEvent> {
     private final ChannelGroup channelGroup = new DefaultChannelGroup(ImmediateEventExecutor.INSTANCE);
     private final EventLoopGroup group = new NioEventLoopGroup();
     private Channel channel;
     @Value("${websocket.netty.port:9999}")
     private int port;
+    @Value("${server.port:-1}")
+    private int webPort;
 
     ChannelFuture start(InetSocketAddress address) {
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -53,9 +56,19 @@ public class WebsocketServer implements ApplicationListener<ApplicationStartedEv
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        ChannelFuture future = this.start(new InetSocketAddress(port));
-        ReflectUtil.setFieldValue(WebsocketSender.class, "sender", new TextWebsocketFrameHandler(channelGroup));
-        Runtime.getRuntime().addShutdownHook(new Thread(this::destroy));
-        future.channel().closeFuture().syncUninterruptibly();
+        new Thread(() -> {
+            ChannelFuture future = this.start(new InetSocketAddress(port));
+            ReflectUtil.setFieldValue(WebsocketSender.class, "sender", new TextWebsocketFrameHandler(channelGroup));
+            Runtime.getRuntime().addShutdownHook(new Thread(this::destroy));
+            log.info("*** *** netty-websocket started, 监听端口：{} *** ***", port);
+            future.channel().closeFuture().syncUninterruptibly();
+        }, "netty-websocket").start();
+    }
+    public int getWebPort() {
+        return webPort;
+    }
+
+    public ChannelGroup getChannelGroup() {
+        return channelGroup;
     }
 }

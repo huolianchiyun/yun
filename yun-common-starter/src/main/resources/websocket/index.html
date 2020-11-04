@@ -16,7 +16,7 @@
             height: 15em;
         }
     </style>
-<!--    <script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>-->
+    <script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>
     <script src="/websocket/jquery.min.js"></script>
     <script type="text/javascript">
         function log(msg) {
@@ -30,11 +30,12 @@
             if (!WebSocket) {
                 $('#not-supported').show()
             } else {
-                var ws = null
+                let ws = null
                 $('#connect').click(function () {
                     if (ws == null || ws.readyState != 1) {
-                        ws = new WebSocket($('#url').val())
+                        let token = encodeURI("Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4NjZjZjk2ODhkODQ0YmM4ODk4ZjFlZDhjZDMzNzkzYiIsImF1dGgiOiJhbGwiLCJzdWIiOiJhZG1pbiJ9.Bil4c40wp7gTjbbxb2sNE8OHQCLPrctop2NxZboRQsKg5smEt1zIlSle1m7nnCSFjT_AIyYqJCKTfcSWhA9m_Q")
 
+                        ws = new WebSocket($('#url').val(),[token]);
                         ws.onerror = function (e) {
                             log('Error : ' + e.message)
                         }

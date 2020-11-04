@@ -1,15 +1,18 @@
 package com.zhangbin.yun.common.web.websocket.netty;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.common.web.websocket.Sender;
 import com.zhangbin.yun.common.web.websocket.SocketMsg;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 import java.net.SocketAddress;
 import java.util.List;
@@ -52,9 +55,10 @@ public class TextWebsocketFrameHandler extends SimpleChannelInboundHandler<TextW
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        log.info("收到客户端信息: {}", msg.text());
-        // 增加消息的引用计数，并将其写入ChannelGroup中所有已经连接的客户端
-//        group.writeAndFlush(msg.retain());
+        if(log.isDebugEnabled() && StringUtils.isNotEmpty(msg.text())){
+            log.debug("收到客户端信息: {}", msg.text());
+        }
+//        ctx.writeAndFlush(msg.retain());
     }
 
     @Override
@@ -66,13 +70,13 @@ public class TextWebsocketFrameHandler extends SimpleChannelInboundHandler<TextW
             WebsocketChannel channel = (WebsocketChannel) c;
             return channel.getIdentity().equals(sid);
         }).collect(Collectors.toList());
-
         if (!collect.isEmpty()) {
-            collect.forEach(c -> c.writeAndFlush(message));
+            // 消息一定要使用TextWebSocketFrame进行封装，否则客户端接收不到消息
+            collect.forEach(c -> c.writeAndFlush(new TextWebSocketFrame(message)));
             return;
         }
         // 群发
-        group.writeAndFlush(message);
+        group.writeAndFlush(new TextWebSocketFrame(message));
     }
 
     static class WebsocketChannel implements Channel {
