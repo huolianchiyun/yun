@@ -1,4 +1,4 @@
-package com.zhangbin.yun.sys.modules.monitor.model.vo;
+package com.zhangbin.yun.monitor.model.vo;
 
 
 import java.util.Map;

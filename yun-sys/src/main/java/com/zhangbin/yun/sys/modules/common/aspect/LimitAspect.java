@@ -3,7 +3,7 @@ package com.zhangbin.yun.sys.modules.common.aspect;
 import com.google.common.collect.*;
 import com.zhangbin.yun.sys.modules.common.annotation.Limit;
 import com.zhangbin.yun.common.exception.BadRequestException;
-import com.zhangbin.yun.sys.modules.common.utils.IPUtil;
+import com.zhangbin.yun.common.utils.ip.IPUtil;
 import com.zhangbin.yun.common.spring.RequestHolder;
 import com.zhangbin.yun.common.utils.str.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

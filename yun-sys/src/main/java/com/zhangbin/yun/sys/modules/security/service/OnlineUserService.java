@@ -5,7 +5,7 @@ import com.alibaba.fastjson.parser.Feature;
 import com.zhangbin.yun.common.spring.redis.RedisUtils;
 import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.common.utils.encodec.EncryptUtils;
-import com.zhangbin.yun.sys.modules.common.utils.IPUtil;
+import com.zhangbin.yun.common.utils.ip.IPUtil;
 import com.zhangbin.yun.common.utils.str.StringUtils;
 import com.zhangbin.yun.common.constant.Constants;
 import com.zhangbin.yun.common.page.PageInfo;

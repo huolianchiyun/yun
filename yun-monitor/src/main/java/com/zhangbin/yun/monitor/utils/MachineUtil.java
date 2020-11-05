@@ -1,7 +1,8 @@
-package com.zhangbin.yun.sys.modules.common.utils;
+package com.zhangbin.yun.monitor.utils;
 
 import cn.hutool.core.date.BetweenFormater;
 import cn.hutool.core.date.DateUtil;
+import com.zhangbin.yun.common.utils.ip.IPUtil;
 import com.zhangbin.yun.common.utils.io.FileUtil;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;

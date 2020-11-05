@@ -1,6 +1,6 @@
 package com.zhangbin.yun.sys.modules.common.config;
 
-import com.zhangbin.yun.sys.modules.common.utils.YunConstant;
+import com.zhangbin.yun.common.constant.YunConstant;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

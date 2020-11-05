@@ -4,7 +4,7 @@ spring:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:log4jdbc:mysql://192.168.11.131:3306/yunrights?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+      url: jdbc:log4jdbc:mysql://192.168.11.131:3306/yunrights_api2menu?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
       username: root
       password: 123456
       # 初始连接数

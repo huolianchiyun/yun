@@ -1,4 +1,4 @@
-package com.zhangbin.yun.sys.modules.common.utils;
+package com.zhangbin.yun.common.constant;
 
 /**
  * 常用静态常量

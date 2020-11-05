@@ -11,7 +11,7 @@ import com.zhangbin.yun.common.mybatis.page.PageMapper;
 import com.zhangbin.yun.common.mybatis.page.PageQuery;
 import com.zhangbin.yun.common.page.PageInfo;
 import com.zhangbin.yun.common.mybatis.page.PageQueryHelper;
-import com.zhangbin.yun.sys.modules.common.utils.IPUtil;
+import com.zhangbin.yun.common.utils.ip.IPUtil;
 import com.zhangbin.yun.common.utils.validator.ValidationUtil;
 import com.zhangbin.yun.sys.modules.logging.annotation.Logging;
 import com.zhangbin.yun.sys.modules.logging.enums.LogLevel;

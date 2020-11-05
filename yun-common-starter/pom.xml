@@ -111,6 +111,18 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.21</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--ip2region - 准确率99.9%的离线IP地址定位库-->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>1.7.2</version>
+        </dependency>
     </dependencies>
 
 </project>

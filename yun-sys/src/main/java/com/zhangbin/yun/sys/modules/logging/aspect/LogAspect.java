@@ -1,6 +1,6 @@
 package com.zhangbin.yun.sys.modules.logging.aspect;
 
-import com.zhangbin.yun.sys.modules.common.utils.IPUtil;
+import com.zhangbin.yun.common.utils.ip.IPUtil;
 import com.zhangbin.yun.common.spring.RequestHolder;
 import com.zhangbin.yun.common.exception.ThrowableUtil;
 import static com.zhangbin.yun.sys.modules.logging.enums.LogLevel.*;

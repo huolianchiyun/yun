@@ -1,10 +1,10 @@
-package com.zhangbin.yun.sys.modules.monitor.service.impl;
+package com.zhangbin.yun.monitor.service.impl;
 
 
-import static com.zhangbin.yun.sys.modules.common.utils.MachineUtil.*;
+import static com.zhangbin.yun.monitor.utils.MachineUtil.*;
 
-import com.zhangbin.yun.sys.modules.monitor.model.vo.MachineInfo;
-import com.zhangbin.yun.sys.modules.monitor.service.MonitorService;
+import com.zhangbin.yun.monitor.model.vo.MachineInfo;
+import com.zhangbin.yun.monitor.service.MonitorService;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;

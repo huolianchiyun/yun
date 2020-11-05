@@ -17,5 +17,10 @@
             <artifactId>yun-sys</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.zhangbin.yun</groupId>
+            <artifactId>yun-monitor</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
