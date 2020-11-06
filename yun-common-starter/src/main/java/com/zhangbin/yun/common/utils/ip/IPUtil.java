@@ -3,7 +3,7 @@ package com.zhangbin.yun.common.utils.ip;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.zhangbin.yun.common.constant.YunConstant;
+import com.zhangbin.yun.common.constant.OSConstant;
 import com.zhangbin.yun.common.spring.SpringContextHolder;
 import com.zhangbin.yun.common.utils.io.FileUtil;
 import com.zhangbin.yun.common.utils.str.StringUtils;
@@ -92,7 +92,7 @@ public class IPUtil {
      * 根据ip获取详细地址
      */
     public static String getHttpCityInfo(String ip) {
-        String api = String.format(YunConstant.Url.IP_URL, ip);
+        String api = String.format(OSConstant.Url.IP_URL, ip);
         JSONObject object = JSONUtil.parseObj(HttpUtil.get(api));
         return object.get("addr", String.class);
     }
@@ -109,7 +109,7 @@ public class IPUtil {
             if (address.charAt(address.length() - 1) == symbol) {
                 address = address.substring(0, address.length() - 1);
             }
-            return address.equals(YunConstant.REGION) ? "内网IP" : address;
+            return address.equals(OSConstant.REGION) ? "内网IP" : address;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

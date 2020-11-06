@@ -148,6 +148,6 @@ public class WebsocketClient implements Sender, InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         ReflectUtil.setFieldValue(WebsocketSender.class, "sender", this);
-        log.info("*** *** tomcat-websocket started *** ***");
+        log.info("*** *** Tomcat-Websocket started， 监听端口同 Web application port *** ***");
     }
 }

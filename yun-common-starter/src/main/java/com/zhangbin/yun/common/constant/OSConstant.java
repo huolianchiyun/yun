@@ -3,7 +3,7 @@ package com.zhangbin.yun.common.constant;
 /**
  * 常用静态常量
  */
-public class YunConstant {
+public class OSConstant {
 
     /**
      * 用于IP定位转换

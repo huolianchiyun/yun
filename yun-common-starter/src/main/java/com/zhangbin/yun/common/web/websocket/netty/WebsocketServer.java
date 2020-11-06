@@ -60,7 +60,7 @@ public class WebsocketServer implements ApplicationListener<ApplicationStartedEv
             ChannelFuture future = this.start(new InetSocketAddress(port));
             ReflectUtil.setFieldValue(WebsocketSender.class, "sender", new TextWebsocketFrameHandler(channelGroup));
             Runtime.getRuntime().addShutdownHook(new Thread(this::destroy));
-            log.info("*** *** netty-websocket started, 监听端口：{} *** ***", port);
+            log.info("*** *** Netty-Websocket started, 监听端口：{} *** ***", port);
             future.channel().closeFuture().syncUninterruptibly();
         }, "netty-websocket").start();
     }

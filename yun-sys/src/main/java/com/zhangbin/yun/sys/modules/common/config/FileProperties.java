@@ -1,6 +1,6 @@
 package com.zhangbin.yun.sys.modules.common.config;
 
-import com.zhangbin.yun.common.constant.YunConstant;
+import com.zhangbin.yun.common.constant.OSConstant;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +24,9 @@ public class FileProperties {
 
     public YunPath getPath(){
         String os = System.getProperty("os.name");
-        if(os.toLowerCase().startsWith(YunConstant.WIN)) {
+        if(os.toLowerCase().startsWith(OSConstant.WIN)) {
             return windows;
-        } else if(os.toLowerCase().startsWith(YunConstant.MAC)){
+        } else if(os.toLowerCase().startsWith(OSConstant.MAC)){
             return mac;
         }
         return linux;
