@@ -1,4 +1,4 @@
-package com.zhangbin.yun.monitor.autoconfigure;
+package monitor.autoconfigure;
 
 import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;

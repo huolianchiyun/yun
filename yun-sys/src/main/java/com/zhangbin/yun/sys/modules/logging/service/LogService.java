@@ -2,15 +2,23 @@ package com.zhangbin.yun.sys.modules.logging.service;
 
 import com.zhangbin.yun.common.page.PageInfo;
 import com.zhangbin.yun.common.utils.download.DownLoadSupport;
+import com.zhangbin.yun.sys.modules.logging.enums.LogLevel;
 import com.zhangbin.yun.sys.modules.logging.model.$do.LogDO;
 import com.zhangbin.yun.sys.modules.logging.model.criteria.LogQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.scheduling.annotation.Async;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface LogService extends DownLoadSupport {
+
+    /**
+     * 导出日志
+     *
+     * @param criteria 查询条件
+     * @param response /
+     */
+    void download(LogQueryCriteria criteria, HttpServletResponse response);
 
     /**
      * 分页查询满足条件的操作日志
@@ -40,20 +48,9 @@ public interface LogService extends DownLoadSupport {
     void saveLog(String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log);
 
     /**
-     * 导出日志
-     *
-     * @param criteria 查询条件
-     * @param response /
+     * 根据日志等级删除日志
+     * @param logLevel 日志等级
      */
-    void download(LogQueryCriteria criteria, HttpServletResponse response);
+    void delLogsByLevel(LogLevel logLevel);
 
-    /**
-     * 删除所有错误日志
-     */
-    void deleteAllLogsByErrorLevel();
-
-    /**
-     * 删除所有INFO日志
-     */
-    void delAllLogsByInfoLevel();
 }

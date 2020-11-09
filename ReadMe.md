@@ -6,12 +6,11 @@
 ```
 
 works：
-1. alarm push system 11
 3. code generator
 4. auto-deploy
 
-分布式事务 alibaba Seate
+服务上下线监控，通知方式：邮件、钉钉、短信 
 
-websocket 连接添加头信息，头带token
-只有满足security校验，才能连接成功
-tomcat-socket支持，netty需适配支持
+
+分布式事务： alibaba Seate
+

@@ -1,8 +1,8 @@
-package com.zhangbin.yun.monitor.controller;
+package monitor.controller;
 
 import com.zhangbin.yun.common.web.response.ResponseData;
-import com.zhangbin.yun.monitor.model.vo.MachineInfo;
-import com.zhangbin.yun.monitor.service.MonitorService;
+import monitor.model.vo.MachineInfo;
+import monitor.service.MonitorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

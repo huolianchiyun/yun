@@ -1,6 +1,6 @@
-package com.zhangbin.yun.monitor.service;
+package monitor.service;
 
-import com.zhangbin.yun.monitor.model.vo.MachineInfo;
+import monitor.model.vo.MachineInfo;
 
 /**
  * 监控服务部署机器接口

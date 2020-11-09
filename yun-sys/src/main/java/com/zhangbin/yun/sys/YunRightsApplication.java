@@ -1,15 +1,13 @@
 package com.zhangbin.yun.sys;
 
-import com.zhangbin.yun.common.web.websocket.EnableWebSocket;
-import com.zhangbin.yun.monitor.autoconfigure.EnableMonitor;
 import com.zhangbin.yun.sys.modules.common.annotation.rest.AnonymousGetMapping;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 
-@EnableMonitor
-@EnableWebSocket
+//@EnableMonitor
+//@EnableWebSocket
 @RestController
 @Api(hidden = true)
 @SpringBootApplication

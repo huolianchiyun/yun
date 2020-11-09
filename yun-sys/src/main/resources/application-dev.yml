@@ -43,7 +43,16 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *
 
 #mybatis
 mybatis:
@@ -55,7 +64,7 @@ login:
   # 登录缓存
   cache-enable: true
   #  是否限制单用户登录
-  single: false
+  single: true
   #  验证码
   login-code:
     #  验证码类型配置 查看 LoginProperties 类

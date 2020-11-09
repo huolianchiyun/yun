@@ -70,13 +70,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void deleteAllLogsByErrorLevel() {
-        logMapper.deleteByLogLevel(LogLevel.ERROR.getLevel());
-    }
-
-    @Override
-    public void delAllLogsByInfoLevel() {
-        logMapper.deleteByLogLevel(LogLevel.INFO.getLevel());
+    public void delLogsByLevel(LogLevel logLevel) {
+        logMapper.deleteByLogLevel(logLevel.getLevel());
     }
 
     private void fillSomeValues2LogDo(String browser, String ip, ProceedingJoinPoint joinPoint, LogDO log) {
@@ -100,5 +95,4 @@ public class LogServiceImpl implements LogService {
         log.setRequestMethod(methodName);
         log.setBrowser(browser);
     }
-
 }

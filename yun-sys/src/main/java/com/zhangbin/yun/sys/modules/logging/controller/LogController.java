@@ -4,10 +4,10 @@ import static com.zhangbin.yun.common.web.response.ResponseUtil.success;
 
 import com.zhangbin.yun.common.page.PageInfo;
 import com.zhangbin.yun.common.web.response.ResponseData;
-import com.zhangbin.yun.common.spring.security.SecurityUtils;
 import com.zhangbin.yun.sys.modules.logging.annotation.Logging;
 import static com.zhangbin.yun.sys.modules.logging.enums.LogLevel.*;
 
+import com.zhangbin.yun.sys.modules.logging.enums.LogLevel;
 import com.zhangbin.yun.sys.modules.logging.model.$do.LogDO;
 import com.zhangbin.yun.sys.modules.logging.model.criteria.LogQueryCriteria;
 import com.zhangbin.yun.sys.modules.logging.service.LogService;
@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/yun/logs")
+@RequestMapping("/yun/log")
 @Api(tags = "系统：日志管理")
 public class LogController {
 
@@ -37,32 +37,11 @@ public class LogController {
         logService.download(criteria.setLogLevel(INFO), response);
     }
 
-    @Logging("导出错误数据")
-    @ApiOperation("导出错误数据")
-    @GetMapping(value = "/download/error")
-    @PreAuthorize("@el.check('all')")
-    public void downloadErrorLog(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
-        logService.download(criteria.setLogLevel(ERROR), response);
-    }
-
     @GetMapping
     @ApiOperation("根据条件分页查询日志")
     @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData<PageInfo<List<LogDO>>>> query(LogQueryCriteria criteria) {
         return success(logService.queryByCriteria(criteria.setLogLevel(INFO)));
-    }
-
-    @GetMapping(value = "/user")
-    @ApiOperation("用户日志查询")
-    public ResponseEntity<ResponseData<PageInfo<List<LogDO>>>> queryUserLog(LogQueryCriteria criteria) {
-        return success(logService.queryByCriteria(criteria.setBlurry(SecurityUtils.getCurrentUsername()).setLogLevel(INFO)));
-    }
-
-    @GetMapping(value = "/error")
-    @ApiOperation("错误日志查询")
-    @PreAuthorize("@el.check('all')")
-    public ResponseEntity<ResponseData<PageInfo<List<LogDO>>>> queryErrorLog(LogQueryCriteria criteria) {
-        return success(logService.queryByCriteria(criteria.setLogLevel(ERROR)));
     }
 
     @GetMapping(value = "/error/{id}")
@@ -72,21 +51,12 @@ public class LogController {
         return success(logService.queryExceptionalDetailById(id));
     }
 
-    @DeleteMapping(value = "/del/error")
-    @Logging("删除所有ERROR日志")
-    @ApiOperation("删除所有ERROR日志")
+    @DeleteMapping(value = "/del/{logLevel}")
+    @Logging("根据日志等级删除日志")
+    @ApiOperation("根据日志等级删除日志")
     @PreAuthorize("@el.check('all')")
-    public ResponseEntity<ResponseData<Void>> delAllErrorLog() {
-        logService.deleteAllLogsByErrorLevel();
-        return success();
-    }
-
-    @DeleteMapping(value = "/del/info")
-    @Logging("删除所有INFO日志")
-    @ApiOperation("删除所有INFO日志")
-    @PreAuthorize("@el.check('all')")
-    public ResponseEntity<ResponseData<Void>> delAllInfoLog() {
-        logService.delAllLogsByInfoLevel();
+    public ResponseEntity<ResponseData<Void>> delLogByLevel(@PathVariable LogLevel logLevel) {
+        logService.delLogsByLevel(logLevel);
         return success();
     }
 }

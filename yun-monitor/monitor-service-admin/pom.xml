@@ -4,23 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <artifactId>yun-monitor</artifactId>
         <groupId>com.zhangbin.yun</groupId>
-        <artifactId>yun</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
-    <artifactId>yun-test</artifactId>
+    <artifactId>monitor-service-admin</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.zhangbin.yun</groupId>
-            <artifactId>yun-sys</artifactId>
-            <version>${project.version}</version>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.zhangbin.yun</groupId>
-            <artifactId>monitor-machine</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
+
 </project>
