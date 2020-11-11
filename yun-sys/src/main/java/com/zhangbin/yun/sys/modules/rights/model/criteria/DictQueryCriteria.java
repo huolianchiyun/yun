@@ -20,7 +20,6 @@ import java.io.Serializable;
 @ValidateDateRange(message = "开始时间不能大于结束时间！")
 public class DictQueryCriteria extends AbstractQueryPage implements Serializable {
 
-    @NotNull(groups = {BaseDO.Update.class}, message = "id 不能为空！")
     private String blurry;
 
     private BlurryType blurryType;

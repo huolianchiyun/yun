@@ -13,7 +13,7 @@
 
     <modules>
         <module>monitor-machine</module>
-        <module>monitor-service-admin</module>
+        <module>monitor-server-admin</module>
     </modules>
 
 </project>

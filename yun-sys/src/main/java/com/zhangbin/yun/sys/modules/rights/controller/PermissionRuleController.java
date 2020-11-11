@@ -50,7 +50,7 @@ public class PermissionRuleController {
     @ApiOperation("根据条件查询规则")
     @GetMapping
     @PreAuthorize("@el.check('rule:list')")
-    public ResponseEntity<ResponseData<PageInfo<List<PermissionRuleDO>>>> queryByCriteria(RuleQueryCriteria criteria) {
+    public ResponseEntity<ResponseData<PageInfo<List<PermissionRuleDO>>>> queryByCriteria(@Validated RuleQueryCriteria criteria) {
         return success(ruleService.queryByCriteria(criteria));
     }
 

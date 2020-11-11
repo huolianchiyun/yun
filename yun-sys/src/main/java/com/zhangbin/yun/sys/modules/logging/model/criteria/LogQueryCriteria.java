@@ -33,24 +33,20 @@ public final class LogQueryCriteria extends AbstractQueryPage {
     @ApiModelProperty("格式：2020-08-25")
     private String endTime;
 
-    public LogQueryCriteria setLogLevel(LogLevel logLevel) {
+    public void setLogLevel(LogLevel logLevel) {
         this.logLevel = logLevel;
-        return this;
     }
 
-    public LogQueryCriteria setBlurry(String blurry) {
+    public void setBlurry(String blurry) {
         this.blurry = blurry;
-        return this;
     }
 
-    public LogQueryCriteria setStartTime(String startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
-        return this;
     }
 
-    public LogQueryCriteria setEndTime(String endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
-        return this;
     }
 
     public enum BlurryType {

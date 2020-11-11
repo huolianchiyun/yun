@@ -75,7 +75,7 @@ public class MenuController {
     @ApiOperation("根据条件查询菜单：1、根据 pid 查询满足条件的子菜单（直接子菜单）2、将 pid 设置为 null可以查询所有满足条件的菜单")
     @GetMapping
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<ResponseData<List<MenuDO>>> queryByCriteria(MenuQueryCriteria criteria) {
+    public ResponseEntity<ResponseData<List<MenuDO>>> queryByCriteria(@Validated MenuQueryCriteria criteria) {
         return success(menuService.queryAllByCriteriaWithNoPage(criteria));
     }
 

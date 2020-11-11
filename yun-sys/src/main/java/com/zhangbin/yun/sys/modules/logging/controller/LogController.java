@@ -33,15 +33,15 @@ public class LogController {
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('all')")
-    public void download(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
-        logService.download(criteria.setLogLevel(INFO), response);
+    public void download(HttpServletResponse response, LogQueryCriteria criteria) {
+        logService.download(criteria, response);
     }
 
     @GetMapping
     @ApiOperation("根据条件分页查询日志")
     @PreAuthorize("@el.check('all')")
     public ResponseEntity<ResponseData<PageInfo<List<LogDO>>>> query(LogQueryCriteria criteria) {
-        return success(logService.queryByCriteria(criteria.setLogLevel(INFO)));
+        return success(logService.queryByCriteria(criteria));
     }
 
     @GetMapping(value = "/error/{id}")

@@ -13,7 +13,9 @@ spring:
       repositories:
         enabled: false
 
-#
+  application:
+    name: yun-sys
+  #
   redis:
     #数据库索引
     database: 1
