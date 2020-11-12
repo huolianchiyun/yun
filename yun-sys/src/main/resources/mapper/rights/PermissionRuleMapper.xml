@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.PermissionRuleMapper">
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.PermissionRuleDO">
+<mapper namespace="com.yun.sys.modules.rights.mapper.PermissionRuleMapper">
+    <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.PermissionRuleDO">
         <id column="pr_id" jdbcType="BIGINT" property="id"/>
         <result column="pr_rule_name" jdbcType="VARCHAR" property="ruleName"/>
         <result column="pr_group_codes" jdbcType="VARCHAR" property="groupCodes"/>
@@ -31,7 +31,7 @@
     </select>
 
     <select id="selectByCriteria"
-            parameterType="com.zhangbin.yun.sys.modules.rights.model.criteria.RuleQueryCriteria"
+            parameterType="com.yun.sys.modules.rights.model.criteria.RuleQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -59,7 +59,7 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.PermissionRuleDO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.PermissionRuleDO" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_permission_rule (pr_rule_name, pr_group_codes, pr_from_table, pr_rule_exps, pr_description,
         pr_is_enabled, pr_creator,pr_updater, pr_create_time, pr_update_time)
         values (#{pr_rule_name,jdbcType=VARCHAR}, #{pr_group_codes,jdbcType=VARCHAR},
@@ -70,7 +70,7 @@
     </insert>
 
     <update id="updateByPrimaryKeySelective"
-            parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.PermissionRuleDO">
+            parameterType="com.yun.sys.modules.rights.model.$do.PermissionRuleDO">
         update t_sys_permission_rule
         <set>
             <if test="ruleName != null">

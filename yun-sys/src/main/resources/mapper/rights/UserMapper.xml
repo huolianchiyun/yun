@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.UserMapper">
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.UserDO">
+<mapper namespace="com.yun.sys.modules.rights.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.UserDO">
         <id column="u_id" jdbcType="BIGINT" property="id"/>
         <result column="u_nickname" jdbcType="VARCHAR" property="nickname"/>
         <result column="u_username" jdbcType="VARCHAR" property="username"/>
@@ -20,17 +20,17 @@
         <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime"/>
     </resultMap>
 
-    <resultMap id="CascadeBaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.UserDO" extends="BaseResultMap">
+    <resultMap id="CascadeBaseResultMap" type="com.yun.sys.modules.rights.model.$do.UserDO" extends="BaseResultMap">
         <!-- 多对一关联映射:association -->
         <association property="dept"
-                     javaType="com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO"
+                     javaType="com.yun.sys.modules.rights.model.$do.GroupDO"
                      column="u_id"
-                     select="com.zhangbin.yun.sys.modules.rights.mapper.GroupMapper.selectDeptByUserId">
+                     select="com.yun.sys.modules.rights.mapper.GroupMapper.selectDeptByUserId">
         </association>
         <!-- 多对多映射的关键:collection -->
         <collection property="groups" javaType="java.util.HashSet"
-                    column="u_id" ofType="com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO"
-                    select="com.zhangbin.yun.sys.modules.rights.mapper.GroupMapper.selectByUserIdForUserMapper">
+                    column="u_id" ofType="com.yun.sys.modules.rights.model.$do.GroupDO"
+                    select="com.yun.sys.modules.rights.mapper.GroupMapper.selectByUserIdForUserMapper">
         </collection>
     </resultMap>
 
@@ -94,7 +94,7 @@
     </select>
 
     <select id="selectByCriteria"
-            parameterType="com.zhangbin.yun.sys.modules.rights.model.criteria.UserQueryCriteria"
+            parameterType="com.yun.sys.modules.rights.model.criteria.UserQueryCriteria"
             resultMap="CascadeBaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -129,7 +129,7 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.UserDO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.UserDO" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user (u_nickname, u_username,
         u_gender, u_pwd, u_phone, u_email, u_is_admin,
         u_dept_id, u_status, u_is_deleted, u_creator,
@@ -143,7 +143,7 @@
 
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.UserDO">
+    <update id="updateByPrimaryKeySelective" parameterType="com.yun.sys.modules.rights.model.$do.UserDO">
         update t_sys_user
         <set>
             <if test="nickname != null">

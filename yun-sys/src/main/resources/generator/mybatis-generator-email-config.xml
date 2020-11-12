@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
     <context id="DB2Tables1" targetRuntime="MyBatis3">
-        <plugin type="com.zhangbin.yun.sys.generator.MybatisPlugin">
+        <plugin type="com.yun.sys.generator.MybatisPlugin">
             <property name="hasLombok" value="true"/>
         </plugin>
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>

@@ -8,7 +8,7 @@
         <setting name="aggressiveLazyLoading" value="false"/>
         <!--配置全局默认枚举类型处理器 defaultEnumTypeHandler, 3.4.5版本新增-->
         <setting name="defaultEnumTypeHandler"
-                 value="com.zhangbin.yun.sys.modules.common.enums.handler.MyEnumTypeHandler"/>
+                 value="com.yun.sys.modules.common.enums.handler.MyEnumTypeHandler"/>
     </settings>
 
     <plugins>
@@ -38,9 +38,9 @@
             <!-- always总是返回PageInfo类型,check检查返回类型是否为PageInfo,none返回Page -->
             <property name="returnPageInfo" value="none"/>
         </plugin>
-        <plugin interceptor="com.zhangbin.yun.common.mybatis.audit.plugin.AuditInterceptor"/>
+        <plugin interceptor="com.yun.common.mybatis.audit.plugin.AuditInterceptor"/>
         <!--由于mybatis拦截器的拦截顺序是从下到上，所有应将DataRightsInterceptor配置在最后，使其被最先拦截。-->
-        <plugin interceptor="com.zhangbin.yun.sys.modules.rights.datarights.DataRightsInterceptor"/>
+        <plugin interceptor="com.yun.sys.modules.rights.datarights.DataRightsInterceptor"/>
     </plugins>
 
 </configuration>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.MenuMapper">
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.MenuDO">
+<mapper namespace="com.yun.sys.modules.rights.mapper.MenuMapper">
+    <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.MenuDO">
         <id column="m_id" jdbcType="BIGINT" property="id"/>
         <result column="m_menu_code" jdbcType="VARCHAR" property="menuCode"/>
         <result column="m_menu_icon" jdbcType="VARCHAR" property="menuIcon"/>
@@ -108,7 +108,7 @@
     </select>
 
     <select id="selectByCriteria"
-            parameterType="com.zhangbin.yun.sys.modules.rights.model.criteria.MenuQueryCriteria"
+            parameterType="com.yun.sys.modules.rights.model.criteria.MenuQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -136,7 +136,7 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.MenuDO"
+    <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.MenuDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
                                 m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_component,
@@ -154,7 +154,7 @@
                 #{updateTime,jdbcType=TIMESTAMP})
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.MenuDO">
+    <update id="updateByPrimaryKeySelective" parameterType="com.yun.sys.modules.rights.model.$do.MenuDO">
         update t_sys_menu
         <set>
             <if test="menuCode != null">

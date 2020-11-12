@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.GroupMenuMapper">
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.GroupMenuDO">
+<mapper namespace="com.yun.sys.modules.rights.mapper.GroupMenuMapper">
+    <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.GroupMenuDO">
         <result column="group_id" jdbcType="INTEGER" property="groupId"/>
         <result column="menu_id" jdbcType="INTEGER" property="menuId"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.GroupMenuDO">
+    <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.GroupMenuDO">
         insert into t_sys_group_menu (group_id, menu_id)
         values (#{groupId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER})
     </insert>

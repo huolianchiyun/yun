@@ -9,7 +9,8 @@ works：
 3. code generator
 4. auto-deploy
 
-服务上下线监控，通知方式：邮件、钉钉、短信 
+服务上下线监控，通知方式：邮件、钉钉
+调整包名
 
 
 分布式事务： alibaba Seate

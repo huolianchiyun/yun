@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.GroupMapper">
+<mapper namespace="com.yun.sys.modules.rights.mapper.GroupMapper">
 
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO">
+    <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.GroupDO">
         <id column="g_id" jdbcType="BIGINT" property="id"/>
         <result column="g_pid" jdbcType="BIGINT" property="pid"/>
         <result column="g_group_code" jdbcType="INTEGER" property="groupCode"/>
@@ -17,19 +17,19 @@
         <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-    <resultMap id="CascadeResultMap0" type="com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO"
+    <resultMap id="CascadeResultMap0" type="com.yun.sys.modules.rights.model.$do.GroupDO"
                extends="BaseResultMap">
         <collection column="g_id" property="menus"
-                    javaType="java.util.HashSet" ofType="com.zhangbin.yun.sys.modules.rights.model.$do.MenuDO"
-                    select="com.zhangbin.yun.sys.modules.rights.mapper.MenuMapper.selectByGroupId">
+                    javaType="java.util.HashSet" ofType="com.yun.sys.modules.rights.model.$do.MenuDO"
+                    select="com.yun.sys.modules.rights.mapper.MenuMapper.selectByGroupId">
         </collection>
     </resultMap>
 
-    <resultMap id="CascadeResultMap1" type="com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO"
+    <resultMap id="CascadeResultMap1" type="com.yun.sys.modules.rights.model.$do.GroupDO"
                extends="CascadeResultMap0">
         <collection column="g_id" property="users"
-                    javaType="java.util.HashSet" ofType="com.zhangbin.yun.sys.modules.rights.model.$do.UserDO"
-                    select="com.zhangbin.yun.sys.modules.rights.mapper.UserMapper.selectByGroupId">
+                    javaType="java.util.HashSet" ofType="com.yun.sys.modules.rights.model.$do.UserDO"
+                    select="com.yun.sys.modules.rights.mapper.UserMapper.selectByGroupId">
         </collection>
     </resultMap>
 
@@ -125,7 +125,7 @@
     </select>
 
     <select id="selectByCriteria"
-            parameterType="com.zhangbin.yun.sys.modules.rights.model.criteria.GroupQueryCriteria"
+            parameterType="com.yun.sys.modules.rights.model.criteria.GroupQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -163,7 +163,7 @@
         </trim>
     </select>
 
-    <insert id="insert" parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO"
+    <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.GroupDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_group (g_pid, g_group_code, g_group_type,
                                  g_group_name, g_description, g_group_sort, g_group_master, g_creator,
@@ -175,7 +175,7 @@
     </insert>
 
     <update id="updateByPrimaryKeySelective"
-            parameterType="com.zhangbin.yun.sys.modules.rights.model.$do.GroupDO">
+            parameterType="com.yun.sys.modules.rights.model.$do.GroupDO">
         update t_sys_group
         <set>
             <if test="pid != null">

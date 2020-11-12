@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangbin.yun.sys.modules.rights.mapper.ApiRightsMapper">
-    <resultMap id="BaseResultMap" type="com.zhangbin.yun.sys.modules.rights.model.$do.ApiRightsDO">
+<mapper namespace="com.yun.sys.modules.rights.mapper.ApiRightsMapper">
+    <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.ApiRightsDO">
         <result column="api_id" jdbcType="BIGINT" property="id"/>
         <result column="api_group" jdbcType="VARCHAR" property="group"/>
         <result column="api_tag" jdbcType="VARCHAR" property="tag"/>
@@ -15,7 +15,7 @@
     </sql>
 
     <select id="selectByCriteria"
-            parameterType="com.zhangbin.yun.sys.modules.rights.model.criteria.ApiRightsQueryCriteria"
+            parameterType="com.yun.sys.modules.rights.model.criteria.ApiRightsQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
