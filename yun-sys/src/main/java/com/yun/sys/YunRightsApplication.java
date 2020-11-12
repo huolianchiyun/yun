@@ -1,12 +1,13 @@
 package com.yun.sys;
 
+import com.yun.monitor.autoconfigure.EnableMonitor;
 import com.yun.sys.modules.common.annotation.rest.AnonymousGetMapping;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 
-//@EnableMonitor
+@EnableMonitor
 //@EnableWebSocket
 @RestController
 @Api(hidden = true)
