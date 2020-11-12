@@ -6,20 +6,20 @@ spring:
       notify:
         enable: true
         mail:
-          to: 45645@qq.com
-          from: 1090@qq.com
-        dingtalk:
-          msgtype: markdown
-          keywords: Alarm
-          title: 服务告警   # msgtype: markdown 时起作用
-          atMobiles: 13186111103
-          webhook-token: https://oapi.dingtalk.com/robot/send?access_token=95908763459b20e24fff6c28c0bc830ac3989997f6887a2580fcdb2531b7debb
-          picUrl:
-          messageUrl: http://localhost:8080/applications/yun-sys
+          to: xxx
+          from: 7884831631@qq.com
+#        dingtalk:
+#          msgtype: markdown
+#          keywords: Alarm
+#          title: 服务告警   # msgtype: markdown 时起作用
+#          atMobiles: 13186111103
+#          webhook-token: https://oapi.dingtalk.com/robot/send?access_token=95908763459b20e24fff6c28c0bc830ac3989997f6887a2580fcdb2531b7debb
+#          picUrl:
+#          messageUrl: http://localhost:8080/applications/yun-sys
   mail:
     host: smtp.qq.com
-    username: 1090@qq.com
-    password: lsdjkflskafjlkd#qq邮箱授权码
+    username: 7884831631@qq.com
+    password: fachvmqsgijbbehc #qq邮箱授权码
     properties:
       mail:
         debug: false

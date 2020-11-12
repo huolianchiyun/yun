@@ -9,6 +9,7 @@ public class MachineInfo {
     private Map<String, Object> memory;
     private Map<String, Object> swap;
     private Map<String, Object> disk;
+    private String time;
 
     public Map<String, Object> getSystem() {
         return system;
@@ -52,6 +53,15 @@ public class MachineInfo {
 
     public MachineInfo setDisk(Map<String, Object> disk) {
         this.disk = disk;
+        return this;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public MachineInfo setTime(String time) {
+        this.time = time;
         return this;
     }
 }
