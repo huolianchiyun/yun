@@ -2,6 +2,8 @@ package com.yun.sys.modules.rights.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
+import com.yun.common.utils.date.DateUtil;
+import com.yun.common.web.response.Meta;
 import com.yun.sys.modules.common.config.RsaProperties;
 import com.yun.sys.modules.common.enums.CodeEnum;
 import com.yun.sys.modules.rights.mapper.UserGroupMapper;
@@ -21,6 +23,7 @@ import com.yun.common.spring.security.SecurityUtils;
 import com.yun.common.utils.encodec.RsaUtils;
 import com.yun.common.page.PageInfo;
 import com.yun.common.mybatis.page.PageQueryHelper;
+import javafx.scene.paint.Material;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.*;
@@ -29,7 +32,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,6 +50,8 @@ import static com.yun.sys.modules.common.xcache.CacheKey.*;
 public class UserServiceImpl implements UserService {
     @Value("${spring.redis.my.expiration-time:7200000}")
     private long expirationTime;
+    @Value("${yun.user.pwd-expiration-period::90}")
+    private int pwdExpirationPeriod;
 
     private final UserMapper userMapper;
     private final UserGroupMapper userGroupMapper;
@@ -110,11 +120,10 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#userPwd.username")
     public void updatePwd(UserPwdVO userPwd) throws Exception {
         Assert.isTrue(userPwd.getUsername().equals(SecurityUtils.getCurrentUsername()), "只允许修改自己密码！");
-        String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getOldPass());
-        String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getNewPass());
+        String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getOldPassword());
+        String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getNewPassword());
         UserDO userDB = queryByUsername(userPwd.getUsername());
         Assert.isTrue(passwordEncoder.matches(oldPass, userDB.getPwd()), "修改失败，旧密码错误");
-        Assert.isTrue(!passwordEncoder.matches(newPass, userDB.getPwd()), "新密码不能与旧密码相同");
         userMapper.updateByPrimaryKeySelective(new UserDO(userDB.getId(), passwordEncoder.encode(newPass), LocalDateTime.now()));
         // 清除用户token，使其重新登录
         onlineUserService.checkLoginOnUser(userDB.getUsername(), null);
@@ -131,6 +140,19 @@ public class UserServiceImpl implements UserService {
         verificationCodeService.validate(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + userEmail.getEmail(), userEmail.getCaptcha());
         userMapper.updateByPrimaryKeySelective(new UserDO(userDb.getId(), userEmail.getEmail()));
         UserInfoCache.cleanCacheFor(userDb.getUsername());
+    }
+
+    @Override
+    public Meta verifyPasswordExpired(String username) {
+        final UserDO userDO = userMapper.selectByUsername(username);
+        final LocalDateTime pwdResetTime = userDO.getPwdResetTime();
+        final LocalDate pwdResetDate = pwdResetTime != null ? pwdResetTime.toLocalDate() : userDO.getCreateTime().toLocalDate();
+        final LocalDate expiredDate = pwdResetDate.plus(pwdExpirationPeriod, ChronoUnit.DAYS);
+        final int difference = LocalDate.now().until(expiredDate).getDays();
+        if (difference >= 0 && difference <= 10) {
+            return Meta.error(String.format("你的密码将在 %s 过期，请尽快修改, 以免影响你后续登录！", expiredDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        }
+        return Meta.ok();
     }
 
     @Override

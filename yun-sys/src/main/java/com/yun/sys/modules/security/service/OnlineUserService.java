@@ -165,7 +165,7 @@ public class OnlineUserService {
      */
     public void checkLoginOnUser(String userName, String ignoreToken) {
         List<OnlineUser> onlineUsers = getAllOnlineUsersWithNoPage(userName);
-        if (onlineUsers == null || onlineUsers.isEmpty()) {
+          if (onlineUsers == null || onlineUsers.isEmpty()) {
             return;
         }
         for (OnlineUser onlineUser : onlineUsers) {

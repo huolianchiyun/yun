@@ -6,7 +6,7 @@ public final class Meta {
     private Status status;
     private String message;
 
-    static Meta ok() {
+    public static Meta ok() {
         return new Meta(Status.OK);
     }
 

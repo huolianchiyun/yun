@@ -115,6 +115,8 @@ yun:
   api:
     rights:
       update: false
+  user:
+    pwd-expiration-period: 90
 
 websocket:
   netty:

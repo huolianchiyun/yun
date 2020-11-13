@@ -1,6 +1,7 @@
 package com.yun.sys.modules.rights.service;
 
 import com.yun.common.utils.download.DownLoadSupport;
+import com.yun.common.web.response.Meta;
 import com.yun.sys.modules.rights.model.criteria.UserQueryCriteria;
 import com.yun.sys.modules.rights.model.$do.UserDO;
 import com.yun.sys.modules.rights.model.vo.UserEmailVO;
@@ -78,5 +79,13 @@ public interface UserService extends PageService<UserQueryCriteria, UserDO>, Dow
      * @param userEmail
      */
     void updateEmail(UserEmailVO userEmail) throws Exception;
+
+    /**
+     * 根据登录名验证密码是否过期
+     *
+     * @param username /
+     * @return /
+     */
+    Meta verifyPasswordExpired(String username);
 
 }

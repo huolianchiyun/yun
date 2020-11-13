@@ -67,7 +67,7 @@
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{u_id}
-        ) and g_group_type ='${@com.zhangbin.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+        ) and g_group_type ='${@com.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
         limit 1
     </select>
 
@@ -76,7 +76,7 @@
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{userId}
-        ) and g_group_type !='${@com.zhangbin.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+        ) and g_group_type !='${@com.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
     </select>
 
     <select id="selectByUserId" parameterType="java.lang.Long" resultMap="CascadeResultMap0">
@@ -92,7 +92,7 @@
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{userId}
-        ) and g_group_type !='${@com.zhangbin.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+        ) and g_group_type !='${@com.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
     </select>
 
     <select id="selectGroupCodesByUsername" parameterType="java.lang.String" resultType="java.lang.String">
@@ -142,7 +142,7 @@
                         </when>
                         <otherwise>
                             g_group_type
-                            !='${@com.zhangbin.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+                            !='${@com.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
                         </otherwise>
                     </choose>
                     <if test='criteria.groupName != null and criteria.groupName != ""'>
@@ -157,7 +157,7 @@
                 </when>
                 <otherwise>
                     and g_group_type
-                    !='${@com.zhangbin.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
+                    !='${@com.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
                 </otherwise>
             </choose>
         </trim>

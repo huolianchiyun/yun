@@ -1,5 +1,6 @@
 package com.yun.sys.modules.rights.controller;
 
+import com.yun.common.web.response.Meta;
 import com.yun.sys.modules.rights.model.$do.UserDO;
 import com.yun.sys.modules.rights.model.criteria.UserQueryCriteria;
 import com.yun.sys.modules.rights.service.UserService;
@@ -13,6 +14,7 @@ import com.yun.sys.modules.rights.model.vo.UserPwdVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -54,6 +56,12 @@ public class UserController {
        return success(userService.queryByCriteria(criteria));
     }
 
+    @ApiOperation("根据用户名验证密码是否过期")
+    @GetMapping("/pwd/expired")
+    public ResponseEntity<ResponseData<Meta>> verifyPasswordExpired(@Param("username") String username) {
+        return success(userService.verifyPasswordExpired(username));
+    }
+
     @Logging("新增用户")
     @ApiOperation("新增用户")
     @PostMapping
@@ -83,7 +91,7 @@ public class UserController {
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/update/pwd")
-    public ResponseEntity<ResponseData<Void>> updatePwd(@Validated(BaseDO.Update.class) @RequestBody UserPwdVO pwdVo) throws Exception {
+    public ResponseEntity<ResponseData<Void>> updatePwd(@Validated @RequestBody UserPwdVO pwdVo) throws Exception {
         userService.updatePwd(pwdVo);
         return success();
     }
