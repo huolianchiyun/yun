@@ -13,6 +13,7 @@ public class UserPwdVO {
     @NotBlank(message = "用户名不能为空！")
     private String  username;
     @NotBlank(message = "原密码不能为空！")
+    // TODO 后续可以加上密码格式校验
     private String oldPassword;
     @NotBlank(message = "新密码不能为空！")
     private String newPassword;

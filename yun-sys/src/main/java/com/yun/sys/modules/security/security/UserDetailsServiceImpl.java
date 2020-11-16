@@ -1,5 +1,6 @@
 package com.yun.sys.modules.security.security;
 
+import com.yun.common.web.response.Meta;
 import com.yun.sys.modules.rights.model.$do.UserDO;
 import com.yun.sys.modules.rights.service.GroupService;
 import com.yun.sys.modules.rights.service.UserService;
@@ -37,6 +38,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             UserDO user = userService.queryByUsername(username);
             Assert.notNull(user, "*** 用户不存 ***");
             Assert.isTrue(user.getStatus(), "*** 账号未激活 ***");
+            // 验证密码是否过期
+            final Meta meta = userService.verifyPasswordExpired(username);
+            Assert.isTrue(Meta.Status.NoApiRights != meta.getStatus(), meta.getMessage());
             myUserDetails = new MyUserDetails(user, groupService.getGrantedAuthorities(user));
             UserInfoCache.put(username, myUserDetails);
         }

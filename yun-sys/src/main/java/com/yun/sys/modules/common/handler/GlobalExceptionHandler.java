@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理所有接口数据验证异常
+     * 处理所有接口请求数据验证异常
      */
     @ExceptionHandler({BindException.class})
     public ResponseEntity<ResponseData> handleBindException(BindException e) {

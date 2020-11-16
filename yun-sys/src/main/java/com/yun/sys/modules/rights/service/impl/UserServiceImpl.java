@@ -150,7 +150,9 @@ public class UserServiceImpl implements UserService {
         final LocalDate expiredDate = pwdResetDate.plus(pwdExpirationPeriod, ChronoUnit.DAYS);
         final int difference = LocalDate.now().until(expiredDate).getDays();
         if (difference >= 0 && difference <= 10) {
-            return Meta.error(String.format("你的密码将在 %s 过期，请尽快修改, 以免影响你后续登录！", expiredDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            return Meta.error(String.format("你的密码将于 %s 过期，请尽快修改, 以免影响你后续登录！", expiredDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        }else if(difference < 0){
+            return Meta.noApiRights(String.format("你的密码已经于 %s 过期， 将无法登录，请重置密码或联系管理员处理！", expiredDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
         }
         return Meta.ok();
     }
