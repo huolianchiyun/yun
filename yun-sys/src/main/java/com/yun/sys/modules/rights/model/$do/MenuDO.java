@@ -129,7 +129,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
 
     public MenuVO toMenuVO() {
         String menuComponent = StrUtil.isEmpty(component) ? "Layout" : component;
-        MenuVO menuVO = new MenuVO(routerName, routerPath, menuComponent, hidden);
+        MenuVO menuVO = new MenuVO(routerName, routerPath, menuComponent, hidden, externalLink);
         menuVO.setMeta(new MenuMetaVO(menuTitle, menuIcon));
         if (CollectionUtil.isNotEmpty(children)) {
             menuVO.setRedirect("noredirect");

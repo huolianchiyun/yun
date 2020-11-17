@@ -60,4 +60,10 @@ public class LoginAuthController {
         loginAuthService.logout(request);
         return success();
     }
+
+    @ApiOperation("第三方服务token委托验证接口")
+    @AnonymousGetMapping(value = "/token")
+    public ResponseEntity<ResponseData<Void>> checkToken() {
+        return success();
+    }
 }
