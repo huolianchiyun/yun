@@ -75,6 +75,8 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
      */
     private Boolean admin;
 
+    private String comeFrom;
+
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(hidden = true)
     private LocalDateTime pwdResetTime;
@@ -127,6 +129,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
         map.put("邮箱", email);
         map.put("状态", status ? "已激活" : "未激活");
         map.put("是否删除", deleted ? "已删除" : "未删除");
+        map.put("用户来源", comeFrom);
         map.put("修改密码时间", pwdResetTime == null ? "" :  DateUtil.format2MdHms(pwdResetTime));
         map.put("创建日期", createTime == null ? "" : DateUtil.format2MdHms(createTime));
         return map;

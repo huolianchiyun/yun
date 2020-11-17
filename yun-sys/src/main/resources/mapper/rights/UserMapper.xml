@@ -13,6 +13,7 @@
         <result column="u_dept_id" jdbcType="BIGINT" property="deptId"/>
         <result column="u_status" jdbcType="BIT" property="status"/>
         <result column="u_is_deleted" jdbcType="BIT" property="deleted"/>
+        <result column="u_come_from" jdbcType="VARCHAR" property="comeFrom"/>
         <result column="u_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="u_updater" jdbcType="VARCHAR" property="updater"/>
         <result column="u_create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -35,7 +36,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        u_id, u_nickname, u_username, u_gender, u_pwd, u_phone, u_email, u_is_admin, u_dept_id, u_status, u_is_deleted,
+        u_id, u_nickname, u_username, u_gender, u_pwd, u_phone, u_email, u_is_admin, u_dept_id, u_status, u_is_deleted, u_come_from,
         u_creator, u_updater, u_create_time, u_update_time, u_pwd_reset_time
     </sql>
 
@@ -132,15 +133,14 @@
     <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.UserDO" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user (u_nickname, u_username,
         u_gender, u_pwd, u_phone, u_email, u_is_admin,
-        u_dept_id, u_status, u_is_deleted, u_creator,
+        u_dept_id, u_status, u_is_deleted, u_come_from, u_creator,
         u_updater, u_create_time, u_update_time,
         u_pwd_reset_time)
         values (#{nickname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
         #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-        #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, ${0},
+        #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, ${0}, #{comeFrom,jdbcType=VARCHAR}
         #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
         #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
-
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.yun.sys.modules.rights.model.$do.UserDO">
@@ -172,6 +172,9 @@
             </if>
             <if test="deleted != null">
                 u_is_deleted = #{deleted,jdbcType=BIT},
+            </if>
+            <if test="comeFrom != null">
+                u_come_from = #{comeFrom,jdbcType=VARCHAR},
             </if>
             <if test="updater != null">
                 u_updater = #{updater,jdbcType=VARCHAR},
