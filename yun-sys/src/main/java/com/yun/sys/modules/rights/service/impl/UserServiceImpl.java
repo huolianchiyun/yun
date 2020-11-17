@@ -2,7 +2,6 @@ package com.yun.sys.modules.rights.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.Page;
-import com.yun.common.utils.date.DateUtil;
 import com.yun.common.web.response.Meta;
 import com.yun.sys.modules.common.config.RsaProperties;
 import com.yun.sys.modules.common.enums.CodeEnum;
@@ -23,7 +22,6 @@ import com.yun.common.spring.security.SecurityUtils;
 import com.yun.common.utils.encodec.RsaUtils;
 import com.yun.common.page.PageInfo;
 import com.yun.common.mybatis.page.PageQueryHelper;
-import javafx.scene.paint.Material;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.*;
@@ -37,11 +35,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yun.sys.modules.common.xcache.CacheKey.*;
+import static com.yun.sys.modules.rights.common.constant.RightsConstants.ANONYMOUS_USER;
 
 
 @Service
@@ -119,9 +117,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#userPwd.username")
     public void updatePwd(UserPwdVO userPwd) throws Exception {
-        Assert.isTrue(userPwd.getUsername().equals(SecurityUtils.getCurrentUsername()), "只允许修改自己密码！");
-        String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getOldPassword());
-        String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getNewPassword());
+        final String currentUsername = SecurityUtils.getCurrentUsername();
+        Assert.isTrue(ANONYMOUS_USER.equals(currentUsername) || userPwd.getUsername().equals(currentUsername), "只允许修改自己密码！");
+        String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getOldPwd());
+        String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getNewPwd());
         UserDO userDB = queryByUsername(userPwd.getUsername());
         Assert.isTrue(passwordEncoder.matches(oldPass, userDB.getPwd()), "修改失败，旧密码错误");
         userMapper.updateByPrimaryKeySelective(new UserDO(userDB.getId(), passwordEncoder.encode(newPass), LocalDateTime.now()));

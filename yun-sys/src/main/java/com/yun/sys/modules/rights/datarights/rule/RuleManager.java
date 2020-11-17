@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import static com.yun.sys.modules.common.xcache.CacheKey.BIND_USER;
 import static com.yun.sys.modules.common.xcache.CacheKey.RULE;
+import static com.yun.sys.modules.rights.common.constant.RightsConstants.ANONYMOUS_USER;
 
 /**
  * 数据权限规则管理类
@@ -110,7 +111,7 @@ public class RuleManager {
      * 获取当前用户组及其父组的规则
      */
     private Set<PermissionRuleDO> filterByCurrentUserGroups(String currentUsername) {
-        if ("anonymousUser".equalsIgnoreCase(currentUsername)) {
+        if (ANONYMOUS_USER.equalsIgnoreCase(currentUsername)) {
             return new HashSet<>(0);
         }
         String sql = "select g_group_code from t_sys_group where g_id in (select group_id from t_sys_user_group join t_sys_user on user_id = u_id and u_username = :username)";
