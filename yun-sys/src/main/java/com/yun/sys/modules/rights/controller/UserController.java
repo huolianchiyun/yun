@@ -16,16 +16,13 @@ import com.yun.sys.modules.rights.model.vo.UserPwdVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -98,7 +95,7 @@ public class UserController {
     }
 
     @ApiOperation("修改密码")
-    @AnonymousPostMapping("/pwd/expired")
+    @AnonymousPostMapping("/update/pwd")
     public ResponseEntity<ResponseData<Void>> updatePwd(@Validated @RequestBody UserPwdVO pwdVo) throws Exception {
         userService.updatePwd(pwdVo);
         return success();

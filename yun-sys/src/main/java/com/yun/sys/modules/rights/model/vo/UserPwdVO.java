@@ -8,8 +8,8 @@ import javax.validation.constraints.Pattern;
 
 @Data
 @ValidateFieldMatch.List({
-        @ValidateFieldMatch(first = "oldPassword", second = "newPassword", message = "新密码不能和旧密码相同", isEqualMode = false),
-        @ValidateFieldMatch(first = "newPassword", second = "confirmPassword", message = "两次输入的密码必须相同")
+        @ValidateFieldMatch(first = "oldPassword", second = "newPassword", message = "新密码不能和旧密码相同", isEqualMode = false, isDecrypt = true),
+        @ValidateFieldMatch(first = "newPassword", second = "confirmPassword", message = "两次输入的密码必须相同", isDecrypt = true)
 })
 public class UserPwdVO {
     @NotBlank(message = "用户名不能为空！")

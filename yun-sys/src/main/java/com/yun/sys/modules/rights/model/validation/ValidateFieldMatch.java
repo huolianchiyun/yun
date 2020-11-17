@@ -22,6 +22,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ValidateFieldMatch {
     // 验证的第一个字段
     String first() default "";
+
     // 验证的第二个字段
     String second() default "";
 
@@ -30,8 +31,12 @@ public @interface ValidateFieldMatch {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
     // 验证 first、second 的相等性还是不等性，默认验证相等性
     boolean isEqualMode() default true;
+
+    // first、second 是否解密后比较
+    boolean isDecrypt() default false;
 
     @Target({FIELD, METHOD, PARAMETER, ANNOTATION_TYPE, TYPE_USE})
     @Retention(RUNTIME)
