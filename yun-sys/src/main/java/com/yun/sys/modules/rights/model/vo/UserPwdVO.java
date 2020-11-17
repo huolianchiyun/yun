@@ -2,7 +2,9 @@ package com.yun.sys.modules.rights.model.vo;
 
 import com.yun.sys.modules.rights.model.validation.ValidateFieldMatch;
 import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 @ValidateFieldMatch.List({
@@ -11,10 +13,10 @@ import javax.validation.constraints.NotBlank;
 })
 public class UserPwdVO {
     @NotBlank(message = "用户名不能为空！")
-    private String  username;
+    private String username;
     @NotBlank(message = "原密码不能为空！")
-    // TODO 后续可以加上密码格式校验
     private String oldPassword;
+    @Pattern(regexp = "^.{6,18}$", message = "密码至少6位,最多18位！")
     @NotBlank(message = "新密码不能为空！")
     private String newPassword;
     @NotBlank(message = "确认密码不能为空！")
