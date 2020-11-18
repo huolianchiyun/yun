@@ -84,6 +84,11 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     private String routerPath;
 
     /**
+     * 菜单重向地址
+     */
+    private String redirect;
+
+    /**
      * 菜单组件路径
      */
     private String component;
@@ -129,10 +134,9 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
 
     public MenuVO toMenuVO() {
         String menuComponent = StrUtil.isEmpty(component) ? "Layout" : component;
-        MenuVO menuVO = new MenuVO(routerName, routerPath, menuComponent, hidden, externalLink);
+        MenuVO menuVO = new MenuVO(routerName, routerPath, menuComponent, hidden, externalLink, redirect);
         menuVO.setMeta(new MenuMetaVO(menuTitle, menuIcon));
         if (CollectionUtil.isNotEmpty(children)) {
-            menuVO.setRedirect("noredirect");
             menuVO.setChildren(children.stream().map(MenuDO::toMenuVO).collect(Collectors.toList()));
         }
         return menuVO;
