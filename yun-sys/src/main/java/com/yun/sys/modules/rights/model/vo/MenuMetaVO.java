@@ -1,12 +1,9 @@
 package com.yun.sys.modules.rights.model.vo;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
 @Data
-@NoArgsConstructor
 public class MenuMetaVO implements Serializable {
     private String title;
 
@@ -14,8 +11,14 @@ public class MenuMetaVO implements Serializable {
 
     private Boolean noCache;
 
-    public MenuMetaVO(String title, String icon) {
+    private Boolean externalLink;
+
+    private String externalLinkUrl;
+
+    public MenuMetaVO(String title, String icon, Boolean externalLink, String externalLinkUrl) {
         this.title = title;
         this.icon = icon;
+        this.externalLink = externalLink;
+        this.externalLinkUrl = externalLinkUrl;
     }
 }

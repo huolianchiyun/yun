@@ -226,7 +226,7 @@ public class MenuServiceImpl implements MenuService {
 
     private void validateExternalLink(MenuDO menu) {
         if (menu.getExternalLink()) {
-            String accessUrl = menu.getRouterPath();
+            String accessUrl = menu.getExternalLinkUrl();
             if (StringUtils.hasText(accessUrl)) {
                 String url = accessUrl.toLowerCase();
                 Assert.isTrue(url.startsWith(HTTP) || url.startsWith(HTTPS),

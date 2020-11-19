@@ -12,9 +12,9 @@
         <result column="m_pid" jdbcType="BIGINT" property="pid"/>
         <result column="m_router_name" jdbcType="VARCHAR" property="routerName"/>
         <result column="m_router_path" jdbcType="VARCHAR" property="routerPath"/>
-        <result column="m_redirect" jdbcType="VARCHAR" property="redirect"/>
         <result column="m_component" jdbcType="VARCHAR" property="component"/>
         <result column="m_is_external_link" jdbcType="BIT" property="externalLink"/>
+        <result column="m_external_link_url" jdbcType="VARCHAR" property="externalLinkUrl"/>
         <result column="m_is_hidden" jdbcType="BIT" property="hidden"/>
         <result column="m_creator" jdbcType="VARCHAR" property="creator"/>
         <result column="m_updater" jdbcType="VARCHAR" property="updater"/>
@@ -23,8 +23,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_redirect, m_component,
-        m_is_external_link, m_is_hidden, m_creator, m_updater, m_create_time, m_update_time
+        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_component,
+        m_is_external_link, m_external_link_url, m_is_hidden, m_creator, m_updater, m_create_time, m_update_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -78,7 +78,7 @@
                m_menu_sort,
                m_router_name,
                m_router_path,
-               m_redirect,
+               m_external_link_url,
                m_component,
                m_is_external_link,
                m_is_hidden
@@ -102,7 +102,7 @@
                m_menu_sort,
                m_router_name,
                m_router_path,
-               m_redirect,
+               m_external_link_url,
                m_component,
                m_is_external_link,
                m_is_hidden
@@ -142,7 +142,7 @@
     <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.MenuDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
-                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_redirect, m_component,
+                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_external_link_url, m_component,
                                 m_is_external_link,
                                 m_is_hidden,
                                 m_creator, m_updater, m_create_time,
@@ -150,7 +150,7 @@
         values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR},
                 #{menuType,jdbcType=INTEGER},
                 #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
-                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{redirect,jdbcType=VARCHAR},
+                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{externalLinkUrl,jdbcType=VARCHAR},
                 #{component,jdbcType=VARCHAR},
                 #{externalLink,jdbcType=BIT}, #{hidden,jdbcType=BIT},
                 #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
@@ -187,8 +187,8 @@
             <if test="routerPath != null">
                 m_router_path = #{routerPath,jdbcType=VARCHAR},
             </if>
-            <if test="redirect != null">
-                m_redirect = #{redirect,jdbcType=VARCHAR},
+            <if test="externalLinkUrl != null">
+                m_external_link_url = #{externalLinkUrl,jdbcType=VARCHAR},
             </if>
             <if test="component != null">
                 m_component = #{component,jdbcType=VARCHAR},

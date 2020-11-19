@@ -19,7 +19,7 @@ public class MenuVO implements Serializable {
 
     private Boolean externalLink = false;
 
-    private String redirect;
+    private String externalLinkUrl;
 
     private String component;
 
@@ -27,12 +27,12 @@ public class MenuVO implements Serializable {
 
     private List<MenuVO> children;
 
-    public MenuVO(String name, String path, String component, Boolean hidden, Boolean externalLink, String redirect) {
+    public MenuVO(String name, String path, String component, Boolean hidden, Boolean externalLink, String externalLinkUrl) {
         this.name = name;
         this.path = path;
         this.component = component;
         this.hidden = hidden;
         this.externalLink = externalLink;
-        this.redirect = redirect;
+        this.externalLinkUrl = externalLinkUrl;
     }
 }
