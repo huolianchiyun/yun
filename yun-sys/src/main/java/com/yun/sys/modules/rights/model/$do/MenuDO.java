@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.beans.Transient;
@@ -35,6 +36,7 @@ import javax.validation.constraints.NotNull;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties("handler")
 public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildren.ChildrenSupport<MenuDO>, ExcelSupport, Serializable {
     private static final long serialVersionUID = 1L;
 
