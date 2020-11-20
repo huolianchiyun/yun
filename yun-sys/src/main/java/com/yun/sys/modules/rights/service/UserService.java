@@ -74,6 +74,13 @@ public interface UserService extends PageService<UserQueryCriteria, UserDO>, Dow
     void updatePwd(UserPwdVO userPwdVo) throws Exception;
 
     /**
+     * 重置密码
+     *
+     * @param username
+     */
+    void resetPwd(String username);
+
+    /**
      * 修改邮箱
      *
      * @param userEmail

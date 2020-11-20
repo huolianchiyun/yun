@@ -130,6 +130,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#username")
+    public void resetPwd(String username) {
+        userMapper.updateByPrimaryKeySelective( new UserDO(username, "123456", LocalDateTime.now()));
+    }
+
+    @Override
     @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#userEmail.username")
     public void updateEmail(UserEmailVO userEmail) throws Exception {
         Assert.isTrue(userEmail.getUsername().equals(SecurityUtils.getCurrentUsername()), "只允许修改自己邮箱！");

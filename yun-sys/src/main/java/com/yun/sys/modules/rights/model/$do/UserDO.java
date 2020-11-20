@@ -104,6 +104,12 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
         this.email = email;
     }
 
+    public UserDO(String username, String pwd, LocalDateTime pwdResetTime) {
+        this.username = username;
+        this.pwd = pwd;
+        this.pwdResetTime = pwdResetTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

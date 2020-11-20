@@ -100,6 +100,13 @@ public class UserController {
         userService.updatePwd(pwdVo);
         return success();
     }
+    @ApiOperation("重置密码")
+    @PutMapping("/reset/pwd/{username}")
+    @PreAuthorize("@el.check('all')")
+    public ResponseEntity<ResponseData<Void>> resetPwd(@PathVariable("username") String username) {
+        userService.resetPwd(username);
+        return success();
+    }
 
     @Logging("修改邮箱")
     @ApiOperation("修改邮箱")
