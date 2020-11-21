@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.yun.sys.modules.common.enums.handler.BaseEnumValue;
@@ -120,7 +121,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     /**
      * 非表字段
      */
-    private List<String> apiUrls;
+    private Set<String> apiUrls;
 
     @Transient
     public Long getOldPid() {

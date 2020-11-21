@@ -37,7 +37,7 @@ public final class ResponseUtil {
     }
 
     public static org.springframework.http.ResponseEntity<ResponseData> noApiRights(String errMsg) {
-        return new org.springframework.http.ResponseEntity<>(new ResponseData(Meta.noApiRights(errMsg)), HttpStatus.OK);
+        return new org.springframework.http.ResponseEntity<>(new ResponseData(Meta.noApiRights(errMsg)), HttpStatus.UNAUTHORIZED);
     }
 
 }
