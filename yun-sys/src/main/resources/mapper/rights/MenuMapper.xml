@@ -21,7 +21,7 @@
         <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <!-- 多对多映射的关键:collection -->
-        <collection property="apiUrls" javaType="java.util.ArrayList"
+        <collection property="apiUrls" javaType="java.util.HashSet"
                     column="m_id" ofType="com.yun.sys.modules.rights.model.$do.MenuDO"
                     select="com.yun.sys.modules.rights.mapper.ApiRightsMapper.selectAuthorizationsByMenuId">
         </collection>
