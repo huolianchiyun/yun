@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#username")
     public void resetPwd(String username) {
-        userMapper.updateByPrimaryKeySelective( new UserDO(username, "123456", LocalDateTime.now()));
+        userMapper.resetPwd( new UserDO(username, passwordEncoder.encode("123456"), LocalDateTime.now()));
     }
 
     @Override

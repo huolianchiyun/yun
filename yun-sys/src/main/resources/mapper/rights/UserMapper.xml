@@ -137,10 +137,10 @@
         u_updater, u_create_time, u_update_time,
         u_pwd_reset_time)
         values (#{nickname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
-        #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
-        #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, ${0}, #{comeFrom,jdbcType=VARCHAR}
-        #{creator,jdbcType=VARCHAR},#{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
+                #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+                #{email,jdbcType=VARCHAR}, #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, ${0},
+                #{comeFrom,jdbcType=VARCHAR},#{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.yun.sys.modules.rights.model.$do.UserDO">
@@ -187,6 +187,22 @@
             </if>
         </set>
         where u_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="resetPwd" parameterType="com.yun.sys.modules.rights.model.$do.UserDO">
+        update t_sys_user
+        <set>
+            <if test="pwd != null">
+                u_pwd = #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null">
+                u_updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="pwdResetTime != null">
+                u_pwd_reset_time = #{pwdResetTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where u_username = #{username,jdbcType=VARCHAR}
     </update>
 
     <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
