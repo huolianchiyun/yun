@@ -3,6 +3,7 @@ package com.yun.sys.modules.rights.service.impl;
 import static com.yun.sys.modules.common.xcache.CacheKey.*;
 import static com.yun.common.constant.Constants.HTTP;
 import static com.yun.common.constant.Constants.HTTPS;
+
 import cn.hutool.core.collection.CollectionUtil;
 import com.yun.sys.modules.rights.common.excel.CollectChildren;
 import com.yun.sys.modules.rights.common.tree.TreeBuilder;
@@ -11,6 +12,7 @@ import com.yun.sys.modules.rights.mapper.MenuApiRightsMapper;
 import com.yun.sys.modules.rights.mapper.MenuMapper;
 import com.yun.sys.modules.rights.model.$do.GroupDO;
 import com.yun.sys.modules.rights.model.$do.MenuApiRightsDO;
+import com.yun.sys.modules.rights.model.vo.Button;
 import com.yun.sys.modules.rights.service.GroupService;
 import com.yun.common.spring.redis.RedisUtils;
 import com.yun.common.spring.security.SecurityUtils;
@@ -31,8 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,21 +95,16 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(value = BIND_USER + MENU, key = "'" + UserIdKey + "' + #p0 +'" + ":" + "'+ #p1")
-    public List<MenuDO> queryByUser(Long userId, Boolean isTree) {
-        Set<MenuDO> menuSet;
+    @Cacheable(value = BIND_USER + MENU, key = "'button:" + UserIdKey + "' + #p0")
+    public Map<String, Button> queryButtonMenusByUser(Long userId) {
         // 如果是admin，则返回所有菜单
-        if (SecurityUtils.isAdmin()) {
-            menuSet = menuMapper.selectByCriteria(null);
-        } else {
-            List<GroupDO> groups = groupService.queryByUserId(userId);
-            if (CollectionUtils.isEmpty(groups)) {
-                return new ArrayList<>();
-            }
-            Set<Long> groupIds = groups.stream().map(GroupDO::getId).collect(Collectors.toSet());
-            menuSet = menuMapper.selectByGroupIds(groupIds);
+        Set<MenuDO> menuSet = SecurityUtils.isAdmin() ?  menuMapper.selectAllButtonMenus() : menuMapper.selectButtonMenusByUser(userId);
+        if (CollectionUtil.isEmpty(menuSet)) {
+            return new HashMap<>(0);
         }
-        return isTree ? buildMenuTree(menuSet) : new ArrayList<>(menuSet);
+        HashMap<String, Button> retVal = new HashMap<>(menuSet.size());
+        menuSet.forEach(menu -> retVal.put(menu.getMenuCode(), new Button(menu.getButtonUrl())));
+        return retVal;
     }
 
     @Override
@@ -113,7 +112,7 @@ public class MenuServiceImpl implements MenuService {
     //  + MENU 目的是避免 redis Hash的 key重名冲突
     public List<MenuVO> getRouterMenusForUser(Long userId) {
         if (SecurityUtils.isAdmin()) {
-            return buildMenuForRouter(menuMapper.selectRouterMenus());
+            return buildMenuForRouter(menuMapper.selectAllRouterMenus());
         }
         return buildMenuForRouter(menuMapper.selectRouterMenusByUserId(userId));
     }
@@ -197,7 +196,7 @@ public class MenuServiceImpl implements MenuService {
     /**
      * 修改菜单关联的API访问权限
      *
-     * @param menu    创建或修改的菜单
+     * @param menu     创建或修改的菜单
      * @param isCreate 是否是创建菜单
      */
     private void updateAssociatedApiRights(MenuDO menu, boolean isCreate) {
@@ -248,7 +247,7 @@ public class MenuServiceImpl implements MenuService {
                 menuIds.add(menu.getPid());  // 后续清除角色缓存时， 也要清除其父菜单对应的角色缓存
             });
             Set<GroupDO> groups = groupService.queryByMenuIds(menuIds);
-            if(CollectionUtil.isNotEmpty(groups)){
+            if (CollectionUtil.isNotEmpty(groups)) {
                 groupService.clearCaches(groups);
             }
         }

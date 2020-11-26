@@ -17,22 +17,16 @@ public class MenuVO implements Serializable {
 
     private Boolean hidden;
 
-    private Boolean externalLink = false;
-
-    private String externalLinkUrl;
-
     private String component;
 
     private MenuMetaVO meta;
 
     private List<MenuVO> children;
 
-    public MenuVO(String name, String path, String component, Boolean hidden, Boolean externalLink, String externalLinkUrl) {
+    public MenuVO(String name, String path, String component, Boolean hidden) {
         this.name = name;
         this.path = path;
         this.component = component;
         this.hidden = hidden;
-        this.externalLink = externalLink;
-        this.externalLinkUrl = externalLinkUrl;
     }
 }

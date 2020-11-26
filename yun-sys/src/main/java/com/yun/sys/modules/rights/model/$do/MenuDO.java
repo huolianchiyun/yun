@@ -77,6 +77,11 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     private Long pid;
 
     /**
+     * 菜单组件路径
+     */
+    private String component;
+
+    /**
      * 菜单路由名称
      */
     private String routerName;
@@ -87,9 +92,9 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     private String routerPath;
 
     /**
-     * 菜单组件路径
+     * 按钮菜单绑定 URL
      */
-    private String component;
+    private String buttonUrl;
 
     /**
      * 是否是外部链接
@@ -137,7 +142,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
 
     public MenuVO toMenuVO() {
         String menuComponent = StrUtil.isEmpty(component) ? "Layout" : component;
-        MenuVO menuVO = new MenuVO(routerName, routerPath, menuComponent, hidden, externalLink, externalLinkUrl);
+        MenuVO menuVO = new MenuVO(routerName, routerPath, menuComponent, hidden);
         menuVO.setMeta(new MenuMetaVO(menuTitle, menuIcon, externalLink, externalLinkUrl));
         if (CollectionUtil.isNotEmpty(children)) {
             menuVO.setChildren(children.stream().map(MenuDO::toMenuVO).collect(Collectors.toList()));
@@ -167,12 +172,12 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
         if (this == o) return true;
         if (!(o instanceof MenuDO)) return false;
         MenuDO menuDO = (MenuDO) o;
-        return Objects.equals(id, menuDO.id) && Objects.equals(pid, menuDO.pid);
+        return Objects.equals(id, menuDO.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pid);
+        return Objects.hash(id, pid, menuCode);
     }
 
     public enum MenuType implements BaseEnumValue<Integer> {

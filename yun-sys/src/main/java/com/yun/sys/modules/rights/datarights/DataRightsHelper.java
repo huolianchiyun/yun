@@ -118,7 +118,7 @@ public class DataRightsHelper implements Dialect {
                 }
             }
         } else {
-            targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, paramObj.getClass());
+            targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, paramObj != null ? paramObj.getClass() : null);
         }
         return targetMethod;
     }

@@ -17,15 +17,23 @@ public interface MenuMapper extends PageMapper<MenuDO> {
 
     Set<MenuDO> selectByGroupIds(@Param("groupIds") Set<Long> groupIds);
 
+    /**
+     * 管理员查询按钮菜单用
+     * @return /
+     */
+    Set<MenuDO> selectAllButtonMenus();
+
+    Set<MenuDO> selectButtonMenusByUser(Long userId);
+
     Set<MenuDO> selectByGroupId(Long groupId);
 
     Set<MenuDO> selectRouterMenusByUserId(Long userId);
 
     /**
-     * 为管理员查询路由菜单
+     * 管理员查询路由菜单用
      * @return /
      */
-    Set<MenuDO> selectRouterMenus();
+    Set<MenuDO> selectAllRouterMenus();
 
     int insert(MenuDO record);
 

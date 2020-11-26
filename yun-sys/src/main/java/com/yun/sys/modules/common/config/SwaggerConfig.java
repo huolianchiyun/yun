@@ -6,6 +6,7 @@ import com.yun.common.page.PageInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,18 +15,24 @@ import springfox.documentation.builders.*;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
+import springfox.documentation.schema.AlternateTypeRules;
+import springfox.documentation.schema.WildcardType;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-
+import com.yun.sys.modules.rights.model.vo.Button;
 import java.util.*;
+import java.util.List;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 @Configuration
 @EnableOpenApi
 public class SwaggerConfig {
+
+    @Autowired
+    private TypeResolver typeResolver;
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -79,6 +86,13 @@ public class SwaggerConfig {
 //                .directModelSubstitute(LocalDate.class, String.class)
 //                .directModelSubstitute(LocalTime.class, String.class)
 //                .directModelSubstitute(ZonedDateTime.class, String.class)
+                .alternateTypeRules(
+                        // https://www.codota.com/code/java/methods/springfox.documentation.spring.web.plugins.Docket/alternateTypeRules
+                        // This rule is necessary to allow Swagger resolving Map<String, Object> types
+                        AlternateTypeRules.newRule(
+                                typeResolver.resolve(Map.class, String.class, Object.class),
+                                typeResolver.resolve(Map.class, String.class, WildcardType.class), Ordered.HIGHEST_PRECEDENCE)
+                )
                 // 支持的通讯协议集合
                 .protocols(new LinkedHashSet<>(
                         Arrays.asList("https", "http")))

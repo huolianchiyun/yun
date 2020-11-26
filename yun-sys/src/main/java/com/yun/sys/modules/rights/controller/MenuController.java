@@ -5,21 +5,20 @@ import com.yun.sys.modules.rights.model.criteria.MenuQueryCriteria;
 import com.yun.common.web.response.ResponseData;
 import com.yun.common.spring.security.SecurityUtils;
 import com.yun.sys.modules.logging.annotation.Logging;
+import com.yun.sys.modules.rights.model.vo.Button;
 import com.yun.sys.modules.rights.model.vo.MenuVO;
 import com.yun.sys.modules.rights.service.MenuService;
-
 import static com.yun.common.web.response.ResponseUtil.success;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.List;
 
 
 @RestController
@@ -38,10 +37,11 @@ public class MenuController {
         menuService.downloadExcel(menuService.queryAllByCriteriaWithNoPage(criteria.setPid(null)), response);
     }
 
-    @GetMapping(value = "/user/{isTree}")
-    @ApiOperation("获取当前用户菜单")
-    public ResponseEntity<ResponseData<List<MenuDO>>> getMenusForUser(@PathVariable Boolean isTree) {
-        return success(menuService.queryByUser(SecurityUtils.getCurrentUserId(), isTree));
+    @GetMapping(value = "/user/button")
+    @ApiOperation("获取当前用户可见的菜单按钮")
+    @ApiResponse
+    public ResponseEntity<ResponseData<Map<String, Button>>> getButtonMenusForUser() {
+        return success(menuService.queryButtonMenusByUser(SecurityUtils.getCurrentUserId()));
     }
 
     @GetMapping(value = "/user/router")
@@ -63,7 +63,7 @@ public class MenuController {
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity<ResponseData<List<MenuDO>>> queryByPid(@PathVariable Long pid) {
         return success(menuService.queryByPid(pid));
-}
+    }
 
     @GetMapping(value = "/group/{groupId}/{isTree}")
     @ApiOperation("根据组ID菜单")
@@ -100,7 +100,7 @@ public class MenuController {
     @ApiOperation("修改菜单")
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
-    public ResponseEntity<ResponseData<Void>> update(@Validated(MenuDO.Update.class)@RequestBody MenuDO menu) {
+    public ResponseEntity<ResponseData<Void>> update(@Validated(MenuDO.Update.class) @RequestBody MenuDO menu) {
         menuService.update(menu);
         return success();
     }

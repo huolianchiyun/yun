@@ -3,10 +3,11 @@ package com.yun.sys.modules.rights.service;
 import com.yun.sys.modules.rights.model.$do.MenuDO;
 import com.yun.sys.modules.rights.model.criteria.MenuQueryCriteria;
 import com.yun.common.utils.download.DownLoadSupport;
+import com.yun.sys.modules.rights.model.vo.Button;
 import com.yun.sys.modules.rights.model.vo.MenuVO;
-
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface MenuService extends DownLoadSupport<MenuDO> {
@@ -56,13 +57,12 @@ public interface MenuService extends DownLoadSupport<MenuDO> {
     List<MenuDO> queryAncestorAndSibling(List<Long> menuIds);
 
     /**
-     * 根据用户获取菜单
+     * 获取用户的按钮菜单
      *
      * @param userId
-     * @param isTree 是否以树状返回
-     * @return /
+     * @return Map<String, Button> map.key is menuCode
      */
-    List<MenuDO> queryByUser(Long userId, Boolean isTree);
+    Map<String, Button> queryButtonMenusByUser(Long userId);
 
     /**
      * 根据用户获取菜单路由

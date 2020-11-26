@@ -13,6 +13,7 @@
         <result column="m_router_name" jdbcType="VARCHAR" property="routerName"/>
         <result column="m_router_path" jdbcType="VARCHAR" property="routerPath"/>
         <result column="m_component" jdbcType="VARCHAR" property="component"/>
+        <result column="m_button_url" jdbcType="VARCHAR" property="buttonUrl"/>
         <result column="m_is_external_link" jdbcType="BIT" property="externalLink"/>
         <result column="m_external_link_url" jdbcType="VARCHAR" property="externalLinkUrl"/>
         <result column="m_is_hidden" jdbcType="BIT" property="hidden"/>
@@ -28,7 +29,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_component,
+        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_component, m_button_url,
         m_is_external_link, m_external_link_url, m_is_hidden, m_creator, m_updater, m_create_time, m_update_time
     </sql>
 
@@ -67,6 +68,27 @@
         and m_id = menu_id
     </select>
 
+    <sql id="Button_Menu_Column_List">
+        m_menu_code, m_button_url
+    </sql>
+
+    <select id="selectAllButtonMenus" resultMap="BaseResultMap">
+        select
+        <include refid="Button_Menu_Column_List"/>
+        from t_sys_menu
+        where m_menu_type = 2
+    </select>
+
+    <select id="selectButtonMenusByUser" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Button_Menu_Column_List"/>
+        from t_sys_user_group ug
+        inner join t_sys_group g on ug.group_id = g.g_id
+        inner join t_sys_group_menu gm on g.g_id = gm.group_id
+        inner join t_sys_menu m on gm.menu_id = m.m_id
+        where ug.user_id = #{userId,jdbcType=INTEGER} and m.m_menu_type = 2
+    </select>
+
     <select id="selectByGroupId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -74,45 +96,31 @@
         where group_id = #{groupId,jdbcType=INTEGER} and m_id = menu_id
     </select>
 
+    <sql id="Router_Menu_Column_List">
+        m_id, m_pid, m_menu_icon, m_menu_title, m_menu_type, m_menu_sort, m_router_name, m_router_path, m_external_link_url, m_component, m_is_external_link, m_is_hidden
+    </sql>
+
     <select id="selectRouterMenusByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select m_id,
-               m_pid,
-               m_menu_icon,
-               m_menu_title,
-               m_menu_type,
-               m_menu_sort,
-               m_router_name,
-               m_router_path,
-               m_external_link_url,
-               m_component,
-               m_is_external_link,
-               m_is_hidden
+        select
+        <include refid="Router_Menu_Column_List"/>
         from t_sys_menu m,
-             t_sys_group_menu gm,
-             t_sys_user_group ug,
-             t_sys_user u
+        t_sys_group_menu gm,
+        t_sys_user_group ug,
+        t_sys_user u
         where m.m_menu_type in (0, 1)
-          and m.m_id = gm.menu_id
-          and gm.group_id = ug.group_id
-          and ug.user_id = u.u_id
-          and u.u_id = #{userId}
+        and m.m_id = gm.menu_id
+        and gm.group_id = ug.group_id
+        and ug.user_id = u.u_id
+        and u.u_id = #{userId}
+        and m_is_hidden = 0
     </select>
 
-    <select id="selectRouterMenus" resultMap="BaseResultMap">
-        select m_id,
-               m_pid,
-               m_menu_icon,
-               m_menu_title,
-               m_menu_type,
-               m_menu_sort,
-               m_router_name,
-               m_router_path,
-               m_external_link_url,
-               m_component,
-               m_is_external_link,
-               m_is_hidden
+    <select id="selectAllRouterMenus" resultMap="BaseResultMap">
+        select
+        <include refid="Router_Menu_Column_List"/>
         from t_sys_menu
         where m_menu_type in (0, 1)
+        and m_is_hidden = 0
     </select>
 
     <select id="selectByCriteria"
@@ -147,7 +155,9 @@
     <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.MenuDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
-                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_external_link_url, m_component,
+                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_button_url,
+                                m_external_link_url,
+                                m_component,
                                 m_is_external_link,
                                 m_is_hidden,
                                 m_creator, m_updater, m_create_time,
@@ -155,8 +165,8 @@
         values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR},
                 #{menuType,jdbcType=INTEGER},
                 #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
-                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{externalLinkUrl,jdbcType=VARCHAR},
-                #{component,jdbcType=VARCHAR},
+                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{buttonUrl,jdbcType=VARCHAR},
+                #{externalLinkUrl,jdbcType=VARCHAR}, #{component,jdbcType=VARCHAR},
                 #{externalLink,jdbcType=BIT}, #{hidden,jdbcType=BIT},
                 #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
                 #{updateTime,jdbcType=TIMESTAMP})
@@ -191,6 +201,12 @@
             </if>
             <if test="routerPath != null">
                 m_router_path = #{routerPath,jdbcType=VARCHAR},
+            </if>
+            <if test="buttonUrl != null">
+                m_button_url = #{buttonUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="externalLinkUrl != null">
+                m_external_link_url = #{externalLinkUrl,jdbcType=VARCHAR},
             </if>
             <if test="externalLinkUrl != null">
                 m_external_link_url = #{externalLinkUrl,jdbcType=VARCHAR},

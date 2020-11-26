@@ -30,7 +30,7 @@
         from t_sys_dict_type td inner join t_sys_dict d on td.dt_code = d.dic_type_code and td.dt_id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_dict_type

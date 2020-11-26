@@ -101,7 +101,6 @@ public class UserServiceImpl implements UserService {
         user.setPwd(passwordEncoder.encode("123456"));
         userMapper.insert(user);
         associateDeptAndGroup(user, true);
-        throw new RuntimeException();
     }
 
     @Override
