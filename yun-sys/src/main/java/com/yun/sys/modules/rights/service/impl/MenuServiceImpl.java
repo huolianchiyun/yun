@@ -12,7 +12,7 @@ import com.yun.sys.modules.rights.mapper.MenuApiRightsMapper;
 import com.yun.sys.modules.rights.mapper.MenuMapper;
 import com.yun.sys.modules.rights.model.$do.GroupDO;
 import com.yun.sys.modules.rights.model.$do.MenuApiRightsDO;
-import com.yun.sys.modules.rights.model.vo.Button;
+import com.yun.sys.modules.rights.model.vo.ButtonVO;
 import com.yun.sys.modules.rights.service.GroupService;
 import com.yun.common.spring.redis.RedisUtils;
 import com.yun.common.spring.security.SecurityUtils;
@@ -96,14 +96,14 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Cacheable(value = BIND_USER + MENU, key = "'button:" + UserIdKey + "' + #p0")
-    public Map<String, Button> queryButtonMenusByUser(Long userId) {
+    public Map<String, ButtonVO> getButtonMenusByUser(Long userId) {
         // 如果是admin，则返回所有菜单
         Set<MenuDO> menuSet = SecurityUtils.isAdmin() ?  menuMapper.selectAllButtonMenus() : menuMapper.selectButtonMenusByUser(userId);
         if (CollectionUtil.isEmpty(menuSet)) {
             return new HashMap<>(0);
         }
-        HashMap<String, Button> retVal = new HashMap<>(menuSet.size());
-        menuSet.forEach(menu -> retVal.put(menu.getMenuCode(), new Button(menu.getButtonUrl())));
+        HashMap<String, ButtonVO> retVal = new HashMap<>(menuSet.size());
+        menuSet.forEach(menu -> retVal.put(menu.getMenuCode(), menu.toButtonVO()));
         return retVal;
     }
 
@@ -119,6 +119,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Caching(evict = {@CacheEvict(key = "'id:' + #p0.pid"), @CacheEvict(key = "'pid:' + #p0.pid")})
+    @Transactional(rollbackFor = Exception.class)
     public void create(MenuDO menu) {
         validate(menu, true);
         menuMapper.insert(menu);

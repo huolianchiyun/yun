@@ -11,5 +11,5 @@ public interface ApiRightsMapper extends PageMapper<ApiRightsDO> {
 
     Set<String> selectAuthorizationsByUserId(Long userId);
 
-    Set<String> selectAuthorizationsByMenuId(Long menuId);
+    Set<ApiRightsDO> selectAuthorizationsByMenuId(Long menuId);
 }

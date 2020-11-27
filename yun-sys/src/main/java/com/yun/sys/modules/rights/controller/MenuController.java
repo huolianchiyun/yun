@@ -5,7 +5,7 @@ import com.yun.sys.modules.rights.model.criteria.MenuQueryCriteria;
 import com.yun.common.web.response.ResponseData;
 import com.yun.common.spring.security.SecurityUtils;
 import com.yun.sys.modules.logging.annotation.Logging;
-import com.yun.sys.modules.rights.model.vo.Button;
+import com.yun.sys.modules.rights.model.vo.ButtonVO;
 import com.yun.sys.modules.rights.model.vo.MenuVO;
 import com.yun.sys.modules.rights.service.MenuService;
 import static com.yun.common.web.response.ResponseUtil.success;
@@ -40,8 +40,8 @@ public class MenuController {
     @GetMapping(value = "/user/button")
     @ApiOperation("获取当前用户可见的菜单按钮")
     @ApiResponse
-    public ResponseEntity<ResponseData<Map<String, Button>>> getButtonMenusForUser() {
-        return success(menuService.queryButtonMenusByUser(SecurityUtils.getCurrentUserId()));
+    public ResponseEntity<ResponseData<Map<String, ButtonVO>>> getButtonMenusForUser() {
+        return success(menuService.getButtonMenusByUser(SecurityUtils.getCurrentUserId()));
     }
 
     @GetMapping(value = "/user/router")

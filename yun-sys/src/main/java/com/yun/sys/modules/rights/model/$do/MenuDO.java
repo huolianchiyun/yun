@@ -9,10 +9,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.beans.Transient;
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.yun.sys.modules.common.enums.handler.BaseEnumValue;
@@ -20,6 +17,7 @@ import com.yun.sys.modules.rights.common.excel.CollectChildren;
 import com.yun.common.utils.date.DateUtil;
 import com.yun.common.model.BaseDO;
 import com.yun.common.utils.download.excel.ExcelSupport;
+import com.yun.sys.modules.rights.model.vo.ButtonVO;
 import com.yun.sys.modules.rights.model.vo.MenuMetaVO;
 import com.yun.sys.modules.rights.model.vo.MenuVO;
 import io.swagger.annotations.ApiModelProperty;
@@ -92,11 +90,6 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     private String routerPath;
 
     /**
-     * 按钮菜单绑定 URL
-     */
-    private String buttonUrl;
-
-    /**
      * 是否是外部链接
      */
     private Boolean externalLink = false;
@@ -124,9 +117,15 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     private Long oldPid;
 
     /**
-     * 非表字段
+     * 非表字段，菜单绑定 api rights时传
      */
     private Set<String> apiUrls;
+
+    /**
+     * 非表字段
+     */
+    @ApiModelProperty(hidden = true)
+    private Set<ApiRightsDO> apiRightsSet;
 
     @Transient
     public Long getOldPid() {
@@ -143,11 +142,35 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     public MenuVO toMenuVO() {
         String menuComponent = StrUtil.isEmpty(component) ? "Layout" : component;
         MenuVO menuVO = new MenuVO(routerName, routerPath, menuComponent, hidden);
-        menuVO.setMeta(new MenuMetaVO(menuTitle, menuIcon, externalLink, externalLinkUrl));
+        final String[] api = getAPI();
+        menuVO.setMeta(new MenuMetaVO(menuTitle, menuIcon, api[0], api[1], externalLink, externalLinkUrl));
         if (CollectionUtil.isNotEmpty(children)) {
             menuVO.setChildren(children.stream().map(MenuDO::toMenuVO).collect(Collectors.toList()));
         }
         return menuVO;
+    }
+
+    public ButtonVO toButtonVO() {
+        final String[] api = getAPI();
+        return new ButtonVO(api[0], api[1]);
+    }
+
+    private String[] getAPI() {
+        String[] apis = new String[2];
+        if (CollectionUtil.isNotEmpty(apiRightsSet)) {
+            // apiUrl: {GET /yun/api/rights/group}
+            StringBuilder methods = new StringBuilder();
+            StringBuilder urls = new StringBuilder();
+            apiRightsSet.forEach(api -> {
+                        final String[] method_url = api.getUrl().replaceAll("[{}]", "").split("\\s+");
+                        methods.append(method_url[0]).append(";");
+                        urls.append(method_url[1]).append(";");
+                    }
+            );
+            apis[0] = methods.deleteCharAt(methods.lastIndexOf(";")).toString();
+            apis[1] = urls.deleteCharAt(urls.lastIndexOf(";")).toString();
+        }
+        return apis;
     }
 
     @Override
@@ -163,7 +186,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
         map.put("菜单编码", menuCode);
         map.put("菜单图标", menuIcon);
         map.put("创建人", creator);
-        map.put("创建日期",  DateUtil.format2MdHms(createTime));
+        map.put("创建日期", DateUtil.format2MdHms(createTime));
         return map;
     }
 

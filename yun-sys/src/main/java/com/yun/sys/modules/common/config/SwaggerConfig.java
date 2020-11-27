@@ -21,7 +21,7 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import com.yun.sys.modules.rights.model.vo.Button;
+
 import java.util.*;
 import java.util.List;
 

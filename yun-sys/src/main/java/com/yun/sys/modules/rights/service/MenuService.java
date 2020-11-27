@@ -3,7 +3,7 @@ package com.yun.sys.modules.rights.service;
 import com.yun.sys.modules.rights.model.$do.MenuDO;
 import com.yun.sys.modules.rights.model.criteria.MenuQueryCriteria;
 import com.yun.common.utils.download.DownLoadSupport;
-import com.yun.sys.modules.rights.model.vo.Button;
+import com.yun.sys.modules.rights.model.vo.ButtonVO;
 import com.yun.sys.modules.rights.model.vo.MenuVO;
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +62,7 @@ public interface MenuService extends DownLoadSupport<MenuDO> {
      * @param userId
      * @return Map<String, Button> map.key is menuCode
      */
-    Map<String, Button> queryButtonMenusByUser(Long userId);
+    Map<String, ButtonVO> getButtonMenusByUser(Long userId);
 
     /**
      * 根据用户获取菜单路由

@@ -13,7 +13,6 @@
         <result column="m_router_name" jdbcType="VARCHAR" property="routerName"/>
         <result column="m_router_path" jdbcType="VARCHAR" property="routerPath"/>
         <result column="m_component" jdbcType="VARCHAR" property="component"/>
-        <result column="m_button_url" jdbcType="VARCHAR" property="buttonUrl"/>
         <result column="m_is_external_link" jdbcType="BIT" property="externalLink"/>
         <result column="m_external_link_url" jdbcType="VARCHAR" property="externalLinkUrl"/>
         <result column="m_is_hidden" jdbcType="BIT" property="hidden"/>
@@ -22,14 +21,14 @@
         <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <!-- 多对多映射的关键:collection -->
-        <collection property="apiUrls" javaType="java.util.HashSet"
+        <collection property="apiRightsSet" javaType="java.util.HashSet"
                     column="m_id" ofType="com.yun.sys.modules.rights.model.$do.MenuDO"
                     select="com.yun.sys.modules.rights.mapper.ApiRightsMapper.selectAuthorizationsByMenuId">
         </collection>
     </resultMap>
 
     <sql id="Base_Column_List">
-        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_component, m_button_url,
+        m_id, m_pid, m_menu_code, m_menu_icon, m_menu_title, m_menu_type, m_description, m_menu_sort, m_router_name, m_router_path, m_component,
         m_is_external_link, m_external_link_url, m_is_hidden, m_creator, m_updater, m_create_time, m_update_time
     </sql>
 
@@ -69,7 +68,7 @@
     </select>
 
     <sql id="Button_Menu_Column_List">
-        m_menu_code, m_button_url
+        m_id, m_menu_code
     </sql>
 
     <select id="selectAllButtonMenus" resultMap="BaseResultMap">
@@ -155,7 +154,7 @@
     <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.MenuDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_menu (m_menu_code, m_menu_icon, m_menu_title, m_menu_type,
-                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path, m_button_url,
+                                m_description, m_menu_sort, m_pid, m_router_name, m_router_path,
                                 m_external_link_url,
                                 m_component,
                                 m_is_external_link,
@@ -165,7 +164,7 @@
         values (#{menuCode,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, #{menuTitle,jdbcType=VARCHAR},
                 #{menuType,jdbcType=INTEGER},
                 #{description,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{pid,jdbcType=BIGINT},
-                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR}, #{buttonUrl,jdbcType=VARCHAR},
+                #{routerName,jdbcType=VARCHAR}, #{routerPath,jdbcType=VARCHAR},
                 #{externalLinkUrl,jdbcType=VARCHAR}, #{component,jdbcType=VARCHAR},
                 #{externalLink,jdbcType=BIT}, #{hidden,jdbcType=BIT},
                 #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
@@ -201,9 +200,6 @@
             </if>
             <if test="routerPath != null">
                 m_router_path = #{routerPath,jdbcType=VARCHAR},
-            </if>
-            <if test="buttonUrl != null">
-                m_button_url = #{buttonUrl,jdbcType=VARCHAR},
             </if>
             <if test="externalLinkUrl != null">
                 m_external_link_url = #{externalLinkUrl,jdbcType=VARCHAR},
