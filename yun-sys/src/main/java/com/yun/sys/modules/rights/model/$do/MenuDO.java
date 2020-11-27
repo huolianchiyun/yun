@@ -117,12 +117,13 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
     private Long oldPid;
 
     /**
-     * 非表字段，菜单绑定 api rights时传
+     * 非表字段，菜单绑定 api rights时传绑定的 api url set
      */
+    @ApiModelProperty(notes="菜单绑定 api rights set")
     private Set<String> apiUrls;
 
     /**
-     * 非表字段
+     * 非表字段， 级联查询菜单绑定的 api rights set
      */
     @ApiModelProperty(hidden = true)
     private Set<ApiRightsDO> apiRightsSet;
