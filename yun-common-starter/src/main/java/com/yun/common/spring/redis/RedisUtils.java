@@ -680,14 +680,17 @@ public class RedisUtils {
         if (CollectionUtil.isEmpty(keySet)) return;
         List<Object> keys = redisTemplate.opsForValue().multiGet(
                 keySet.stream().map(key -> new StringBuffer(prefix).append(key).toString())
-                        .collect(Collectors.toSet()));
-        long count = redisTemplate.delete(keys);
-        // 此处提示可自行删除
-        if (log.isDebugEnabled()) {
-            log.debug("--------------------------------------------");
-            log.debug("成功删除缓存：" + keys.toString());
-            log.debug("缓存删除数量：" + count + "个");
-            log.debug("--------------------------------------------");
+                        .collect(Collectors.toSet()))
+                .stream().filter(key -> key != null).collect(Collectors.toList());
+        if (CollectionUtil.isEmpty(keys)) {
+            long count = redisTemplate.delete(keys);
+            // 此处提示可自行删除
+            if (log.isDebugEnabled()) {
+                log.debug("--------------------------------------------");
+                log.debug("成功删除缓存：" + keys.toString());
+                log.debug("缓存删除数量：" + count + "个");
+                log.debug("--------------------------------------------");
+            }
         }
     }
 
