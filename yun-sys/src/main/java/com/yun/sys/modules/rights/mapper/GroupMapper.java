@@ -57,6 +57,13 @@ public interface GroupMapper extends PageMapper<GroupDO>{
 
     Set<GroupDO> selectByMenuIds(@Param("menuIds") Set<Long> menuIds);
 
+    Set<GroupDO> selectByGroupType(String groupType);
+
+    /**
+     * 最多查询 1000 条记录
+     */
+    Set<GroupDO> selectAll();
+
     int insert(GroupDO group);
 
     int updateByPrimaryKeySelective(GroupDO record);

@@ -37,8 +37,8 @@ public final class TreeBuilder<T extends BaseDO & Comparable<T> & CollectChildre
 
     /**
      * 以指定的树根节点构建树结构
-     * 若 sources 为空或 null，则返回 空集合；
-     * 若 treeRootIds 为空或 null，则 {@link TreeBuilder#buildTree(java.util.Collection)}
+     * 若 sources 为空或 null，则返回空集合；
+     * 若 treeRootIds 为空或 null，则返回{@link TreeBuilder#buildTree(java.util.Collection)}
      *
      * @param sources     树节点源数据
      * @param treeRootIds 指定的树根节点 ID

@@ -53,6 +53,6 @@
         select api.api_url, api.api_authorization
         from t_sys_api_rights api
                  join t_sys_menu_api_rights mapi on api.api_url = mapi.api_url
-        where mapi.menu_id = #{menuId,jdbcType=BIGINT} order by id;
+        where mapi.menu_id = #{menuId,jdbcType=BIGINT} order by api.api_id;
     </select>
 </mapper>

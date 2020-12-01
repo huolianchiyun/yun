@@ -124,6 +124,19 @@
         and g_id = group_id
     </select>
 
+    <select id="selectByGroupType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group
+        where g_group_type = #{groupType, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_group limit 1000
+    </select>
+
     <select id="selectByCriteria"
             parameterType="com.yun.sys.modules.rights.model.criteria.GroupQueryCriteria"
             resultMap="BaseResultMap">

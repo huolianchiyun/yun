@@ -15,7 +15,6 @@ import com.yun.common.utils.collect.SetUtils;
 import com.yun.common.utils.str.StringUtils;
 import com.yun.common.page.PageInfo;
 import com.yun.common.mybatis.page.PageQueryHelper;
-
 import static com.yun.sys.modules.common.xcache.CacheKey.*;
 import static com.yun.sys.modules.rights.common.constant.RightsConstants.DICT_SUFFIX;
 import com.yun.sys.modules.rights.common.excel.CollectChildren;
@@ -32,7 +31,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -179,6 +177,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Boolean isAssociatedUser(Set<Long> groupIds) {
+        Assert.notEmpty(groupIds, "检验组是否关联用户， group id must not empty.");
         return groupMapper.countAssociatedUser(groupIds) > 0;
     }
 
@@ -242,7 +241,7 @@ public class GroupServiceImpl implements GroupService {
      * @param groupIds 组集合
      */
     private List<GroupDO> getPosterityMenusWithSelf(Set<Long> groupIds) {
-        Set<GroupDO> allGroups = groupMapper.selectByCriteria(null);
+        Set<GroupDO> allGroups = groupMapper.selectAll();
         List<GroupDO> tree = new TreeBuilder<GroupDO>().buildTree(allGroups, groupIds);
         List<GroupDO> groupsSorted = new ArrayList<>();
         tree.forEach(new CollectChildren<>(groupsSorted));

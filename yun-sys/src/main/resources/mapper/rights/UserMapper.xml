@@ -128,6 +128,7 @@
             </if>
             and u_is_deleted = 0
         </trim>
+        order by u_create_time desc
     </select>
 
     <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.UserDO" useGeneratedKeys="true" keyProperty="id">
