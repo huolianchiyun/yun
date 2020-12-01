@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PermissionRuleServiceImpl implements PermissionRuleService {
+class PermissionRuleServiceImpl implements PermissionRuleService {
 
     private final PermissionRuleMapper ruleMapper;
 

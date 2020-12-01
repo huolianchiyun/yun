@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = MENU)
-public class MenuServiceImpl implements MenuService {
+class MenuServiceImpl implements MenuService {
 
     private final GroupService groupService;
     private final MenuMapper menuMapper;

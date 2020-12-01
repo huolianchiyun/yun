@@ -5,7 +5,7 @@ import cn.hutool.core.util.ReflectUtil;
 import com.fasterxml.classmate.TypeResolver;
 import com.yun.sys.modules.rights.model.common.NameValue;
 import com.yun.sys.modules.rights.model.$do.ApiRightsDO;
-import com.yun.sys.modules.rights.service.impl.ApiRightsServiceImpl;
+import com.yun.sys.modules.rights.service.ApiRightsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Conditional;
@@ -57,7 +57,7 @@ public class ApiRightsConfig {
         public OnlyInitApiGroup(List<Docket> dockets) {
             nullToEmptyList(dockets).forEach(docket -> {
                 ApiInfo apiInfo = (ApiInfo) ReflectUtil.getFieldValue(docket, "apiInfo");
-                ApiRightsServiceImpl.groups.add(new NameValue<>(apiInfo.getTitle(), docket.getGroupName()));
+                ApiRightsService.groups.add(new NameValue<>(apiInfo.getTitle(), docket.getGroupName()));
             });
         }
     }
@@ -138,7 +138,7 @@ public class ApiRightsConfig {
                 LocalDateTime now = LocalDateTime.now();
                 nullToEmptyList(dockets).forEach(docket -> {
                     ApiInfo apiInfo = (ApiInfo) ReflectUtil.getFieldValue(docket, "apiInfo");
-                    ApiRightsServiceImpl.groups.add(new NameValue<>(apiInfo.getTitle(), docket.getGroupName()));
+                    ApiRightsService.groups.add(new NameValue<>(apiInfo.getTitle(), docket.getGroupName()));
                     String groupName = Optional.ofNullable(docket.getGroupName()).orElse(Docket.DEFAULT_GROUP_NAME);
                     Documentation documentation = getScanned().documentationByGroup(groupName);
                     if (documentation != null) {

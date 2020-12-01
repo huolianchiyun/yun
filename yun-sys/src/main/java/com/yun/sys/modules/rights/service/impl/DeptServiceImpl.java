@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "dept")
-public class DeptServiceImpl implements DeptService {
+class DeptServiceImpl implements DeptService {
     // 对组的操作委派给 GroupService 处理
     private final GroupService groupService;
 

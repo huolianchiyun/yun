@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = GROUP)
-public class GroupServiceImpl implements GroupService {
+class GroupServiceImpl implements GroupService {
 
     private final GroupMapper groupMapper;
     private final UserMapper userMapper;

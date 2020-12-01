@@ -62,9 +62,9 @@ public class DeptController {
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity<ResponseData<Void>> create(@Validated(DeptDTO.Create.class) @RequestBody DeptDTO dept) {
-        deptService.create(dept);
+            deptService.create(dept);
         return success();
-    }
+}
 
     @Logging("修改部门")
     @ApiOperation("修改部门")

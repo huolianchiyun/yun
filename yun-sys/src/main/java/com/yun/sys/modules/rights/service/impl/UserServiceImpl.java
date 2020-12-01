@@ -45,7 +45,7 @@ import static com.yun.sys.modules.rights.common.constant.RightsConstants.ANONYMO
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = USER)
-public class UserServiceImpl implements UserService {
+class UserServiceImpl implements UserService {
     @Value("${spring.redis.my.expiration-time:7200000}")
     private long expirationTime;
     @Value("${yun.user.pwd-expiration-period::90}")

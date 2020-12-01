@@ -20,7 +20,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class CaptchaServiceImpl implements CaptchaService {
+class CaptchaServiceImpl implements CaptchaService {
 
     @Value("${code.expiration}")
     private Long expiration;

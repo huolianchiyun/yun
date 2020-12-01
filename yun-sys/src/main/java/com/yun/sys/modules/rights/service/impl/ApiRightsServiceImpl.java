@@ -14,9 +14,8 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ApiRightsServiceImpl implements ApiRightsService {
-    // populate value in ApiRightsInit
-    public final static Set<NameValue> groups = new HashSet<>(5);
+class ApiRightsServiceImpl implements ApiRightsService {
+
     private final ApiRightsMapper apiRightsMapper;
 
     @Override

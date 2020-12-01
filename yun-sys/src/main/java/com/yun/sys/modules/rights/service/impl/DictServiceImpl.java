@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "dict")
-public class DictServiceImpl implements DictService {
+class DictServiceImpl implements DictService {
 
     private final DictMapper dictMapper;
 

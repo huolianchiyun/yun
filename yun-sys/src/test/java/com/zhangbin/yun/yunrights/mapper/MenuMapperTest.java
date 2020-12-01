@@ -7,7 +7,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.yun.sys.modules.rights.mapper.MenuMapper;
 import com.yun.sys.modules.rights.model.$do.MenuDO;
 import com.yun.sys.modules.rights.service.MenuService;
-import com.yun.sys.modules.rights.service.impl.MenuServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +27,6 @@ public class MenuMapperTest {
 
     @Test
     public void testDownload() {
-        MenuServiceImpl menuService = new MenuServiceImpl(null, null, null, null);
         MenuDO menu1 = new MenuDO();
         menu1.setId(0L);
         menu1.setMenuTitle("aa");
