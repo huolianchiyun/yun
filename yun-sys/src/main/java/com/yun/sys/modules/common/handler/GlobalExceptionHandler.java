@@ -7,6 +7,7 @@ import com.yun.common.web.response.ResponseData;
 import com.yun.common.exception.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -117,6 +118,7 @@ public class GlobalExceptionHandler {
         log.error(ThrowableUtil.getStackTrace(e));
         return requestError(e.getLocalizedMessage());
     }
+
     /**
      * 处理接口验证失败异常
      */
@@ -125,6 +127,16 @@ public class GlobalExceptionHandler {
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return noApiRights(e.getLocalizedMessage());
+    }
+
+    /**
+     * 处理接口验证失败异常
+     */
+    @ExceptionHandler({DuplicateKeyException.class})
+    public ResponseEntity<ResponseData> handleDuplicateKeyException(DuplicateKeyException e){
+        // 打印堆栈信息
+        log.error(ThrowableUtil.getStackTrace(e));
+        return requestError("Sql Integrity Constraint Violation Exception");
     }
 
     private static String getErrMessage(BindingResult bindingResult) {
