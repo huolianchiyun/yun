@@ -164,7 +164,7 @@ public class MenuDO extends BaseDO implements Comparable<MenuDO>, CollectChildre
             StringBuilder urls = new StringBuilder();
             apiRightsSet.forEach(api -> {
                         final String[] method_url = api.getUrl().replaceFirst("^\\s*\\{", "")
-                        .replaceAll("}\\s*}$", "}").trim().split("\\s+");
+                        .replaceAll("}$", "").trim().split("\\s+");
                         methods.append(method_url[0]).append(";");
                         urls.append(method_url[1]).append(";");
                     }
