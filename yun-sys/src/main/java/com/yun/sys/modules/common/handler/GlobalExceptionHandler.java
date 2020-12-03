@@ -136,7 +136,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseData> handleDuplicateKeyException(DuplicateKeyException e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
-        return requestError("Sql Integrity Constraint Violation Exception");
+        return requestError("Sql Integrity Constraint Violation Exception, Cause: duplicate key");
     }
 
     private static String getErrMessage(BindingResult bindingResult) {
