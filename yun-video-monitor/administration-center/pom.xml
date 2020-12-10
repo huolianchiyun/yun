@@ -5,15 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.hlcy.yun</groupId>
-        <artifactId>yun</artifactId>
+        <artifactId>yun-video-monitor</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>yun-monitor</artifactId>
-    <packaging>pom</packaging>
 
-    <modules>
-        <module>monitor-machine</module>
-        <module>monitor-server-admin</module>
-    </modules>
+    <artifactId>administration-center</artifactId>
+
 
 </project>

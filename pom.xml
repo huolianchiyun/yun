@@ -11,7 +11,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.zhangbin.yun</groupId>
+    <groupId>com.hlcy.yun</groupId>
     <artifactId>yun</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -24,6 +24,7 @@
         <module>yun-workflow</module>
         <module>yun-monitor</module>
         <module>yun-service-keeper</module>
+        <module>yun-video-monitor</module>
     </modules>
 
     <properties>
