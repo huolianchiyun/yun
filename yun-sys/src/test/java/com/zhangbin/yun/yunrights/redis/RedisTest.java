@@ -1,6 +1,6 @@
 package com.zhangbin.yun.yunrights.redis;
 
-import com.yun.common.spring.redis.RedisUtils;
+import com.hlcy.yun.common.spring.redis.RedisUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

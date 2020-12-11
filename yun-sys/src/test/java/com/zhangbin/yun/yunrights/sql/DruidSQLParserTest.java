@@ -2,7 +2,7 @@ package com.zhangbin.yun.yunrights.sql;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.druid.sql.SQLUtils;
-import com.yun.sys.modules.rights.model.$do.PermissionRuleDO;
+import com.hlcy.yun.sys.modules.rights.model.$do.PermissionRuleDO;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.HashSet;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yun.sys.modules.email.mapper.EmailConfigMapper">
-  <resultMap id="BaseResultMap" type="com.yun.sys.modules.email.model.$do.EmailConfigDO">
+<mapper namespace="com.hlcy.yun.sys.modules.email.mapper.EmailConfigMapper">
+  <resultMap id="BaseResultMap" type="com.hlcy.yun.sys.modules.email.model.$do.EmailConfigDO">
     <id column="ec_id" jdbcType="BIGINT" property="id" />
     <result column="ec_host" jdbcType="VARCHAR" property="host" />
     <result column="ec_port" jdbcType="VARCHAR" property="port" />
@@ -26,7 +26,7 @@
     where ec_id = #{id,jdbcType=BIGINT}
   </select>
 
-  <insert id="insert" parameterType="com.yun.sys.modules.email.model.$do.EmailConfigDO">
+  <insert id="insert" parameterType="com.hlcy.yun.sys.modules.email.model.$do.EmailConfigDO">
     insert into t_sys_email_config (ec_host, ec_port,
       ec_password, ec_user, ec_sender,
       ec_creator, ec_updater, ec_create_time,
@@ -37,7 +37,7 @@
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.yun.sys.modules.email.model.$do.EmailConfigDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hlcy.yun.sys.modules.email.model.$do.EmailConfigDO">
     update t_sys_email_config
     <set>
       <if test="host != null">

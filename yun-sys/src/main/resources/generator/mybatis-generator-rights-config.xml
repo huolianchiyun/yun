@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
     <context id="DB2Tables0" targetRuntime="MyBatis3">
-        <plugin type="com.yun.sys.generator.MybatisPlugin">
+        <plugin type="com.hlcy.yun.sys.generator.MybatisPlugin">
             <property name="hasLombok" value="true"/>
         </plugin>
         <!-- 生成的pojo，将implements Serializable -->

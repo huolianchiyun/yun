@@ -1,7 +1,7 @@
 package com.zhangbin.yun.yunrights.service;
 
-import com.yun.sys.modules.rights.model.$do.UserDO;
-import com.yun.sys.modules.rights.service.UserService;
+import com.hlcy.yun.sys.modules.rights.model.$do.UserDO;
+import com.hlcy.yun.sys.modules.rights.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

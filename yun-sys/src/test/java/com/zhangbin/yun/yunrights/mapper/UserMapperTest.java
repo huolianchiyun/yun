@@ -2,9 +2,9 @@ package com.zhangbin.yun.yunrights.mapper;
 
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.yun.sys.modules.rights.mapper.UserMapper;
-import com.yun.sys.modules.rights.model.$do.UserDO;
-import com.yun.sys.modules.rights.model.criteria.UserQueryCriteria;
+import com.hlcy.yun.sys.modules.rights.mapper.UserMapper;
+import com.hlcy.yun.sys.modules.rights.model.$do.UserDO;
+import com.hlcy.yun.sys.modules.rights.model.criteria.UserQueryCriteria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

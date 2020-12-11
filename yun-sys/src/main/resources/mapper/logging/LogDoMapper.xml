@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yun.sys.modules.logging.mapper.LogMapper">
-    <resultMap id="BaseResultMap" type="com.yun.sys.modules.logging.model.$do.LogDO">
+<mapper namespace="com.hlcy.yun.sys.modules.logging.mapper.LogMapper">
+    <resultMap id="BaseResultMap" type="com.hlcy.yun.sys.modules.logging.model.$do.LogDO">
         <id column="l_id" jdbcType="BIGINT" property="id"/>
         <result column="l_operation_desc" jdbcType="VARCHAR" property="operationDesc"/>
         <result column="l_log_level" jdbcType="CHAR" property="logLevel"/>
@@ -30,7 +30,7 @@
     </select>
 
     <select id="selectByCriteria"
-            parameterType="com.yun.sys.modules.logging.model.criteria.LogQueryCriteria"
+            parameterType="com.hlcy.yun.sys.modules.logging.model.criteria.LogQueryCriteria"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -71,7 +71,7 @@
         order by l_create_time desc
     </select>
 
-    <insert id="insert" parameterType="com.yun.sys.modules.logging.model.$do.LogDO">
+    <insert id="insert" parameterType="com.hlcy.yun.sys.modules.logging.model.$do.LogDO">
         <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>

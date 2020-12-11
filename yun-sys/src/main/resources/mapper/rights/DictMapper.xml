@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yun.sys.modules.rights.mapper.DictMapper">
-    <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.DictDO">
+<mapper namespace="com.hlcy.yun.sys.modules.rights.mapper.DictMapper">
+    <resultMap id="BaseResultMap" type="com.hlcy.yun.sys.modules.rights.model.$do.DictDO">
         <result column="dic_id" jdbcType="BIGINT" property="id"/>
         <result column="dic_type_code" jdbcType="VARCHAR" property="typeCode"/>
         <result column="dic_name" jdbcType="VARCHAR" property="name"/>
@@ -39,7 +39,7 @@
     </select>
 
     <select id="selectByCriteria"
-            parameterType="com.yun.sys.modules.rights.model.criteria.DictQueryCriteria"
+            parameterType="com.hlcy.yun.sys.modules.rights.model.criteria.DictQueryCriteria"
             resultMap="BaseResultMap">
         select dt.dt_name,
         <include refid="Base_Column_List"/>
@@ -71,7 +71,7 @@
         order by dic_create_time
     </select>
 
-    <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.DictDO"
+    <insert id="insert" parameterType="com.hlcy.yun.sys.modules.rights.model.$do.DictDO"
             useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_dict (dic_id, dic_name, dic_type_code, dic_code, dic_sort, dic_description, dic_status,
                                 dic_creator, dic_updater, dic_create_time, dic_update_time)
@@ -83,7 +83,7 @@
     </insert>
 
     <update id="updateByPrimaryKeySelective"
-            parameterType="com.yun.sys.modules.rights.model.$do.DictDO">
+            parameterType="com.hlcy.yun.sys.modules.rights.model.$do.DictDO">
         update t_sys_dict
         <set>
             <if test="typeCode != null">

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yun.sys.modules.rights.mapper.MenuApiRightsMapper">
+<mapper namespace="com.hlcy.yun.sys.modules.rights.mapper.MenuApiRightsMapper">
 
-  <resultMap id="BaseResultMap" type="com.yun.sys.modules.rights.model.$do.MenuApiRightsDO">
+  <resultMap id="BaseResultMap" type="com.hlcy.yun.sys.modules.rights.model.$do.MenuApiRightsDO">
     <result column="menu_id" jdbcType="BIGINT" property="menuId" />
     <result column="api_url" jdbcType="VARCHAR" property="apiUrl" />
   </resultMap>
 
-  <insert id="insert" parameterType="com.yun.sys.modules.rights.model.$do.MenuApiRightsDO">
+  <insert id="insert" parameterType="com.hlcy.yun.sys.modules.rights.model.$do.MenuApiRightsDO">
     insert into t_sys_menu_api_rights (menu_id, api_url)
     values (#{groupId,jdbcType=BIGINT}, #{apiUrl,jdbcType=VARCHAR})
   </insert>
