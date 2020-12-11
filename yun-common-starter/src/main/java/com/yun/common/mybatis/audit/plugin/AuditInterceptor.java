@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
+
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -100,7 +101,10 @@ public class AuditInterceptor implements Interceptor {
         if (field.getAnnotation(CreatedDate.class) != null) {
             if (SqlCommandType.INSERT.equals(sqlCommandType)) {
                 field.setAccessible(true);
-                field.set(entity, now);
+                if (field.get(entity) == null) {
+                    field.set(entity, now);
+                }
+                field.setAccessible(false);
             }
         }
 
@@ -108,13 +112,16 @@ public class AuditInterceptor implements Interceptor {
         if (field.getAnnotation(LastModifiedDate.class) != null) {
             if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
                 field.setAccessible(true);
-                //兼容mybatis plus的update
-                if (isPlugUpdate) {
-                    Map updateParam = (Map) entity;
-                    field.set(updateParam.get("param1"), now);
-                } else {
-                    field.set(entity, now);
+                if (field.get(entity) == null) {
+                    //兼容mybatis plus的update
+                    if (isPlugUpdate) {
+                        Map updateParam = (Map) entity;
+                        field.set(updateParam.get("param1"), now);
+                    } else {
+                        field.set(entity, now);
+                    }
                 }
+                field.setAccessible(false);
             }
         }
     }

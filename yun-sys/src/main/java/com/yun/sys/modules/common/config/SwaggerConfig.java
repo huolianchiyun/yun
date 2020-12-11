@@ -82,10 +82,6 @@ public class SwaggerConfig {
                 .paths(PathSelectors.ant(baseUrl))
                 .build()
                 .groupName(groupName)
-//                .directModelSubstitute(LocalDateTime.class, String.class)
-//                .directModelSubstitute(LocalDate.class, String.class)
-//                .directModelSubstitute(LocalTime.class, String.class)
-//                .directModelSubstitute(ZonedDateTime.class, String.class)
                 .alternateTypeRules(
                         // https://www.codota.com/code/java/methods/springfox.documentation.spring.web.plugins.Docket/alternateTypeRules
                         // This rule is necessary to allow Swagger resolving Map<String, Object> types

@@ -15,15 +15,13 @@ import java.util.Objects;
 @ComponentScan(value = YunRightsAutoConfig.SCAN_PACKAGE)
 @MapperScan(value = YunRightsAutoConfig.SCAN_PACKAGE, annotationClass = Mapper.class)
 public class YunRightsAutoConfig implements ApplicationContextAware {
-    static final String SCAN_PACKAGE ="com.zhangbin.yun.sys.modules";
+    static final String SCAN_PACKAGE ="com.yun.sys.modules";
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         try {
             TomcatServletWebServerFactory webServerFactory = applicationContext.getBean(TomcatServletWebServerFactory.class);
-            if (Objects.nonNull(webServerFactory)) {
-                webServerFactory.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
-            }
+            webServerFactory.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
         } catch (Exception e) {
             e.printStackTrace();
         }
