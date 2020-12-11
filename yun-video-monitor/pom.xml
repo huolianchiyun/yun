@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>sip-GB28181</module>
-        <module>administration-center</module>
+        <module>admin-center</module>
     </modules>
     <parent>
         <groupId>com.hlcy.yun</groupId>
