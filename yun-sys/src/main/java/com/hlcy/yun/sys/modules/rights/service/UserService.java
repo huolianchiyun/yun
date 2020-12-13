@@ -1,5 +1,6 @@
 package com.hlcy.yun.sys.modules.rights.service;
 
+import com.hlcy.yun.common.utils.download.DownLoadSupport;
 import com.hlcy.yun.common.web.response.Meta;
 import com.hlcy.yun.sys.modules.rights.model.criteria.UserQueryCriteria;
 import com.hlcy.yun.sys.modules.rights.model.$do.UserDO;

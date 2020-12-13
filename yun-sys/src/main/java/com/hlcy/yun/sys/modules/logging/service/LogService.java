@@ -1,5 +1,6 @@
 package com.hlcy.yun.sys.modules.logging.service;
 
+import com.hlcy.yun.common.utils.download.DownLoadSupport;
 import com.hlcy.yun.sys.modules.logging.model.criteria.LogQueryCriteria;
 import com.hlcy.yun.common.page.PageInfo;
 import com.hlcy.yun.sys.modules.logging.enums.LogLevel;

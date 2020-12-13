@@ -7,7 +7,6 @@ import com.hlcy.yun.sys.modules.rights.mapper.*;
 import com.hlcy.yun.sys.modules.rights.model.$do.GroupDO;
 import com.hlcy.yun.sys.modules.rights.model.$do.UserDO;
 import com.hlcy.yun.sys.modules.rights.model.$do.UserGroupDO;
-import com.yun.sys.modules.rights.mapper.*;
 import com.hlcy.yun.sys.modules.rights.model.$do.GroupMenuDO;
 import com.hlcy.yun.common.spring.redis.RedisUtils;
 import com.hlcy.yun.common.spring.security.SecurityUtils;

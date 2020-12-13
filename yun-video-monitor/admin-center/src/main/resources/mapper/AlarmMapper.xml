@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlcy.yun.admincenter.mapper.AlarmMapper">
+    <resultMap id="BaseResultMap" type="com.hlcy.yun.admincenter.model.$do.Alarm">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="info" jdbcType="VARCHAR" property="info"/>
+        <result column="level" jdbcType="VARCHAR" property="level"/>
+        <result column="state" jdbcType="TINYINT" property="state"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updater" jdbcType="VARCHAR" property="updater"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, info, level, state, device_id, creator, create_time, updater, update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_vm_alarm
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" parameterType="com.hlcy.yun.admincenter.model.$do.Alarm" useGeneratedKeys="true" keyProperty="id">
+        insert into t_vm_alarm (id, info, level,
+        state, device_id, creator,
+        create_time, updater, update_time
+        )
+        values (#{id,jdbcType=BIGINT}, #{info,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR},
+        #{state,jdbcType=TINYINT}, #{deviceId,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hlcy.yun.admincenter.model.$do.Alarm">
+        update t_vm_alarm
+        <set>
+            <if test="info != null">
+                info = #{info,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=TINYINT},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updater != null">
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from t_vm_alarm
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+</mapper>

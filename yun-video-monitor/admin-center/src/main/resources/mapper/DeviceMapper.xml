@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlcy.yun.admincenter.mapper.DeviceMapper">
+  <resultMap id="BaseResultMap" type="com.hlcy.yun.admincenter.model.$do.Device">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="channel_id" jdbcType="VARCHAR" property="channelId" />
+    <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer" />
+    <result column="model" jdbcType="VARCHAR" property="model" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="parental" jdbcType="BIT" property="parental" />
+    <result column="civil_code" jdbcType="VARCHAR" property="civilCode" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="register_way" jdbcType="VARCHAR" property="registerWay" />
+    <result column="secrecy" jdbcType="BIT" property="secrecy" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="port" jdbcType="VARCHAR" property="port" />
+    <result column="transport" jdbcType="VARCHAR" property="transport" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.hlcy.yun.admincenter.model.$do.Device">
+    <result column="extra_info" jdbcType="LONGVARCHAR" property="extraInfo" />
+  </resultMap>
+
+  <sql id="Blob_Column_List">
+    extra_info
+  </sql>
+
+  <insert id="insert" parameterType="com.hlcy.yun.admincenter.model.$do.Device" useGeneratedKeys="true" keyProperty="id">
+    insert into t_vm_device (id, parent_id, name,
+      type, channel_id, manufacturer,
+      model, owner, parental,
+      civil_code, address, register_way,
+      secrecy, ip, port, transport,
+      state, creator, create_time,
+      updater, update_time, extra_info
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{type,jdbcType=VARCHAR}, #{channelId,jdbcType=VARCHAR}, #{manufacturer,jdbcType=VARCHAR},
+      #{model,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{parental,jdbcType=BIT},
+      #{civilCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{registerWay,jdbcType=VARCHAR},
+      #{secrecy,jdbcType=BIT}, #{ip,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR}, #{transport,jdbcType=VARCHAR},
+      #{state,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updater,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{extraInfo,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+</mapper>

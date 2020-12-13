@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlcy.yun.admincenter.mapper.HistoryVideoMapper">
+    <resultMap id="BaseResultMap" type="com.hlcy.yun.admincenter.model.$do.HistoryVideo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="device_id" jdbcType="VARCHAR" property="deviceId"/>
+        <result column="video_date" jdbcType="DATE" property="videoDate"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="secrecy" jdbcType="BIT" property="secrecy"/>
+        <result column="file_path" jdbcType="VARCHAR" property="filePath"/>
+        <result column="file_size" jdbcType="INTEGER" property="fileSize"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, device_id, video_date, start_time, end_time, secrecy, file_path, file_size, address
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_vm_history_video
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" parameterType="com.hlcy.yun.admincenter.model.$do.HistoryVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_vm_history_video (id, device_id, video_date,
+        start_time, end_time, secrecy,
+        file_path, file_size, address
+        )
+        values (#{id,jdbcType=BIGINT}, #{deviceId,jdbcType=VARCHAR}, #{videoDate,jdbcType=DATE},
+        #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{secrecy,jdbcType=BIT},
+        #{filePath,jdbcType=VARCHAR}, #{fileSize,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hlcy.yun.admincenter.model.$do.HistoryVideo">
+        update t_vm_history_video
+        <set>
+            <if test="deviceId != null">
+                device_id = #{deviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="videoDate != null">
+                video_date = #{videoDate,jdbcType=DATE},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="secrecy != null">
+                secrecy = #{secrecy,jdbcType=BIT},
+            </if>
+            <if test="filePath != null">
+                file_path = #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                file_size = #{fileSize,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from t_vm_history_video
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+</mapper>

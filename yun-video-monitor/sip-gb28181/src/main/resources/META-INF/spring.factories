@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.hlcy.yun.sip.config.GB28181AutoConfiguration

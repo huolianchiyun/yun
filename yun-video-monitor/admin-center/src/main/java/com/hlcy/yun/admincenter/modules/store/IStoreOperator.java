@@ -1,4 +1,4 @@
-package com.hlcy.yun.admincenter.store;
+package com.hlcy.yun.admincenter.modules.store;
 
 import java.io.InputStream;
 

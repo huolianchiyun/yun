@@ -1,5 +1,6 @@
 package com.hlcy.yun.sys.modules.rights.model.$do;
 
+import com.hlcy.yun.common.model.BaseDO;
 import com.hlcy.yun.sys.modules.rights.model.common.NameValue;
 
 import java.io.Serializable;

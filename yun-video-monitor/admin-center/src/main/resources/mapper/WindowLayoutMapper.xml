@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlcy.yun.admincenter.mapper.WindowLayoutMapper">
+  <resultMap id="BaseResultMap" type="com.hlcy.yun.admincenter.model.$do.WindowLayout">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="h_num" jdbcType="INTEGER" property="hNum" />
+    <result column="v_num" jdbcType="INTEGER" property="vNum" />
+    <result column="devices" jdbcType="VARCHAR" property="devices" />
+    <result column="lasted_use" jdbcType="BIT" property="lastedUse" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, name, h_num, v_num, devices, lasted_use, creator, create_time, updater, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_vm_window_layout
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <insert id="insert" parameterType="com.hlcy.yun.admincenter.model.$do.WindowLayout" useGeneratedKeys="true" keyProperty="id">
+    insert into t_vm_window_layout (id, name, h_num,
+      v_num, devices, lasted_use,
+      creator, create_time, updater,
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{hNum,jdbcType=INTEGER},
+      #{vNum,jdbcType=INTEGER}, #{devices,jdbcType=VARCHAR}, #{lastedUse,jdbcType=BIT},
+      #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hlcy.yun.admincenter.model.$do.WindowLayout">
+    update t_vm_window_layout
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="hNum != null">
+        h_num = #{hNum,jdbcType=INTEGER},
+      </if>
+      <if test="vNum != null">
+        v_num = #{vNum,jdbcType=INTEGER},
+      </if>
+      <if test="devices != null">
+        devices = #{devices,jdbcType=VARCHAR},
+      </if>
+      <if test="lastedUse != null">
+        lasted_use = #{lastedUse,jdbcType=BIT},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_vm_window_layout
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+</mapper>

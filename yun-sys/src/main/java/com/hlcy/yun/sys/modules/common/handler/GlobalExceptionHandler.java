@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 
+import static com.hlcy.yun.common.web.response.ResponseUtil.*;
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 /**
