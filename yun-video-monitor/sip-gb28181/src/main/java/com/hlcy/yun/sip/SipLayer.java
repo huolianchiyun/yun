@@ -1,7 +1,8 @@
 package com.hlcy.yun.sip;
 
 import com.hlcy.yun.sip.config.GB28181Properties;
-import com.hlcy.yun.sip.message.MessagePipeline;
+import com.hlcy.yun.sip.message.RequestPipeline;
+import com.hlcy.yun.sip.message.ResponsePipeline;
 import lombok.extern.slf4j.Slf4j;
 import javax.sip.*;
 import javax.sip.message.Response;
@@ -22,7 +23,9 @@ public class SipLayer implements SipListener {
 
     private SipProvider udpSipProvider;
 
-    private MessagePipeline pipeline;
+    private RequestPipeline requestPipeline;
+
+    private ResponsePipeline responsePipeline;
 
     /**
      * Thread pool that process request message
@@ -55,7 +58,7 @@ public class SipLayer implements SipListener {
     public void processRequest(RequestEvent evt) {
         executor.execute(() -> {
             // process request
-            pipeline.read(evt);
+            requestPipeline.processRequest(evt);
         });
     }
 
@@ -68,8 +71,8 @@ public class SipLayer implements SipListener {
         if ((status >= 100) && (status < 200)) {
             return;
         } else if ((status >= 200) && (status < 300)) { //Success!
-          // process response
-            pipeline.write(evt);
+            // process response
+            responsePipeline.processResponse(evt);
         }
         log.error("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());
     }
@@ -111,10 +114,6 @@ public class SipLayer implements SipListener {
 
     public SipProvider getUdpSipProvider() {
         return udpSipProvider;
-    }
-
-    public void setPipeline(MessagePipeline pipeline) {
-        this.pipeline = pipeline;
     }
 
     private void initSipFactory() {
