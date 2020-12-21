@@ -120,6 +120,7 @@ class GroupServiceImpl implements GroupService {
         // 校验组长信息，若不存在，将创建人设置为组长
         checkOperationalRights(group);
         setGroupMasterFor(group);
+        group.setGroupCode(null);
         groupMapper.insert(group);
         // 更新组编码
         groupMapper.updateGroupCodeById(generateGroupCode(group), group.getId());

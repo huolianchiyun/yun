@@ -60,7 +60,7 @@ management:
 #mybatis
 mybatis:
   config-location: classpath:mybatis-config.xml
-  mapper-locations: classpath:mapper/**/*.xml
+  mapper-locations: classpath*:mapper/**/*.xml
 
 # 登录相关配置
 login:
@@ -129,19 +129,17 @@ ip:
   local-parsing: true
 
 gb28181:
-  sip:
-    ip: 192.168.0.102
-    port: 5060
-    # 根据国标6.1.2中规定，domain宜采用ID统一编码的前十位编码。国标附录D中定义前8位为中心编码（由省级、市级、区级、基层编号组成，参照GB/T 2260-2007）
-    # 后两位为行业编码，定义参照附录D.3
-    # 3701020049标识山东济南历下区 信息行业接入
-    domain: 3701020049
-    id: 37010200492000000001
-    # 默认设备认证密码，后续扩展使用设备单独密码
-    password: admin123
-  media:
-    ip: 192.168.0.102
-    port: 10000
+  sipIp: 192.168.11.1
+  sipPort: 5060
+  # 根据国标6.1.2中规定，domain宜采用ID统一编码的前十位编码。国标附录D中定义前8位为中心编码（由省级、市级、区级、基层编号组成，参照GB/T 2260-2007）
+  # 后两位为行业编码，定义参照附录D.3
+  # 3701020049标识山东济南历下区 信息行业接入
+  sipDomain: 3701020049
+  sipId: 37010200492000000001
+  # 默认设备认证密码，后续扩展使用设备单独密码
+  sipPassword: admin123
+  mediaIp: 192.168.0.102
+  mediaPort: 10000
   ptz:
    speed: 50
 

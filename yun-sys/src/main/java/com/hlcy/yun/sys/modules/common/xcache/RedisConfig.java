@@ -131,14 +131,6 @@ public class RedisConfig extends CachingConfigurerSupport {
             }
         };
     }
-
-    @Bean
-    public DefaultRedisScript<Long> redisScript() {// 返回值要是 Long，不支持 Integer
-        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/del_keys_with_same_prefix.lua")));
-        redisScript.setResultType(Long.class);
-        return redisScript;
-    }
 }
 
 /**

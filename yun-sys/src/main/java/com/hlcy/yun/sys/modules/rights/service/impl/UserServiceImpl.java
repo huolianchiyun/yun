@@ -48,7 +48,7 @@ import static com.hlcy.yun.sys.modules.common.xcache.CacheKey.*;
 class UserServiceImpl implements UserService {
     @Value("${spring.redis.my.expiration-time:7200000}")
     private long expirationTime;
-    @Value("${yun.user.pwd-expiration-period::90}")
+    @Value("${yun.user.pwd-expiration-period:90}")
     private int pwdExpirationPeriod;
 
     private final UserMapper userMapper;
@@ -152,7 +152,7 @@ class UserServiceImpl implements UserService {
         final LocalDateTime pwdResetTime = userDO.getPwdResetTime();
         final LocalDate pwdResetDate = pwdResetTime != null ? pwdResetTime.toLocalDate() : userDO.getCreateTime().toLocalDate();
         final LocalDate expiredDate = pwdResetDate.plus(pwdExpirationPeriod, ChronoUnit.DAYS);
-        final int difference = LocalDate.now().until(expiredDate).getDays();
+        final long difference = LocalDate.now().until(expiredDate, ChronoUnit.DAYS);
         if (difference >= 0 && difference <= 10) {
             return Meta.error(String.format("你的密码将于 %s 过期，请尽快修改, 以免影响你后续登录！", expiredDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
         }else if(difference < 0){

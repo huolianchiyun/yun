@@ -10,6 +10,7 @@ import com.hlcy.yun.sys.modules.rights.common.tree.TreeBuilder;
 import com.hlcy.yun.sys.modules.rights.mapper.GroupMenuMapper;
 import com.hlcy.yun.sys.modules.rights.mapper.MenuApiRightsMapper;
 import com.hlcy.yun.sys.modules.rights.mapper.MenuMapper;
+import com.hlcy.yun.sys.modules.rights.model.$do.ApiRightsDO;
 import com.hlcy.yun.sys.modules.rights.model.$do.GroupDO;
 import com.hlcy.yun.sys.modules.rights.model.$do.MenuApiRightsDO;
 import com.hlcy.yun.sys.modules.rights.model.vo.ButtonVO;
@@ -57,7 +58,9 @@ class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDO> queryAllByCriteriaWithNoPage(MenuQueryCriteria criteria) {
-        return SetUtils.toListWithSorted(menuMapper.selectByCriteria(criteria), MenuDO::compareTo);
+        final Set<MenuDO> menus = menuMapper.selectByCriteria(criteria);
+        menus.forEach(menu -> menu.setApiUrls(menu.getApiRightsSet().stream().map(ApiRightsDO::getUrl).collect(Collectors.toSet())));
+        return SetUtils.toListWithSorted(menus, MenuDO::compareTo);
     }
 
     @Override
@@ -98,7 +101,7 @@ class MenuServiceImpl implements MenuService {
     @Cacheable(value = BIND_USER + MENU, key = "'button:" + UserIdKey + "' + #p0")
     public Map<String, ButtonVO> getButtonMenusByUser(Long userId) {
         // 如果是admin，则返回所有菜单
-        Set<MenuDO> menuSet = SecurityUtils.isAdmin() ?  menuMapper.selectAllButtonMenus() : menuMapper.selectButtonMenusByUser(userId);
+        Set<MenuDO> menuSet = SecurityUtils.isAdmin() ? menuMapper.selectAllButtonMenus() : menuMapper.selectButtonMenusByUser(userId);
         if (CollectionUtil.isEmpty(menuSet)) {
             return new HashMap<>(0);
         }

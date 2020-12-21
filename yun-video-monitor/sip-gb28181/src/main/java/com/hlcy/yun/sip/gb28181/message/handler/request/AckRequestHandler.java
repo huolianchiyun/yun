@@ -1,0 +1,33 @@
+package com.hlcy.yun.sip.gb28181.message.handler.request;
+
+import com.hlcy.yun.sip.gb28181.message.RequestHandler;
+import gov.nist.javax.sip.header.CSeq;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.sip.Dialog;
+import javax.sip.InvalidArgumentException;
+import javax.sip.RequestEvent;
+import javax.sip.SipException;
+import javax.sip.message.Request;
+
+@Slf4j
+public class AckRequestHandler extends RequestHandler {
+    @Override
+    public void handle(RequestEvent event) {
+        if (!Request.ACK.equals(event.getRequest().getMethod())) {
+            this.next.handle(event);
+            return;
+        }
+        log.info("Receive a ack request: {}.", event.getRequest());
+        Request request = event.getRequest();
+        Dialog dialog = event.getDialog();
+        try {
+            CSeq csReq = (CSeq) request.getHeader(CSeq.NAME);
+            Request ackRequest = dialog.createAck(csReq.getSeqNumber());
+            dialog.sendAck(ackRequest);
+            log.info("send ack to callee: {}", ackRequest.toString());
+        } catch (SipException | InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+}

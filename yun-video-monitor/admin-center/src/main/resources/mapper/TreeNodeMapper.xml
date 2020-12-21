@@ -15,7 +15,7 @@
 
   <insert id="insert" parameterType="com.hlcy.yun.admincenter.model.$do.TreeNode" useGeneratedKeys="true" keyProperty="id">
     insert into t_vm_tree_node (id, pid, name,
-      type, device_id, creator,
+      type, code, creator,
       updater, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},

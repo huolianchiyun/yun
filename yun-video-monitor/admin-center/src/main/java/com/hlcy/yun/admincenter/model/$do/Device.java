@@ -3,19 +3,25 @@ package com.hlcy.yun.admincenter.model.$do;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.hlcy.yun.common.model.BaseDO;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hlcy.yun.common.mybatis.audit.annotation.CreatedBy;
+import com.hlcy.yun.common.mybatis.audit.annotation.CreatedDate;
+import com.hlcy.yun.common.mybatis.audit.annotation.LastModifiedBy;
+import com.hlcy.yun.common.mybatis.audit.annotation.LastModifiedDate;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * 设备表
  * 表 t_vm_device
+ *
  * @author ASUS
  * @date 2020-12-11 21:22:52
  */
 @Getter
 @Setter
-public class Device extends BaseDO implements Serializable {
+public class Device implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * ID
@@ -103,28 +109,25 @@ public class Device extends BaseDO implements Serializable {
     private Byte state;
 
     /**
-     * 创建者用户账号
-     */
-    private String creator;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 修改者用户账号
-     */
-    private String updater;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
      * 扩展信息
      */
     private String extraInfo;
 
+    @CreatedBy
+    @ApiModelProperty(hidden = true)
+    protected String creator;
+
+    @LastModifiedBy
+    @ApiModelProperty(hidden = true)
+    protected String updater;
+
+    @CreatedDate
+    @ApiModelProperty(hidden = true)
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    protected LocalDateTime createTime;
+
+    @LastModifiedDate
+    @ApiModelProperty(hidden = true)
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    protected LocalDateTime updateTime;
 }

@@ -2,10 +2,10 @@ server:
   port: 8081
 
 spring:
-  freemarker:
-    check-template-location: false
   profiles:
     active: dev
+    application:
+      name: yun-sys
   jackson:
     time-zone: GMT+8
   data:
@@ -13,8 +13,7 @@ spring:
       repositories:
         enabled: false
 
-  application:
-    name: yun-sys
+
   #
   redis:
     #数据库索引
@@ -27,7 +26,10 @@ spring:
     my:
       #设置 redis 数据默认过期时间，默认2小时
       expiration-time: 7200000
-
+    stream:
+      key: STREAM_MRK
+      consumer-group: MRK_CONSUMER
+      consumer-name: MRK
 #task:
 #  pool:
 #    # 核心线程池大小
