@@ -1,6 +1,8 @@
 package com.hlcy.yun.sip.gb28181.message;
 
 import javax.sip.ResponseEvent;
+import javax.sip.header.CSeqHeader;
+import javax.sip.message.Response;
 
 /**
  * @implNote 子类要保证线程安全
@@ -12,7 +14,11 @@ public abstract class ResponseHandler {
 
     protected ResponseHandler next;
 
-    protected abstract void handle(ResponseEvent evt);
+    public abstract void handle(ResponseEvent event);
+
+    protected String getMethodFrom(ResponseEvent event) {
+        return ((CSeqHeader) event.getResponse().getHeader(CSeqHeader.NAME)).getMethod();
+    }
 
     public String getName() {
         return name;

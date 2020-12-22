@@ -2,7 +2,6 @@ package com.hlcy.yun.sip.gb28181.message.handler.request;
 
 import com.hlcy.yun.sip.gb28181.auth.DigestServerAuthHelper;
 import com.hlcy.yun.sip.gb28181.bean.Device;
-import com.hlcy.yun.sip.gb28181.bean.Host;
 import com.hlcy.yun.sip.gb28181.message.RequestHandler;
 import com.hlcy.yun.sip.gb28181.notification.event.LogoutEvent;
 import com.hlcy.yun.sip.gb28181.notification.event.RegisterEvent;
@@ -10,7 +9,6 @@ import gov.nist.javax.sip.address.AddressImpl;
 import gov.nist.javax.sip.address.SipUri;
 import gov.nist.javax.sip.header.Expires;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.sip.RequestEvent;
 import javax.sip.header.*;
 import javax.sip.message.Request;
@@ -65,15 +63,15 @@ public class RegisterRequestHandler extends RequestHandler {
         ViaHeader viaHeader = (ViaHeader) request.getHeader(ViaHeader.NAME);
         String received = viaHeader.getReceived();
         int rPort = viaHeader.getRPort();
-        Host host = new Host(received, rPort, received.concat(":").concat(String.valueOf(rPort)));
-
         FromHeader fromHeader = (FromHeader) request.getHeader(FromHeader.NAME);
         AddressImpl address = (AddressImpl) fromHeader.getAddress();
         SipUri uri = (SipUri) address.getURI();
         String deviceId = uri.getUser();
-        Device device = new Device(deviceId, host);
-        device.setTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
-        return device;
+        return new Device(deviceId)
+                .setIp(viaHeader.getReceived())
+                .setPort(viaHeader.getRPort())
+                .setAddress(received.concat(":").concat(String.valueOf(rPort)))
+                .setTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
     }
 
     private void setupResponseHeaders(Request request, Response response) {

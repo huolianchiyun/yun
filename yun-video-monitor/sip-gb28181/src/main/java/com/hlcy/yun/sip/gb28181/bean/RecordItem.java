@@ -1,5 +1,8 @@
 package com.hlcy.yun.sip.gb28181.bean;
 
+import lombok.Getter;
+
+@Getter
 public class RecordItem {
 
 	private String deviceId;
@@ -20,75 +23,48 @@ public class RecordItem {
 
 	private String recorderId;
 
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
+	public RecordItem setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+		return this;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
+	public RecordItem setName(String name) {
 		this.name = name;
+		return this;
 	}
 
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
+	public RecordItem setFilePath(String filePath) {
 		this.filePath = filePath;
+		return this;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
+	public RecordItem setAddress(String address) {
 		this.address = address;
+		return this;
 	}
 
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
+	public RecordItem setStartTime(String startTime) {
 		this.startTime = startTime;
+		return this;
 	}
 
-	public int getSecrecy() {
-		return secrecy;
-	}
-
-	public void setSecrecy(int secrecy) {
-		this.secrecy = secrecy;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getRecorderId() {
-		return recorderId;
-	}
-
-	public void setRecordId(String recorderId) {
-		this.recorderId = recorderId;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
+	public RecordItem setEndTime(String endTime) {
 		this.endTime = endTime;
+		return this;
+	}
+
+	public RecordItem setSecrecy(int secrecy) {
+		this.secrecy = secrecy;
+		return this;
+	}
+
+	public RecordItem setType(String type) {
+		this.type = type;
+		return this;
+	}
+
+	public RecordItem setRecorderId(String recorderId) {
+		this.recorderId = recorderId;
+		return this;
 	}
 }

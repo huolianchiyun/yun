@@ -10,13 +10,13 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class RegisterEvent extends AbstractDeviceEvent implements EventMap {
+public class AlarmEvent extends AbstractDeviceEvent implements EventMap {
     private Device device;
 
-    public RegisterEvent(Device device) {
-        this.device = device;
+    public AlarmEvent(Device device) {
         this.deviceId = device.getDeviceId();
-        this.type = "register";
+        this.device = device;
+        type = "alarm";
     }
 
     public Map<String, String> toMap() {
@@ -27,7 +27,7 @@ public class RegisterEvent extends AbstractDeviceEvent implements EventMap {
         return map;
     }
 
-    public static RegisterEvent valueOf(Map<String, String> map) {
-        return new RegisterEvent(JSON.parseObject(map.get("device"), Device.class));
+    public static AlarmEvent valueOf(Map<String, String> map) {
+        return new AlarmEvent(JSON.parseObject(map.get("device"), Device.class));
     }
 }

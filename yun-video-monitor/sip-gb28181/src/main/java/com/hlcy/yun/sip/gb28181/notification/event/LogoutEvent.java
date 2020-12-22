@@ -1,6 +1,5 @@
 package com.hlcy.yun.sip.gb28181.notification.event;
 
-import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,11 +10,10 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LogoutEvent implements DeviceEvent {
-    private String type = "logout";
-    private String deviceId;
+public class LogoutEvent  extends AbstractDeviceEvent implements EventMap {
 
     public LogoutEvent(String deviceId) {
+        this.type = "logout";
         this.deviceId = deviceId;
     }
 

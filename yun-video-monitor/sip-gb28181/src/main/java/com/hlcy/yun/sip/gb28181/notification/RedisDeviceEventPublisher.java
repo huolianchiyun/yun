@@ -1,6 +1,6 @@
 package com.hlcy.yun.sip.gb28181.notification;
 
-import com.hlcy.yun.sip.gb28181.notification.event.DeviceEvent;
+import com.hlcy.yun.sip.gb28181.notification.event.EventMap;
 import com.hlcy.yun.sip.stream.redis.RedisStreamProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.stream.StreamRecords;
@@ -15,7 +15,7 @@ class RedisDeviceEventPublisher implements DeviceEventPublisher {
     private final RedisStreamProperties properties;
 
     @Override
-    public void publishEvent(DeviceEvent event) {
+    public void publishEvent(EventMap event) {
         this.delegate.opsForStream().add(StreamRecords.mapBacked(event.toMap()).withStreamKey(properties.getKey()));
     }
 }

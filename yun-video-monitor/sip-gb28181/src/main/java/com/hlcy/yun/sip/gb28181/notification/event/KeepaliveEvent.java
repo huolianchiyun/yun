@@ -10,12 +10,11 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
-public class KeepaliveEvent implements DeviceEvent {
-    private String type = "keepalive";
-    private String deviceId;
+public class KeepaliveEvent extends AbstractDeviceEvent implements EventMap {
 
     public KeepaliveEvent(String deviceId) {
         this.deviceId = deviceId;
+        this.type = "keepalive";
     }
 
     public Map<String, String> toMap() {

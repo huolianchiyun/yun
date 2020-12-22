@@ -61,6 +61,20 @@ public abstract class RequestHandler {
         }
     }
 
+    /**
+     * Send 200 response
+     * Creates a new Response message of type specified by the statusCode parameter, based on a specific Request message.
+     * This new Response does not contain a body.
+     * @param event request event
+     * @throws SipException
+     * @throws InvalidArgumentException
+     * @throws ParseException
+     */
+    protected void responseAck(RequestEvent event) throws SipException, InvalidArgumentException, ParseException {
+        Response response = buildResponse(Response.OK, event.getRequest());
+        getServerTransaction(event).sendResponse(response);
+    }
+
     private ServerTransaction getServerTransaction(RequestEvent event) {
         Request request = event.getRequest();
         final SipLayer.Transport transport = SipLayer.Transport.valueOf(

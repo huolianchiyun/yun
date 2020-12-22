@@ -1,7 +1,7 @@
 package com.hlcy.yun.sip.gb28181.notification;
 
 
-import com.hlcy.yun.sip.gb28181.notification.event.DeviceEvent;
+import com.hlcy.yun.sip.gb28181.notification.event.EventMap;
 
 public interface DeviceEventPublisher {
 
@@ -10,6 +10,6 @@ public interface DeviceEventPublisher {
      *
      * @param event register event
      */
-    void publishEvent(DeviceEvent event);
+    void publishEvent(EventMap event);
 
 }

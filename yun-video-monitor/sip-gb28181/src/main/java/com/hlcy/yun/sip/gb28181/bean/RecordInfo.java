@@ -1,7 +1,10 @@
 package com.hlcy.yun.sip.gb28181.bean;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class RecordInfo {
 
 	private String deviceId;
@@ -12,35 +15,23 @@ public class RecordInfo {
 
 	private List<RecordItem> recordList;
 
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
+	public RecordInfo setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+		return this;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
+	public RecordInfo setName(String name) {
 		this.name = name;
+		return this;
 	}
 
-	public int getSumNum() {
-		return sumNum;
-	}
-
-	public void setSumNum(int sumNum) {
+	public RecordInfo setSumNum(int sumNum) {
 		this.sumNum = sumNum;
+		return this;
 	}
 
-	public List<RecordItem> getRecordList() {
-		return recordList;
-	}
-
-	public void setRecordList(List<RecordItem> recordList) {
+	public RecordInfo setRecordList(List<RecordItem> recordList) {
 		this.recordList = recordList;
+		return this;
 	}
 }

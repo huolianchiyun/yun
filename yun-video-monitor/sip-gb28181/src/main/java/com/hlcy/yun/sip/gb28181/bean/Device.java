@@ -1,8 +1,10 @@
 package com.hlcy.yun.sip.gb28181.bean;
 
+import lombok.Getter;
+
 import java.util.Map;
 
-
+@Getter
 public class Device {
 
     /**
@@ -14,6 +16,21 @@ public class Device {
      * 设备名
      */
     private String name;
+
+    /**
+     * 设备联网IP
+     */
+    private String ip;
+
+    /**
+     * 设备联网端口
+     */
+    private int port;
+
+    /**
+     * 设备安装地址
+     */
+    private String address;
 
     /**
      * 生产厂商
@@ -31,15 +48,9 @@ public class Device {
     private String firmware;
 
     /**
-     * 传输协议
-     * UDP/TCP
+     * 传输协议：UDP/TCP
      */
     private String transport;
-
-    /**
-     * wan地址
-     */
-    private Host host;
 
     /**
      * 在线
@@ -47,84 +58,69 @@ public class Device {
     private int online;
 
     /**
-     * 通道列表
+     * 设备通道列表
      */
     private Map<String, DeviceChannel> channelMap;
 
-    public Device(String deviceId, Host host) {
-        this.deviceId = deviceId;
-        this.host = host;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
+    public Device(String deviceId) {
         this.deviceId = deviceId;
     }
 
-    public String getName() {
-        return name;
+    public Device setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+        return this;
     }
 
-    public void setName(String name) {
+    public Device setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public String getTransport() {
-        return transport;
+    public Device setIp(String ip) {
+        this.ip = ip;
+        return this;
     }
 
-    public void setTransport(String transport) {
+    public Device setPort(int port) {
+        this.port = port;
+        return this;
+    }
+
+    public Device setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public Device setTransport(String transport) {
         this.transport = transport;
+        return this;
     }
 
-    public Host getHost() {
-        return host;
-    }
-
-    public void setHost(Host host) {
-        this.host = host;
-    }
-
-    public Map<String, DeviceChannel> getChannelMap() {
-        return channelMap;
-    }
-
-    public void setChannelMap(Map<String, DeviceChannel> channelMap) {
+    public Device setChannelMap(Map<String, DeviceChannel> channelMap) {
         this.channelMap = channelMap;
+        return this;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
 
-    public void setManufacturer(String manufacturer) {
+    public Device setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+        return this;
     }
 
-    public String getModel() {
-        return model;
-    }
 
-    public void setModel(String model) {
+    public Device setModel(String model) {
         this.model = model;
+        return this;
     }
 
-    public String getFirmware() {
-        return firmware;
-    }
 
-    public void setFirmware(String firmware) {
+    public Device setFirmware(String firmware) {
         this.firmware = firmware;
+        return this;
     }
 
-    public int getOnline() {
-        return online;
-    }
-
-    public void setOnline(int online) {
+    public Device setOnline(int online) {
         this.online = online;
+        return this;
     }
 }

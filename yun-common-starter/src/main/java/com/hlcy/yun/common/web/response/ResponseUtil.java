@@ -29,9 +29,18 @@ public final class ResponseUtil {
         return new org.springframework.http.ResponseEntity<>(new ResponseData<>(data, Meta.ok()), HttpStatus.OK);
     }
 
+    public static org.springframework.http.ResponseEntity<ResponseData> success1(Object data) {
+        return new org.springframework.http.ResponseEntity<>(new ResponseData<>(data, Meta.ok()), HttpStatus.OK);
+    }
+
+    public static <T> org.springframework.http.ResponseEntity<ResponseData<T>> error0(String errMsg) {
+        return new org.springframework.http.ResponseEntity<>(new ResponseData<>(Meta.error(errMsg)), HttpStatus.OK);
+    }
+
     public static org.springframework.http.ResponseEntity<ResponseData> error(String errMsg) {
         return new org.springframework.http.ResponseEntity<>(new ResponseData(Meta.error(errMsg)), HttpStatus.OK);
     }
+
     public static org.springframework.http.ResponseEntity<ResponseData> requestError(String errMsg) {
         return new org.springframework.http.ResponseEntity<>(new ResponseData(Meta.requestError(errMsg)), HttpStatus.OK);
     }
