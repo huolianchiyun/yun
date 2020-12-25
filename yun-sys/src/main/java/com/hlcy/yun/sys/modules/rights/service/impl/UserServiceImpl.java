@@ -92,6 +92,7 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#user.username")
     @Transactional(rollbackFor = Exception.class)
     public void create(UserDO user) {
         user.setAdmin(false);

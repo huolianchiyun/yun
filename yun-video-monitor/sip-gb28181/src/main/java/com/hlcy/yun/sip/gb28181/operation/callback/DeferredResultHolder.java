@@ -13,10 +13,11 @@ public final class DeferredResultHolder {
     private static final Map<String, List<DeferredResult<ResponseEntity<ResponseData>>>> RequestDeferredResultMap = new ConcurrentHashMap<>();
 
     public static final String CALLBACK_CMD_DEVICE_INFO = "Callback_DeviceInfo:";
-
     public static final String CALLBACK_CMD_CATALOG = "Callback_Catalog:";
-
     public static final String CALLBACK_CMD_RECORD_INFO = "Callback_RecordInfo:";
+
+    public static final String CALLBACK_CMD_PLAY = "Callback_Play:";
+    public static final String CALLBACK_CMD_STOP = "Callback_Stop:";
 
 
     public static void put(String requestId, DeferredResult<ResponseEntity<ResponseData>> result) {

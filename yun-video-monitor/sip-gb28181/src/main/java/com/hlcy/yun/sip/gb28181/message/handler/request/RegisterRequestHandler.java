@@ -35,7 +35,7 @@ public class RegisterRequestHandler extends RequestHandler {
                 Request request = event.getRequest();
                 Response response = buildResponse(Response.OK, request);
                 setupResponseHeaders(request, response);
-                sendResponseForRequest(event, response);
+                sendResponse(event, response);
 
                 Device device = extractDeviceInfoFromRequest(request);
                 if (isLogout(request)) {
@@ -104,7 +104,7 @@ public class RegisterRequestHandler extends RequestHandler {
         if (!isPass) {
             final Response response = buildResponse(Response.UNAUTHORIZED, request);
             DigestServerAuthHelper.generateChallenge(getHeaderFactory(), response);
-            sendResponseForRequest(event, response);
+            sendResponse(event, response);
         }
         return isPass;
     }

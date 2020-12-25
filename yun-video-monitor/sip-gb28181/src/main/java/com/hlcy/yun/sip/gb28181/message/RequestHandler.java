@@ -47,12 +47,24 @@ public abstract class RequestHandler {
     }
 
     /**
+     * Send 200 response
+     * Creates a new Response message of type specified by the statusCode parameter, based on a specific Request message.
+     * This new Response does not contain a body.
+     *
+     * @param event request event
+     * @throws ParseException
+     */
+    protected void sendAckResponse(RequestEvent event) throws ParseException {
+        sendResponse(event, buildResponse(Response.OK, event.getRequest()));
+    }
+
+    /**
      * Responding to request event
      *
      * @param event    request event
      * @param response
      */
-    protected void sendResponseForRequest(RequestEvent event, Response response) {
+    protected void sendResponse(RequestEvent event, Response response) {
         try {
             getServerTransaction(event).sendResponse(response);
         } catch (SipException | InvalidArgumentException e) {
@@ -61,25 +73,9 @@ public abstract class RequestHandler {
         }
     }
 
-    /**
-     * Send 200 response
-     * Creates a new Response message of type specified by the statusCode parameter, based on a specific Request message.
-     * This new Response does not contain a body.
-     * @param event request event
-     * @throws SipException
-     * @throws InvalidArgumentException
-     * @throws ParseException
-     */
-    protected void responseAck(RequestEvent event) throws SipException, InvalidArgumentException, ParseException {
-        Response response = buildResponse(Response.OK, event.getRequest());
-        getServerTransaction(event).sendResponse(response);
-    }
-
     private ServerTransaction getServerTransaction(RequestEvent event) {
         Request request = event.getRequest();
-        final SipLayer.Transport transport = SipLayer.Transport.valueOf(
-                ((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport().toUpperCase()
-        );
+        final SipLayer.Transport transport = SipLayer.getTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
         ServerTransaction serverTransaction = event.getServerTransaction();
         if (serverTransaction == null) {
             final SipProvider sipProvider = SipLayer.getSipProvider(transport);

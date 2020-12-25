@@ -24,6 +24,10 @@ spring:
       key: STREAM_MRK
       consumer-group: MRK_CONSUMER
       consumer-name: MRK
+  mvc:
+    async:
+      request-timeout: 60000
+
 
 gb28181:
   sipIp: 192.168.11.1
@@ -35,5 +39,6 @@ gb28181:
   sipId: 37010200492000000001
   # 默认设备认证密码，后续扩展使用设备单独密码
   sipPassword: admin123
+  mediaId: mediaId001
   mediaIp: 192.168.0.102
   mediaPort: 10000

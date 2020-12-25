@@ -109,9 +109,9 @@ public class MessageRequestHandler extends RequestHandler {
             try {
                 Element rootElement = getRootElementFrom(event);
                 String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
-                MessageRequestHandler.this.responseAck(event);
+                MessageRequestHandler.this.sendAckResponse(event);
                 getDeviceEventPublisher().publishEvent(new KeepaliveEvent(deviceId));
-            } catch (ParseException | SipException | InvalidArgumentException e) {
+            } catch (ParseException e) {
                 log.error("Handle a CmdType <KeepAlive> message({}) failed, cause: {}.", event.getRequest(), e.getMessage());
                 e.printStackTrace();
             }
@@ -149,8 +149,8 @@ public class MessageRequestHandler extends RequestHandler {
             DeferredResultHolder.setDeferredResultForRequest(CALLBACK_CMD_CATALOG + deviceId, device);
             try {
                 // 200 with no response body
-                MessageRequestHandler.this.responseAck(event);
-            } catch (SipException | InvalidArgumentException | ParseException e) {
+                MessageRequestHandler.this.sendAckResponse(event);
+            } catch (ParseException e) {
                 log.error("Handle a CmdType <Catalog> message({}) failed, cause: {}.", event.getRequest(), e.getMessage());
                 e.printStackTrace();
             }

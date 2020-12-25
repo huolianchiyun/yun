@@ -2,7 +2,9 @@ package com.hlcy.yun.sip.gb28181;
 
 import com.hlcy.yun.sip.gb28181.auth.DigestServerAuthHelper;
 import com.hlcy.yun.sip.gb28181.config.GB28181Properties;
+import com.hlcy.yun.sip.gb28181.message.factory.SipRequestFactory;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.sip.*;
 import javax.sip.address.AddressFactory;
 import javax.sip.header.HeaderFactory;
@@ -13,6 +15,7 @@ import java.util.TooManyListenersException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import static com.hlcy.yun.sip.gb28181.message.PipelineInitializer.getRequestPipeline;
 import static com.hlcy.yun.sip.gb28181.message.PipelineInitializer.getResponsePipeline;
 
@@ -61,6 +64,8 @@ public class SipLayer implements SipListener {
         udpSipProvider.addSipListener(this);
 
         initThreadPool();
+
+        SipRequestFactory.setSipFactory(sipFactory);
     }
 
     /**
@@ -174,4 +179,7 @@ public class SipLayer implements SipListener {
         }
     }
 
+    public static Transport getTransport(String transport) {
+        return Transport.valueOf(transport.toUpperCase());
+    }
 }

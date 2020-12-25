@@ -7,6 +7,7 @@
 
 works：
 组没有分页，考虑支持分页
+创建用户未清缓存导致用户不存在
 3. code generator
 4. auto-deploy
 

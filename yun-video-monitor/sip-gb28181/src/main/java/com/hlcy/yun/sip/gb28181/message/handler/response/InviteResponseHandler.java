@@ -26,6 +26,7 @@ public class InviteResponseHandler extends ResponseHandler {
         try {
             Response response = event.getResponse();
             int statusCode = response.getStatusCode();
+
             // 下发 ack
             if (statusCode == Response.OK) {
                 Dialog dialog = event.getDialog();

@@ -25,7 +25,7 @@ public class AckRequestHandler extends RequestHandler {
             CSeq csReq = (CSeq) request.getHeader(CSeq.NAME);
             Request ackRequest = dialog.createAck(csReq.getSeqNumber());
             dialog.sendAck(ackRequest);
-            log.info("send ack to callee: {}", ackRequest.toString());
+            log.info("send a ack to callee: {}", ackRequest);
         } catch (SipException | InvalidArgumentException e) {
             e.printStackTrace();
         }
