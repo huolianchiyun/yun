@@ -1,6 +1,7 @@
-package com.hlcy.yun.sip.gb28181.message;
+package com.hlcy.yun.sip.gb28181.message.handler;
 
 import com.hlcy.yun.sip.gb28181.SipLayer;
+import com.hlcy.yun.sip.gb28181.message.MessageHandler;
 import gov.nist.javax.sip.SipStackImpl;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.stack.SIPServerTransaction;
@@ -17,12 +18,8 @@ import java.text.ParseException;
  * @implNote 子类要保证线程安全
  */
 @Slf4j
-public abstract class RequestHandler {
+public abstract class RequestHandler extends MessageHandler<RequestEvent> {
     protected String name;
-
-    protected RequestHandler prev;
-
-    protected RequestHandler next;
 
     public abstract void handle(RequestEvent event);
 

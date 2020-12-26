@@ -2,7 +2,7 @@ package com.hlcy.yun.sip.gb28181.message.handler.request;
 
 import com.hlcy.yun.sip.gb28181.auth.DigestServerAuthHelper;
 import com.hlcy.yun.sip.gb28181.bean.Device;
-import com.hlcy.yun.sip.gb28181.message.RequestHandler;
+import com.hlcy.yun.sip.gb28181.message.handler.RequestHandler;
 import com.hlcy.yun.sip.gb28181.notification.event.LogoutEvent;
 import com.hlcy.yun.sip.gb28181.notification.event.RegisterEvent;
 import gov.nist.javax.sip.address.AddressImpl;

@@ -64,6 +64,7 @@ public class LoginAuthController {
     @ApiOperation("第三方服务token委托验证接口")
     @AnonymousGetMapping(value = "/token")
     public ResponseEntity<ResponseData<Void>> checkToken() {
+        // TODO token验证
         return success();
     }
 }

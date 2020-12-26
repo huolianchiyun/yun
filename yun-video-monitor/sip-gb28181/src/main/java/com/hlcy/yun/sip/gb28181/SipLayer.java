@@ -16,8 +16,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.hlcy.yun.sip.gb28181.message.PipelineInitializer.getRequestPipeline;
-import static com.hlcy.yun.sip.gb28181.message.PipelineInitializer.getResponsePipeline;
+import static com.hlcy.yun.sip.gb28181.message.SIpPipelineFactory.getRequestPipeline;
+import static com.hlcy.yun.sip.gb28181.message.SIpPipelineFactory.getResponsePipeline;
 
 @Slf4j
 public class SipLayer implements SipListener {
@@ -74,7 +74,7 @@ public class SipLayer implements SipListener {
     public void processRequest(RequestEvent evt) {
         executor.execute(() -> {
             // process request
-            getRequestPipeline().processRequest(evt);
+            getRequestPipeline().processMessage(evt);
         });
     }
 
@@ -88,7 +88,7 @@ public class SipLayer implements SipListener {
             return;
         } else if ((status >= 200) && (status < 300)) { //Success!
             // process response
-            getResponsePipeline().processResponse(evt);
+            getResponsePipeline().processMessage(evt);
         }
         log.error("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());
     }

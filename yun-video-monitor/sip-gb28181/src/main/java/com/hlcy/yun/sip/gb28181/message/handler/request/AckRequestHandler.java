@@ -1,6 +1,6 @@
 package com.hlcy.yun.sip.gb28181.message.handler.request;
 
-import com.hlcy.yun.sip.gb28181.message.RequestHandler;
+import com.hlcy.yun.sip.gb28181.message.handler.RequestHandler;
 import gov.nist.javax.sip.header.CSeq;
 import lombok.extern.slf4j.Slf4j;
 

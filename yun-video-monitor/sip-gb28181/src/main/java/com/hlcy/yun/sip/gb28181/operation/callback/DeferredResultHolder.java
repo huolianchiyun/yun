@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.hlcy.yun.common.web.response.ResponseUtil.*;
 
 public final class DeferredResultHolder {
-    private static final Map<String, List<DeferredResult<ResponseEntity<ResponseData>>>> RequestDeferredResultMap = new ConcurrentHashMap<>();
+    private static final Map<String, List<DeferredResult<ResponseEntity<ResponseData>>>> REQUEST_DEFERRED_RESULT_CACHE = new ConcurrentHashMap<>();
 
     public static final String CALLBACK_CMD_DEVICE_INFO = "Callback_DeviceInfo:";
     public static final String CALLBACK_CMD_CATALOG = "Callback_Catalog:";
@@ -21,11 +21,11 @@ public final class DeferredResultHolder {
 
 
     public static void put(String requestId, DeferredResult<ResponseEntity<ResponseData>> result) {
-        RequestDeferredResultMap.computeIfAbsent(requestId, k -> new ArrayList<>()).add(result);
+        REQUEST_DEFERRED_RESULT_CACHE.computeIfAbsent(requestId, k -> new ArrayList<>()).add(result);
     }
 
     public static List<DeferredResult<ResponseEntity<ResponseData>>> get(String requestId) {
-        return RequestDeferredResultMap.get(requestId);
+        return REQUEST_DEFERRED_RESULT_CACHE.get(requestId);
     }
 
     /**
@@ -35,13 +35,13 @@ public final class DeferredResultHolder {
      * @param data      响应数据
      */
     public synchronized static void setDeferredResultForRequest(String requestId, Object data) {
-        List<DeferredResult<ResponseEntity<ResponseData>>> results = RequestDeferredResultMap.get(requestId);
+        List<DeferredResult<ResponseEntity<ResponseData>>> results = REQUEST_DEFERRED_RESULT_CACHE.get(requestId);
         try {
             if (results != null && !results.isEmpty()) {
                 results.forEach(result -> result.setResult(success1(data)));
             }
         } finally {
-            RequestDeferredResultMap.remove(requestId);
+            REQUEST_DEFERRED_RESULT_CACHE.remove(requestId);
         }
     }
 }

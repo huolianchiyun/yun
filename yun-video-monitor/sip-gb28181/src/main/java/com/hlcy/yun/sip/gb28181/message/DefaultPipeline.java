@@ -1,22 +1,18 @@
 package com.hlcy.yun.sip.gb28181.message;
 
-import javax.sip.ResponseEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The default {@link ResponsePipeline} implementation.
+ * The default {@link Pipeline} implementation.
  */
-public class DefaultResponsePipeline implements ResponsePipeline {
-    private Map<String, ResponseHandler> handlerMap = new ConcurrentHashMap<>();
-    private ResponseHandler head;
-    private ResponseHandler tail;
+public class DefaultPipeline<T extends MessageHandler<E>, E> implements Pipeline<T>, MessageInvoker<E> {
+    private Map<String, T> handlerMap = new ConcurrentHashMap<>();
+    private T head;
+    private T tail;
 
     @Override
-    public ResponsePipeline addFirst(String name, ResponseHandler handler) {
+    public Pipeline addFirst(String name, T handler) {
         if (this.head == null){
             this.head = this.tail = handler;
         }
@@ -29,7 +25,7 @@ public class DefaultResponsePipeline implements ResponsePipeline {
     }
 
     @Override
-    public ResponsePipeline addLast(String name, ResponseHandler handler) {
+    public Pipeline addLast(String name, T handler) {
         if (this.tail == null){
             this.head = this.tail = handler;
         }
@@ -42,8 +38,8 @@ public class DefaultResponsePipeline implements ResponsePipeline {
     }
 
     @Override
-    public ResponsePipeline addBefore(String baseName, String name, ResponseHandler handler) {
-        final ResponseHandler baseHandler = handlerMap.get(baseName);
+    public Pipeline addBefore(String baseName, String name, T handler) {
+        final T baseHandler = handlerMap.get(baseName);
         baseHandler.prev.next = handler;
         handler.prev = baseHandler.prev;
         handler.next = baseHandler;
@@ -53,8 +49,8 @@ public class DefaultResponsePipeline implements ResponsePipeline {
     }
 
     @Override
-    public ResponsePipeline addAfter(String baseName, String name, ResponseHandler handler) {
-        final ResponseHandler baseHandler = handlerMap.get(baseName);
+    public Pipeline addAfter(String baseName, String name, T handler) {
+        final T baseHandler = handlerMap.get(baseName);
         baseHandler.next.prev = handler;
         handler.next = baseHandler.next;
         handler.prev = baseHandler;
@@ -64,25 +60,25 @@ public class DefaultResponsePipeline implements ResponsePipeline {
     }
 
     @Override
-    public ResponseHandler remove(String name) {
-        final ResponseHandler deletedHandler = handlerMap.remove(name);
+    public T remove(String name) {
+        final T deletedHandler = handlerMap.remove(name);
         deletedHandler.prev.next = deletedHandler.next;
         deletedHandler.next.prev = deletedHandler.prev;
         return deletedHandler;
     }
 
     @Override
-    public ResponseHandler first() {
+    public T first() {
         return head;
     }
 
     @Override
-    public ResponseHandler last() {
+    public T last() {
         return tail;
     }
 
     @Override
-    public ResponseHandler get(String name) {
+    public T get(String name) {
         return handlerMap.get(name);
     }
 
@@ -92,17 +88,17 @@ public class DefaultResponsePipeline implements ResponsePipeline {
     }
 
     @Override
-    public Map<String, ResponseHandler> toMap() {
+    public Map<String, T> toMap() {
         return handlerMap;
     }
 
     @Override
-    public void processResponse(ResponseEvent event) {
+    public void processMessage(E event) {
         head.handle(event);
     }
 
     @Override
-    public Iterator<Map.Entry<String, ResponseHandler>> iterator() {
+    public Iterator<Map.Entry<String, T>> iterator() {
         return handlerMap.entrySet().iterator();
     }
 }

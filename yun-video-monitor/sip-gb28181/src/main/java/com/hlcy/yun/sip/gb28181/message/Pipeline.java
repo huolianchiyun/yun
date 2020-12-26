@@ -7,31 +7,31 @@ import java.util.NoSuchElementException;
 
 /**
  * A list of {@link }s which handles or intercepts request events and response operations of a
- * {@link Message}.  {@link RequestPipeline} implements an advanced form of the
+ * {@link Message}.  {@link Pipeline} implements an advanced form of the
  */
-public interface RequestPipeline extends RequestInvoker, Iterable<Map.Entry<String, RequestHandler>> {
+public interface Pipeline<T> extends Iterable<Map.Entry<String, T>>{
     /**
-     * Inserts a {@link RequestHandler} at the first position of this pipeline.
+     * Inserts a {@link T} at the first position of this pipeline.
      *
      * @param name    the name of the handler to insert first
      * @param handler the handler to insert first
      * @throws IllegalArgumentException if there's an entry with the same name already in the pipeline
      * @throws NullPointerException     if the specified handler is {@code null}
      */
-    RequestPipeline addFirst(String name, RequestHandler handler);
+    Pipeline addFirst(String name, T handler);
 
     /**
-     * Appends a {@link RequestHandler} at the last position of this pipeline.
+     * Appends a {@link T} at the last position of this pipeline.
      *
      * @param name    the name of the handler to append
      * @param handler the handler to append
      * @throws IllegalArgumentException if there's an entry with the same name already in the pipeline
      * @throws NullPointerException     if the specified handler is {@code null}
      */
-    RequestPipeline addLast(String name, RequestHandler handler);
+    Pipeline addLast(String name, T handler);
 
     /**
-     * Inserts a {@link RequestHandler} before an existing handler of this
+     * Inserts a {@link T} before an existing handler of this
      * pipeline.
      *
      * @param baseName the name of the existing handler
@@ -41,10 +41,10 @@ public interface RequestPipeline extends RequestInvoker, Iterable<Map.Entry<Stri
      * @throws IllegalArgumentException if there's an entry with the same name already in the pipeline
      * @throws NullPointerException     if the specified baseName or handler is {@code null}
      */
-    RequestPipeline addBefore(String baseName, String name, RequestHandler handler);
+    Pipeline addBefore(String baseName, String name, T handler);
 
     /**
-     * Inserts a {@link RequestHandler} after an existing handler of this
+     * Inserts a {@link T} after an existing handler of this
      * pipeline.
      *
      * @param baseName the name of the existing handler
@@ -54,40 +54,40 @@ public interface RequestPipeline extends RequestInvoker, Iterable<Map.Entry<Stri
      * @throws IllegalArgumentException if there's an entry with the same name already in the pipeline
      * @throws NullPointerException     if the specified baseName or handler is {@code null}
      */
-    RequestPipeline addAfter(String baseName, String name, RequestHandler handler);
+    Pipeline addAfter(String baseName, String name, T handler);
 
     /**
-     * Removes the {@link RequestHandler} with the specified name from this pipeline.
+     * Removes the {@link T} with the specified name from this pipeline.
      *
-     * @param name the name under which the {@link RequestHandler} was stored.
+     * @param name the name under which the {@link T} was stored.
      * @return the removed handler
      * @throws NoSuchElementException if there's no such handler with the specified name in this pipeline
      * @throws NullPointerException   if the specified name is {@code null}
      */
-    RequestHandler remove(String name);
+    T remove(String name);
 
     /**
-     * Returns the first {@link RequestHandler} in this pipeline.
+     * Returns the first {@link T} in this pipeline.
      *
      * @return the first handler.  {@code null} if this pipeline is empty.
      */
-    RequestHandler first();
+    T first();
 
     /**
-     * Returns the last {@link RequestHandler} in this pipeline.
+     * Returns the last {@link T} in this pipeline.
      *
      * @return the last handler.  {@code null} if this pipeline is empty.
      */
-    RequestHandler last();
+    T last();
 
     /**
-     * Returns the {@link RequestHandler} with the specified name in this
+     * Returns the {@link T} with the specified name in this
      * pipeline.
      *
      * @return the handler with the specified name.
      * {@code null} if there's no such handler in this pipeline.
      */
-    RequestHandler get(String name);
+    T get(String name);
 
     /**
      * Returns the {@link List} of the handler names.
@@ -95,8 +95,8 @@ public interface RequestPipeline extends RequestInvoker, Iterable<Map.Entry<Stri
     List<String> names();
 
     /**
-     * Converts this pipeline into an ordered {@link java.util.Map} whose keys are
+     * Converts this pipeline into an ordered {@link Map} whose keys are
      * handler names and whose values are handlers.
      */
-    Map<String, RequestHandler> toMap();
+    Map<String, T> toMap();
 }

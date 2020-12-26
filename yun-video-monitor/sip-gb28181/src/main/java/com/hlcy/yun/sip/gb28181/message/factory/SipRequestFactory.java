@@ -3,6 +3,7 @@ package com.hlcy.yun.sip.gb28181.message.factory;
 import com.hlcy.yun.sip.gb28181.SipLayer;
 import com.hlcy.yun.sip.gb28181.bean.Device;
 import com.hlcy.yun.sip.gb28181.config.GB28181Properties;
+import gov.nist.javax.sip.message.SIPRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +40,10 @@ public final class SipRequestFactory {
 
     public static Request getInviteRequest(To to, From from, String subject, String transport, byte[] content) {
         return createRequest(to, from, subject, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, content);
+    }
+
+    public static String getCallId(Request request) {
+        return ((SIPRequest) request).getCallId().getCallId();
     }
 
     /**
@@ -113,7 +118,7 @@ public final class SipRequestFactory {
     }
 
     @Getter
-    class To {
+    static class To {
         private String user;
         private Host host;
         private String tag;
@@ -126,7 +131,7 @@ public final class SipRequestFactory {
     }
 
     @Getter
-    class From {
+    static class From {
         // SIP服务 or 设备 or 流媒体的编码
         private String user;
         private Host host;
@@ -140,7 +145,7 @@ public final class SipRequestFactory {
     }
 
     @Getter
-    class Host {
+    static class Host {
         private String ip;
         private int port;
 
