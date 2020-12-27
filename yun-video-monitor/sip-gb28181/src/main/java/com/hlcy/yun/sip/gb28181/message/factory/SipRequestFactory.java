@@ -42,8 +42,20 @@ public final class SipRequestFactory {
         return createRequest(to, from, subject, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, content);
     }
 
+    public static Request getByeRequest(To to, From from, String subject, String transport, byte[] content) {
+        return createRequest(to, from, subject, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, content);
+    }
+
     public static String getCallId(Request request) {
         return ((SIPRequest) request).getCallId().getCallId();
+    }
+
+    public static To createTo(String user, String ip, int port, String tag) {
+        return new To(user, new Host(ip, port), tag);
+    }
+
+    public static From createFrom(String user, String ip, int port, String tag) {
+        return new From(user, new Host(ip, port), tag);
     }
 
     /**
@@ -123,7 +135,7 @@ public final class SipRequestFactory {
         private Host host;
         private String tag;
 
-        public To(String user, Host host, String tag) {
+        To(String user, Host host, String tag) {
             this.user = user;
             this.host = host;
             this.tag = tag;
@@ -137,7 +149,7 @@ public final class SipRequestFactory {
         private Host host;
         private String tag;
 
-        public From(String user, Host host, String tag) {
+        From(String user, Host host, String tag) {
             this.user = user;
             this.host = host;
             this.tag = tag;
@@ -149,7 +161,7 @@ public final class SipRequestFactory {
         private String ip;
         private int port;
 
-        public Host(String ip, int port) {
+        Host(String ip, int port) {
             this.ip = ip;
             this.port = port;
         }

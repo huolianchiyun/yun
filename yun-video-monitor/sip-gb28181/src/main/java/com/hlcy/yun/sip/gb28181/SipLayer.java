@@ -3,6 +3,7 @@ package com.hlcy.yun.sip.gb28181;
 import com.hlcy.yun.sip.gb28181.auth.DigestServerAuthHelper;
 import com.hlcy.yun.sip.gb28181.config.GB28181Properties;
 import com.hlcy.yun.sip.gb28181.message.factory.SipRequestFactory;
+import com.hlcy.yun.sip.gb28181.util.SSRCUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
@@ -66,6 +67,8 @@ public class SipLayer implements SipListener {
         initThreadPool();
 
         SipRequestFactory.setSipFactory(sipFactory);
+
+        SSRCUtil.setSsrcPrefix(properties.getSipDomain().substring(3, 8));
     }
 
     /**

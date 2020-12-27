@@ -3,10 +3,12 @@ package com.hlcy.yun.sip.gb28181.operation.flow;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.sip.gb28181.bean.Device;
+import com.hlcy.yun.sip.gb28181.config.GB28181Properties;
 import com.hlcy.yun.sip.gb28181.operation.Operation;
 import com.hlcy.yun.sip.gb28181.operation.ResponseProcessor;
 
 import javax.sip.ClientTransaction;
+import java.util.Iterator;
 
 import static com.hlcy.yun.sip.gb28181.operation.flow.FlowPipelineFactory.getFlowPipeline;
 
@@ -15,10 +17,13 @@ public class FlowContext {
     private final Operation operation;
     private ResponseProcessor currentProcessor;
     private Device device;
+    private GB28181Properties properties;
+    private String ssrc;
 
-    public FlowContext(Operation operation, Device device) {
+    public FlowContext(Operation operation, Device device, GB28181Properties properties) {
         this.operation = operation;
         this.device = device;
+        this.properties = properties;
         this.currentProcessor = getFlowPipeline(operation).first();
     }
 
@@ -27,7 +32,7 @@ public class FlowContext {
     }
 
     /**
-     * Switch current processor to the next processor
+     * Switch current processor to the next processor.
      */
     public void switch2NextProcessor() {
         this.currentProcessor = this.currentProcessor.getNextProcessor();
@@ -39,6 +44,26 @@ public class FlowContext {
 
     public Device getDevice() {
         return device;
+    }
+
+    public GB28181Properties getProperties() {
+        return properties;
+    }
+
+    public String getSsrc() {
+        return ssrc;
+    }
+
+    public void setSsrc(String ssrc) {
+        this.ssrc = ssrc;
+    }
+
+    public void put(String key, ClientTransaction transaction) {
+        SESSION_CACHE.put(key, transaction);
+    }
+
+    public Iterator<ClientTransaction> iterator() {
+        return SESSION_CACHE.iterator();
     }
 
     public void clearSessionCache() {

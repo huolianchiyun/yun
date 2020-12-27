@@ -1,6 +1,7 @@
 package com.hlcy.yun.sip.gb28181.operation.flow.play;
 
 import com.hlcy.yun.sip.gb28181.operation.ResponseProcessor;
+import com.hlcy.yun.sip.gb28181.operation.flow.FlowContext;
 
 import javax.sip.ResponseEvent;
 
@@ -12,7 +13,7 @@ import javax.sip.ResponseEvent;
  */
 public class DeviceByeResponseProcessor extends ResponseProcessor {
     @Override
-    public void process(ResponseEvent event) {
+    protected void process(ResponseEvent event, FlowContext context) {
 
     }
 }
