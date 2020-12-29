@@ -8,12 +8,14 @@ import com.hlcy.yun.sip.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.sip.gb28181.operation.flow.FlowContextCache;
 import com.hlcy.yun.sip.gb28181.util.SSRCUtil;
 import gov.nist.javax.sdp.fields.SessionNameField;
+
 import javax.sdp.SdpException;
 import javax.sdp.SessionDescription;
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
+
 import static com.hlcy.yun.sip.gb28181.client.RequestSender.sendRequest;
 import static com.hlcy.yun.sip.gb28181.message.factory.SipRequestFactory.createFrom;
 import static com.hlcy.yun.sip.gb28181.message.factory.SipRequestFactory.createTo;
@@ -62,9 +64,8 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
             GB28181Properties properties = context.getProperties();
             final String ssrc = SSRCUtil.getPlaySsrc();
             Request inviteRequest = SipRequestFactory.getInviteRequest(
-                    createTo(device.getDeviceId(), device.getIp(), device.getPort(), ""),
-                    createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort(), ""),
-                    "",
+                    createTo(device.getDeviceId(), device.getIp(), device.getPort()),
+                    createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
                     device.getTransport(),
                     (sessionDescription.toString() + "y=" + ssrc + "\r\n").getBytes(StandardCharsets.UTF_8));
 

@@ -28,8 +28,9 @@ public class RegisterRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-
-        log.info("Receive a register request: {}.", event.getRequest());
+        if(log.isDebugEnabled()){
+            log.debug("Receive a register request: {}.", event.getRequest());
+        }
         try {
             if (checkAuthorizedRequest(event)) {
                 Request request = event.getRequest();

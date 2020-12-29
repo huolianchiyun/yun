@@ -40,5 +40,5 @@ gb28181:
   # 默认设备认证密码，后续扩展使用设备单独密码
   sipPassword: admin123
   mediaId: mediaId001
-  mediaIp: 192.168.0.102
+  mediaIp: 192.168.11.1
   mediaPort: 10000

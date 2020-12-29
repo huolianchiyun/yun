@@ -6,7 +6,6 @@ import com.hlcy.yun.sip.gb28181.operation.flow.FlowContextCache;
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.header.CallIdHeader;
-import javax.sip.message.Response;
 
 public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> {
 

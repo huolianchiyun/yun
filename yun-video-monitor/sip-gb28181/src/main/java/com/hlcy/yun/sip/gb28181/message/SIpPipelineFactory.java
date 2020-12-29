@@ -21,6 +21,7 @@ public class SIpPipelineFactory {
         REQUEST_PIPELINE.addLast("cancel", new CancelRequestHandler());
         REQUEST_PIPELINE.addLast("message", new MessageRequestHandler());
         REQUEST_PIPELINE.addLast("subscribe", new SubscribeRequestHandler());
+
         RESPONSE_PIPELINE.addLast("invite", new InviteResponseHandler(Request.INVITE, Request.INVITE));
     }
 

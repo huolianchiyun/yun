@@ -1,10 +1,12 @@
 package com.hlcy.yun.sip.gb28181.bean;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class Device {
 
     /**

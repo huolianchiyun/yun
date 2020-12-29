@@ -22,9 +22,9 @@ public class DefaultPlayer implements Player {
     @Override
     public void play(Device device) {
         // 2:向媒体服务器发送Invite消息,此消息不携带SDP消息体。
-        Request inviteMedia = getInviteRequest(createTo("media", properties.getMediaIp(), properties.getMediaPort(), ""),
-                createFrom("sip-server", properties.getSipIp(), properties.getSipPort(), ""),
-                null, device.getTransport(), null);
+        Request inviteMedia = getInviteRequest(createTo("media", properties.getMediaIp(), properties.getMediaPort()),
+                createFrom("sip-server", properties.getSipIp(), properties.getSipPort()),
+                device.getTransport(), new byte[0]);
         sendRequest(inviteMedia);
         FlowContextCache.put(getCallId(inviteMedia), new FlowContext(Operation.PLAY, device, properties));
     }
@@ -32,9 +32,9 @@ public class DefaultPlayer implements Player {
     @Override
     public void stop(String ssrc) {
         // 15:SIP服务器收到BYE消息后向媒体服务器发送BYE消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
-        Request byeMedia = getByeRequest(createTo("media", properties.getMediaIp(), properties.getMediaPort(), ""),
-                createFrom("sip-server", properties.getSipIp(), properties.getSipPort(), ""),
-                null, null, null);
+        Request byeMedia = getByeRequest(createTo("media", properties.getMediaIp(), properties.getMediaPort()),
+                createFrom("sip-server", properties.getSipIp(), properties.getSipPort()),
+                "UDP", new byte[0]);
         sendRequest(byeMedia);
     }
 }

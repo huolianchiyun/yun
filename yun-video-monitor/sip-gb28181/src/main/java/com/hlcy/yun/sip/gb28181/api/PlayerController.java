@@ -13,7 +13,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 @Slf4j
 @RequiredArgsConstructor
-@RestController("/player")
+@RequestMapping("/yun/player")
+@RestController
 public class PlayerController {
 
     private final Player player;
