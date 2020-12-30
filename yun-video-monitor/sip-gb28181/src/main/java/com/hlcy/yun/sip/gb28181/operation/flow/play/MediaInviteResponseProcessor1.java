@@ -53,8 +53,7 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
      * y=0100000001
      */
     @Override
-    protected void process(ResponseEvent event, FlowContext context) {
-        try {
+    protected void process(ResponseEvent event, FlowContext context) throws SdpException {
             SessionDescription sessionDescription = getSessionDescription(getResponseBody(event));
             SessionNameField sessionNameField = new SessionNameField();
             sessionNameField.setSessionName("Play");
@@ -74,8 +73,6 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
             context.setSsrc(ssrc);
             context.put(SipRequestFactory.getCallId(inviteRequest), clientTransaction);
             FlowContextCache.put(SipRequestFactory.getCallId(inviteRequest), context);
-        } catch (SdpException e) {
-            e.printStackTrace();
-        }
+
     }
 }

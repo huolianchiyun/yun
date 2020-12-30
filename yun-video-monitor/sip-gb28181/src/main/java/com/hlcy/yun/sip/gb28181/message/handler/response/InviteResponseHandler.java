@@ -13,7 +13,7 @@ public class InviteResponseHandler extends ResponseHandler {
 
     @Override
     public void doHandle(ResponseEvent event) {
-        log.info("Receive a invite response: {}.", event.getResponse());
+        log.info("Receive a invite response: \n{}.", event.getResponse());
         if (event.getResponse().getStatusCode() == Response.OK) {
             getFlowContext(event).getProcessor().handle(event);
         }

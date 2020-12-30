@@ -17,6 +17,6 @@ import javax.sip.ResponseEvent;
 public class DeviceInviteResponseProcessor extends ResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
-
+        System.out.println("DeviceInviteResponseProcessor");
     }
 }

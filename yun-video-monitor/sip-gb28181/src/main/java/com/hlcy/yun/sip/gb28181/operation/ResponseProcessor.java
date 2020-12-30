@@ -3,6 +3,8 @@ package com.hlcy.yun.sip.gb28181.operation;
 import com.hlcy.yun.sip.gb28181.message.MessageHandler;
 import com.hlcy.yun.sip.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.sip.gb28181.operation.flow.FlowContextCache;
+
+import javax.sdp.SdpException;
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.header.CallIdHeader;
@@ -12,11 +14,15 @@ public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> {
     @Override
     public void handle(ResponseEvent event) {
         final FlowContext flowContext = getFlowContext(event);
-        process(event, flowContext);
-        flowContext.switch2NextProcessor();
+        try {
+            process(event, flowContext);
+            flowContext.switch2NextProcessor();
+        } catch (SdpException e) {
+            e.printStackTrace();
+        }
     }
 
-    protected abstract void process(ResponseEvent event, FlowContext context);
+    protected abstract void process(ResponseEvent event, FlowContext context) throws SdpException;
 
     public ResponseProcessor getNextProcessor() {
         return (ResponseProcessor) next;

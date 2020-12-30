@@ -1,12 +1,10 @@
 package com.hlcy.yun.sip.gb28181.message.factory;
 
 import com.hlcy.yun.sip.gb28181.SipLayer;
-import com.hlcy.yun.sip.gb28181.bean.Device;
-import com.hlcy.yun.sip.gb28181.config.GB28181Properties;
+import com.hlcy.yun.sip.gb28181.util.UUIDUtil;
 import gov.nist.javax.sip.message.SIPRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.sip.InvalidArgumentException;
 import javax.sip.PeerUnavailableException;
 import javax.sip.SipFactory;
@@ -123,6 +121,9 @@ public final class SipRequestFactory {
             // Call-ID
             CallIdHeader callIdHeader = SipLayer.getSipProvider(SipLayer.getTransport(transport)).getNewCallId();
 
+            //TODO 调试写死
+            callIdHeader.setCallId("667d46b3cb3e81f9bd27d8e6ed7991d1@192.168.11.1");
+
             // Via
             ViaHeader viaHeader = headerFactory.createViaHeader(from.host.ip, from.host.port, transport, viaBranch); // viaBranch may be null, but not empty.
             viaHeader.setRPort();
@@ -211,6 +212,7 @@ public final class SipRequestFactory {
         From(String user, Host host) {
             this.user = user;
             this.host = host;
+            this.tag = UUIDUtil.getUUID();
         }
     }
 
