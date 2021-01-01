@@ -11,6 +11,12 @@ public final class FlowContextCache {
         CONTEXT_CACHE.put(key, context);
     }
 
+    public static void setNewKey(String oldKey, String newKey) {
+        final FlowContext context = CONTEXT_CACHE.get(oldKey);
+        CONTEXT_CACHE.put(newKey, context);
+        CONTEXT_CACHE.remove(oldKey);
+    }
+
     public static FlowContext get(String key) {
         return CONTEXT_CACHE.get(key);
     }

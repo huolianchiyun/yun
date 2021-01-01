@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import static com.hlcy.yun.sip.gb28181.client.RequestSender.sendRequest;
 import static com.hlcy.yun.sip.gb28181.message.factory.SipRequestFactory.createFrom;
 import static com.hlcy.yun.sip.gb28181.message.factory.SipRequestFactory.createTo;
+import static com.hlcy.yun.sip.gb28181.operation.flow.play.PlaySession.SIP_DEVICE_SESSION;
 
 /**
  * 客户端主动发起的实时视音频点播流程: 3->4<br/>
@@ -39,6 +40,7 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
      * m=video6000RTP/AVP969897
      * a=recvonly
      * a=rtpmap:96PS/90000
+     * <p>
      * 发送给设备(媒体流发送者)的 SDP 消息体
      * v=0
      * o=6401000000202000000100INIP4172.18.16.3
@@ -54,25 +56,26 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
      */
     @Override
     protected void process(ResponseEvent event, FlowContext context) throws SdpException {
-            SessionDescription sessionDescription = getSessionDescription(getResponseBody(event));
-            SessionNameField sessionNameField = new SessionNameField();
-            sessionNameField.setSessionName("Play");
-            sessionDescription.setSessionName(sessionNameField);
+        SessionNameField sessionNameField = new SessionNameField();
+        sessionNameField.setSessionName("Play");
+        SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
+        sessionDescription.setSessionName(sessionNameField);
 
-            Device device = context.getDevice();
-            GB28181Properties properties = context.getProperties();
-            final String ssrc = SSRCUtil.getPlaySsrc();
-            Request inviteRequest = SipRequestFactory.getInviteRequest(
-                    createTo(device.getDeviceId(), device.getIp(), device.getPort()),
-                    createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                    device.getTransport(),
-                    (sessionDescription.toString() + "y=" + ssrc + "\r\n").getBytes(StandardCharsets.UTF_8));
+        Device device = context.getDevice();
+        GB28181Properties properties = context.getProperties();
+        final String ssrc = SSRCUtil.getPlaySsrc();
 
-            final ClientTransaction clientTransaction = sendRequest(inviteRequest);
+        Request inviteRequest2device = SipRequestFactory.getInviteRequest(
+                createTo(device.getDeviceId(), device.getIp(), device.getPort()),
+                createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
+                device.getTransport(),
+                (sessionDescription.toString() + "y=" + ssrc + "\r\n").getBytes(StandardCharsets.UTF_8));
 
-            context.setSsrc(ssrc);
-            context.put(SipRequestFactory.getCallId(inviteRequest), clientTransaction);
-            FlowContextCache.put(SipRequestFactory.getCallId(inviteRequest), context);
+        final ClientTransaction clientTransaction = sendRequest(inviteRequest2device);
 
+        context.setSsrc(ssrc);
+        context.put(SIP_DEVICE_SESSION, clientTransaction);
+
+        FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
     }
 }

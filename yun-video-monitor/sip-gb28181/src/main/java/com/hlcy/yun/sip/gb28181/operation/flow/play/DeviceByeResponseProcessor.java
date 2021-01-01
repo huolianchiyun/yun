@@ -2,7 +2,7 @@ package com.hlcy.yun.sip.gb28181.operation.flow.play;
 
 import com.hlcy.yun.sip.gb28181.operation.ResponseProcessor;
 import com.hlcy.yun.sip.gb28181.operation.flow.FlowContext;
-
+import com.hlcy.yun.sip.gb28181.operation.flow.FlowContextCache;
 import javax.sip.ResponseEvent;
 
 /**
@@ -14,6 +14,8 @@ import javax.sip.ResponseEvent;
 public class DeviceByeResponseProcessor extends ResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
-
+        // clean up play flow environment
+        FlowContextCache.remove(getCallId(event));
+        getFlowContext(event).clearSessionCache();
     }
 }

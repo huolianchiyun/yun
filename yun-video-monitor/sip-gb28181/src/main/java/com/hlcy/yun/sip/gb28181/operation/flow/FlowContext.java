@@ -13,7 +13,7 @@ import java.util.Iterator;
 import static com.hlcy.yun.sip.gb28181.operation.flow.FlowPipelineFactory.getFlowPipeline;
 
 public class FlowContext {
-    private final TimedCache<String, ClientTransaction> SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
+    private final TimedCache<Enum, ClientTransaction> SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
     private final Operation operation;
     private ResponseProcessor currentProcessor;
     private Device device;
@@ -58,7 +58,11 @@ public class FlowContext {
         this.ssrc = ssrc;
     }
 
-    public void put(String key, ClientTransaction transaction) {
+    public ClientTransaction get(Enum key) {
+        return SESSION_CACHE.get(key);
+    }
+
+    public void put(Enum key, ClientTransaction transaction) {
         SESSION_CACHE.put(key, transaction);
     }
 

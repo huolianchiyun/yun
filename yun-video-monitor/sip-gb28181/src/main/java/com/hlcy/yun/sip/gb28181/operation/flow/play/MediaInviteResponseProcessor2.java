@@ -1,9 +1,17 @@
 package com.hlcy.yun.sip.gb28181.operation.flow.play;
 
+import com.hlcy.yun.sip.gb28181.message.factory.SipRequestFactory;
 import com.hlcy.yun.sip.gb28181.operation.ResponseProcessor;
+import com.hlcy.yun.sip.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.sip.gb28181.operation.flow.FlowContext;
+import com.hlcy.yun.sip.gb28181.operation.flow.FlowContextCache;
 
+import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
+import javax.sip.message.Request;
+
+import static com.hlcy.yun.sip.gb28181.client.RequestSender.sendAckRequest;
+import static com.hlcy.yun.sip.gb28181.operation.flow.play.PlaySession.SIP_MEDIA_SESSION_2;
 
 
 /**
@@ -18,6 +26,12 @@ import javax.sip.ResponseEvent;
 public class MediaInviteResponseProcessor2 extends ResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
-        System.out.println("+++++++++++++++++++");
+        final String ssrc = context.getSsrc();
+        DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PLAY + context.getDevice().getDeviceId(), ssrc);
+
+        final ClientTransaction mediaTransaction = context.get(SIP_MEDIA_SESSION_2);
+        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
+        sendAckRequest(ackRequest4Media, mediaTransaction);
+        FlowContextCache.setNewKey(getCallId(event), ssrc);
     }
 }

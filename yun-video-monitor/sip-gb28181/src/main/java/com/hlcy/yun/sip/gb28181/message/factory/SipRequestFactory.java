@@ -5,9 +5,8 @@ import com.hlcy.yun.sip.gb28181.util.UUIDUtil;
 import gov.nist.javax.sip.message.SIPRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import javax.sip.InvalidArgumentException;
-import javax.sip.PeerUnavailableException;
-import javax.sip.SipFactory;
+
+import javax.sip.*;
 import javax.sip.address.Address;
 import javax.sip.address.AddressFactory;
 import javax.sip.address.SipURI;
@@ -58,16 +57,33 @@ public final class SipRequestFactory {
         return createRequest(to, from, subject, viaBranch, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, content);
     }
 
-    public static Request getByeRequest(To to, From from, String transport) {
-        return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.BYE, transport, EMPTY_CONTENT);
+    public static Request getAckRequest(ClientTransaction clientTransaction) {
+        return getAckRequest(clientTransaction, EMPTY_CONTENT);
     }
 
-    public static Request getByeRequest(To to, From from, String transport, byte[] content) {
-        return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.BYE, transport, content);
+    public static Request getAckRequest(ClientTransaction clientTransaction, byte[] content) {
+        final Dialog dialog = clientTransaction.getDialog();
+        try {
+            final Request ack = dialog.createAck(1L);
+            HeaderFactory headerFactory = SipLayer.getHeaderFactory();
+            ack.setContentLength(headerFactory.createContentLengthHeader(content.length));
+            ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader(CONTENT_TYPE, CONTENT_SUBTYPE_SDP);
+            ack.setContent(content, contentTypeHeader);
+            return ack;
+        } catch (InvalidArgumentException | SipException | ParseException e) {
+            log.error("Create a ack request exception, cause: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Request getByeRequest(To to, From from, String subject, String viaBranch, String transport, byte[] content) {
-        return createRequest(to, from, subject, viaBranch, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.BYE, transport, content);
+    public static Request getByeRequest(ClientTransaction clientTransaction) {
+        final Dialog dialog = clientTransaction.getDialog();
+        try {
+            return dialog.createRequest(Request.BYE);
+        } catch (SipException e) {
+            log.error("Create a ack request exception, cause: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getCallId(Request request) {
@@ -102,7 +118,8 @@ public final class SipRequestFactory {
      * @param content
      * @return {@link Request}
      */
-    private static Request createRequest(To to, From from, String subject, String viaBranch, String contentType, String contentSubType, String method, String transport, byte[] content) {
+    private static Request createRequest(To to, From from, String subject, String viaBranch, String contentType, String contentSubType,
+                                         String method, String transport, byte[] content) {
         try {
             final AddressFactory addressFactory = SipLayer.getAddressFactory();
             // sip uri
@@ -140,7 +157,8 @@ public final class SipRequestFactory {
             // Max-Forwards
             MaxForwardsHeader maxForwards = headerFactory.createMaxForwardsHeader(70);
 
-            final Request request = sipFactory.createMessageFactory().createRequest(requestURI, method, callIdHeader, cSeqHeader, fromHeader, toHeader, viaHeaders, maxForwards, contentTypeHeader, content);
+            final Request request = sipFactory.createMessageFactory().createRequest(requestURI, method, callIdHeader, cSeqHeader, fromHeader, toHeader,
+                    viaHeaders, maxForwards, contentTypeHeader, content);
 
             // Content-Length:消息实体的字节长度
             final ContentLengthHeader contentLengthHeader = headerFactory.createContentLengthHeader(content.length);
@@ -161,7 +179,6 @@ public final class SipRequestFactory {
         } catch (ParseException | PeerUnavailableException | InvalidArgumentException e) {
             log.error("Create a request exception, cause: {} \ncreate params: \nto:{} \nfrom:{} \nsubject:{} \ncontentType:{} \ncontentSubType:{} \nmethod:{} \ntransport:{} \ncontent:{}.",
                     e.getMessage(), to, from, subject, contentType, contentSubType, method, transport, new String(content));
-            e.printStackTrace();
             throw new RuntimeException("Create a request exception.", e);
         }
     }

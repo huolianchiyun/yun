@@ -3,6 +3,7 @@ package com.hlcy.yun.sip.gb28181.client;
 import com.alibaba.fastjson.JSON;
 import com.hlcy.yun.sip.gb28181.SipLayer;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.sip.*;
 import javax.sip.header.ViaHeader;
 import javax.sip.message.Request;
@@ -21,5 +22,14 @@ public final class RequestSender {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void sendAckRequest(Request ack, ClientTransaction transaction) {
+        try {
+            transaction.getDialog().sendAck(ack);
+        } catch (SipException e) {
+            log.error("Send a ack request({}) message failed, \ncause: {}", JSON.toJSONString(ack), e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

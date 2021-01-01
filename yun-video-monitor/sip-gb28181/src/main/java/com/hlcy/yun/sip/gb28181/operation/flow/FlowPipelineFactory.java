@@ -20,8 +20,8 @@ public class FlowPipelineFactory {
         PLAY_PIPELINE.addLast("3-4", new MediaInviteResponseProcessor1());
         PLAY_PIPELINE.addLast("5-6-7-8", new DeviceInviteResponseProcessor());
         PLAY_PIPELINE.addLast("9-10-11-12", new MediaInviteResponseProcessor2());
-        PLAY_PIPELINE.addLast("16-17", new MediaByeResponseProcessor());
-        PLAY_PIPELINE.addLast("18-19", new MediaByeResponseProcessor());
+        PLAY_PIPELINE.addLast("16-17", new MediaByeResponseProcessor1());
+        PLAY_PIPELINE.addLast("18-19", new MediaByeResponseProcessor2());
         PLAY_PIPELINE.addLast("20", new DeviceByeResponseProcessor());
         map.put(PLAY, PLAY_PIPELINE);
         PIPELINE_CONTAINER = Collections.unmodifiableMap(map);

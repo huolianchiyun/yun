@@ -3,11 +3,11 @@ package com.hlcy.yun.sip.gb28181.operation;
 import com.hlcy.yun.sip.gb28181.message.MessageHandler;
 import com.hlcy.yun.sip.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.sip.gb28181.operation.flow.FlowContextCache;
-
 import javax.sdp.SdpException;
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.header.CallIdHeader;
+import java.nio.charset.StandardCharsets;
 
 public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> {
 
@@ -40,7 +40,11 @@ public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> {
         return ((CallIdHeader) event.getResponse().getHeader(CallIdHeader.NAME)).getCallId();
     }
 
-    protected String getResponseBody(ResponseEvent event){
+    protected String getResponseBody1(ResponseEvent event){
         return new String(event.getResponse().getRawContent());
+    }
+
+    protected byte[] getResponseBody2(ResponseEvent event){
+        return new String(event.getResponse().getRawContent()).getBytes(StandardCharsets.UTF_8);
     }
 }
