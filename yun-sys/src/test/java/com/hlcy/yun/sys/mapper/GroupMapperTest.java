@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.mapper;
+package com.hlcy.yun.sys.mapper;
 
 
 import com.hlcy.yun.sys.modules.rights.model.$do.GroupDO;

@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.service;
+package com.hlcy.yun.sys.service;
 
 import com.hlcy.yun.sys.modules.rights.model.$do.UserDO;
 import com.hlcy.yun.sys.modules.rights.service.UserService;

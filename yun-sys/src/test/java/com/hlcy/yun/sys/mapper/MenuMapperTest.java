@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.mapper;
+package com.hlcy.yun.sys.mapper;
 
 
 import cn.hutool.core.collection.CollectionUtil;

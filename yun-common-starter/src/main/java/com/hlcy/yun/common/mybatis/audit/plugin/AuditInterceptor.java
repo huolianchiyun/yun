@@ -8,12 +8,14 @@ import com.hlcy.yun.common.spring.security.SecurityUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 
@@ -37,39 +39,55 @@ public class AuditInterceptor implements Interceptor {
         SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
         Audit_Handle:
         {
-            if (skip(sqlCommandType)) {
+            if (isSkip(sqlCommandType)) {
                 break Audit_Handle;
             }
             // 获取将要持久化的实体对象
             Object entity = invocation.getArgs()[1];
-            // 获取私有成员变量
-            Class<?> entityClass = entity.getClass();
-            Field[] declaredFields = entityClass.getDeclaredFields();
-            if (entityClass.getSuperclass() != null) {
-                Field[] superField = entityClass.getSuperclass().getDeclaredFields();
-                declaredFields = ArrayUtils.addAll(declaredFields, superField);
-            }
-            // 是否为mybatis plug
-            boolean isPlugUpdate = declaredFields.length == 1
-                    && declaredFields[0].getName().equals("serialVersionUID");
-
-            //兼容mybatis plus的update
-            if (isPlugUpdate) {
-                Map updateParam = (Map) entity;
-                Class<?> updateParamType = updateParam.get("param1").getClass();
-                declaredFields = updateParamType.getDeclaredFields();
-                if (updateParamType.getSuperclass() != null) {
-                    Field[] superField = updateParamType.getSuperclass().getDeclaredFields();
-                    declaredFields = ArrayUtils.addAll(declaredFields, superField);
+            if (!processCollectionEntity(sqlCommandType, entity)) {
+                Field[] declaredFields = getFieldsWithSuperFields(entity.getClass());
+                // 是否为mybatis plug
+                boolean isPlugUpdate = declaredFields.length == 1 && declaredFields[0].getName().equals("serialVersionUID");
+                //兼容mybatis plus的update
+                if (isPlugUpdate) {
+                    Map updateParam = (Map) entity;
+                    declaredFields = getFieldsWithSuperFields(updateParam.get("param1").getClass());
                 }
-            }
-            LocalDateTime now = LocalDateTime.now();
-            for (Field field : declaredFields) {
-                fillTimeOnInsertOrUpdate(sqlCommandType, entity, isPlugUpdate, field, now);
-                fillOperatorOnInsertOrUpdate(sqlCommandType, entity, isPlugUpdate, field, SecurityUtils.getCurrentUsername());
+                auditEntity(sqlCommandType, entity, declaredFields, isPlugUpdate);
             }
         }
         return invocation.proceed();
+    }
+
+    private boolean processCollectionEntity(SqlCommandType sqlCommandType, Object entity) throws IllegalAccessException {
+        if (entity instanceof MapperMethod.ParamMap) {
+            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) entity;
+            final Object[] entities = ((Collection) paramMap.get("collection")).toArray();
+            final Field[] declaredFields = getFieldsWithSuperFields(entities[0].getClass());
+            for (Object o : entities) {
+                auditEntity(sqlCommandType, o, declaredFields, false);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void auditEntity(SqlCommandType sqlCommandType, Object entity, Field[] declaredFields,
+                             boolean isPlugUpdate) throws IllegalAccessException {
+        LocalDateTime now = LocalDateTime.now();
+        for (Field field : declaredFields) {
+            fillTimeOnInsertOrUpdate(sqlCommandType, entity, isPlugUpdate, field, now);
+            fillOperatorOnInsertOrUpdate(sqlCommandType, entity, isPlugUpdate, field, SecurityUtils.getCurrentUsername());
+        }
+    }
+
+    private Field[] getFieldsWithSuperFields(Class<?> entityClass) {
+        Field[] declaredFields = entityClass.getDeclaredFields();
+        if (entityClass.getSuperclass() != null) {
+            Field[] superField = entityClass.getSuperclass().getDeclaredFields();
+            declaredFields = ArrayUtils.addAll(declaredFields, superField);
+        }
+        return declaredFields;
     }
 
     @Override
@@ -139,29 +157,24 @@ public class AuditInterceptor implements Interceptor {
     private void fillOperatorOnInsertOrUpdate(SqlCommandType sqlCommandType, Object entity, boolean isPlugUpdate,
                                               Field field, String operator) throws IllegalAccessException {
         // insert
-        if (field.getAnnotation(CreatedBy.class) != null) {
-            if (SqlCommandType.INSERT.equals(sqlCommandType)) {
-                field.setAccessible(true);
-                field.set(entity, operator);
-            }
+        if (field.getAnnotation(CreatedBy.class) != null && SqlCommandType.INSERT.equals(sqlCommandType)) {
+            field.setAccessible(true);
+            field.set(entity, operator);
         }
-
         // update
-        if (field.getAnnotation(LastModifiedBy.class) != null) {
-            if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
-                field.setAccessible(true);
-                //兼容mybatis plus的 update
-                if (isPlugUpdate) {
-                    Map updateParam = (Map) entity;
-                    field.set(updateParam.get("param1"), operator);
-                } else {
-                    field.set(entity, operator);
-                }
+        if (field.getAnnotation(LastModifiedBy.class) != null && SqlCommandType.UPDATE.equals(sqlCommandType)) {
+            field.setAccessible(true);
+            //兼容mybatis plus的 update
+            if (isPlugUpdate) {
+                Map updateParam = (Map) entity;
+                field.set(updateParam.get("param1"), operator);
+            } else {
+                field.set(entity, operator);
             }
         }
     }
 
-    private boolean skip(SqlCommandType sqlCommandType) {
+    private boolean isSkip(SqlCommandType sqlCommandType) {
         return !(SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType));
     }
 }

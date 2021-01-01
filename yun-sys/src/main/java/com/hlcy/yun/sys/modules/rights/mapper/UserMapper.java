@@ -6,7 +6,9 @@ import com.hlcy.yun.sys.modules.rights.model.$do.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Mapper
@@ -34,6 +36,8 @@ public interface UserMapper extends PageMapper<UserDO> {
     Set<UserDO> selectByGroupIds(@Param("groupIds") Set<Long> groupIds);
 
     int insert(UserDO record);
+
+    int batchInsert(List<UserDO> record);
 
     int updateByPrimaryKeySelective(UserDO record);
 

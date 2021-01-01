@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.redis;
+package com.hlcy.yun.sys.redis;
 
 import com.hlcy.yun.common.spring.redis.RedisUtils;
 import org.junit.jupiter.api.Test;

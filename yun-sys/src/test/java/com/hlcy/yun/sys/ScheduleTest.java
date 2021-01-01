@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights;
+package com.hlcy.yun.sys;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

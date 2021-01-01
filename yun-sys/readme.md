@@ -25,5 +25,15 @@ https://www.cnblogs.com/pluto4596/p/11005417.html
     2、提高了数据权限控制的灵活性。例如原本只有主管能查本部门下组织架构/订单数据，现在新增助理角色，能够查询本部门下组织架构，不能查询订单。这样的话普通的写法就需要调整逻辑控制，使用数据权限控制的话，直接修改配置就好。
 ```
 
+单元测试问题：
+    question：Unable to find a @SpringBootConfiguration, you need to use @ContextConfiguration or @SpringBootTest(classes=...) with your test
+    answer： @link https://www.jianshu.com/p/b50ac44c3444
+    @SpringBootTest搜索@SpringBootApplication注解的类，是按照test所在类的package往父层级逐级搜索。 
+    所以解决办法一：@SpringBootTest(classes = Application.class)，
+    解决方案二：修改test所在类的package，放到@SpringBootApplication子package
+    
+有spring-security时，如何进行单元测试？？
+https://docs.spring.io/spring-security/site/docs/5.0.6.RELEASE/reference/htmlsingle/#test-method-withmockuser
+
 
 

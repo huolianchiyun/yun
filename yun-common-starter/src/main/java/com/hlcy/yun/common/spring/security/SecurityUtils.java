@@ -41,7 +41,7 @@ public class SecurityUtils {
     public static String getCurrentUsername() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "当前登录状态过期");
+            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "当前登录状态过期！");
         }
         Object principal = authentication.getPrincipal();
         if(authentication.getPrincipal() instanceof UserDetails){

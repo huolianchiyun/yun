@@ -21,7 +21,8 @@
         <result column="u_pwd_reset_time" jdbcType="TIMESTAMP" property="pwdResetTime"/>
     </resultMap>
 
-    <resultMap id="CascadeBaseResultMap" type="com.hlcy.yun.sys.modules.rights.model.$do.UserDO" extends="BaseResultMap">
+    <resultMap id="CascadeBaseResultMap" type="com.hlcy.yun.sys.modules.rights.model.$do.UserDO"
+               extends="BaseResultMap">
         <!-- 多对一关联映射:association -->
         <association property="dept"
                      javaType="com.hlcy.yun.sys.modules.rights.model.$do.GroupDO"
@@ -131,17 +132,35 @@
         order by u_create_time desc
     </select>
 
-    <insert id="insert" parameterType="com.hlcy.yun.sys.modules.rights.model.$do.UserDO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.hlcy.yun.sys.modules.rights.model.$do.UserDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_sys_user (u_nickname, u_username,
+                                u_gender, u_pwd, u_phone, u_email, u_is_admin,
+                                u_dept_id, u_status, u_is_deleted, u_come_from, u_creator,
+                                u_updater, u_create_time, u_update_time,
+                                u_pwd_reset_time)
+        values (#{nickname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
+                #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+                #{email,jdbcType=VARCHAR}, #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT},
+                ${0}, #{comeFrom,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         insert into t_sys_user (u_nickname, u_username,
         u_gender, u_pwd, u_phone, u_email, u_is_admin,
         u_dept_id, u_status, u_is_deleted, u_come_from, u_creator,
         u_updater, u_create_time, u_update_time,
         u_pwd_reset_time)
-        values (#{nickname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
-                #{gender,jdbcType=TINYINT}, #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
-                #{email,jdbcType=VARCHAR}, #{admin,jdbcType=BIT}, #{deptId,jdbcType=BIGINT}, #{status,jdbcType=BIT}, ${0},
-                #{comeFrom,jdbcType=VARCHAR},#{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-                #{updateTime,jdbcType=TIMESTAMP}, #{pwdResetTime,jdbcType=TIMESTAMP})
+        values
+        <foreach item="item" collection="list" separator=",">
+            (#{item.nickname,jdbcType=VARCHAR}, #{item.username,jdbcType=VARCHAR},
+            #{item.gender,jdbcType=TINYINT}, #{item.pwd,jdbcType=VARCHAR}, #{item.phone,jdbcType=VARCHAR},
+            #{item.email,jdbcType=VARCHAR}, #{item.admin,jdbcType=BIT}, #{item.deptId,jdbcType=BIGINT}, #{item.status,jdbcType=BIT}, ${0},
+            #{item.comeFrom,jdbcType=VARCHAR},#{item.creator,jdbcType=VARCHAR}, #{item.updater,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.pwdResetTime,jdbcType=TIMESTAMP})
+        </foreach>
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.hlcy.yun.sys.modules.rights.model.$do.UserDO">
@@ -209,7 +228,8 @@
     <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
         update t_sys_user
         set u_is_deleted = 1
-        where u_id = #{id,jdbcType=BIGINT} and u_username != 'admin'
+        where u_id = #{id,jdbcType=BIGINT}
+          and u_username != 'admin'
     </update>
 
     <update id="deleteByIds" parameterType="java.util.Set">

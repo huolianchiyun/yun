@@ -1,4 +1,4 @@
-package com.zhangbin.yun.yunrights.sql;
+package com.hlcy.yun.sys.sql;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.druid.sql.SQLUtils;
