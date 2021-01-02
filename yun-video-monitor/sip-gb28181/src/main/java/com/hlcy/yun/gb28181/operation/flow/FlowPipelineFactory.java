@@ -4,7 +4,6 @@ import com.hlcy.yun.gb28181.sip.message.DefaultPipeline;
 import com.hlcy.yun.gb28181.operation.Operation;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
 import com.hlcy.yun.gb28181.operation.flow.play.*;
-import com.hlcy.yun.sip.gb28181.operation.flow.play.*;
 import javax.sip.ResponseEvent;
 import java.util.Collections;
 import java.util.HashMap;

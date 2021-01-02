@@ -4,8 +4,6 @@ import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import com.hlcy.yun.gb28181.sip.message.handler.ResponseHandler;
 import com.hlcy.yun.gb28181.sip.message.handler.request.*;
 import com.hlcy.yun.gb28181.sip.message.handler.response.InviteResponseHandler;
-import com.hlcy.yun.sip.gb28181.message.handler.request.*;
-
 import javax.sip.RequestEvent;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
