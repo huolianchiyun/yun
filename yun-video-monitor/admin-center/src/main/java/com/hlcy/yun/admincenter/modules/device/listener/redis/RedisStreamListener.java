@@ -1,10 +1,10 @@
 package com.hlcy.yun.admincenter.modules.device.listener.redis;
 
 import com.hlcy.yun.admincenter.modules.device.listener.DeviceEventHandler;
-import com.hlcy.yun.sip.gb28181.notification.event.KeepaliveEvent;
-import com.hlcy.yun.sip.gb28181.notification.event.LogoutEvent;
-import com.hlcy.yun.sip.gb28181.notification.event.RegisterEvent;
-import com.hlcy.yun.sip.stream.redis.RedisStreamProperties;
+import com.hlcy.yun.gb28181.notification.event.KeepaliveEvent;
+import com.hlcy.yun.gb28181.notification.event.LogoutEvent;
+import com.hlcy.yun.gb28181.notification.event.RegisterEvent;
+import com.hlcy.yun.redis.stream.RedisStreamProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.stream.MapRecord;
