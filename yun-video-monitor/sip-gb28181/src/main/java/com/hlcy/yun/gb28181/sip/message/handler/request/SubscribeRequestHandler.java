@@ -18,8 +18,9 @@ public class SubscribeRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-
-        log.info("Receive a subscribe request: {}", event.getRequest());
+        if(log.isDebugEnabled()){
+            log.debug("Receive a subscribe request: {}", event.getRequest());
+        }
         try {
             Response response = buildResponse(Response.OK, request);
             if (response != null) {

@@ -62,7 +62,12 @@ public class AuditInterceptor implements Interceptor {
     private boolean processCollectionEntity(SqlCommandType sqlCommandType, Object entity) throws IllegalAccessException {
         if (entity instanceof MapperMethod.ParamMap) {
             MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) entity;
-            final Object[] entities = ((Collection) paramMap.get("collection")).toArray();
+            final Object[] entities;
+            if (paramMap.containsKey("collection")) {
+                entities = ((Collection) paramMap.get("collection")).toArray();
+            } else {
+                entities = ((Collection) paramMap.get("params")).toArray();
+            }
             final Field[] declaredFields = getFieldsWithSuperFields(entities[0].getClass());
             for (Object o : entities) {
                 auditEntity(sqlCommandType, o, declaredFields, false);

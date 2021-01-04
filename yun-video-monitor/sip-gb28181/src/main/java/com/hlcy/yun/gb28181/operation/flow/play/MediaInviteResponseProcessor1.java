@@ -17,9 +17,6 @@ import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
 
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createFrom;
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createTo;
-
 /**
  * 客户端主动发起的实时视音频点播流程: 3->4<br/>
  * <p>

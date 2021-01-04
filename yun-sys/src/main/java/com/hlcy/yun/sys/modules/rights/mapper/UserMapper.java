@@ -37,7 +37,7 @@ public interface UserMapper extends PageMapper<UserDO> {
 
     int insert(UserDO record);
 
-    int batchInsert(List<UserDO> record);
+    int batchInsert(Set<UserDO> list);
 
     int updateByPrimaryKeySelective(UserDO record);
 

@@ -18,7 +18,9 @@ public class AckRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-        log.info("Receive a ack request: {}.", event.getRequest());
+        if (log.isDebugEnabled()) {
+            log.debug("Receive a ack request: {}.", event.getRequest());
+        }
         Request request = event.getRequest();
         Dialog dialog = event.getDialog();
         try {

@@ -39,8 +39,9 @@ public class MessageRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-
-        log.info("Receive a message request: {}", event.getRequest());
+        if(log.isDebugEnabled()){
+            log.debug("Receive a message request: {}", event.getRequest());
+        }
         strategyFactory.getCmdTypeStrategy(getCmdTypeFrom(event)).handleMessage(event);
     }
 
@@ -102,7 +103,9 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            log.info("Receive a CmdType <KeepAlive> request: {}.", event.getRequest());
+            if(log.isDebugEnabled()){
+                log.debug("Receive a CmdType <KeepAlive> request: {}.", event.getRequest());
+            }
             try {
                 Element rootElement = getRootElementFrom(event);
                 String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
@@ -124,7 +127,9 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            log.info("Receive a CmdType <ConfigDownload> request, message: {}.", event.getRequest());
+            if(log.isDebugEnabled()){
+                log.debug("Receive a CmdType <ConfigDownload> request, message: {}.", event.getRequest());
+            }
         }
     }
 
@@ -137,7 +142,9 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            log.info("Receive a CmdType <Catalog> request, message: {}.", event.getRequest());
+            if(log.isDebugEnabled()){
+                log.debug("Receive a CmdType <Catalog> request, message: {}.", event.getRequest());
+            }
             Element rootElement = getRootElementFrom(event);
             String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
             final Device device = new Device(deviceId);
@@ -203,7 +210,9 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            log.info("Receive a CmdType <DeviceInfo> request, message: {}.", event.getRequest());
+            if(log.isDebugEnabled()){
+                log.debug("Receive a CmdType <DeviceInfo> request, message: {}.", event.getRequest());
+            }
             Element rootElement = getRootElementFrom(event);
             String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
             Device device = new Device(deviceId)
@@ -226,8 +235,9 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            log.info("Receive a CmdType <Alarm> request, message: {}.", event.getRequest());
-
+            if(log.isDebugEnabled()){
+                log.debug("Receive a CmdType <Alarm> request, message: {}.", event.getRequest());
+            }
             Element rootElement = getRootElementFrom(event);
             String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
             // TODO  设备告警后续看怎么处理，先遗留
@@ -251,7 +261,9 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            log.info("Receive a CmdType <RecordInfo> request, message: {}.", event.getRequest());
+            if(log.isDebugEnabled()){
+                log.debug("Receive a CmdType <RecordInfo> request, message: {}.", event.getRequest());
+            }
             Element rootElement = getRootElementFrom(event);
             final String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
             RecordInfo recordInfo = extractRecordInfoFrom(rootElement);

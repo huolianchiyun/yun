@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @SpringBootTest
@@ -47,7 +48,7 @@ public class UserMapperTest {
     }
 
     @Test
-    public void testInsert(){
+    public void testInsert() {
         UserDO user = new UserDO();
         user.setUsername("lisi");
         user.setNickname("李四");
@@ -60,8 +61,8 @@ public class UserMapperTest {
     }
 
     @Test
-    @WithMockUser(username="test")
-    public void testBatchInsert(){
+    @WithMockUser(username = "test")
+    public void testBatchInsert() {
         UserDO user1 = new UserDO();
         user1.setUsername("lisi666");
         user1.setNickname("李四666");
@@ -74,7 +75,7 @@ public class UserMapperTest {
         user2.setPhone("12345678991");
         user2.setPwd("12345678991");
 
-        userMapper.batchInsert(Arrays.asList(user1,user2));
+        userMapper.batchInsert(new HashSet<>(Arrays.asList(user1, user2)));
 
     }
 

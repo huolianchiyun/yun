@@ -94,7 +94,7 @@ public class RegisterRequestHandler extends RequestHandler {
         boolean isPass = true;
         final Request request = event.getRequest();
         // 未携带授权头或者密码错误 均回复 401
-        if (request.getHeader(AuthorizationHeader.NAME) == null) {
+        if (request.getHeader(ProxyAuthorizationHeader.NAME) == null) {
             log.warn("Will reply 401 after not carrying authorization.");
             isPass = false;
         } else if (DigestServerAuthHelper.authenticatePlainTextPassword(request)) {
