@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.notification.event;
 import com.alibaba.fastjson.JSON;
 import com.hlcy.yun.gb28181.bean.Device;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashMap;
@@ -13,11 +14,12 @@ import java.util.Map;
 public class DeviceEvent extends AbstractDeviceEvent implements EventMap {
     private Device device;
 
-    public DeviceEvent(Device device) {
+    public DeviceEvent(String type, Device device) {
         this.deviceId = device.getDeviceId();
         this.device = device;
-        type = "device";
+        this.type = type;
     }
+
 
     public Map<String, String> toMap() {
         final Map<String, String> map = new HashMap<>();
@@ -28,6 +30,6 @@ public class DeviceEvent extends AbstractDeviceEvent implements EventMap {
     }
 
     public static DeviceEvent valueOf(Map<String, String> map) {
-        return new DeviceEvent(JSON.parseObject(map.get("device"), Device.class));
+        return new DeviceEvent(map.get("type"),JSON.parseObject(map.get("device"), Device.class));
     }
 }

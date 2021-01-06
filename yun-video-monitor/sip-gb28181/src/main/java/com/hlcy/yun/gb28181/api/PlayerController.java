@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
-
 import static com.hlcy.yun.common.web.response.ResponseUtil.success;
 
 
@@ -50,35 +49,27 @@ public class PlayerController {
         return success();
     }
 
-    @PostMapping("/playback/forward/{ssrc}")
-    public DeferredResult<ResponseEntity<ResponseData>> playbackForward(@PathVariable String ssrc) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAYBACK + ssrc, result);
-        player.playbackForward(ssrc);
-        return result;
-    }
-
-    @PostMapping("/playback/back/{ssrc}")
-    public DeferredResult<ResponseEntity<ResponseData>> playbackBack(@PathVariable String ssrc) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAYBACK + ssrc, result);
-        player.playbackBack(ssrc);
-        return result;
+    @PostMapping("/playback/scale/{scale}/{ssrc}")
+    public ResponseEntity<ResponseData<Void>> playbackForwardOrkBack(@PathVariable String ssrc, @PathVariable double scale) {
+        player.playbackForwardOrkBack(ssrc, scale);
+        return success();
     }
 
     @PostMapping("/playback/drag/{ssrc}")
-    public DeferredResult<ResponseEntity<ResponseData>> playbackDrag(@PathVariable String ssrc) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAYBACK + ssrc, result);
+    public ResponseEntity<ResponseData<Void>> playbackDrag(@PathVariable String ssrc) {
         player.playbackDrag(ssrc);
-        return result;
+        return success();
     }
 
     @PostMapping("/playback/pause/{ssrc}")
-    public DeferredResult<ResponseEntity<ResponseData>> playbackReplay(@PathVariable String ssrc) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAYBACK + ssrc, result);
+    public ResponseEntity<ResponseData<Void>> playbackPause(@PathVariable String ssrc) {
+        player.playbackPause(ssrc);
+        return success();
+    }
+
+    @PostMapping("/playback/replay/{ssrc}")
+    public ResponseEntity<ResponseData<Void>> playbackReplay(@PathVariable String ssrc) {
         player.playbackReplay(ssrc);
-        return result;
+        return success();
     }
 }

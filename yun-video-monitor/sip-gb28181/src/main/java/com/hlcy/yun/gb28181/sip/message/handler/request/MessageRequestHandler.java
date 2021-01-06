@@ -48,7 +48,7 @@ public class MessageRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Receive a message request: {}", event.getRequest());
         }
         strategyFactory.getCmdTypeStrategy(getCmdTypeFrom(event)).handleMessage(event);
@@ -114,7 +114,7 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Receive a CmdType <KeepAlive> request: {}.", event.getRequest());
             }
             try {
@@ -138,7 +138,7 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Receive a CmdType <ConfigDownload> request, message: {}.", event.getRequest());
             }
         }
@@ -153,14 +153,14 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Receive a CmdType <Catalog> request, message: {}.", event.getRequest());
             }
             Element rootElement = getRootElementFrom(event);
             String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
             final Device device = new Device(deviceId);
             setChannelMapForDevice(device, rootElement.element("DeviceList"));
-            PublisherFactory.getDeviceEventPublisher().publishEvent(new DeviceEvent(device));
+            PublisherFactory.getDeviceEventPublisher().publishEvent(new DeviceEvent("Catalog", device));
             DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_CATALOG + deviceId, device);
             try {
                 // 200 with no response body
@@ -221,7 +221,7 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Receive a CmdType <DeviceInfo> request, message: {}.", event.getRequest());
             }
             Element rootElement = getRootElementFrom(event);
@@ -232,7 +232,7 @@ public class MessageRequestHandler extends RequestHandler {
                     .setModel(XmlUtil.getTextOfChildTagFrom(rootElement, "Model"))
                     .setFirmware(XmlUtil.getTextOfChildTagFrom(rootElement, "Firmware"));
             // 向管理中心发布设备事件
-            PublisherFactory.getDeviceEventPublisher().publishEvent(new DeviceEvent(device));
+            PublisherFactory.getDeviceEventPublisher().publishEvent(new DeviceEvent("DeviceInfo", device));
             DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_DEVICE_INFO + deviceId, device);
         }
     }
@@ -246,7 +246,7 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Receive a CmdType <Alarm> request, message: {}.", event.getRequest());
             }
             Element rootElement = getRootElementFrom(event);
@@ -272,7 +272,7 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Receive a CmdType <RecordInfo> request, message: {}.", event.getRequest());
             }
             Element rootElement = getRootElementFrom(event);
@@ -364,7 +364,7 @@ public class MessageRequestHandler extends RequestHandler {
 
         @Override
         protected void handleMessage(RequestEvent event) {
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Receive a CmdType <MediaStatus> request, message: {}.", event.getRequest());
             }
             Element rootElement = getRootElementFrom(event);
@@ -372,7 +372,7 @@ public class MessageRequestHandler extends RequestHandler {
 
             // 通知事件类型(必选), 取值“121"表示历史媒体文件发送结束。
             String notifyType = XmlUtil.getTextOfChildTagFrom(rootElement, "NotifyType");
-            if("121".equals(notifyType)){
+            if ("121".equals(notifyType)) {
                 try {
                     // 200 with no response body
                     MessageRequestHandler.this.send200Response(event);
