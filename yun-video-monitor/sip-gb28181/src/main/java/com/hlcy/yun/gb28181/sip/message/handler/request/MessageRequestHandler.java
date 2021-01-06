@@ -5,6 +5,8 @@ import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.gb28181.bean.DeviceChannel;
 import com.hlcy.yun.gb28181.bean.RecordInfo;
 import com.hlcy.yun.gb28181.bean.RecordItem;
+import com.hlcy.yun.gb28181.operation.flow.FlowContext;
+import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import com.hlcy.yun.gb28181.notification.PublisherFactory;
 import com.hlcy.yun.gb28181.notification.event.KeepaliveEvent;
@@ -19,6 +21,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import javax.sip.ClientTransaction;
 import javax.sip.RequestEvent;
 import javax.sip.message.Request;
 import java.io.ByteArrayInputStream;
@@ -26,7 +29,13 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static com.hlcy.yun.gb28181.operation.flow.play.PlaySession.SIP_MEDIA_SESSION_2;
+import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendRequest;
+import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.getByeRequest;
+import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.getCallId;
 import static com.hlcy.yun.gb28181.sip.message.handler.request.MessageRequestHandler.CmdTypeStrategyFactory.*;
+import static com.hlcy.yun.gb28181.sip.message.handler.request.MessageRequestHandler.CmdTypeStrategyFactory.MESSAGE_ALARM;
 
 
 @Slf4j
@@ -71,6 +80,7 @@ public class MessageRequestHandler extends RequestHandler {
         static final String MESSAGE_DEVICE_INFO = "DeviceInfo";
         static final String MESSAGE_ALARM = "Alarm";
         static final String MESSAGE_RECORD_INFO = "RecordInfo";
+        static final String MESSAGE_MEDIA_STATUS = "MediaStatus";
 
         private Map<String, AbstractCmdTypeStrategy> strategyMap = new HashMap<>();
 
@@ -79,8 +89,9 @@ public class MessageRequestHandler extends RequestHandler {
             strategyMap.put(MESSAGE_CONFIG_DOWNLOAD, new ConfigDownloadStrategy());
             strategyMap.put(MESSAGE_CATALOG, new CatalogStrategy());
             strategyMap.put(MESSAGE_DEVICE_INFO, new DeviceInfoStrategy());
-            strategyMap.put(MESSAGE_ALARM, new AlarmStrategy());
+            strategyMap.put(MESSAGE_ALARM, new MediaStatusStrategy());
             strategyMap.put(MESSAGE_RECORD_INFO, new RecordInfoStrategy());
+            strategyMap.put(MESSAGE_MEDIA_STATUS, new RecordInfoStrategy());
         }
 
         AbstractCmdTypeStrategy getCmdTypeStrategy(String cmdType) {
@@ -109,7 +120,7 @@ public class MessageRequestHandler extends RequestHandler {
             try {
                 Element rootElement = getRootElementFrom(event);
                 String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
-                MessageRequestHandler.this.sendAckResponse(event);
+                MessageRequestHandler.this.send200Response(event);
                 PublisherFactory.getDeviceEventPublisher().publishEvent(new KeepaliveEvent(deviceId));
             } catch (ParseException e) {
                 log.error("Handle a CmdType <KeepAlive> message({}) failed, cause: {}.", event.getRequest(), e.getMessage());
@@ -153,7 +164,7 @@ public class MessageRequestHandler extends RequestHandler {
             DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_CATALOG + deviceId, device);
             try {
                 // 200 with no response body
-                MessageRequestHandler.this.sendAckResponse(event);
+                MessageRequestHandler.this.send200Response(event);
             } catch (ParseException e) {
                 log.error("Handle a CmdType <Catalog> message({}) failed, cause: {}.", event.getRequest(), e.getMessage());
                 e.printStackTrace();
@@ -341,6 +352,36 @@ public class MessageRequestHandler extends RequestHandler {
                 }
             }
             return recordInfo;
+        }
+    }
+
+    class MediaStatusStrategy extends AbstractCmdTypeStrategy {
+
+        @Override
+        public String getCmdType() {
+            return MESSAGE_ALARM;
+        }
+
+        @Override
+        protected void handleMessage(RequestEvent event) {
+            if(log.isDebugEnabled()){
+                log.debug("Receive a CmdType <MediaStatus> request, message: {}.", event.getRequest());
+            }
+            Element rootElement = getRootElementFrom(event);
+            String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
+
+            // 通知事件类型(必选), 取值“121"表示历史媒体文件发送结束。
+            String notifyType = XmlUtil.getTextOfChildTagFrom(rootElement, "NotifyType");
+            if("121".equals(notifyType)){
+                try {
+                    // 200 with no response body
+                    MessageRequestHandler.this.send200Response(event);
+                } catch (ParseException e) {
+                    log.error("Handle a CmdType <MediaStatus> message({}) failed, cause: {}.", event.getRequest(), e.getMessage());
+                    e.printStackTrace();
+                }
+                // TODO 是否通知前端历史文件发送完成
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.hlcy.yun.sys.modules.rights.datarights;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.hlcy.yun.sys.modules.rights.datarights.dialect.Dialect;
 import com.hlcy.yun.sys.modules.rights.datarights.rule.RuleManager;
 import com.hlcy.yun.sys.modules.rights.model.$do.PermissionRuleDO;
@@ -12,6 +13,7 @@ import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -21,8 +23,9 @@ import static com.hlcy.yun.sys.modules.rights.common.constant.RightsConstants.AD
 /**
  * Mybatis - 通用数据权限拦截器<br/>
  * DataRightsInterceptor.dialect = DataRightsHelper
- *
+ * <p>
  * Assign a value to variable ruleManager
+ *
  * @See {@link RightsBeanPostProcessor}
  */
 public class DataRightsHelper implements Dialect {
@@ -31,7 +34,7 @@ public class DataRightsHelper implements Dialect {
 
     @Override
     public boolean skip(MappedStatement ms, StatementHandler statementHandler) {
-        if (ADMINISTRATOR.equals(SecurityUtils.getCurrentUsername()) || hasNotPermissionAnnotation(ms, statementHandler)
+        if (hasNotPermissionAnnotation(ms, statementHandler) || ADMINISTRATOR.equals(SecurityUtils.getCurrentUsername())
                 || CollectionUtil.isEmpty(ruleManager.getRulesForCurrentUser(getCurrentUsername()))) {
             return true;
         } else {
@@ -90,7 +93,7 @@ public class DataRightsHelper implements Dialect {
     }
 
     /**
-     * 获取 mapper中被代理的方法
+     * 获取 mapper中被代理的方法（目标方法）, 即 Mapper接口中的方法
      *
      * @param statementHandler /
      * @param splitMethodId    /
@@ -99,27 +102,54 @@ public class DataRightsHelper implements Dialect {
      */
     private Method getTargetMethod(StatementHandler statementHandler, List<String> splitMethodId, Class<?> clazz) {
         String methodName = splitMethodId.get(splitMethodId.size() - 1);
-        // 定位出现在执行 mapper 的哪个方法，不考虑方法重载，因为mybatis定位sql节点是根据 mapper接口完全限定名+id 全局唯一定位
+        // 定位出现在执行 mapper 的哪个方法，不考虑方法重载，因为mybatis定位sql节点是根据 mapper接口完全限定名+id, 全局唯一定位
         // 但实现获取目标方法过程中已解决了方法重载问题，通过方法参数类型唯一定位
         Object paramObj = statementHandler.getParameterHandler().getParameterObject();
         Method targetMethod;
         if (paramObj instanceof MapperMethod.ParamMap) {
-            Map<String, Object> paramsMap = (MapperMethod.ParamMap) paramObj;
-            Class[] classes = paramsMap.entrySet().stream()
-                    .filter(kv -> kv.getKey().startsWith("param"))
-                    .sorted(Comparator.comparing(Map.Entry::getKey))
-                    .map(kv -> kv.getValue().getClass())
-                    .toArray(Class[]::new);
-            targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, classes);
+            targetMethod = getMethodByMethodNameAndParamTypes(clazz, methodName, (MapperMethod.ParamMap) paramObj);
             if (targetMethod == null) {
-                for (Class<?> anInterface : clazz.getInterfaces()) {
-                    targetMethod = ClassUtil.getDeclaredMethod(anInterface, methodName, classes);
-                    if (targetMethod != null) break;
-                }
+                targetMethod = getMethodByMethodName(clazz, methodName);
             }
         } else {
-            targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, paramObj != null ? paramObj.getClass() : null);
+            targetMethod = getMethodByMethodNameAndParamType(clazz, methodName, paramObj);
         }
+        return targetMethod;
+    }
+
+    private Method getMethodByMethodNameAndParamTypes(Class<?> clazz, String methodName, MapperMethod.ParamMap<Object> paramsMap) {
+        Class[] parameterTypes = paramsMap.entrySet().stream()
+                .filter(kv -> kv.getKey().startsWith("param") && kv.getValue() != null)
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .map(kv -> kv.getValue().getClass())
+                .toArray(Class[]::new);
+
+        Method targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, parameterTypes);
+
+        if (targetMethod == null) {
+            for (Class<?> anInterface : clazz.getInterfaces()) {
+                targetMethod = ClassUtil.getDeclaredMethod(anInterface, methodName, parameterTypes);
+                if (targetMethod != null) break;
+            }
+        }
+        return targetMethod;
+    }
+
+    private Method getMethodByMethodName(Class<?> clazz, String methodName) {
+        Method targetMethod = ReflectUtil.getMethodByName(clazz, methodName);
+
+        if (targetMethod == null) {
+            for (Class<?> anInterface : clazz.getInterfaces()) {
+                targetMethod = ReflectUtil.getMethodByName(anInterface, methodName);
+                if (targetMethod != null) break;
+            }
+        }
+        return targetMethod;
+    }
+
+    private Method getMethodByMethodNameAndParamType(Class<?> clazz, String methodName, Object paramObj) {
+        Method targetMethod;
+        targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, paramObj != null ? paramObj.getClass() : null);
         return targetMethod;
     }
 }

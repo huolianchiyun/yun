@@ -1,4 +1,4 @@
-package com.hlcy.yun.redis.stream;
+package com.hlcy.yun.gb28181.notification;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

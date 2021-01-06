@@ -46,14 +46,7 @@ public class AuditInterceptor implements Interceptor {
             Object entity = invocation.getArgs()[1];
             if (!processCollectionEntity(sqlCommandType, entity)) {
                 Field[] declaredFields = getFieldsWithSuperFields(entity.getClass());
-                // 是否为mybatis plug
-                boolean isPlugUpdate = declaredFields.length == 1 && declaredFields[0].getName().equals("serialVersionUID");
-                //兼容mybatis plus的update
-                if (isPlugUpdate) {
-                    Map updateParam = (Map) entity;
-                    declaredFields = getFieldsWithSuperFields(updateParam.get("param1").getClass());
-                }
-                auditEntity(sqlCommandType, entity, declaredFields, isPlugUpdate);
+                auditEntity(sqlCommandType, entity, declaredFields);
             }
         }
         return invocation.proceed();
@@ -66,23 +59,22 @@ public class AuditInterceptor implements Interceptor {
             if (paramMap.containsKey("collection")) {
                 entities = ((Collection) paramMap.get("collection")).toArray();
             } else {
-                entities = ((Collection) paramMap.get("params")).toArray();
+                entities = ((Collection) paramMap.get("param1")).toArray();
             }
             final Field[] declaredFields = getFieldsWithSuperFields(entities[0].getClass());
             for (Object o : entities) {
-                auditEntity(sqlCommandType, o, declaredFields, false);
+                auditEntity(sqlCommandType, o, declaredFields);
             }
             return true;
         }
         return false;
     }
 
-    private void auditEntity(SqlCommandType sqlCommandType, Object entity, Field[] declaredFields,
-                             boolean isPlugUpdate) throws IllegalAccessException {
+    private void auditEntity(SqlCommandType sqlCommandType, Object entity, Field[] declaredFields) throws IllegalAccessException {
         LocalDateTime now = LocalDateTime.now();
         for (Field field : declaredFields) {
-            fillTimeOnInsertOrUpdate(sqlCommandType, entity, isPlugUpdate, field, now);
-            fillOperatorOnInsertOrUpdate(sqlCommandType, entity, isPlugUpdate, field, SecurityUtils.getCurrentUsername());
+            fillTimeOnInsertOrUpdate(sqlCommandType, entity, field, now);
+            fillOperatorOnInsertOrUpdate(sqlCommandType, entity, field);
         }
     }
 
@@ -113,39 +105,18 @@ public class AuditInterceptor implements Interceptor {
      *
      * @param sqlCommandType sql 类型
      * @param entity         将要持久化的实体对象
-     * @param isPlugUpdate   兼容mybatis plus的 update
      * @param now            将要填充的时间
      * @param field          实体对象属性对应得 Field
      * @throws IllegalAccessException
      */
-    private void fillTimeOnInsertOrUpdate(SqlCommandType sqlCommandType, Object entity, boolean isPlugUpdate,
-                                          Field field, LocalDateTime now) throws IllegalAccessException {
-        // insert
-        if (field.getAnnotation(CreatedDate.class) != null) {
-            if (SqlCommandType.INSERT.equals(sqlCommandType)) {
-                field.setAccessible(true);
-                if (field.get(entity) == null) {
-                    field.set(entity, now);
-                }
-                field.setAccessible(false);
+    private void fillTimeOnInsertOrUpdate(SqlCommandType sqlCommandType, Object entity, Field field, LocalDateTime now) throws IllegalAccessException {
+        if ((field.getAnnotation(CreatedDate.class) != null && SqlCommandType.INSERT.equals(sqlCommandType))
+                || (field.getAnnotation(LastModifiedDate.class) != null && SqlCommandType.UPDATE.equals(sqlCommandType))) {
+            field.setAccessible(true);
+            if (field.get(entity) == null) {
+                field.set(entity, now);
             }
-        }
-
-        // update
-        if (field.getAnnotation(LastModifiedDate.class) != null) {
-            if (SqlCommandType.UPDATE.equals(sqlCommandType)) {
-                field.setAccessible(true);
-                if (field.get(entity) == null) {
-                    //兼容mybatis plus的update
-                    if (isPlugUpdate) {
-                        Map updateParam = (Map) entity;
-                        field.set(updateParam.get("param1"), now);
-                    } else {
-                        field.set(entity, now);
-                    }
-                }
-                field.setAccessible(false);
-            }
+            field.setAccessible(false);
         }
     }
 
@@ -154,28 +125,17 @@ public class AuditInterceptor implements Interceptor {
      *
      * @param sqlCommandType sql 类型
      * @param entity         将要持久化的实体对象
-     * @param isPlugUpdate   兼容mybatis plus的 update
-     * @param operator       将要填充的操作人
      * @param field          实体对象属性对应得 Field
      * @throws IllegalAccessException
      */
-    private void fillOperatorOnInsertOrUpdate(SqlCommandType sqlCommandType, Object entity, boolean isPlugUpdate,
-                                              Field field, String operator) throws IllegalAccessException {
-        // insert
-        if (field.getAnnotation(CreatedBy.class) != null && SqlCommandType.INSERT.equals(sqlCommandType)) {
+    private void fillOperatorOnInsertOrUpdate(SqlCommandType sqlCommandType, Object entity, Field field) throws IllegalAccessException {
+        if ((field.getAnnotation(CreatedBy.class) != null && SqlCommandType.INSERT.equals(sqlCommandType))
+                || (field.getAnnotation(LastModifiedBy.class) != null && SqlCommandType.UPDATE.equals(sqlCommandType))) {
             field.setAccessible(true);
-            field.set(entity, operator);
-        }
-        // update
-        if (field.getAnnotation(LastModifiedBy.class) != null && SqlCommandType.UPDATE.equals(sqlCommandType)) {
-            field.setAccessible(true);
-            //兼容mybatis plus的 update
-            if (isPlugUpdate) {
-                Map updateParam = (Map) entity;
-                field.set(updateParam.get("param1"), operator);
-            } else {
-                field.set(entity, operator);
+            if (field.get(entity) == null) {
+                field.set(entity, SecurityUtils.getCurrentUsername());
             }
+            field.setAccessible(false);
         }
     }
 

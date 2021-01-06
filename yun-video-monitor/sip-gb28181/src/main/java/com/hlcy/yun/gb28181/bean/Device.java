@@ -68,6 +68,15 @@ public class Device {
         this.deviceId = deviceId;
     }
 
+    public DeviceChannel getAvailableChannel() {
+        if (channelMap != null && !channelMap.isEmpty()) {
+            for (DeviceChannel channel : channelMap.values()) {
+                if (channel.getStatus() == 1) return channel;
+            }
+        }
+        throw new IllegalStateException(String.format("The device<deviceId:%s> has not available channel.", deviceId));
+    }
+
     public Device setDeviceId(String deviceId) {
         this.deviceId = deviceId;
         return this;

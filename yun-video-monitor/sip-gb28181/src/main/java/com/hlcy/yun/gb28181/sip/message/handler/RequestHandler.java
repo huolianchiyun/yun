@@ -51,7 +51,7 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
      * @param event request event
      * @throws ParseException
      */
-    protected void sendAckResponse(RequestEvent event) throws ParseException {
+    protected void send200Response(RequestEvent event) throws ParseException {
         sendResponse(event, buildResponse(Response.OK, event.getRequest()));
     }
 

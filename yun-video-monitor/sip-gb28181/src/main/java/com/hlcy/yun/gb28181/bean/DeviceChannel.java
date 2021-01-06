@@ -1,8 +1,13 @@
 package com.hlcy.yun.gb28181.bean;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 
 @Getter
+@Setter
+@Accessors(chain = true)
 public class DeviceChannel {
 
     /**
@@ -126,123 +131,4 @@ public class DeviceChannel {
      */
     private double latitude;
 
-    public DeviceChannel setChannelId(String channelId) {
-        this.channelId = channelId;
-        return this;
-    }
-
-    public DeviceChannel setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public DeviceChannel setManufacture(String manufacture) {
-        this.manufacture = manufacture;
-        return this;
-    }
-
-    public DeviceChannel setModel(String model) {
-        this.model = model;
-        return this;
-    }
-
-    public DeviceChannel setOwner(String owner) {
-        this.owner = owner;
-        return this;
-    }
-
-    public DeviceChannel setCivilCode(String civilCode) {
-        this.civilCode = civilCode;
-        return this;
-    }
-
-    public DeviceChannel setBlock(String block) {
-        this.block = block;
-        return this;
-    }
-
-    public DeviceChannel setAddress(String address) {
-        this.address = address;
-        return this;
-    }
-
-    public DeviceChannel setParental(int parental) {
-        this.parental = parental;
-        return this;
-    }
-
-    public DeviceChannel setParentId(String parentId) {
-        this.parentId = parentId;
-        return this;
-    }
-
-    public DeviceChannel setSafetyWay(int safetyWay) {
-        this.safetyWay = safetyWay;
-        return this;
-    }
-
-    public DeviceChannel setRegisterWay(int registerWay) {
-        this.registerWay = registerWay;
-        return this;
-    }
-
-    public DeviceChannel setCertNum(String certNum) {
-        this.certNum = certNum;
-        return this;
-    }
-
-    public DeviceChannel setCertifiable(int certifiable) {
-        this.certifiable = certifiable;
-        return this;
-    }
-
-    public DeviceChannel setErrCode(int errCode) {
-        this.errCode = errCode;
-        return this;
-    }
-
-    public DeviceChannel setEndTime(String endTime) {
-        this.endTime = endTime;
-        return this;
-    }
-
-    public DeviceChannel setSecrecy(String secrecy) {
-        this.secrecy = secrecy;
-        return this;
-    }
-
-    public DeviceChannel setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-        return this;
-    }
-
-    public DeviceChannel setPort(int port) {
-        this.port = port;
-        return this;
-    }
-
-    public DeviceChannel setPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
-    /**
-     * 设置状态
-     * @param status 1：在线, 0：离线
-     * @return /
-     */
-    public DeviceChannel setStatus(int status) {
-        this.status = status;
-        return this;
-    }
-
-    public DeviceChannel setLongitude(double longitude) {
-        this.longitude = longitude;
-        return this;
-    }
-
-    public DeviceChannel setLatitude(double latitude) {
-        this.latitude = latitude;
-        return this;
-    }
 }

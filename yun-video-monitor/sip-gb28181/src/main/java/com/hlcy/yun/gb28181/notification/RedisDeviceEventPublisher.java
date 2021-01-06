@@ -1,7 +1,6 @@
 package com.hlcy.yun.gb28181.notification;
 
 import com.hlcy.yun.gb28181.notification.event.EventMap;
-import com.hlcy.yun.redis.stream.RedisStreamProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.data.redis.core.StringRedisTemplate;

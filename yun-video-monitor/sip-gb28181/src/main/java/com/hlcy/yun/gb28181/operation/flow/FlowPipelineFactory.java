@@ -27,12 +27,12 @@ class FlowPipelineFactory {
         map.put(PLAY, PLAY_PIPELINE);
 
         DefaultPipeline<ResponseProcessor, ResponseEvent> PLAYBACK_PIPELINE = new DefaultPipeline<>();
-        PLAY_PIPELINE.addLast("3-4", new MediaInviteResponseProcessor1());
-        PLAY_PIPELINE.addLast("5-6-7-8", new DeviceInviteResponseProcessor());
-        PLAY_PIPELINE.addLast("9-10-11-12", new MediaInviteResponseProcessor2());
-        PLAY_PIPELINE.addLast("16-17", new MediaByeResponseProcessor1());
-        PLAY_PIPELINE.addLast("18-19", new MediaByeResponseProcessor2());
-        PLAY_PIPELINE.addLast("20", new DeviceByeResponseProcessor());
+        PLAY_PIPELINE.addLast("3-4", new com.hlcy.yun.gb28181.operation.flow.playback.MediaInviteResponseProcessor1());
+        PLAY_PIPELINE.addLast("5-6-7-8", new com.hlcy.yun.gb28181.operation.flow.playback.DeviceInviteResponseProcessor());
+        PLAY_PIPELINE.addLast("9-10-11-12", new com.hlcy.yun.gb28181.operation.flow.playback.MediaInviteResponseProcessor2());
+        PLAY_PIPELINE.addLast("16-17", new com.hlcy.yun.gb28181.operation.flow.playback.MediaByeResponseProcessor1());
+        PLAY_PIPELINE.addLast("18-19", new com.hlcy.yun.gb28181.operation.flow.playback.MediaByeResponseProcessor2());
+        PLAY_PIPELINE.addLast("20", new com.hlcy.yun.gb28181.operation.flow.playback.DeviceByeResponseProcessor());
         map.put(PLAYBACK, PLAYBACK_PIPELINE);
 
 

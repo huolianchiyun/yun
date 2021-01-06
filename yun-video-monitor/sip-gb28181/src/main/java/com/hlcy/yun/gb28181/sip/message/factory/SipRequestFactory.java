@@ -76,6 +76,21 @@ public final class SipRequestFactory {
         }
     }
 
+    public static Request getInfoRequest(ClientTransaction clientTransaction, byte[] content) {
+        final Dialog dialog = clientTransaction.getDialog();
+        try {
+            final Request info = dialog.createRequest(Request.INFO);
+            HeaderFactory headerFactory = SipLayer.getHeaderFactory();
+            info.setContentLength(headerFactory.createContentLengthHeader(content.length));
+            ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader(CONTENT_TYPE, CONTENT_SUBTYPE_SDP);
+            info.setContent(content, contentTypeHeader);
+            return info;
+        } catch (InvalidArgumentException | SipException | ParseException e) {
+            log.error("Create a info request exception, cause: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
     public static Request getByeRequest(ClientTransaction clientTransaction) {
         final Dialog dialog = clientTransaction.getDialog();
         try {
