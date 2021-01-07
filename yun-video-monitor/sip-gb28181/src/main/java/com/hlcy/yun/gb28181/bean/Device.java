@@ -1,5 +1,6 @@
 package com.hlcy.yun.gb28181.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -68,6 +69,7 @@ public class Device {
         this.deviceId = deviceId;
     }
 
+    @JSONField(serialize = false)
     public DeviceChannel getAvailableChannel() {
         if (channelMap != null && !channelMap.isEmpty()) {
             for (DeviceChannel channel : channelMap.values()) {

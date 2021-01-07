@@ -10,6 +10,7 @@ import com.hlcy.yun.sys.modules.rights.service.MenuService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +95,22 @@ public class MenuMapperTest {
     public void testMenuTree(){
         Set<MenuDO> set = menuMapper.selectByCriteria(null);
         System.out.println(JSON.toJSONString(menuService.buildMenuTree(set), SerializerFeature.WriteNullListAsEmpty));
+    }
 
+    @WithMockUser(username = "test")
+    @Test
+    public void testInsert(){
+        final MenuDO menuDO = new MenuDO();
+        menuDO.setMenuType(MenuDO.MenuType.MENU);
+        menuDO.setMenuCode("99999999999999");
+        menuDO.setMenuTitle("888888888888888");
+        menuMapper.insert(menuDO);
+    }
+
+    @WithMockUser(username = "test")
+    @Test
+    public void testSelect(){
+        System.out.println(menuMapper.selectByPrimaryKey(8L));
     }
 
 }

@@ -187,7 +187,7 @@ public class MessageRequestHandler extends RequestHandler {
                 channelMap.put(channelDeviceId, new DeviceChannel()
                         .setName(XmlUtil.getTextOf(itemDevice.element("Name")))
                         .setChannelId(channelDeviceId)
-                        .setStatus(Integer.parseInt(XmlUtil.getOrDefaultTextOf(itemDevice.element("Status"), "1")))
+                        .setStatus(XmlUtil.getOrDefaultTextOf(itemDevice.element("Status"), "ON").equalsIgnoreCase("ON") ? 1 : 0)
                         .setManufacture(XmlUtil.getTextOfChildTagFrom(itemDevice, "Manufacturer"))
                         .setModel(XmlUtil.getTextOfChildTagFrom(itemDevice, "Model"))
                         .setOwner(XmlUtil.getTextOfChildTagFrom(itemDevice, "Owner"))
