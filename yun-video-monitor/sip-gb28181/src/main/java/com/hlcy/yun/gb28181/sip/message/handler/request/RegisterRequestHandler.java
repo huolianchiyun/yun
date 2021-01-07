@@ -86,7 +86,7 @@ public class RegisterRequestHandler extends RequestHandler {
         if (request.getHeader(ProxyAuthorizationHeader.NAME) == null) {
             log.warn("Will reply 401 after not carrying authorization.");
             isPass = false;
-        } else if (DigestServerAuthHelper.authenticatePlainTextPassword(request)) {
+        } else if (!DigestServerAuthHelper.authenticatePlainTextPassword(request)) {
             log.warn("Will reply 401 after sip sever's password isn't correct.");
             isPass = false;
         }
