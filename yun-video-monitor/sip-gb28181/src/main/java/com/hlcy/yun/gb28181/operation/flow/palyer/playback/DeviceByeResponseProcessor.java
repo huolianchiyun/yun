@@ -1,4 +1,4 @@
-package com.hlcy.yun.gb28181.operation.flow.playback;
+package com.hlcy.yun.gb28181.operation.flow.palyer.playback;
 
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;

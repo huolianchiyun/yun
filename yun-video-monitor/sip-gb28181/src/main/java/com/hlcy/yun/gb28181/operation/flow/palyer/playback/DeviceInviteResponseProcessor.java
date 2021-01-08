@@ -1,10 +1,10 @@
-package com.hlcy.yun.gb28181.operation.flow.playback;
+package com.hlcy.yun.gb28181.operation.flow.palyer.playback;
 
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
-import com.hlcy.yun.gb28181.operation.flow.play.PlaySession;
+import com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 
@@ -35,9 +35,9 @@ public class DeviceInviteResponseProcessor extends ResponseProcessor {
         final Request inviteRequest4Device = deviceTransaction.getRequest();
         final GB28181Properties properties = context.getProperties();
         Request inviteRequest2media = SipRequestFactory.getInviteRequest(
-                SipRequestFactory.createTo("media", properties.getMediaIp(), properties.getMediaPort()),
+                SipRequestFactory.createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaPort()),
                 SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                context.getDevice().getTransport(),
+                context.getPlaybackParams().getDeviceTransport(),
                 inviteRequest4Device.getRawContent());
 
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);

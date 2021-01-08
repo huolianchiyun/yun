@@ -2,35 +2,32 @@ package com.hlcy.yun.gb28181.operation.flow;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
-import com.hlcy.yun.gb28181.bean.Device;
-import com.hlcy.yun.gb28181.bean.PlaybackInfo;
+import com.hlcy.yun.gb28181.bean.api.PlayParams;
+import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.operation.Operation;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
-
 import javax.sip.ClientTransaction;
 import java.util.Iterator;
 
 public class FlowContext {
+    private static GB28181Properties properties;
     private final TimedCache<Enum, ClientTransaction> SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
     private final Operation operation;
     private ResponseProcessor currentProcessor;
-    private GB28181Properties properties;
-    private Device device;
-    private PlaybackInfo playbackInfo;
+    private PlayParams playParams;
+    private PlaybackParams playbackParams;
     private String ssrc;
 
-    public FlowContext(Operation operation, Device device, GB28181Properties properties) {
+    public FlowContext(Operation operation, PlayParams playParams) {
         this.operation = operation;
-        this.device = device;
-        this.properties = properties;
+        this.playParams = playParams;
         this.currentProcessor = FlowPipelineFactory.getFlowPipeline(operation).first();
     }
 
-    public FlowContext(Operation operation, PlaybackInfo playbackInfo, GB28181Properties properties) {
+    public FlowContext(Operation operation, PlaybackParams playbackParams) {
         this.operation = operation;
-        this.playbackInfo = playbackInfo;
-        this.properties = properties;
+        this.playbackParams = playbackParams;
         this.currentProcessor = FlowPipelineFactory.getFlowPipeline(operation).first();
     }
 
@@ -45,16 +42,20 @@ public class FlowContext {
         this.currentProcessor = this.currentProcessor.getNextProcessor();
     }
 
+    public static void setProperties(GB28181Properties properties){
+        FlowContext.properties = properties;
+    }
+
     public Operation getOperation() {
         return operation;
     }
 
-    public Device getDevice() {
-        return device;
+    public PlayParams getPlayParams() {
+        return playParams;
     }
 
-    public PlaybackInfo getPlaybackInfo() {
-        return playbackInfo;
+    public PlaybackParams getPlaybackParams() {
+        return playbackParams;
     }
 
     public GB28181Properties getProperties() {

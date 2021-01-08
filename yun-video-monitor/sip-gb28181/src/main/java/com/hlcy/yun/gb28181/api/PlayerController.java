@@ -1,10 +1,10 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
-import com.hlcy.yun.gb28181.bean.PlaybackInfo;
+import com.hlcy.yun.gb28181.bean.api.PlayParams;
+import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.Player;
-import com.hlcy.yun.gb28181.bean.Device;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,31 +22,25 @@ public class PlayerController {
     private final Player player;
 
     @PostMapping("/play")
-    public DeferredResult<ResponseEntity<ResponseData>> play(@RequestBody Device device) {
+    public DeferredResult<ResponseEntity<ResponseData>> play(@RequestBody PlayParams playParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAY + device.getDeviceId(), result);
-        player.play(device);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAY + playParams.getChannelId(), result);
+        player.play(playParams);
         return result;
     }
 
-    @PostMapping("/play/stop/{ssrc}")
+    @PostMapping("/stop/{ssrc}")
     public ResponseEntity<ResponseData<Void>> playStop(@PathVariable String ssrc) {
-        player.playStop(ssrc);
+        player.stop(ssrc);
         return success();
     }
 
     @PostMapping("/playback")
-    public DeferredResult<ResponseEntity<ResponseData>> playback(@RequestBody PlaybackInfo playbackInfo) {
+    public DeferredResult<ResponseEntity<ResponseData>> playback(@RequestBody PlaybackParams playbackParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAYBACK + playbackInfo.getDeviceId(), result);
-        player.playback(playbackInfo);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAYBACK + playbackParams.getChannelId(), result);
+        player.playback(playbackParams);
         return result;
-    }
-
-    @PostMapping("/playback/stop/{ssrc}")
-    public ResponseEntity<ResponseData<Void>> playback(@PathVariable String ssrc) {
-        player.playbackStop(ssrc);
-        return success();
     }
 
     @PostMapping("/playback/scale/{scale}/{ssrc}")

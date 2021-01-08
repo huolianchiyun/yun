@@ -1,7 +1,8 @@
-package com.hlcy.yun.gb28181.bean;
+package com.hlcy.yun.admincenter.modules.device.listener.event;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.util.Map;
 
 @Getter

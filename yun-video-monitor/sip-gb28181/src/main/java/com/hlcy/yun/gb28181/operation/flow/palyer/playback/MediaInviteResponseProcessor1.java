@@ -1,17 +1,18 @@
-package com.hlcy.yun.gb28181.operation.flow.playback;
+package com.hlcy.yun.gb28181.operation.flow.palyer.playback;
 
-import com.hlcy.yun.gb28181.bean.Device;
-import com.hlcy.yun.gb28181.bean.DeviceChannel;
-import com.hlcy.yun.gb28181.bean.PlaybackInfo;
+import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.exception.SSRCException;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
+import com.hlcy.yun.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
-import com.hlcy.yun.gb28181.operation.flow.play.PlaySession;
+import com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.util.SSRCUtil;
+import com.hlcy.yun.gb28181.util.SSRCManger;
 import gov.nist.javax.sdp.fields.SessionNameField;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sdp.SdpException;
 import javax.sdp.SessionDescription;
@@ -29,6 +30,7 @@ import java.util.Vector;
  * 4:SIP服务器收到媒体服务器返回的200OK响应后,向媒体流发送者发送Invite请求,请求中携带消息3中媒体服务器回复的200OK响应消息体,s字段为“Playback”代表历史回放,u字段代表回放通道ID和回放类型,t字段代表回放时间段,增加y字段描述SSRC值,f字段描述媒体参数。<br/>
  * </p>
  */
+@Slf4j
 public class MediaInviteResponseProcessor1 extends ResponseProcessor {
 
     /**
@@ -88,18 +90,20 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
         SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
         sessionDescription.setSessionName(sessionNameField);
 
-        final PlaybackInfo playbackInfo = context.getPlaybackInfo();
-        sessionDescription.setTimeDescriptions(new Vector<>(Arrays.asList(playbackInfo.getStartTimestamp(), playbackInfo.getEndTimestamp())));
-        final String ssrc = SSRCUtil.getPlaySsrc();
+        final PlaybackParams playbackParams = context.getPlaybackParams();
+        sessionDescription.setTimeDescriptions(new Vector<>(Arrays.asList(playbackParams.getStartTimestamp(), playbackParams.getEndTimestamp())));
+
+        final String ssrc = getSSRC(context);
+
         StringBuilder content = new StringBuilder(sessionDescription.toString())
-                .append("u=").append(playbackInfo.getChannelId()).append(":").append(playbackInfo.getPlaybackType()).append("\r\n")
+                .append("u=").append(playbackParams.getChannelId()).append(":").append(playbackParams.getPlaybackType()).append("\r\n")
                 .append("y=").append(ssrc).append("\r\n");
 
         GB28181Properties properties = context.getProperties();
         Request inviteRequest2device = SipRequestFactory.getInviteRequest(
-                SipRequestFactory.createTo(playbackInfo.getDeviceId(), playbackInfo.getDeviceIp(), playbackInfo.getDevicePort()),
+                SipRequestFactory.createTo(playbackParams.getChannelId(), playbackParams.getDeviceIp(), playbackParams.getDevicePort()),
                 SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                playbackInfo.getTransport(),
+                playbackParams.getDeviceTransport(),
                 content.toString().getBytes(StandardCharsets.UTF_8));
 
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2device);
@@ -107,5 +111,16 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
         context.setSsrc(ssrc);
         context.put(PlaySession.SIP_DEVICE_SESSION, clientTransaction);
         FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
+    }
+
+    private String getSSRC(FlowContext context) {
+        try {
+            return SSRCManger.getPlaySSRC();
+        } catch (SSRCException e) {
+            log.warn(e.getMessage());
+            DeferredResultHolder.setErrorDeferredResultForRequest(
+                    DeferredResultHolder.CALLBACK_CMD_PLAYBACK + context.getPlayParams().getChannelId(), e.getMessage());
+            throw e;
+        }
     }
 }

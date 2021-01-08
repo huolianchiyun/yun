@@ -1,4 +1,4 @@
-package com.hlcy.yun.gb28181.operation.flow.play;
+package com.hlcy.yun.gb28181.operation.flow.palyer.play;
 
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;

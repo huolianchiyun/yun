@@ -4,7 +4,7 @@ import com.hlcy.yun.gb28181.sip.auth.DigestServerAuthHelper;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.SIpPipelineFactory;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.util.SSRCUtil;
+import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
@@ -66,7 +66,7 @@ public class SipLayer implements SipListener {
 
         SipRequestFactory.setSipFactory(sipFactory);
 
-        SSRCUtil.setSsrcPrefix(properties.getSipDomain().substring(3, 8));
+        SSRCManger.setSsrc4to8bit(properties.getSipDomain().substring(3, 8));
     }
 
     /**

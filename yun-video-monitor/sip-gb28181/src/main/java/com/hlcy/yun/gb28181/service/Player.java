@@ -1,42 +1,34 @@
 package com.hlcy.yun.gb28181.service;
 
-import com.hlcy.yun.gb28181.bean.Device;
-import com.hlcy.yun.gb28181.bean.PlaybackInfo;
+import com.hlcy.yun.gb28181.bean.api.PlayParams;
+import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 
 public interface Player {
 
     /**
      * 点播
      *
-     * @param device /
+     * @param params /
      */
-    void play(Device device);
+    void play(PlayParams params);
 
     /**
-     * 点播停止
+     * 停止点播或回放
      *
      * @param ssrc /
      */
-    void playStop(String ssrc);
+    void stop(String ssrc);
 
     /**
      * 回放播放
-     * @param playbackInfo /
+     * @param playbackParams /
      */
-    void playback(PlaybackInfo playbackInfo);
-
-    /**
-     * 点播停止
-     *
-     * @param ssrc /
-     */
-    void playbackStop(String ssrc);
+    void playback(PlaybackParams playbackParams);
 
     /**
      * 回放快进或倒放
      */
     void playbackForwardOrkBack(String ssrc, double scale);
-
 
     /**
      * 回放拖动

@@ -1,10 +1,13 @@
 package com.hlcy.yun.gb28181.config;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-@lombok.Data
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "gb28181")
 public class GB28181Properties {
 
@@ -17,6 +20,8 @@ public class GB28181Properties {
     private String sipId;
 
     private String sipPassword;
+
+    private String mediaId;
 
     private String mediaIp;
 

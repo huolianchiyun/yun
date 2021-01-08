@@ -76,10 +76,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--configuration 解决spring-boot-maven-plugin 插件，打包的Jar包可以直接运行，但是不可其他模块依赖的问题！-->
-                <configuration>
-                    <classifier>execute</classifier>
-                </configuration>
             </plugin>
         </plugins>
     </build>

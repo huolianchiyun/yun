@@ -5,8 +5,6 @@ import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.gb28181.bean.DeviceChannel;
 import com.hlcy.yun.gb28181.bean.RecordInfo;
 import com.hlcy.yun.gb28181.bean.RecordItem;
-import com.hlcy.yun.gb28181.operation.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import com.hlcy.yun.gb28181.notification.PublisherFactory;
 import com.hlcy.yun.gb28181.notification.event.KeepaliveEvent;
@@ -21,7 +19,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import javax.sip.ClientTransaction;
 import javax.sip.RequestEvent;
 import javax.sip.message.Request;
 import java.io.ByteArrayInputStream;
@@ -30,10 +27,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.hlcy.yun.gb28181.operation.flow.play.PlaySession.SIP_MEDIA_SESSION_2;
-import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendRequest;
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.getByeRequest;
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.getCallId;
 import static com.hlcy.yun.gb28181.sip.message.handler.request.MessageRequestHandler.CmdTypeStrategyFactory.*;
 import static com.hlcy.yun.gb28181.sip.message.handler.request.MessageRequestHandler.CmdTypeStrategyFactory.MESSAGE_ALARM;
 

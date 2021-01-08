@@ -1,14 +1,17 @@
-package com.hlcy.yun.gb28181.operation.flow.play;
+package com.hlcy.yun.gb28181.operation.flow.palyer.play;
 
-import com.hlcy.yun.gb28181.bean.Device;
+import com.hlcy.yun.gb28181.bean.api.PlayParams;
+import com.hlcy.yun.gb28181.exception.SSRCException;
+import com.hlcy.yun.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
-import com.hlcy.yun.gb28181.util.SSRCUtil;
+import com.hlcy.yun.gb28181.util.SSRCManger;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
 import gov.nist.javax.sdp.fields.SessionNameField;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sdp.SdpException;
 import javax.sdp.SessionDescription;
@@ -24,47 +27,46 @@ import java.nio.charset.StandardCharsets;
  * 4:SIP服务器收到媒体服务器返回的200OK响应后,向媒体流发送者发送Invite请求,请求中携带消息3中媒体服务器回复的200OK响应消息体,s字段为“Play”代表实时点播,增加y字段描述SSRC值,f字段描述媒体参数。<br/>
  * </p>
  */
+@Slf4j
 public class MediaInviteResponseProcessor1 extends ResponseProcessor {
 
     /**
      * 流媒体服务器 200OK 响应的消息体
      * v=0
-     * o=6401000000202000000100INIP4172.18.16.3
+     * o=64010000002020000001 0 0 IN IP4 172.18.16.3
      * s=##ms20091214119
-     * c=INIP4172.18.16.3
-     * t=00
-     * m=video6000RTP/AVP969897
+     * c=IN IP4 172.18.16.3
+     * t=0 0
+     * m=video 6000 RTP/AVP 96 98 97
      * a=recvonly
-     * a=rtpmap:96PS/90000
+     * a=rtpmap:96 PS/90000
      * <p>
      * 发送给设备(媒体流发送者)的 SDP 消息体
      * v=0
-     * o=6401000000202000000100INIP4172.18.16.3
+     * o=64010000002020000001 0 0 IN IP4 172.18.16.3
      * s=Play
-     * c=INIP4172.18.16.3
+     * c=IN IP4 172.18.16.3
      * t=00
-     * m=video6000RTP/AVP969897
+     * m=video 6000 RTP/AVP 96 98 97
      * a=recvonly
-     * a=rtpmap:96PS/90000
-     * a=rtpmap:98H264/90000
-     * a=rtpmap:97MPEG4/90000
+     * a=rtpmap:96 PS/90000
+     * a=rtpmap:98 H264/90000
+     * a=rtpmap:97 MPEG4/90000
      * y=0100000001
      */
     @Override
     protected void process(ResponseEvent event, FlowContext context) throws SdpException {
-        SessionNameField sessionNameField = new SessionNameField();
-        sessionNameField.setSessionName("Play");
-        SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
-        sessionDescription.setSessionName(sessionNameField);
+        SessionDescription sessionDescription = extractSessionDescAndSetSessionName(event);
 
-        Device device = context.getDevice();
+        final PlayParams playParams = context.getPlayParams();
         GB28181Properties properties = context.getProperties();
-        final String ssrc = SSRCUtil.getPlaySsrc();
+
+        String ssrc = getSSRC(context);
 
         Request inviteRequest2device = SipRequestFactory.getInviteRequest(
-                SipRequestFactory.createTo(device.getDeviceId(), device.getIp(), device.getPort()),
+                SipRequestFactory.createTo(playParams.getChannelId(), playParams.getDeviceIp(), playParams.getDevicePort()),
                 SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                device.getTransport(),
+                playParams.getDeviceTransport(),
                 (sessionDescription.toString() + "y=" + ssrc + "\r\n").getBytes(StandardCharsets.UTF_8));
 
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2device);
@@ -73,5 +75,24 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
         context.put(PlaySession.SIP_DEVICE_SESSION, clientTransaction);
 
         FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
+    }
+
+    private SessionDescription extractSessionDescAndSetSessionName(ResponseEvent event) throws SdpException {
+        SessionNameField sessionNameField = new SessionNameField();
+        sessionNameField.setSessionName("Play");
+        SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
+        sessionDescription.setSessionName(sessionNameField);
+        return sessionDescription;
+    }
+
+    private String getSSRC(FlowContext context) {
+        try {
+            return SSRCManger.getPlaySSRC();
+        } catch (SSRCException e) {
+            log.warn(e.getMessage());
+            DeferredResultHolder.setErrorDeferredResultForRequest(
+                    DeferredResultHolder.CALLBACK_CMD_PLAY + context.getPlayParams().getChannelId(), e.getMessage());
+            throw e;
+        }
     }
 }

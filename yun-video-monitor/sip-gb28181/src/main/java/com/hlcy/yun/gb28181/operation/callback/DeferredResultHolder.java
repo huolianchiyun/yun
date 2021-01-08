@@ -45,4 +45,21 @@ public final class DeferredResultHolder {
             REQUEST_DEFERRED_RESULT_CACHE.remove(requestId);
         }
     }
+
+    /**
+     * 设置 Http 请求异步异常响应结果
+     *
+     * @param requestId /
+     * @param message   异常信息
+     */
+    public synchronized static void setErrorDeferredResultForRequest(String requestId, String message) {
+        List<DeferredResult<ResponseEntity<ResponseData>>> results = REQUEST_DEFERRED_RESULT_CACHE.get(requestId);
+        try {
+            if (results != null && !results.isEmpty()) {
+                results.forEach(result -> result.setResult(error(message)));
+            }
+        } finally {
+            REQUEST_DEFERRED_RESULT_CACHE.remove(requestId);
+        }
+    }
 }
