@@ -96,7 +96,7 @@ public final class SipRequestFactory {
         try {
             return dialog.createRequest(Request.BYE);
         } catch (SipException e) {
-            log.error("Create a ack request exception, cause: {}", e.getMessage());
+            log.error("Create a bye request exception, cause: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -152,9 +152,6 @@ public final class SipRequestFactory {
 
             // Call-ID
             CallIdHeader callIdHeader = SipLayer.getSipProvider(SipLayer.getTransport(transport)).getNewCallId();
-
-            //TODO 调试写死
-            callIdHeader.setCallId("667d46b3cb3e81f9bd27d8e6ed7991d1@192.168.11.1");
 
             // Via
             ViaHeader viaHeader = headerFactory.createViaHeader(from.host.ip, from.host.port, transport, viaBranch); // viaBranch may be null, but not empty.
