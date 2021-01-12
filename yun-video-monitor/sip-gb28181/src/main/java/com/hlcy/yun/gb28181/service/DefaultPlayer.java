@@ -12,6 +12,7 @@ import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
@@ -48,8 +49,6 @@ public class DefaultPlayer implements Player {
         // 点播 15:SIP服务器收到BYE消息后向媒体服务器发送BYE消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
         // 回放 23:SIP服务器收到 BYE 消息后向媒体服务器发送 BYE 消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
         final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
-
-        // TODO 判断是否已经关闭流
         final Request bye = getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
         FlowContextCache.setNewKey(ssrc, getCallId(bye));
@@ -58,6 +57,7 @@ public class DefaultPlayer implements Player {
 
     private ClientTransaction getMediaByeClientTransaction(String ssrc) {
         final FlowContext context = FlowContextCache.get(ssrc);
+        Assert.notNull(context, String.format("该媒体流已关闭，SSRC：%S", ssrc));
         final ClientTransaction clientTransaction;
         if (Operation.PLAY == context.getOperation()) {
             clientTransaction = context.get(SIP_MEDIA_SESSION_2);

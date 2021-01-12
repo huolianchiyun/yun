@@ -1,5 +1,6 @@
 package com.hlcy.yun.gb28181.operation.flow.palyer.play;
 
+import com.hlcy.yun.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
@@ -10,6 +11,7 @@ import com.hlcy.yun.gb28181.operation.ResponseProcessor;
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
+import javax.sip.message.Response;
 
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createFrom;
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createTo;
@@ -26,25 +28,40 @@ import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createT
 public class DeviceInviteResponseProcessor extends ResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
-        final ClientTransaction mediaTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_1);
-        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
-        RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
+        if (!process486Response(event, context)){
+            final ClientTransaction mediaTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_1);
+            final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
+            RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
 
-        final ClientTransaction deviceTransaction = context.get(PlaySession.SIP_DEVICE_SESSION);
-        final Request ackRequest4Device = SipRequestFactory.getAckRequest(deviceTransaction);
-        RequestSender.sendAckRequest(ackRequest4Device, deviceTransaction);
+            final ClientTransaction deviceTransaction = context.get(PlaySession.SIP_DEVICE_SESSION);
+            final Request ackRequest4Device = SipRequestFactory.getAckRequest(deviceTransaction);
+            RequestSender.sendAckRequest(ackRequest4Device, deviceTransaction);
 
-        final Request inviteRequest4Device = deviceTransaction.getRequest();
-        final GB28181Properties properties = context.getProperties();
-        Request inviteRequest2media = SipRequestFactory.getInviteRequest(
-                SipRequestFactory.createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaPort()),
-                SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                context.getPlayParams().getDeviceTransport(),
-                inviteRequest4Device.getRawContent());
+            final Request inviteRequest4Device = deviceTransaction.getRequest();
+            final GB28181Properties properties = context.getProperties();
+            Request inviteRequest2media = SipRequestFactory.getInviteRequest(
+                    SipRequestFactory.createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaPort()),
+                    SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
+                    context.getPlayParams().getDeviceTransport(),
+                    inviteRequest4Device.getRawContent());
 
-        final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);
+            final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);
 
-        context.put(PlaySession.SIP_MEDIA_SESSION_2, clientTransaction);
-        FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2media));
+            context.put(PlaySession.SIP_MEDIA_SESSION_2, clientTransaction);
+            FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2media));
+        }
+
+    }
+
+    private boolean process486Response(ResponseEvent event, FlowContext context) {
+        if(event.getResponse().getStatusCode() == Response.BUSY_HERE){
+            DeferredResultHolder.setErrorDeferredResultForRequest(
+                    DeferredResultHolder.CALLBACK_CMD_PLAY + context.getPlayParams().getChannelId(),
+                    "设备繁忙，请稍后再试！");
+
+
+            return true;
+        }
+        return false;
     }
 }
