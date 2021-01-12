@@ -1,6 +1,7 @@
 package com.hlcy.yun.gb28181.sip.client;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +19,7 @@ public final class RequestSender {
             clientTransaction.sendRequest();
             return clientTransaction;
         } catch (SipException e) {
-            log.error("Send a request({}) message failed, \ncause: {}", JSON.toJSONString(request), e.getMessage());
+            log.error("Send a request({}) message failed, \ncause: {}", JSON.toJSONString(request, SerializerFeature.IgnoreNonFieldGetter), e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -28,7 +29,17 @@ public final class RequestSender {
         try {
             transaction.getDialog().sendAck(ack);
         } catch (SipException e) {
-            log.error("Send a ack request({}) message failed, \ncause: {}", JSON.toJSONString(ack), e.getMessage());
+            log.error("Send a ack request({}) message failed, \ncause: {}", JSON.toJSONString(ack, SerializerFeature.IgnoreNonFieldGetter), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendByeRequest(Request bye, ClientTransaction transaction) {
+        final SipProvider sipProvider = SipLayer.getSipProvider(SipLayer.getTransport(((ViaHeader) bye.getHeader(ViaHeader.NAME)).getTransport()));
+        try {
+            transaction.getDialog().sendRequest(sipProvider.getNewClientTransaction(bye));
+        } catch (SipException e) {
+            log.error("Send a bye request({}) message failed, \ncause: {}", JSON.toJSONString(bye, SerializerFeature.IgnoreNonFieldGetter), e.getMessage());
             e.printStackTrace();
         }
     }

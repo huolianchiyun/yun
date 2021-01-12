@@ -27,8 +27,6 @@ public class PtzCmd implements ControlCmd<PtzParams> {
                 .append("<SN>").append((int) ((Math.random() * 9 + 1) * 100000)).append("</SN>")
                 .append("<DeviceID>").append(ptzParams.getChannelId()).append("</DeviceID>")
                 .append("<PTZCmd>").append(buildPTZCmd(ptzParams)).append("</PTZCmd>")
-                .append("<Info>")
-                .append("</Info>")
                 .append("</Control>");
 
         Request request = SipRequestFactory.getMessageRequest(

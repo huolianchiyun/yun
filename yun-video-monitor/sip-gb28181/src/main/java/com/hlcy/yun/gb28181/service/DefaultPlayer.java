@@ -3,7 +3,7 @@ package com.hlcy.yun.gb28181.service;
 import com.hlcy.yun.gb28181.bean.api.PlayParams;
 import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.operation.Operation;
+import com.hlcy.yun.gb28181.operation.flow.Operation;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.flow.palyer.playback.PlaybackSession;
@@ -12,9 +12,12 @@ import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
+
+import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendByeRequest;
 import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendRequest;
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.*;
 import static com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession.SIP_MEDIA_SESSION_1;
@@ -45,8 +48,10 @@ public class DefaultPlayer implements Player {
         // 点播 15:SIP服务器收到BYE消息后向媒体服务器发送BYE消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
         // 回放 23:SIP服务器收到 BYE 消息后向媒体服务器发送 BYE 消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
         final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
+
+        // TODO 判断是否已经关闭流
         final Request bye = getByeRequest(clientTransaction);
-        sendRequest(bye);
+        sendByeRequest(bye, clientTransaction);
         FlowContextCache.setNewKey(ssrc, getCallId(bye));
         SSRCManger.releaseSSRC(ssrc);
     }

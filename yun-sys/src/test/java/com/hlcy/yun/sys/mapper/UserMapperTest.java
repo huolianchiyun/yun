@@ -48,6 +48,7 @@ public class UserMapperTest {
     }
 
     @Test
+    @WithMockUser(username = "test")
     public void testInsert() {
         UserDO user = new UserDO();
         user.setUsername("lisi");
@@ -56,6 +57,21 @@ public class UserMapperTest {
         user.setPwd("12345678991");
 
         userMapper.insert(user);
+        System.out.println("user:" + user.toString());
+
+    }
+
+    @Test
+    @WithMockUser(username = "test")
+    public void testUpdate() {
+        UserDO user = new UserDO();
+        user.setId(31L);
+        user.setUsername("999999");
+        user.setNickname("李四");
+        user.setPhone("12345678991");
+        user.setPwd("12345678991");
+
+        userMapper.updateByPrimaryKeySelective(user);
         System.out.println("user:" + user.toString());
 
     }

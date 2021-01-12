@@ -30,7 +30,7 @@ public class PlayerController {
     }
 
     @PostMapping("/stop/{ssrc}")
-    public ResponseEntity<ResponseData<Void>> playStop(@PathVariable String ssrc) {
+    public ResponseEntity<ResponseData<Void>> stop(@PathVariable String ssrc) {
         player.stop(ssrc);
         return success();
     }

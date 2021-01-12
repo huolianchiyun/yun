@@ -1,15 +1,14 @@
 package com.hlcy.yun.gb28181.operation.flow;
 
 import com.hlcy.yun.gb28181.sip.message.DefaultPipeline;
-import com.hlcy.yun.gb28181.operation.Operation;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
 import com.hlcy.yun.gb28181.operation.flow.palyer.play.*;
 import javax.sip.ResponseEvent;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import static com.hlcy.yun.gb28181.operation.Operation.PLAY;
-import static com.hlcy.yun.gb28181.operation.Operation.PLAYBACK;
+import static com.hlcy.yun.gb28181.operation.flow.Operation.PLAY;
+import static com.hlcy.yun.gb28181.operation.flow.Operation.PLAYBACK;
 
 class FlowPipelineFactory {
     private static final Map<Operation, DefaultPipeline<ResponseProcessor, ResponseEvent>> PIPELINE_CONTAINER;

@@ -12,11 +12,9 @@ import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
-
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -44,7 +42,7 @@ public class AuditInterceptor implements Interceptor {
             }
             // 获取将要持久化的实体对象
             Object entity = invocation.getArgs()[1];
-            if (!processCollectionEntity(sqlCommandType, entity)) {
+            if (!processParamMap(sqlCommandType, entity)) {
                 Field[] declaredFields = getFieldsWithSuperFields(entity.getClass());
                 auditEntity(sqlCommandType, entity, declaredFields);
             }
@@ -52,22 +50,27 @@ public class AuditInterceptor implements Interceptor {
         return invocation.proceed();
     }
 
-    private boolean processCollectionEntity(SqlCommandType sqlCommandType, Object entity) throws IllegalAccessException {
+    private boolean processParamMap(SqlCommandType sqlCommandType, Object entity) throws IllegalAccessException {
         if (entity instanceof MapperMethod.ParamMap) {
-            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) entity;
-            final Object[] entities;
-            if (paramMap.containsKey("collection")) {
-                entities = ((Collection) paramMap.get("collection")).toArray();
-            } else {
-                entities = ((Collection) paramMap.get("param1")).toArray();
-            }
+            processCollectionType(sqlCommandType, (MapperMethod.ParamMap) entity);
+            return true;
+        }
+        return false;
+    }
+
+    private void processCollectionType(SqlCommandType sqlCommandType, MapperMethod.ParamMap paramMap) throws IllegalAccessException {
+        Object[] entities = new Object[0];
+        if (paramMap.containsKey("collection") && paramMap.get("collection") instanceof Collection) {
+            entities = ((Collection) paramMap.get("collection")).toArray();
+        } else if (paramMap.containsKey("param1") && paramMap.get("param1") instanceof Collection) {
+            entities = ((Collection) paramMap.get("param1")).toArray();
+        }
+        if (entities.length > 0) {
             final Field[] declaredFields = getFieldsWithSuperFields(entities[0].getClass());
             for (Object o : entities) {
                 auditEntity(sqlCommandType, o, declaredFields);
             }
-            return true;
         }
-        return false;
     }
 
     private void auditEntity(SqlCommandType sqlCommandType, Object entity, Field[] declaredFields) throws IllegalAccessException {

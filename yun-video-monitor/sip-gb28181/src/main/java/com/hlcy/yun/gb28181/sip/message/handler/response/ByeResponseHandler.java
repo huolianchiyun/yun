@@ -13,7 +13,7 @@ public class ByeResponseHandler extends ResponseHandler {
 
     @Override
     public void doHandle(ResponseEvent event) {
-        log.info("Receive a bye response: {}.", event.getResponse());
+        log.info("Receive a bye response: {}", event.getResponse());
         if (event.getResponse().getStatusCode() == Response.OK) {
             getFlowContext(event).getProcessor().handle(event);
         }

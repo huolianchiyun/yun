@@ -108,7 +108,7 @@ public class MyEnumTypeHandler<E extends Enum & BaseEnumValue> extends BaseTypeH
             static <E extends Enum<E> & BaseEnumValue> E valueOf(Class<E> enumClass, Object code) {
                 E[] enumConstants = enumClass.getEnumConstants();
                 for (E e : enumConstants) {
-                    if (e.getValue().equals(code)) {
+                    if (String.valueOf(e.getValue()).equalsIgnoreCase(String.valueOf(code))) {
                         return e;
                     }
                 }
