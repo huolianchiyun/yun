@@ -19,7 +19,6 @@
     <modules>
         <module>yun-common-starter</module>
         <module>yun-sys</module>
-        <module>yun-test</module>
         <module>yun-antlr</module>
         <module>yun-workflow</module>
         <module>yun-monitor</module>

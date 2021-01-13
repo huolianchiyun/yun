@@ -1,4 +1,4 @@
-package com.hlcy.yun.sys.modules.common.config;
+package com.hlcy.yun.gb28181.config;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.classmate.TypeResolver;
@@ -11,19 +11,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import springfox.documentation.builders.*;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.WildcardType;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.*;
-import java.util.List;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
@@ -34,11 +37,6 @@ public class SwaggerConfig {
     @Autowired
     private TypeResolver typeResolver;
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
-    @Value("${jwt.token-start-with}")
-    private String tokenStartWith;
 
     @Value("${swagger.enable}")
     private Boolean enable;
@@ -46,25 +44,18 @@ public class SwaggerConfig {
     /**
      * 业务系统组名
      */
-    @Value("${swagger.groupName:业务接口: 接口文档V1.0}")
+    @Value("${swagger.groupName:GB28181: 接口文档V1.0}")
     private String groupName;
 
     /**
      * 业务系统总的 api前缀
      */
-    @Value("${swagger.baseUrl:/api/**}")
+    @Value("${swagger.baseUrl:/yun/**}")
     private String baseUrl;
 
     @Bean
     public Docket api() {
-        return getDocket(baseUrl, groupName, "业务接口", "", "1.0", enable);
-    }
-
-
-    @Bean
-    public Docket yunrights_api() {
-        return getDocket("/yun/**", "系统权限: yun-rights-接口文档V1.0", "权限接口",
-                "一个简单且易上手的 Spring boot 权限框架", "1.0", enable);
+        return getDocket(baseUrl, groupName, "GB28181 接口", "", "1.0", enable);
     }
 
     private Docket getDocket(String baseUrl, String groupName, String title, String description, String version, Boolean enable) {
@@ -75,7 +66,7 @@ public class SwaggerConfig {
                         .title(title)
                         .version(version)
                         .build())
-                //修正Byte转string的Bug
+                //修正 Byte 转 string 的 Bug
                 .directModelSubstitute(Byte.class, Integer.class)
                 .select()
                 .apis(RequestHandlerSelectors.any())
@@ -91,15 +82,7 @@ public class SwaggerConfig {
                 )
                 // 支持的通讯协议集合
                 .protocols(new LinkedHashSet<>(
-                        Arrays.asList("https", "http")))
-                // 授权信息设置，必要的header token等认证信息
-                .securitySchemes(Collections.singletonList(
-                        new ApiKey(tokenHeader, "token", "header")))
-                // 授权信息全局token
-                .securityContexts(Collections.singletonList(
-                        SecurityContext.builder().securityReferences(Collections.singletonList(
-                                new SecurityReference(tokenHeader, new AuthorizationScope[]{new AuthorizationScope("global", "")}))).build()
-                ));
+                        Arrays.asList("https", "http")));
     }
 }
 

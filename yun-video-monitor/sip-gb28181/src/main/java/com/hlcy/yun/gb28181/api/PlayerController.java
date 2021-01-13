@@ -5,6 +5,8 @@ import com.hlcy.yun.gb28181.bean.api.PlayParams;
 import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.Player;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import static com.hlcy.yun.common.web.response.ResponseUtil.success;
 
 
 @Slf4j
+@Api(tags = "GB28181：播放 API")
 @RequiredArgsConstructor
 @RequestMapping("/yun/player")
 @RestController
@@ -21,6 +24,7 @@ public class PlayerController {
 
     private final Player player;
 
+    @ApiOperation("点播")
     @PostMapping("/play")
     public DeferredResult<ResponseEntity<ResponseData>> play(@RequestBody PlayParams playParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
@@ -29,12 +33,14 @@ public class PlayerController {
         return result;
     }
 
+    @ApiOperation("点播或历史回放停止")
     @PostMapping("/stop/{ssrc}")
     public ResponseEntity<ResponseData<Void>> stop(@PathVariable String ssrc) {
         player.stop(ssrc);
         return success();
     }
 
+    @ApiOperation("历史回放")
     @PostMapping("/playback")
     public DeferredResult<ResponseEntity<ResponseData>> playback(@RequestBody PlaybackParams playbackParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
@@ -43,24 +49,28 @@ public class PlayerController {
         return result;
     }
 
+    @ApiOperation("历史回放快进或回退")
     @PostMapping("/playback/scale/{scale}/{ssrc}")
     public ResponseEntity<ResponseData<Void>> playbackForwardOrkBack(@PathVariable String ssrc, @PathVariable double scale) {
         player.playbackForwardOrkBack(ssrc, scale);
         return success();
     }
 
+    @ApiOperation("历史回放进度条拖拽")
     @PostMapping("/playback/drag/{ssrc}")
     public ResponseEntity<ResponseData<Void>> playbackDrag(@PathVariable String ssrc) {
         player.playbackDrag(ssrc);
         return success();
     }
 
+    @ApiOperation("历史回放暂停")
     @PostMapping("/playback/pause/{ssrc}")
     public ResponseEntity<ResponseData<Void>> playbackPause(@PathVariable String ssrc) {
         player.playbackPause(ssrc);
         return success();
     }
 
+    @ApiOperation("历史回放暂停后重播")
     @PostMapping("/playback/replay/{ssrc}")
     public ResponseEntity<ResponseData<Void>> playbackReplay(@PathVariable String ssrc) {
         player.playbackReplay(ssrc);

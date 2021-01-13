@@ -13,8 +13,7 @@ import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
 import javax.sip.message.Response;
 
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createFrom;
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createTo;
+import static com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession.SIP_MEDIA_SESSION_1;
 
 /**
  * 客户端主动发起的实时视音频点播流程: 5->6->7->8->9<br/>
@@ -29,7 +28,7 @@ public class DeviceInviteResponseProcessor extends ResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         if (!process486Response(event, context)){
-            final ClientTransaction mediaTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_1);
+            final ClientTransaction mediaTransaction = context.get(SIP_MEDIA_SESSION_1);
             final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
             RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
 
@@ -58,8 +57,8 @@ public class DeviceInviteResponseProcessor extends ResponseProcessor {
             DeferredResultHolder.setErrorDeferredResultForRequest(
                     DeferredResultHolder.CALLBACK_CMD_PLAY + context.getPlayParams().getChannelId(),
                     "设备繁忙，请稍后再试！");
-
-
+            // clean up FlowContext
+            FlowContextCache.remove(getCallId(event));
             return true;
         }
         return false;
