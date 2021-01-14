@@ -77,7 +77,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
 
     private String comeFrom;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(hidden = true)
     private LocalDateTime pwdResetTime;
 

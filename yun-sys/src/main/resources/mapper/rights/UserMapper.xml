@@ -74,18 +74,6 @@
         )
     </select>
 
-    <select id="selectByMenuIs" parameterType="java.util.HashSet" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from t_sys_user u, t_sys_user_group ug, t_sys_group_menu gm
-        where gm.menu_id in
-        <foreach collection="menuIds" index="index" item="menuId" separator="," open="(" close=")">
-            #{menuId,jdbcType=INTEGER}
-        </foreach>
-        and u.u_id = ug.user_id
-        and ug.group_id = gm.group_id
-    </select>
-
     <select id="selectByGroupIds" parameterType="java.util.HashSet" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -127,7 +115,6 @@
                     and u_create_time <![CDATA[<=]]> #{criteria.endTime}
                 </if>
             </if>
-            and u_is_deleted = 0
         </trim>
         order by u_create_time desc
     </select>

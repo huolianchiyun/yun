@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class SipLayer implements SipListener {
+public final class SipLayer implements SipListener {
 
     private static AddressFactory addressFactory;
 
@@ -40,10 +40,20 @@ public class SipLayer implements SipListener {
      */
     private ThreadPoolExecutor executor;
 
+    public static void start(GB28181Properties properties) {
+        try {
+            new SipLayer(properties);
+        } catch (PeerUnavailableException | TransportNotSupportedException | InvalidArgumentException | ObjectInUseException | TooManyListenersException e) {
+            e.printStackTrace();
+            log.error("*** SipLayer init exception ***");
+            System.exit(-1);
+        }
+    }
+
     /**
      * Here we initialize the SIP stack.
      */
-    public SipLayer(GB28181Properties properties) throws PeerUnavailableException, TransportNotSupportedException,
+    private SipLayer(GB28181Properties properties) throws PeerUnavailableException, TransportNotSupportedException,
             InvalidArgumentException, ObjectInUseException, TooManyListenersException {
         DigestServerAuthHelper.init(properties);
 

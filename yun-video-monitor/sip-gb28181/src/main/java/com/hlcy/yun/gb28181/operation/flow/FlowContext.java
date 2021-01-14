@@ -22,6 +22,7 @@ public class FlowContext {
         this.operation = operation;
         this.playParams = playParams;
         this.currentProcessor = FlowPipelineFactory.getFlowPipeline(operation).first();
+
     }
 
     public FlowContext(Operation operation, PlaybackParams playbackParams) {

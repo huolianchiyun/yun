@@ -24,8 +24,8 @@ public class PlayerController {
 
     private final Player player;
 
-    @ApiOperation("点播")
     @PostMapping("/play")
+    @ApiOperation("点播")
     public DeferredResult<ResponseEntity<ResponseData>> play(@RequestBody PlayParams playParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAY + playParams.getChannelId(), result);
@@ -33,8 +33,8 @@ public class PlayerController {
         return result;
     }
 
-    @ApiOperation("点播或历史回放停止")
     @PostMapping("/stop/{ssrc}")
+    @ApiOperation("点播或历史回放停止（流媒体无人观看停止专用接口")
     public ResponseEntity<ResponseData<Void>> stop(@PathVariable String ssrc) {
         player.stop(ssrc);
         return success();

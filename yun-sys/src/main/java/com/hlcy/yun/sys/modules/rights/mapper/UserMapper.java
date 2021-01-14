@@ -27,9 +27,6 @@ public interface UserMapper extends PageMapper<UserDO> {
     Set<UserDO> selectByIds(@Param("ids") Set<Long> ids);
 
     @NotPermission
-    Set<UserDO> selectByMenuIs(@Param("menuIds") Set<Long> menuIds);
-
-    @NotPermission
     Set<UserDO> selectByGroupId(Long groupId);
 
     @NotPermission

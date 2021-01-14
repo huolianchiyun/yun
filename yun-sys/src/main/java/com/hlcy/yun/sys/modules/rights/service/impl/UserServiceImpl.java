@@ -122,6 +122,7 @@ class UserServiceImpl implements UserService {
         String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getOldPwd());
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getNewPwd());
         UserDO userDB = queryByUsername(userPwd.getUsername());
+        Assert.notNull(userDB, "用户不存在， 请确认用户名输入是否正确！");
         Assert.isTrue(passwordEncoder.matches(oldPass, userDB.getPwd()), "修改失败，旧密码错误");
         userMapper.updateByPrimaryKeySelective(new UserDO(userDB.getId(), passwordEncoder.encode(newPass), LocalDateTime.now()));
         // 清除用户token，使其重新登录

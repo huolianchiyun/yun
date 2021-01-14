@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hlcy.yun.gb28181.config.GB28181AutoConfiguration
+com.hlcy.yun.gb28181.config.GB28181Configuration

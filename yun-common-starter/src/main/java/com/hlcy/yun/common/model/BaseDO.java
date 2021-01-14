@@ -30,11 +30,11 @@ public abstract class BaseDO implements ExcelSupport {
     protected String updater; // 用户登录账号，全局唯一
     @CreatedDate
     @ApiModelProperty(hidden = true)
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     protected LocalDateTime createTime;
     @LastModifiedDate
     @ApiModelProperty(hidden = true)
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     protected LocalDateTime updateTime;
 
     /* 分组校验 */

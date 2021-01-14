@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.service;
 import com.hlcy.yun.gb28181.bean.api.PlayParams;
 import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.operation.flow.Operation;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
@@ -17,6 +18,10 @@ import org.springframework.util.Assert;
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendByeRequest;
 import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendRequest;
@@ -31,6 +36,12 @@ public class DefaultPlayer implements Player {
 
     @Override
     public void play(PlayParams params) {
+        // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
+        final Optional<FlowContext> optional = FlowContextCache.findFlowContextBy(params.getChannelId());
+        if (optional.isPresent()) {
+            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(), optional.get().getSsrc());
+            return;
+        }
         // 2:向媒体服务器发送Invite消息,此消息不携带SDP消息体。
         Request inviteMedia = getInviteRequest(
                 createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaPort()),
