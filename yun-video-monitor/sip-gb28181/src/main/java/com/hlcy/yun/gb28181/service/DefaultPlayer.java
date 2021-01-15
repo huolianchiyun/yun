@@ -12,16 +12,14 @@ import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendByeRequest;
 import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendRequest;
@@ -29,6 +27,7 @@ import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.*;
 import static com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession.SIP_MEDIA_SESSION_1;
 import static com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession.SIP_MEDIA_SESSION_2;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DefaultPlayer implements Player {
@@ -59,6 +58,10 @@ public class DefaultPlayer implements Player {
     public void stop(String ssrc) {
         // 点播 15:SIP服务器收到BYE消息后向媒体服务器发送BYE消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
         // 回放 23:SIP服务器收到 BYE 消息后向媒体服务器发送 BYE 消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
+        if (isClosedMediaStreamOf(ssrc)) {
+            return;
+        }
+
         final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
         final Request bye = getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
@@ -66,15 +69,24 @@ public class DefaultPlayer implements Player {
         SSRCManger.releaseSSRC(ssrc);
     }
 
+    private boolean isClosedMediaStreamOf(String ssrc) {
+        final FlowContext context = FlowContextCache.get(ssrc);
+        if (context == null) {
+            log.info("媒体流已关闭，SSRC：{}", ssrc);
+            return true;
+        }
+        return false;
+    }
+
     private ClientTransaction getMediaByeClientTransaction(String ssrc) {
         final FlowContext context = FlowContextCache.get(ssrc);
-        Assert.notNull(context, String.format("该媒体流已关闭，SSRC：%S", ssrc));
-        final ClientTransaction clientTransaction;
+        ClientTransaction clientTransaction = null;
         if (Operation.PLAY == context.getOperation()) {
             clientTransaction = context.get(SIP_MEDIA_SESSION_2);
-        } else {
+        } else if (Operation.PLAYBACK == context.getOperation()) {
             clientTransaction = context.get(PlaybackSession.SIP_MEDIA_SESSION_2);
         }
+        Assert.notNull(clientTransaction, String.format("The clientTransaction of SIP_MEDIA_SESSION_2 has been lost, SSRC: %s", ssrc));
         return clientTransaction;
     }
 
