@@ -3,15 +3,17 @@ package com.hlcy.yun.gb28181.operation;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.sdp.SdpException;
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.header.CallIdHeader;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
-public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> {
+
+public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Override
     public void handle(ResponseEvent event) {

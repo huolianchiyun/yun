@@ -7,9 +7,12 @@ import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
 import javax.sip.ClientTransaction;
+import java.io.Serializable;
 import java.util.Iterator;
 
-public class FlowContext {
+public class FlowContext implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private static GB28181Properties properties;
     private final TimedCache<Enum, ClientTransaction> SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
     private final Operation operation;
@@ -22,7 +25,6 @@ public class FlowContext {
         this.operation = operation;
         this.playParams = playParams;
         this.currentProcessor = FlowPipelineFactory.getFlowPipeline(operation).first();
-
     }
 
     public FlowContext(Operation operation, PlaybackParams playbackParams) {

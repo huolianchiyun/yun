@@ -11,7 +11,7 @@ import javax.sip.header.CallIdHeader;
 /**
  * @implNote 子类要保证线程安全
  */
-public abstract class ResponseHandler extends MessageHandler<ResponseEvent> {
+public abstract class ResponseHandler extends MessageHandler<ResponseEvent>{
     protected String name;
     // 响应方法: invite, message and so on
     protected String method;

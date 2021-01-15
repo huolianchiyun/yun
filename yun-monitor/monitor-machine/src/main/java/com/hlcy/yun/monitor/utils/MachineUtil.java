@@ -1,6 +1,6 @@
 package com.hlcy.yun.monitor.utils;
 
-import cn.hutool.core.date.BetweenFormater;
+import cn.hutool.core.date.BetweenFormatter;
 import cn.hutool.core.date.DateUtil;
 import com.hlcy.yun.common.utils.ip.IPUtil;
 import com.hlcy.yun.common.utils.io.FileUtil;
@@ -118,7 +118,7 @@ public final class MachineUtil {
         long time = ManagementFactory.getRuntimeMXBean().getStartTime();
         Date date = new Date(time);
         // 计算项目运行时间
-        String formatBetween = DateUtil.formatBetween(date, new Date(), BetweenFormater.Level.HOUR);
+        String formatBetween = DateUtil.formatBetween(date, new Date(), BetweenFormatter.Level.HOUR);
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
