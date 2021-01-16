@@ -6,6 +6,7 @@ import com.hlcy.yun.gb28181.bean.api.PlayParams;
 import com.hlcy.yun.gb28181.bean.api.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
+
 import javax.sip.ClientTransaction;
 import java.io.Serializable;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 public class FlowContext implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private boolean isRecovered;
     private static GB28181Properties properties;
     private final TimedCache<Enum, ClientTransaction> SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
     private final Operation operation;
@@ -22,14 +24,17 @@ public class FlowContext implements Serializable {
     private String ssrc;
 
     public FlowContext(Operation operation, PlayParams playParams) {
-        this.operation = operation;
+        this(operation);
         this.playParams = playParams;
-        this.currentProcessor = FlowPipelineFactory.getFlowPipeline(operation).first();
     }
 
     public FlowContext(Operation operation, PlaybackParams playbackParams) {
-        this.operation = operation;
+        this(operation);
         this.playbackParams = playbackParams;
+    }
+
+    private FlowContext(Operation operation) {
+        this.operation = operation;
         this.currentProcessor = FlowPipelineFactory.getFlowPipeline(operation).first();
     }
 
@@ -44,7 +49,11 @@ public class FlowContext implements Serializable {
         this.currentProcessor = this.currentProcessor.getNextProcessor();
     }
 
-    public static void setProperties(GB28181Properties properties){
+    void setCurrentProcessorToFirstByeProcessor() {
+        this.currentProcessor = FlowPipelineFactory.getFlowPipeline(operation).get(operation.name());
+    }
+
+    public static void setProperties(GB28181Properties properties) {
         FlowContext.properties = properties;
     }
 
@@ -72,8 +81,20 @@ public class FlowContext implements Serializable {
         this.ssrc = ssrc;
     }
 
+    public boolean isRecovered() {
+        return isRecovered;
+    }
+
+    public void setRecovered(boolean recovered) {
+        isRecovered = recovered;
+    }
+
     public ClientTransaction get(Enum key) {
-        return SESSION_CACHE.get(key);
+        final ClientTransaction clientTransaction = SESSION_CACHE.get(key);
+        if(isRecovered){
+            return new RecoveredClientTransaction(clientTransaction);
+        }
+        return clientTransaction;
     }
 
     public void put(Enum key, ClientTransaction transaction) {

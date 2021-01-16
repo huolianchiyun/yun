@@ -27,7 +27,6 @@ public class MediaByeResponseProcessor2 extends ResponseProcessor {
         final ClientTransaction clientTransaction = context.get(SIP_DEVICE_SESSION);
         final Request bye = SipRequestFactory.getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
-
         FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(bye));
     }
 }

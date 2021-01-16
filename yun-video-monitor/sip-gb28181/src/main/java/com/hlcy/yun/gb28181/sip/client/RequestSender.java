@@ -2,6 +2,7 @@ package com.hlcy.yun.gb28181.sip.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.hlcy.yun.gb28181.operation.flow.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +36,10 @@ public final class RequestSender {
     }
 
     public static void sendByeRequest(Request bye, ClientTransaction transaction) {
+        if (transaction.getClass().isAssignableFrom(RecoveredClientTransaction.class)) {
+            sendRequest(bye);
+            return;
+        }
         final SipProvider sipProvider = SipLayer.getSipProvider(SipLayer.getTransport(((ViaHeader) bye.getHeader(ViaHeader.NAME)).getTransport()));
         try {
             transaction.getDialog().sendRequest(sipProvider.getNewClientTransaction(bye));

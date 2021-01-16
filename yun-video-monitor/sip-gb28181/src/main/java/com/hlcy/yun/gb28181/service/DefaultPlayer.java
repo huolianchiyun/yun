@@ -7,6 +7,7 @@ import com.hlcy.yun.gb28181.operation.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.operation.flow.Operation;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.operation.flow.FlowContext;
+import com.hlcy.yun.gb28181.operation.flow.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.operation.flow.palyer.playback.PlaybackSession;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
@@ -65,6 +66,7 @@ public class DefaultPlayer implements Player {
         final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
         final Request bye = getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
+
         FlowContextCache.setNewKey(ssrc, getCallId(bye));
         SSRCManger.releaseSSRC(ssrc);
     }

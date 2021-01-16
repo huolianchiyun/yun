@@ -1,5 +1,6 @@
 package com.hlcy.yun.gb28181.sip.message.factory;
 
+import com.hlcy.yun.gb28181.operation.flow.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import com.hlcy.yun.gb28181.util.UUIDUtil;
 import gov.nist.javax.sip.message.SIPRequest;
@@ -92,6 +93,11 @@ public final class SipRequestFactory {
     }
 
     public static Request getByeRequest(ClientTransaction clientTransaction) {
+        if(clientTransaction.getClass().isAssignableFrom(RecoveredClientTransaction.class)){
+            final Request request = clientTransaction.getRequest();
+
+            return createRequest(null, null, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.BYE, null, EMPTY_CONTENT);
+        }
         final Dialog dialog = clientTransaction.getDialog();
         try {
             return dialog.createRequest(Request.BYE);
