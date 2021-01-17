@@ -15,6 +15,11 @@ public class SSRCField extends SDPField implements SSRC {
         super(SSRC_FIELD);
     }
 
+    public SSRCField(String ssrc) {
+        super(SSRC_FIELD);
+        this.ssrc = ssrc;
+    }
+
     @Override
     public String getValue() throws SdpParseException {
         return ssrc;

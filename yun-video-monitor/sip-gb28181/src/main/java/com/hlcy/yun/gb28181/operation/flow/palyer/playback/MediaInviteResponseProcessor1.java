@@ -11,7 +11,9 @@ import com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
+import gov.nist.javax.sdp.fields.SSRCField;
 import gov.nist.javax.sdp.fields.SessionNameField;
+import gov.nist.javax.sdp.fields.URIField;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sdp.SdpException;
@@ -85,8 +87,7 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
      */
     @Override
     protected void process(ResponseEvent event, FlowContext context) throws SdpException {
-        SessionNameField sessionNameField = new SessionNameField();
-        sessionNameField.setSessionName("Playback");
+        SessionNameField sessionNameField = new SessionNameField("Playback");
         SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
         sessionDescription.setSessionName(sessionNameField);
 
@@ -94,17 +95,17 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
         sessionDescription.setTimeDescriptions(new Vector<>(Arrays.asList(playbackParams.getStartTimestamp(), playbackParams.getEndTimestamp())));
 
         final String ssrc = getSSRC(context);
-
-        StringBuilder content = new StringBuilder(sessionDescription.toString())
-                .append("u=").append(playbackParams.getChannelId()).append(":").append(playbackParams.getPlaybackType()).append("\r\n")
-                .append("y=").append(ssrc).append("\r\n");
+        sessionDescription.setSSRC(new SSRCField(ssrc));
+        final URIField uriField = new URIField();
+        uriField.setURI(playbackParams.getChannelId() + ":" + playbackParams.getPlaybackType());
+        sessionDescription.setURI(uriField);
 
         GB28181Properties properties = context.getProperties();
         Request inviteRequest2device = SipRequestFactory.getInviteRequest(
                 SipRequestFactory.createTo(playbackParams.getChannelId(), playbackParams.getDeviceIp(), playbackParams.getDevicePort()),
                 SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
                 playbackParams.getDeviceTransport(),
-                content.toString().getBytes(StandardCharsets.UTF_8));
+                sessionDescription.toString().getBytes(StandardCharsets.UTF_8));
 
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2device);
 

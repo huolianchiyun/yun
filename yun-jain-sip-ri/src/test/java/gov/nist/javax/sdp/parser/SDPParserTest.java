@@ -1,5 +1,6 @@
 package gov.nist.javax.sdp.parser;
 
+import gov.nist.javax.sdp.fields.URIField;
 import org.junit.Test;
 
 import javax.sdp.*;
@@ -52,9 +53,12 @@ public class SDPParserTest {
         String contentString = new String(contentBytes);
         SdpFactory sdpFactory = SdpFactory.getInstance();
         SessionDescription sd = null;
+        final URIField uriField = new URIField();
+        uriField.setURI("rqtetwetwew3532535" + ":" + 3);
         try {
             sd = sdpFactory.createSessionDescription(contentString);
-        } catch (SdpParseException e) {
+            sd.setURI(uriField);
+        } catch (SdpException e) {
             e.printStackTrace();
         }
         System.out.println("Parsed Content is :\n" + sd.toString());

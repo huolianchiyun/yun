@@ -38,8 +38,14 @@ public class SessionNameField extends SDPField implements SessionName {
     protected String sessionName;
 
     public SessionNameField() {
-        super(SDPFieldNames.SESSION_NAME_FIELD);
+        super(SESSION_NAME_FIELD);
     }
+
+    public SessionNameField(String sessionName) {
+        super(SESSION_NAME_FIELD);
+        this.sessionName = sessionName;
+    }
+
     public String getSessionName() {
         return sessionName;
     }

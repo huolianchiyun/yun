@@ -10,6 +10,7 @@ import com.hlcy.yun.gb28181.operation.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import com.hlcy.yun.gb28181.operation.ResponseProcessor;
+import gov.nist.javax.sdp.fields.SSRCField;
 import gov.nist.javax.sdp.fields.SessionNameField;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,18 +57,19 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
      */
     @Override
     protected void process(ResponseEvent event, FlowContext context) throws SdpException {
-        SessionDescription sessionDescription = extractSessionDescAndSetSessionName(event);
 
         final PlayParams playParams = context.getPlayParams();
         GB28181Properties properties = context.getProperties();
 
+        SessionDescription sessionDescription = extractSessionDescAndSetSessionName(event);
         String ssrc = getSSRC(context);
+        sessionDescription.setSSRC(new SSRCField(ssrc));
 
         Request inviteRequest2device = SipRequestFactory.getInviteRequest(
                 SipRequestFactory.createTo(playParams.getChannelId(), playParams.getDeviceIp(), playParams.getDevicePort()),
                 SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
                 playParams.getDeviceTransport(),
-                (sessionDescription.toString() + "y=" + ssrc + "\r\n").getBytes(StandardCharsets.UTF_8));
+                sessionDescription.toString().getBytes(StandardCharsets.UTF_8));
 
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2device);
 
@@ -78,10 +80,8 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
     }
 
     private SessionDescription extractSessionDescAndSetSessionName(ResponseEvent event) throws SdpException {
-        SessionNameField sessionNameField = new SessionNameField();
-        sessionNameField.setSessionName("Play");
         SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
-        sessionDescription.setSessionName(sessionNameField);
+        sessionDescription.setSessionName(new SessionNameField("Play"));
         return sessionDescription;
     }
 
