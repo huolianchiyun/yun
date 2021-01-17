@@ -95,7 +95,7 @@ public final class SipRequestFactory {
     public static Request getByeRequest(ClientTransaction clientTransaction) {
         if(clientTransaction.getClass().isAssignableFrom(RecoveredClientTransaction.class)){
             final Request request = clientTransaction.getRequest();
-
+            // TODO
             return createRequest(null, null, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.BYE, null, EMPTY_CONTENT);
         }
         final Dialog dialog = clientTransaction.getDialog();
