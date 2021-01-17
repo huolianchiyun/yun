@@ -1,28 +1,28 @@
 /*
-* Conditions Of Use
-*
-* This software was developed by employees of the National Institute of
-* Standards and Technology (NIST), an agency of the Federal Government.
-* Pursuant to title 15 Untied States Code Section 105, works of NIST
-* employees are not subject to copyright protection in the United States
-* and are considered to be in the public domain.  As a result, a formal
-* license is not needed to use the software.
-*
-* This software is provided by NIST as a service and is expressly
-* provided "AS IS."  NIST MAKES NO WARRANTY OF ANY KIND, EXPRESS, IMPLIED
-* OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT
-* AND DATA ACCURACY.  NIST does not warrant or make any representations
-* regarding the use of the software or the results thereof, including but
-* not limited to the correctness, accuracy, reliability or usefulness of
-* the software.
-*
-* Permission to use this software is contingent upon your acceptance
-* of the terms of this agreement
-*
-* .
-*
-*/
+ * Conditions Of Use
+ *
+ * This software was developed by employees of the National Institute of
+ * Standards and Technology (NIST), an agency of the Federal Government.
+ * Pursuant to title 15 Untied States Code Section 105, works of NIST
+ * employees are not subject to copyright protection in the United States
+ * and are considered to be in the public domain.  As a result, a formal
+ * license is not needed to use the software.
+ *
+ * This software is provided by NIST as a service and is expressly
+ * provided "AS IS."  NIST MAKES NO WARRANTY OF ANY KIND, EXPRESS, IMPLIED
+ * OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT
+ * AND DATA ACCURACY.  NIST does not warrant or make any representations
+ * regarding the use of the software or the results thereof, including but
+ * not limited to the correctness, accuracy, reliability or usefulness of
+ * the software.
+ *
+ * Permission to use this software is contingent upon your acceptance
+ * of the terms of this agreement
+ *
+ * .
+ *
+ */
 /*
  * SessionDescriptionImpl.java
  *
@@ -40,14 +40,9 @@ import java.util.Vector;
 /**
  * Implementation of the SessionDescription interface.
  *
- * @version JSR141-PUBLIC-REVIEW
- *
- *
  * @author Olivier Deruelle
  * @author M. Ranganathan  <br/>
- *
- *
- *
+ * @version JSR141-PUBLIC-REVIEW
  */
 public class SessionDescriptionImpl implements SessionDescription {
     private TimeDescriptionImpl currentTimeDescription;
@@ -68,6 +63,10 @@ public class SessionDescriptionImpl implements SessionDescription {
 
     protected KeyField keyImpl;
 
+    protected FormatField formatImpl;
+
+    protected SSRCField ssrcImpl;
+
     protected Vector timeDescriptions;
 
     protected Vector mediaDescriptions;
@@ -82,7 +81,10 @@ public class SessionDescriptionImpl implements SessionDescription {
 
     protected Vector attributesList;
 
-    /** Creates new SessionDescriptionImpl */
+
+    /**
+     * Creates new SessionDescriptionImpl
+     */
     public SessionDescriptionImpl() {
     }
 
@@ -93,8 +95,7 @@ public class SessionDescriptionImpl implements SessionDescription {
      * @throws SdpException - if there is a problem constructing the SessionDescription.
      */
     public SessionDescriptionImpl(SessionDescription otherSessionDescription)
-            throws SdpException
-    {
+            throws SdpException {
         // If the other session description is null there's nothing to initialize
         if (otherSessionDescription == null) return;
 
@@ -133,21 +134,33 @@ public class SessionDescriptionImpl implements SessionDescription {
         }
 
         // OK to clone the connection field, class already does a deep copy
-        Connection otherConnection = (Connection) otherSessionDescription.getConnection();
+        Connection otherConnection = otherSessionDescription.getConnection();
         if (otherConnection != null) {
             this.setConnection((Connection) otherConnection.clone());
         }
 
         // OK to clone the key field, just a couple of strings
-        Key otherKey = (Key) otherSessionDescription.getKey();
+        Key otherKey = otherSessionDescription.getKey();
         if (otherKey != null) {
             this.setKey((Key) otherKey.clone());
+        }
+
+        // OK to clone the format field, just a couple of strings
+        Format otherFormat =  otherSessionDescription.getFormat();
+        if (otherFormat != null) {
+            this.setFormat((Format) otherFormat.clone());
+        }
+
+        // OK to clone the ssrc field, just a couple of strings
+        SSRC otherSSRC = otherSessionDescription.getSSRC();
+        if (otherSSRC != null) {
+            this.setSSRC((SSRC) otherSSRC.clone());
         }
 
         // Deep copy each vector, starting with time descriptions
         Vector otherTimeDescriptions = otherSessionDescription.getTimeDescriptions(false);
         if (otherTimeDescriptions != null) {
-            Vector newTDs = new Vector();
+            Vector<TimeDescriptionImpl> newTDs = new Vector<>();
             Iterator itTimeDescriptions = otherTimeDescriptions.iterator();
             while (itTimeDescriptions.hasNext()) {
                 TimeDescriptionImpl otherTimeDescription = (TimeDescriptionImpl) itTimeDescriptions.next();
@@ -175,7 +188,7 @@ public class SessionDescriptionImpl implements SessionDescription {
         // Deep copy the email list
         Vector otherEmails = otherSessionDescription.getEmails(false);
         if (otherEmails != null) {
-            Vector newEmails = new Vector();
+            Vector<EmailField> newEmails = new Vector<>();
             Iterator itEmails = otherEmails.iterator();
             while (itEmails.hasNext()) {
                 EmailField otherEmailField = (EmailField) itEmails.next();
@@ -191,7 +204,7 @@ public class SessionDescriptionImpl implements SessionDescription {
         // Deep copy the phone list
         Vector otherPhones = otherSessionDescription.getPhones(false);
         if (otherPhones != null) {
-            Vector newPhones = new Vector();
+            Vector<PhoneField> newPhones = new Vector<PhoneField>();
             Iterator itPhones = otherPhones.iterator();
             while (itPhones.hasNext()) {
                 PhoneField otherPhoneField = (PhoneField) itPhones.next();
@@ -207,7 +220,7 @@ public class SessionDescriptionImpl implements SessionDescription {
         // Deep copy the zone adjustments list
         Vector otherZAs = otherSessionDescription.getZoneAdjustments(false);
         if (otherZAs != null) {
-            Vector newZAs = new Vector();
+            Vector<ZoneField> newZAs = new Vector<ZoneField>();
             Iterator itZAs = otherZAs.iterator();
             while (itZAs.hasNext()) {
                 ZoneField otherZoneField = (ZoneField) itZAs.next();
@@ -223,7 +236,7 @@ public class SessionDescriptionImpl implements SessionDescription {
         // Deep copy the bandwidth list
         Vector otherBandwidths = otherSessionDescription.getBandwidths(false);
         if (otherBandwidths != null) {
-            Vector newBandwidths = new Vector();
+            Vector<BandwidthField> newBandwidths = new Vector<>();
             Iterator itBandwidths = otherBandwidths.iterator();
             while (itBandwidths.hasNext()) {
                 BandwidthField otherBandwidthField = (BandwidthField) itBandwidths.next();
@@ -239,7 +252,7 @@ public class SessionDescriptionImpl implements SessionDescription {
         // Deep copy the attribute list
         Vector otherAttributes = otherSessionDescription.getAttributes(false);
         if (otherAttributes != null) {
-            Vector newAttributes = new Vector();
+            Vector<AttributeField> newAttributes = new Vector<AttributeField>();
             Iterator itAttributes = otherAttributes.iterator();
             while (itAttributes.hasNext()) {
                 AttributeField otherAttributeField = (AttributeField) itAttributes.next();
@@ -255,7 +268,7 @@ public class SessionDescriptionImpl implements SessionDescription {
         // Deep copy the media descriptions
         Vector otherMediaDescriptions = otherSessionDescription.getMediaDescriptions(false);
         if (otherMediaDescriptions != null) {
-            Vector newMDs = new Vector();
+            Vector<MediaDescriptionImpl> newMDs = new Vector<MediaDescriptionImpl>();
             Iterator itMediaDescriptions = otherMediaDescriptions.iterator();
             while (itMediaDescriptions.hasNext()) {
                 MediaDescriptionImpl otherMediaDescription = (MediaDescriptionImpl) itMediaDescriptions.next();
@@ -271,15 +284,13 @@ public class SessionDescriptionImpl implements SessionDescription {
                         newMF.setPort(otherMediaField.getPort());
                         newMF.setNports(otherMediaField.getNports());
                         newMF.setProto(otherMediaField.getProto());
-                        Vector otherFormats = otherMediaField.getFormats();
-                        if (otherFormats != null) {
-                            Vector newFormats = new Vector();
-                            Iterator itFormats = otherFormats.iterator();
-                            while (itFormats.hasNext()) {
-                                Object otherFormat = itFormats.next();
-                                if (otherFormat != null) {
+                        Vector otherMediaFormats = otherMediaField.getFormats();
+                        if (otherMediaFormats != null) {
+                            Vector<String> newFormats = new Vector<>();
+                            for (Object otherMediaFormat : otherMediaFormats) {
+                                if (otherMediaFormat != null) {
                                     // Convert all format objects to strings in order to avoid reflection
-                                    newFormats.add(String.valueOf(otherFormat));
+                                    newFormats.add(String.valueOf(otherMediaFormat));
                                 }
                             }
                             newMF.setFormats(newFormats);
@@ -308,7 +319,7 @@ public class SessionDescriptionImpl implements SessionDescription {
                             BandwidthField otherBF = (BandwidthField) itBFs.next();
                             if (otherBF != null) {
                                 // BandwidthField is a shallow object, ok to use clone
-                                newBFs.add((BandwidthField) otherBF.clone());
+                                newBFs.add(otherBF.clone());
                             }
                         }
                         newMD.setBandwidths(newBFs);
@@ -330,7 +341,7 @@ public class SessionDescriptionImpl implements SessionDescription {
                             if (otherAF != null) {
                                 // AttributeField clone() already makes a deep copy, but be careful. It will use reflection
                                 // unless the attribute is a String or any other immutable object.
-                                newAFs.add((AttributeField) otherAF.clone());
+                                newAFs.add(otherAF.clone());
                             }
                         }
                         newMD.setAttributeFields(newAFs);
@@ -351,24 +362,29 @@ public class SessionDescriptionImpl implements SessionDescription {
             } else if (sdpField instanceof SessionNameField) {
                 sessionNameImpl = (SessionNameField) sdpField;
             } else if (sdpField instanceof InformationField) {
-                if (currentMediaDescription != null)
-                    currentMediaDescription
-                            .setInformationField((InformationField) sdpField);
-                else
+                if (currentMediaDescription != null) {
+                    currentMediaDescription.setInformationField((InformationField) sdpField);
+                } else {
                     this.infoImpl = (InformationField) sdpField;
+                }
             } else if (sdpField instanceof URIField) {
                 uriImpl = (URIField) sdpField;
             } else if (sdpField instanceof ConnectionField) {
-                if (currentMediaDescription != null)
-                    currentMediaDescription
-                            .setConnectionField((ConnectionField) sdpField);
-                else
+                if (currentMediaDescription != null) {
+                    currentMediaDescription.setConnectionField((ConnectionField) sdpField);
+                } else {
                     this.connectionImpl = (ConnectionField) sdpField;
+                }
             } else if (sdpField instanceof KeyField) {
-                if (currentMediaDescription != null)
+                if (currentMediaDescription != null) {
                     currentMediaDescription.setKey((KeyField) sdpField);
-                else
+                } else {
                     keyImpl = (KeyField) sdpField;
+                }
+            } else if (sdpField instanceof FormatField) {
+                formatImpl = (FormatField) sdpField;
+            } else if (sdpField instanceof SSRCField) {
+                ssrcImpl = (SSRCField) sdpField;
             } else if (sdpField instanceof EmailField) {
                 getEmails(true).add(sdpField);
             } else if (sdpField instanceof PhoneField) {
@@ -381,28 +397,25 @@ public class SessionDescriptionImpl implements SessionDescription {
                 if (currentTimeDescription == null) {
                     throw new ParseException("no time specified", 0);
                 } else {
-                    currentTimeDescription
-                            .addRepeatField((RepeatField) sdpField);
+                    currentTimeDescription.addRepeatField((RepeatField) sdpField);
                 }
             } else if (sdpField instanceof ZoneField) {
                 getZoneAdjustments(true).add(sdpField);
             } else if (sdpField instanceof BandwidthField) {
-                if (currentMediaDescription != null)
-                    currentMediaDescription
-                            .addBandwidthField((BandwidthField) sdpField);
-                else
+                if (currentMediaDescription != null) {
+                    currentMediaDescription.addBandwidthField((BandwidthField) sdpField);
+                } else {
                     getBandwidths(true).add(sdpField);
+                }
             } else if (sdpField instanceof AttributeField) {
                 if (currentMediaDescription != null) {
                     AttributeField af = (AttributeField) sdpField;
                     String s = af.getName();
                     // Bug report from Andreas Bystrom
-                    currentMediaDescription
-                            .addAttribute((AttributeField) sdpField);
+                    currentMediaDescription.addAttribute((AttributeField) sdpField);
                 } else {
                     getAttributes(true).add(sdpField);
                 }
-
             } else if (sdpField instanceof MediaField) {
                 currentMediaDescription = new MediaDescriptionImpl();
                 getMediaDescriptions(true).add(currentMediaDescription);
@@ -417,8 +430,8 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Creates and returns a deep copy of this object
      *
-     * @return     a clone of this instance.
-     * @exception  CloneNotSupportedException  if this instance cannot be cloned.
+     * @return a clone of this instance.
+     * @throws CloneNotSupportedException if this instance cannot be cloned.
      */
     public Object clone() throws CloneNotSupportedException {
         try {
@@ -443,10 +456,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Sets the version of SDP in use. This corresponds to the v= field of the
      * SDP data.
      *
-     * @param v
-     *            version - the integer version.
-     * @throws SdpException
-     *             if the version is null
+     * @param v version - the integer version.
+     * @throws SdpException if the version is null
      */
     public void setVersion(Version v) throws SdpException {
         if (v == null)
@@ -472,10 +483,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Sets information about the originator of the session. This corresponds to
      * the o= field of the SDP data.
      *
-     * @param origin
-     *            origin - the originator data.
-     * @throws SdpException
-     *             if the origin is null
+     * @param origin origin - the originator data.
+     * @throws SdpException if the origin is null
      */
     public void setOrigin(Origin origin) throws SdpException {
         if (origin == null)
@@ -502,10 +511,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Sets the name of the session. This corresponds to the s= field of the SDP
      * data.
      *
-     * @param sessionName
-     *            name - the session name.
-     * @throws SdpException
-     *             if the sessionName is null
+     * @param sessionName name - the session name.
+     * @throws SdpException if the sessionName is null
      */
     public void setSessionName(SessionName sessionName) throws SdpException {
         if (sessionName == null)
@@ -530,10 +537,8 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Sets the i= field of this object.
      *
-     * @param i
-     *            s - new i= value; if null removes the field
-     * @throws SdpException
-     *             if the info is null
+     * @param i s - new i= value; if null removes the field
+     * @throws SdpException if the info is null
      */
     public void setInfo(Info i) throws SdpException {
         if (i == null)
@@ -560,10 +565,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Sets the uri to the location of more details about the session. This
      * corresponds to the u= field of the SDP data.
      *
-     * @param uri
-     *            uri - the uri.
-     * @throws SdpException
-     *             if the uri is null
+     * @param uri uri - the uri.
+     * @throws SdpException if the uri is null
      */
     public void setURI(URI uri) throws SdpException {
         if (uri == null)
@@ -580,10 +583,9 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Returns an email address to contact for further information about the
      * session. This corresponds to the e= field of the SDP data.
      *
-     * @param create
-     *            boolean to set
-     * @throws SdpParseException
+     * @param create boolean to set
      * @return the email address.
+     * @throws SdpParseException
      */
     public Vector getEmails(boolean create) throws SdpParseException {
         if (emailList == null) {
@@ -597,10 +599,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Sets a an email address to contact for further information about the
      * session. This corresponds to the e= field of the SDP data.
      *
-     * @param emails
-     *            email - the email address.
-     * @throws SdpException
-     *             if the vector is null
+     * @param emails email - the email address.
+     * @throws SdpException if the vector is null
      */
     public void setEmails(Vector emails) throws SdpException {
         if (emails == null)
@@ -613,10 +613,9 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Returns a phone number to contact for further information about the
      * session. This corresponds to the p= field of the SDP data.
      *
-     * @param create
-     *            boolean to set
-     * @throws SdpException
+     * @param create boolean to set
      * @return the phone number.
+     * @throws SdpException
      */
     public Vector getPhones(boolean create) throws SdpException {
         if (phoneList == null) {
@@ -630,10 +629,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Sets a phone number to contact for further information about the session.
      * This corresponds to the p= field of the SDP data.
      *
-     * @param phones
-     *            phone - the phone number.
-     * @throws SdpException
-     *             if the vector is null
+     * @param phones phone - the phone number.
+     * @throws SdpException if the vector is null
      */
     public void setPhones(Vector phones) throws SdpException {
         if (phones == null)
@@ -647,10 +644,9 @@ public class SessionDescriptionImpl implements SessionDescription {
      * information of the session. This corresponds to the t= field of the SDP
      * data.
      *
-     * @param create
-     *            boolean to set
-     * @throws SdpException
+     * @param create boolean to set
      * @return the Time Field.
+     * @throws SdpException
      */
     public Vector getTimeDescriptions(boolean create) throws SdpException {
         if (timeDescriptions == null) {
@@ -665,10 +661,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * information of the session. This corresponds to the t= field of the SDP
      * data.
      *
-     * @param times
-     *            time - the TimeField.
-     * @throws SdpException
-     *             if the vector is null
+     * @param times time - the TimeField.
+     * @throws SdpException if the vector is null
      */
     public void setTimeDescriptions(Vector times) throws SdpException {
         if (times == null)
@@ -681,11 +675,10 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Returns the time zone adjustments for the Session
      *
-     * @param create
-     *            boolean to set
-     * @throws SdpException
+     * @param create boolean to set
      * @return a Hashtable containing the zone adjustments, where the key is the
-     *         Adjusted Time Zone and the value is the offset.
+     * Adjusted Time Zone and the value is the offset.
+     * @throws SdpException
      */
     public Vector getZoneAdjustments(boolean create) throws SdpException {
         if (zoneAdjustments == null) {
@@ -698,12 +691,10 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Sets the time zone adjustment for the TimeField.
      *
-     * @param zoneAdjustments
-     *            zoneAdjustments - a Hashtable containing the zone adjustments,
-     *            where the key is the Adjusted Time Zone and the value is the
-     *            offset.
-     * @throws SdpException
-     *             if the vector is null
+     * @param zoneAdjustments zoneAdjustments - a Hashtable containing the zone adjustments,
+     *                        where the key is the Adjusted Time Zone and the value is the
+     *                        offset.
+     * @throws SdpException if the vector is null
      */
     public void setZoneAdjustments(Vector zoneAdjustments) throws SdpException {
         if (zoneAdjustments == null)
@@ -727,10 +718,8 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Set the connection data for this entity.
      *
-     * @param conn
-     *            to set
-     * @throws SdpException
-     *             if the parameter is null
+     * @param conn to set
+     * @throws SdpException if the parameter is null
      */
     public void setConnection(Connection conn) throws SdpException {
         if (conn == null)
@@ -745,8 +734,7 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Returns the Bandwidth of the specified type.
      *
-     * @param create
-     *            type - type of the Bandwidth to return
+     * @param create type - type of the Bandwidth to return
      * @return the Bandwidth or null if undefined
      */
     public Vector getBandwidths(boolean create) {
@@ -760,10 +748,8 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * set the value of the Bandwidth with the specified type.
      *
-     * @param bandwidthList
-     *            to set
-     * @throws SdpException
-     *             if the vector is null
+     * @param bandwidthList to set
+     * @throws SdpException if the vector is null
      */
     public void setBandwidths(Vector bandwidthList) throws SdpException {
         if (bandwidthList == null)
@@ -775,10 +761,9 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Returns the integer value of the specified bandwidth name.
      *
-     * @param name
-     *            name - the name of the bandwidth type
-     * @throws SdpParseException
+     * @param name name - the name of the bandwidth type
      * @return the value of the named bandwidth
+     * @throws SdpParseException
      */
     public int getBandwidth(String name) throws SdpParseException {
         if (name == null)
@@ -803,12 +788,9 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Sets the value of the specified bandwidth type.
      *
-     * @param name
-     *            name - the name of the bandwidth type.
-     * @param value
-     *            value - the value of the named bandwidth type.
-     * @throws SdpException
-     *             if the name is null
+     * @param name  name - the name of the bandwidth type.
+     * @param value value - the value of the named bandwidth type.
+     * @throws SdpException if the name is null
      */
     public void setBandwidth(String name, int value) throws SdpException {
         if (name == null)
@@ -832,8 +814,7 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Removes the specified bandwidth type.
      *
-     * @param name
-     *            name - the name of the bandwidth type
+     * @param name name - the name of the bandwidth type
      */
     public void removeBandwidth(String name) {
         if (name != null)
@@ -869,10 +850,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Sets encryption key information. This consists of a method and an
      * encryption key included inline.
      *
-     * @param key
-     *            key - the encryption key data; depending on method may be null
-     * @throws SdpException
-     *             if the parameter is null
+     * @param key key - the encryption key data; depending on method may be null
+     * @throws SdpException if the parameter is null
      */
     public void setKey(Key key) throws SdpException {
         if (key == null)
@@ -888,10 +867,9 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Returns the value of the specified attribute.
      *
-     * @param name
-     *            name - the name of the attribute
-     * @throws SdpParseException
+     * @param name name - the name of the attribute
      * @return the value of the named attribute
+     * @throws SdpParseException
      */
     public String getAttribute(String name) throws SdpParseException {
         if (name == null)
@@ -917,9 +895,8 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Returns the set of attributes for this Description as a Vector of
      * Attribute objects in the order they were parsed.
      *
-     * @param create
-     *            create - specifies whether to return null or a new empty
-     *            Vector in case no attributes exists for this Description
+     * @param create create - specifies whether to return null or a new empty
+     *               Vector in case no attributes exists for this Description
      * @return attributes for this Description
      */
     public Vector getAttributes(boolean create) {
@@ -933,8 +910,7 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Removes the attribute specified by the value parameter.
      *
-     * @param name
-     *            name - the name of the attribute
+     * @param name name - the name of the attribute
      */
     public void removeAttribute(String name) {
         if (name != null)
@@ -961,12 +937,9 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Sets the value of the specified attribute.
      *
-     * @param name
-     *            name - the name of the attribute.
-     * @param value
-     *            value - the value of the named attribute.
-     * @throws SdpException
-     *             if the name or the value is null
+     * @param name  name - the name of the attribute.
+     * @param value value - the value of the named attribute.
+     * @throws SdpException if the name or the value is null
      */
     public void setAttribute(String name, String value) throws SdpException {
         if (name == null || value == null)
@@ -991,8 +964,7 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Adds the specified Attribute to this Description object.
      *
      * @param attributes - the attribute to add
-     * @throws SdpException
-     *             if the vector is null
+     * @throws SdpException if the vector is null
      */
     public void setAttributes(Vector attributes) throws SdpException {
         if (attributes == null)
@@ -1005,10 +977,9 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Adds a MediaDescription to the session description. These correspond to
      * the m= fields of the SDP data.
      *
-     * @param create
-     *            boolean to set
-     * @throws SdpException
+     * @param create boolean to set
      * @return media - the field to add.
+     * @throws SdpException
      */
     public Vector getMediaDescriptions(boolean create) throws SdpException {
         if (mediaDescriptions == null) {
@@ -1021,10 +992,8 @@ public class SessionDescriptionImpl implements SessionDescription {
     /**
      * Removes all MediaDescriptions from the session description.
      *
-     * @param mediaDescriptions
-     *            to set
-     * @throws SdpException
-     *             if the parameter is null
+     * @param mediaDescriptions to set
+     * @throws SdpException if the parameter is null
      */
     public void setMediaDescriptions(Vector mediaDescriptions)
             throws SdpException {
@@ -1032,6 +1001,60 @@ public class SessionDescriptionImpl implements SessionDescription {
             throw new SdpException("The parameter is null");
         else
             this.mediaDescriptions = mediaDescriptions;
+    }
+
+    /**
+     * Returns the format of media stream. This corresponds to the f= field of the
+     * SDP data.
+     *
+     * @return the format of media stream
+     */
+    public Format getFormat() {
+        return formatImpl;
+    }
+
+    /**
+     * Sets the format of media stream. This corresponds to the f= field of the SDP data.
+     *
+     * @param format - the format.
+     * @throws SdpException if the format is null
+     */
+    public void setFormat(Format format) throws SdpException {
+        if (format == null)
+            throw new SdpException("The parameter is null");
+        if (format instanceof FormatField) {
+            FormatField f = (FormatField) format;
+            formatImpl = f;
+        } else {
+            throw new SdpException("The parameter must be an instance of FormatField");
+        }
+    }
+
+    /**
+     * Returns the ssrc of media stream. This corresponds to the y= field of the
+     * SDP data.
+     *
+     * @return the format of media stream
+     */
+    public SSRC getSSRC() {
+        return ssrcImpl;
+    }
+
+    /**
+     * Sets the ssrc of media stream. This corresponds to the y= field of the SDP data.
+     *
+     * @param ssrc - the ssrc.
+     * @throws SdpException if the format is null
+     */
+    public void setSSRC(SSRC ssrc) throws SdpException {
+        if (ssrc == null)
+            throw new SdpException("The parameter is null");
+        if (ssrc instanceof SSRCField) {
+            SSRCField y = (SSRCField) ssrc;
+            ssrcImpl = y;
+        } else {
+            throw new SdpException("The parameter must be an instance of SSRCField");
+        }
     }
 
     private String encodeVector(Vector vector) {
@@ -1049,7 +1072,7 @@ public class SessionDescriptionImpl implements SessionDescription {
      * Ivov.
      *
      * @return Returns the canonical string representation of the current
-     *         SessionDescrption.
+     * SessionDescrption.
      */
 
     public String toString() {
@@ -1058,9 +1081,10 @@ public class SessionDescriptionImpl implements SessionDescription {
         // Encode single attributes
         encBuff.append(getVersion() == null ? "" : getVersion().toString());
         encBuff.append(getOrigin() == null ? "" : getOrigin().toString());
-        encBuff.append(getSessionName() == null ? "" : getSessionName()
-                .toString());
+        encBuff.append(getSessionName() == null ? "" : getSessionName().toString());
         encBuff.append(getInfo() == null ? "" : getInfo().toString());
+        encBuff.append(getFormat() == null ? "" : getFormat().toString());
+        encBuff.append(getSSRC() == null ? "" : getSSRC().toString());
 
         // Encode attribute vectors
         try {
