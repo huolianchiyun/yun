@@ -3,6 +3,8 @@ package com.hlcy.yun.gb28181.sip.message.factory;
 import com.hlcy.yun.gb28181.operation.flow.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import com.hlcy.yun.gb28181.util.UUIDUtil;
+import gov.nist.javax.sip.Utils;
+import gov.nist.javax.sip.header.*;
 import gov.nist.javax.sip.message.SIPRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -93,10 +95,8 @@ public final class SipRequestFactory {
     }
 
     public static Request getByeRequest(ClientTransaction clientTransaction) {
-        if(clientTransaction.getClass().isAssignableFrom(RecoveredClientTransaction.class)){
-            final Request request = clientTransaction.getRequest();
-            // TODO
-            return createRequest(null, null, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.BYE, null, EMPTY_CONTENT);
+        if (isRecoveredTransaction(clientTransaction)) {
+            return toByeRequest(clientTransaction.getRequest());
         }
         final Dialog dialog = clientTransaction.getDialog();
         try {
@@ -106,6 +106,39 @@ public final class SipRequestFactory {
             throw new RuntimeException(e);
         }
     }
+
+    private static boolean isRecoveredTransaction(ClientTransaction clientTransaction) {
+        return clientTransaction.getClass().isAssignableFrom(RecoveredClientTransaction.class);
+    }
+
+    private static Request toByeRequest(Request request) {
+        try {
+            request.setMethod(Request.BYE);
+
+            request.removeHeader(ContentType.NAME);
+            final ContentLengthHeader contentLengthHeader = (ContentLengthHeader) request.getHeader(ContentLength.NAME);
+            contentLengthHeader.setContentLength(0);
+            request.removeContent();
+
+            CSeqHeader cSeqHeader = (CSeqHeader) request.getHeader(CSeq.NAME);
+            cSeqHeader.setMethod(Request.BYE);
+            cSeqHeader.setSeqNumber(2L);
+
+            ViaHeader viaHeader = (ViaHeader) request.getHeader(Via.NAME);
+            viaHeader.removeParameter(Via.RPORT);
+            viaHeader.removeParameter(Via.BRANCH);
+
+            request.removeHeader(Contact.NAME);
+
+            ToHeader toHeader = (ToHeader) request.getHeader(gov.nist.javax.sip.header.To.NAME);
+            toHeader.setTag(Utils.getInstance().generateTag());
+        } catch (InvalidArgumentException | ParseException e) {
+            log.error("An exception occurs when convert a request to bye request, cause: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return request;
+    }
+
 
     public static String getCallId(Request request) {
         return ((SIPRequest) request).getCallId().getCallId();
@@ -130,17 +163,17 @@ public final class SipRequestFactory {
     /**
      * Create a sip request
      *
-     * @param to
-     * @param from
-     * @param subject
-     * @param contentType
-     * @param contentSubType
-     * @param method
-     * @param content
+     * @param to             /
+     * @param from           /
+     * @param subject        /
+     * @param contentType    /
+     * @param contentSubType /
+     * @param method         /
+     * @param content        /
      * @return {@link Request}
      */
-    private static Request createRequest(To to, From from, String subject, String viaBranch, String contentType, String contentSubType,
-                                         String method, String transport, byte[] content) {
+    private static Request createRequest(To to, From from, String subject, String viaBranch, String
+            contentType, String contentSubType, String method, String transport, byte[] content) {
         try {
             final AddressFactory addressFactory = SipLayer.getAddressFactory();
             // sip uri
@@ -210,8 +243,8 @@ public final class SipRequestFactory {
         /**
          * To constructor
          *
-         * @param user
-         * @param host
+         * @param user /
+         * @param host /
          * @param tag  this value may be null, but not empty.
          */
         To(String user, Host host, String tag) {
@@ -235,8 +268,8 @@ public final class SipRequestFactory {
         /**
          * From constructor
          *
-         * @param user
-         * @param host
+         * @param user /
+         * @param host /
          * @param tag  this value may be null, but not empty.
          */
         From(String user, Host host, String tag) {
