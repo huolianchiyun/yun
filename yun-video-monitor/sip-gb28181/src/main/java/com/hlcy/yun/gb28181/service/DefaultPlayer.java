@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
@@ -38,7 +39,7 @@ public class DefaultPlayer implements Player {
     public void play(PlayParams params) {
         // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
         final Optional<FlowContext> optional = FlowContextCache.findFlowContextBy(params.getChannelId());
-        if (optional.isPresent()) {
+        if (optional.isPresent() && StringUtils.hasText(optional.get().getSsrc())) {
             DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(), optional.get().getSsrc());
             return;
         }

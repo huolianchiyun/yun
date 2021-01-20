@@ -29,6 +29,7 @@ public class SIpPipelineFactory {
         RESPONSE_PIPELINE.addLast("invite", new InviteResponseHandler(Request.INVITE, Request.INVITE));
         RESPONSE_PIPELINE.addLast("cancel", new CancelResponseHandler(Request.CANCEL, Request.CANCEL));
         RESPONSE_PIPELINE.addLast("bye", new ByeResponseHandler(Request.BYE, Request.BYE));
+        // FIXME 判断 不支持的  不能直接用unsupported判断
         RESPONSE_PIPELINE.addLast("unsupported", new UnsupportedResponseHandler("unsupported", "unsupported"));
     }
 

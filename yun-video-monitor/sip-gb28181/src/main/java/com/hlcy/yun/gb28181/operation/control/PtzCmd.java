@@ -77,7 +77,7 @@ public class PtzCmd implements ControlCmd<PtzParams> {
 
         // 字节8:校验码,为前面的第1~7字节的算术和的低8位,即算术和对256取模后的结果。
         // 字节8=(字节1+字节2+字节3+字节4+字节5+字节6+字节7)%256。
-        int checkCode = (0XA5 + 0X0F + 0X01 + cmdCode + panSpeed + tiltSpeed + (zoomSpeed & 0XF0)) % 0X100;
+        int checkCode = (0XA5 + 0X0F + 0X01 + cmdCode + panSpeed + tiltSpeed + (zoomSpeed << 4 & 0XF0)) % 0X100;
         builder.append(String.format("%02X", checkCode), 0, 2);
 
         return builder.toString();
