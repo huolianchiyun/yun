@@ -63,9 +63,9 @@ public class SessionDescriptionImpl implements SessionDescription {
 
     protected KeyField keyImpl;
 
-    protected FormatField formatImpl;
-
     protected SSRCField ssrcImpl;
+
+    protected FormatField formatImpl;
 
     protected Vector timeDescriptions;
 
@@ -146,7 +146,7 @@ public class SessionDescriptionImpl implements SessionDescription {
         }
 
         // OK to clone the format field, just a couple of strings
-        Format otherFormat =  otherSessionDescription.getFormat();
+        Format otherFormat = otherSessionDescription.getFormat();
         if (otherFormat != null) {
             this.setFormat((Format) otherFormat.clone());
         }
@@ -1079,33 +1079,25 @@ public class SessionDescriptionImpl implements SessionDescription {
         StringBuilder encBuff = new StringBuilder();
 
         // Encode single attributes
-        encBuff.append(getVersion() == null ? "" : getVersion().toString());
-        encBuff.append(getOrigin() == null ? "" : getOrigin().toString());
-        encBuff.append(getSessionName() == null ? "" : getSessionName().toString());
-        encBuff.append(getInfo() == null ? "" : getInfo().toString());
-        encBuff.append(getFormat() == null ? "" : getFormat().toString());
-        encBuff.append(getSSRC() == null ? "" : getSSRC().toString());
+        encBuff.append(getVersion() == null ? "" : getVersion().toString())
+                .append(getOrigin() == null ? "" : getOrigin().toString())
+                .append(getSessionName() == null ? "" : getSessionName().toString())
+                .append(getInfo() == null ? "" : getInfo().toString());
 
         // Encode attribute vectors
         try {
-            encBuff.append(getURI() == null ? "" : getURI().toString());
-            encBuff.append(getEmails(false) == null ? ""
-                    : encodeVector(getEmails(false)));
-            encBuff.append(getPhones(false) == null ? ""
-                    : encodeVector(getPhones(false)));
-            encBuff.append(getConnection() == null ? "" : getConnection()
-                    .toString());
-            encBuff.append(getBandwidths(false) == null ? ""
-                    : encodeVector(getBandwidths(false)));
-            encBuff.append(getTimeDescriptions(false) == null ? ""
-                    : encodeVector(getTimeDescriptions(false)));
-            encBuff.append(getZoneAdjustments(false) == null ? ""
-                    : encodeVector(getZoneAdjustments(false)));
-            encBuff.append(getKey() == null ? "" : getKey().toString());
-            encBuff.append(getAttributes(false) == null ? ""
-                    : encodeVector(getAttributes(false)));
-            encBuff.append(getMediaDescriptions(false) == null ? ""
-                    : encodeVector(getMediaDescriptions(false)));
+            encBuff.append(getURI() == null ? "" : getURI().toString())
+                    .append(getEmails(false) == null ? "" : encodeVector(getEmails(false)))
+                    .append(getPhones(false) == null ? "" : encodeVector(getPhones(false)))
+                    .append(getConnection() == null ? "" : getConnection().toString())
+                    .append(getBandwidths(false) == null ? "" : encodeVector(getBandwidths(false)))
+                    .append(getTimeDescriptions(false) == null ? "" : encodeVector(getTimeDescriptions(false)))
+                    .append(getZoneAdjustments(false) == null ? "" : encodeVector(getZoneAdjustments(false)))
+                    .append(getKey() == null ? "" : getKey().toString())
+                    .append(getAttributes(false) == null ? "" : encodeVector(getAttributes(false)))
+                    .append(getMediaDescriptions(false) == null ? "" : encodeVector(getMediaDescriptions(false)))
+                    .append(getSSRC() == null ? "" : getSSRC().toString())
+                    .append(getFormat() == null ? "" : getFormat().toString());
             // adds the final crlf
         } catch (SdpException exc) {
             // add exception handling if necessary

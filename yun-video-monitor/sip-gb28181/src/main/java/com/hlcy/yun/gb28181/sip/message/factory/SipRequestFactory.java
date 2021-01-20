@@ -211,10 +211,6 @@ public final class SipRequestFactory {
             final Request request = sipFactory.createMessageFactory().createRequest(requestURI, method, callIdHeader, cSeqHeader, fromHeader, toHeader,
                     viaHeaders, maxForwards, contentTypeHeader, content);
 
-            // Content-Length:消息实体的字节长度
-            final ContentLengthHeader contentLengthHeader = headerFactory.createContentLengthHeader(content.length);
-            request.setContentLength(contentLengthHeader);
-
             // Contact
             Address concatAddress = addressFactory.createAddress(addressFactory.createSipURI(from.user, from.host.toAddress()));
             final ContactHeader contactHeader = headerFactory.createContactHeader(concatAddress);

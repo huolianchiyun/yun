@@ -15,8 +15,8 @@ public class InviteResponseHandler extends ResponseHandler {
     public void doHandle(ResponseEvent event) {
         log.info("Receive a invite response: \n{}", event.getResponse());
         final int status = event.getResponse().getStatusCode();
-        if (status == Response.OK || status == Response.BUSY_HERE) {
+//        if (status == Response.OK || status == Response.BUSY_HERE) {
             getFlowContext(event).getProcessor().handle(event);
-        }
+//        }
     }
 }

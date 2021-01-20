@@ -62,6 +62,7 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
         GB28181Properties properties = context.getProperties();
 
         SessionDescription sessionDescription = extractSessionDescAndSetSessionName(event);
+
         String ssrc = getSSRC(context);
         sessionDescription.setSSRC(new SSRCField(ssrc));
 

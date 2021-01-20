@@ -97,11 +97,12 @@ public final class SipLayer implements SipListener {
         int status = response.getStatusCode();
         if ((status >= 100) && (status < 200)) {
             return;
-        } else if ((status >= 200) && (status < 300) || status == 486) {
+        } else if ((status >= 200) && (status < 500)) {
             // process response
             SIpPipelineFactory.getResponsePipeline().processMessage(evt);
             return;
         }
+
         log.error("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());
     }
 
