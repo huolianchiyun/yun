@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlcy.yun.sys.modules.rights.mapper.DeptMapper">
+    <resultMap id="BaseResultMap" type="com.hlcy.yun.sys.modules.rights.model.$do.DeptDO">
+        <id column="d_id" jdbcType="BIGINT" property="id"/>
+        <result column="d_pid" jdbcType="BIGINT" property="pid"/>
+        <result column="d_dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="d_dept_code" jdbcType="VARCHAR" property="deptCode"/>
+        <result column="d_sort" jdbcType="INTEGER" property="sort"/>
+        <result column="d_description" jdbcType="VARCHAR" property="description"/>
+        <result column="d_creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="d_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="d_updater" jdbcType="VARCHAR" property="updater"/>
+        <result column="d_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        d_id, d_pid, d_dept_name, d_dept_code, d_sort, d_description, d_creator, d_create_time,
+    d_updater, d_update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_dept
+        where d_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_dept
+        where d_pid = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_dept limit 1000
+    </select>
+
+    <select id="countAssociatedUser" parameterType="java.util.HashSet" resultType="int">
+        select count(*) FROM t_sys_user
+        where u_dept_id in
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </select>
+
+    <select id="selectByCriteria"
+            parameterType="com.hlcy.yun.sys.modules.rights.model.criteria.DeptQueryCriteria"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_dept
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test='criteria != null'>
+                <if test='criteria.deptName != null and criteria.deptName != ""'>
+                    and d_dept_name like concat('%', #{criteria.deptName}, '%')
+                </if>
+                <if test='criteria.startTime != null and criteria.startTime != ""'>
+                    and d_create_time >= #{criteria.startTime}
+                </if>
+                <if test='criteria.endTime != null and criteria.endTime != ""'>
+                    and d_create_time <![CDATA[<=]]> #{criteria.endTime}
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert" parameterType="com.hlcy.yun.sys.modules.rights.model.$do.DeptDO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sys_dept (d_id, d_pid, d_dept_name,
+                                d_dept_code, d_sort, d_description,
+                                d_creator, d_create_time, d_updater,
+                                d_update_time)
+        values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{deptName,jdbcType=VARCHAR},
+                #{deptCode,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR},
+                #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hlcy.yun.sys.modules.rights.model.$do.DeptDO">
+        update t_sys_dept
+        <set>
+            <if test="pid != null">
+                d_pid = #{pid,jdbcType=BIGINT},
+            </if>
+            <if test="deptName != null">
+                d_dept_name = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null">
+                d_dept_code = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sort != null">
+                d_sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                d_description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                d_creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                d_create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updater != null">
+                d_updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                d_update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where d_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByIds" parameterType="java.lang.Long">
+        delete
+        from t_sys_dept
+        where d_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+</mapper>
