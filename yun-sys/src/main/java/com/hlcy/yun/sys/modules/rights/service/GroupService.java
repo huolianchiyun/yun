@@ -72,7 +72,7 @@ public interface GroupService extends PageService<GroupQueryCriteria, GroupDO>, 
     List<GroupDO> queryByPid(Long pid);
 
     /**
-     * 根据部门 id 集合获取同级与上级数据
+     * 根据组 id 集合获取同级与上级数据
      *
      * @param groupIds 部门 ID 集合
      * @return {@link List<GroupDO>}
@@ -101,9 +101,9 @@ public interface GroupService extends PageService<GroupQueryCriteria, GroupDO>, 
     void deleteByIds(Set<Long> groupIds);
 
     /**
-     * 构建部门树
+     * 构建组树
      *
-     * @param depts 用于构建部门树的部门集合源数据
+     * @param depts 用于构建组树的组集合源数据
      * @return {@link List<GroupDO>}
      */
     List<GroupDO> buildGroupTree(Collection<GroupDO> depts);

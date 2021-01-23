@@ -7,11 +7,18 @@ public interface CacheKey {
     String API_RIGHTS = "api-rights";
 
     /**
+     * 部门信息
+     */
+    String DEPT_ID = "dept::id:";
+    String DEPT_PID = "dept::pid:";
+
+    /**
      * 组信息
      */
     String GROUP_ID = "group::id:";
     String GROUP_PID = "group::pid:";
     String GROUP_BIND_MENU = "menu::group:";
+
     /**
      * 菜单信息
      */

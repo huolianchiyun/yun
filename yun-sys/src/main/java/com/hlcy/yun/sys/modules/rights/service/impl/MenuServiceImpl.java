@@ -149,6 +149,7 @@ class MenuServiceImpl implements MenuService {
         // 获取要删除菜单及子孙菜单
         Set<MenuDO> posterityMenuWithSelf = new HashSet<>(getPosterityMenusWithSelf(menuIds));
         Set<Long> deletingMenuIds = posterityMenuWithSelf.stream().map(MenuDO::getId).collect(Collectors.toSet());
+        Assert.notEmpty(deletingMenuIds, "将要删除的菜单不存在！");
         menuMapper.batchDeleteByIds(deletingMenuIds);
         // 将要删除的菜单与角色解绑
         groupMenuMapper.deleteByMenuIds(deletingMenuIds);

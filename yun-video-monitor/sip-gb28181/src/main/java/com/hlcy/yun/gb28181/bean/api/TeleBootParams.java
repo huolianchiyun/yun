@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 强制关键帧 API 参数
+ * 远程启动控制 API 参数
  */
 @Getter
 @Setter

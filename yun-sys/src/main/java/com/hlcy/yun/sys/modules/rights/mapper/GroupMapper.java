@@ -18,14 +18,6 @@ public interface GroupMapper extends PageMapper<GroupDO>{
     @Select("select g_group_code from t_sys_group where g_id = #{id} for update")
     String selectGroupCodeByIdForUpdate(Long id);
 
-    /**
-     * 检查 group code 对应记录条数，用于检测 group code 唯一性
-     * @param groupCode group code
-     * @return 条数
-     */
-    @Select("select count(*) from t_sys_group where g_group_code = #{groupCode}")
-    Integer countByGroupCode(String groupCode);
-
     Set<GroupDO> selectByPrimaryKeys(Set<Long> ids);
 
     /**
@@ -52,8 +44,6 @@ public interface GroupMapper extends PageMapper<GroupDO>{
     Set<String> selectGroupCodesByUsername(String username);
 
     Set<GroupDO> selectByPid(Long Pid);
-
-    GroupDO selectDeptByUserId(Long userId);
 
     Set<GroupDO> selectByMenuIds(@Param("menuIds") Set<Long> menuIds);
 

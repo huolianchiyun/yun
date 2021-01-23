@@ -1,9 +1,15 @@
 package com.hlcy.yun.gb28181.bean.api;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 拉框放大/缩小控制 API 参数
  */
+@Getter
+@Setter
 public class DragZoomParams extends DeviceParams {
+    private ZoomType zoomType;
     /**
      * 播放窗口长度像素值
      */
@@ -30,4 +36,11 @@ public class DragZoomParams extends DeviceParams {
      */
     private int lengthY;
 
+    /**
+     * IN：放大
+     * OUT：缩小
+     */
+    public enum ZoomType {
+        IN, OUT
+    }
 }

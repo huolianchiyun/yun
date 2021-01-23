@@ -1,10 +1,13 @@
 package com.hlcy.yun.sys.modules.rights.controller;
 
+import com.hlcy.yun.sys.modules.rights.model.$do.DeptDO;
 import com.hlcy.yun.sys.modules.rights.model.criteria.DeptQueryCriteria;
 import com.hlcy.yun.sys.modules.rights.model.dto.DeptDTO;
 import com.hlcy.yun.sys.modules.rights.service.DeptService;
 import com.hlcy.yun.common.web.response.ResponseData;
+
 import static com.hlcy.yun.common.web.response.ResponseUtil.success;
+
 import com.hlcy.yun.sys.modules.logging.annotation.Logging;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -29,7 +33,6 @@ public class DeptController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
     public void download(HttpServletResponse response, DeptQueryCriteria criteria) throws Exception {
-        criteria.setPid(null);
         deptService.downloadExcel(deptService.queryAllByCriteriaWithNoPage(criteria), response);
     }
 
@@ -37,7 +40,7 @@ public class DeptController {
     @ApiOperation("根据ID查询部门")
     @GetMapping("/{id}")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<ResponseData<DeptDTO>> query(@PathVariable Long id) {
+    public ResponseEntity<ResponseData<DeptDO>> query(@PathVariable Long id) {
         return success(deptService.queryById(id));
     }
 
@@ -45,7 +48,7 @@ public class DeptController {
     @ApiOperation("根据条件查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<ResponseData<List<DeptDTO>>> query(DeptQueryCriteria criteria) {
+    public ResponseEntity<ResponseData<List<DeptDO>>> query(DeptQueryCriteria criteria) {
         return success(deptService.queryAllByCriteriaWithNoPage(criteria));
     }
 
@@ -53,24 +56,24 @@ public class DeptController {
     @ApiOperation("查询部门: 根据ID获取同级与上级数据")
     @PostMapping("/tree2me")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<ResponseData<List<DeptDTO>>> queryAncestorAndSiblingOfDepts(@RequestBody Set<Long> deptIds) {
-        return success(deptService.queryAncestorAndSiblingOfDepts(deptIds));
+    public ResponseEntity<ResponseData<List<DeptDO>>> queryAncestorAndSiblingOfDepts(@RequestBody Set<Long> deptIds) {
+        return success(deptService.queryAncestorAndSibling(deptIds));
     }
 
     @Logging("新增部门")
     @ApiOperation("新增部门")
     @PostMapping
     @PreAuthorize("@el.check('dept:add')")
-    public ResponseEntity<ResponseData<Void>> create(@Validated(DeptDTO.Create.class) @RequestBody DeptDTO dept) {
-            deptService.create(dept);
+    public ResponseEntity<ResponseData<Void>> create(@Validated(DeptDO.Create.class) @RequestBody DeptDO dept) {
+        deptService.create(dept);
         return success();
-}
+    }
 
     @Logging("修改部门")
     @ApiOperation("修改部门")
     @PutMapping
     @PreAuthorize("@el.check('dept:edit')")
-    public ResponseEntity<ResponseData<Void>> update(@Validated(DeptDTO.Update.class) @RequestBody DeptDTO dept) {
+    public ResponseEntity<ResponseData<Void>> update(@Validated(DeptDO.Update.class) @RequestBody DeptDO dept) {
         deptService.update(dept);
         return success();
     }

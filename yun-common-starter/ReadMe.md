@@ -15,7 +15,7 @@
 --utils             公共工具，开发工程中可以优先考虑使用该包中的工具类，不要重复造轮子
 --web               web相关
   --response        对前端响应数据格式的统一封装，可以参考：yun-sys模块用法
-  --websocket       websocket 支持tomcat 和 netty方式， 前端请求url：ws://localhost:8081/ws/sid，sid必填，tcp handshake时需带token进行校验
+  --websocket       websocket 支持tomcat 和 netty方式， 前端请求url：ws://localhost:8081/ws/sid，sid必填，tcp handshake时需带token进行校验, 带token方式见/resources/websocket/index.html
                     使用方式：springboot 启动类上加 @EnableWebSocket 注解后，将启动websocket功能，并可以设置该注解的属性值切换 tomcat 或 netty 模式
 ```
 

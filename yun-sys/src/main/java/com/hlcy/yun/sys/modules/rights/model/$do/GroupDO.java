@@ -1,6 +1,5 @@
 package com.hlcy.yun.sys.modules.rights.model.$do;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,11 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.hlcy.yun.common.model.BaseDO;
 import com.hlcy.yun.common.utils.download.excel.ExcelSupport;
-import com.hlcy.yun.sys.modules.rights.model.dto.DeptDTO;
 import com.hlcy.yun.common.utils.date.DateUtil;
 import com.hlcy.yun.sys.modules.rights.common.excel.CollectChildren;
 import io.swagger.annotations.ApiModelProperty;
@@ -100,23 +97,23 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         return pid;
     }
 
-    public DeptDTO toDept() {
-        DeptDTO deptDTO = new DeptDTO();
-        deptDTO.setId(id);
-        deptDTO.setPid(pid);
-        deptDTO.setDeptCode(groupCode);
-        deptDTO.setDeptName(groupName);
-        deptDTO.setDeptSort(groupSort);
-        deptDTO.setDescription(description);
-        deptDTO.setCreator(creator);
-        deptDTO.setUpdater(updater);
-        deptDTO.setCreateTime(createTime);
-        deptDTO.setUpdateTime(updateTime);
-        if (CollectionUtil.isNotEmpty(children)) {
-            deptDTO.setChildren(children.stream().map(GroupDO::toDept).collect(Collectors.toList()));
-        }
-        return deptDTO;
-    }
+//    public DeptDTO toDept() {
+//        DeptDTO deptDTO = new DeptDTO();
+//        deptDTO.setId(id);
+//        deptDTO.setPid(pid);
+//        deptDTO.setDeptCode(groupCode);
+//        deptDTO.setDeptName(groupName);
+//        deptDTO.setDeptSort(groupSort);
+//        deptDTO.setDescription(description);
+//        deptDTO.setCreator(creator);
+//        deptDTO.setUpdater(updater);
+//        deptDTO.setCreateTime(createTime);
+//        deptDTO.setUpdateTime(updateTime);
+//        if (CollectionUtil.isNotEmpty(children)) {
+//            deptDTO.setChildren(children.stream().map(GroupDO::toDept).collect(Collectors.toList()));
+//        }
+//        return deptDTO;
+//    }
 
     public LinkedHashMap<String, Object> toLinkedMap() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();

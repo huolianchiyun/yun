@@ -14,9 +14,7 @@ public class CancelResponseHandler extends ResponseHandler {
 
     @Override
     protected void doHandle(ResponseEvent event) {
-        log.info("Receive a cancel response: {}.", event.getResponse());
-        if (event.getResponse().getStatusCode() == Response.OK) {
-            getFlowContext(event).getProcessor().handle(event);
-        }
+        log.info("Receive a cancel response: \n{}", event.getResponse());
+        getFlowContext(event).getProcessor().handle(event);
     }
 }

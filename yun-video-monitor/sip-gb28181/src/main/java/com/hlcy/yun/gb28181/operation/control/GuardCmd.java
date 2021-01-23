@@ -2,18 +2,19 @@ package com.hlcy.yun.gb28181.operation.control;
 
 
 import com.hlcy.yun.gb28181.bean.api.GuardParams;
-import com.hlcy.yun.gb28181.bean.api.RecordParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
-@RequiredArgsConstructor
-public class GuardCmd implements ControlCmd<GuardParams> {
-    private final GB28181Properties properties;
+/**
+ * 报警布防/撤防命令
+ */
+public class GuardCmd extends AbstractControlCmd<GuardParams> {
+
+    public GuardCmd(GB28181Properties properties) {
+        super(properties);
+    }
 
     @Override
-    public void execute(GuardParams guardParams) {
-
+    protected String buildCmdXML(GuardParams guardParams) {
+        return "<GuardCmd>" + guardParams.getOperate() + "</GuardCmd>";
     }
 }

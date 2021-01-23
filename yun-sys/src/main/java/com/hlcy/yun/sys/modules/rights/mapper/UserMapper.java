@@ -30,6 +30,9 @@ public interface UserMapper extends PageMapper<UserDO> {
     Set<UserDO> selectByGroupId(Long groupId);
 
     @NotPermission
+    Set<UserDO> selectByDeptId(Long deptId);
+
+    @NotPermission
     Set<UserDO> selectByGroupIds(@Param("groupIds") Set<Long> groupIds);
 
     int insert(UserDO record);

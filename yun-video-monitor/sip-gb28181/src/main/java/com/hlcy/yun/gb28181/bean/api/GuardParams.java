@@ -9,4 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GuardParams extends DeviceParams {
+    private GuardOperate operate;
+
+    public enum GuardOperate {
+        SetGuard, ResetGuard
+    }
 }

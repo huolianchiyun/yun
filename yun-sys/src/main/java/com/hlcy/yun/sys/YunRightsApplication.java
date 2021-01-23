@@ -1,5 +1,6 @@
 package com.hlcy.yun.sys;
 
+import com.hlcy.yun.common.web.websocket.EnableWebSocket;
 import com.hlcy.yun.monitor.autoconfigure.EnableMonitor;
 import com.hlcy.yun.sys.modules.common.annotation.rest.AnonymousGetMapping;
 import io.swagger.annotations.Api;
@@ -8,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 
 @EnableMonitor
-//@EnableWebSocket
+@EnableWebSocket(EnableWebSocket.WebSocketType.Netty)
 @RestController
 @Api(hidden = true)
 @SpringBootApplication

@@ -3,16 +3,19 @@ package com.hlcy.yun.gb28181.operation.control;
 
 import com.hlcy.yun.gb28181.bean.api.TeleBootParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
-@RequiredArgsConstructor
-public class TeleBootCmd implements ControlCmd<TeleBootParams> {
-    private final GB28181Properties properties;
+/**
+ * 远程启动控制命令
+ */
+public class TeleBootCmd extends AbstractControlCmd<TeleBootParams> {
+
+    public TeleBootCmd(GB28181Properties properties) {
+        super(properties);
+    }
 
     @Override
-    public void execute(TeleBootParams teleBootParams) {
-
+    protected String buildCmdXML(TeleBootParams teleBootParams) {
+        return "<TeleBoot>Boot</TeleBoot>";
     }
+
 }

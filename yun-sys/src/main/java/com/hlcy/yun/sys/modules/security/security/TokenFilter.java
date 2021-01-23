@@ -12,11 +12,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -24,8 +26,7 @@ import java.util.Objects;
 
 public class TokenFilter extends GenericFilterBean {
     private static final Logger log = LoggerFactory.getLogger(TokenFilter.class);
-
-
+    public static final String SEC_WEBSOCKET_PROTOCOL = "sec-websocket-protocol";
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
     private final OnlineUserService onlineUserService;
@@ -45,6 +46,10 @@ public class TokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+
+        handleSecWebsocketProtocol(httpServletRequest, httpServletResponse);
+
         String token = getTokenFrom(httpServletRequest);
         // 对于 Token 为空的不需要去查 Redis
         if (StrUtil.isNotBlank(token)) {
@@ -70,6 +75,12 @@ public class TokenFilter extends GenericFilterBean {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
+    private void handleSecWebsocketProtocol(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        if (httpServletRequest.getRequestURI().startsWith("/ws")) {
+            httpServletResponse.setHeader(SEC_WEBSOCKET_PROTOCOL, httpServletRequest.getHeader(SEC_WEBSOCKET_PROTOCOL));
+        }
+    }
+
     private String getTokenFrom(HttpServletRequest httpServletRequest) {
         return resolveToken(httpServletRequest);
     }
@@ -84,7 +95,7 @@ public class TokenFilter extends GenericFilterBean {
         String bearerToken = null;
         try {
             bearerToken = request.getRequestURI().startsWith("/ws")
-                    ? URLDecoder.decode(request.getHeader("Sec-WebSocket-Protocol"), "UTF-8")
+                    ? URLDecoder.decode(request.getHeader(SEC_WEBSOCKET_PROTOCOL), "UTF-8")
                     : request.getHeader(properties.getHeader());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

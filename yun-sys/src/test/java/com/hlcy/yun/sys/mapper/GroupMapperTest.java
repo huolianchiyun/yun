@@ -21,7 +21,7 @@ public class GroupMapperTest {
     @WithMockUser("test")
     void testCreateGroup(){
         GroupDO groupDO = new GroupDO();
-        groupDO.setGroupName("6677");
+        groupDO.setGroupName("8888");
         groupDO.setGroupSort(1);
         groupDO.setPid(1L);
         groupDO.setGroupMaster(ADMINISTRATOR);

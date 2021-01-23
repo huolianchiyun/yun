@@ -121,12 +121,14 @@ public class DefaultPlayer implements Player {
     }
 
     @Override
-    public void playbackDrag(String ssrc) {
+    public void playbackDrag(String ssrc, int range) {
         final FlowContext flowContext = FlowContextCache.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.get(PlaybackSession.SIP_DEVICE_SESSION);
         String content = "PLAY RTSP/1.0" + "\r\n"
                 + "CSeq:4" + "\r\n"
-                + "Range: npt=100-";
+                + "Range: npt="
+                + range
+                + "-";
         final Request infoRequest = SipRequestFactory.getInfoRequest(deviceTransaction, content.getBytes(StandardCharsets.UTF_8));
         RequestSender.sendRequest(infoRequest);
     }

@@ -16,7 +16,7 @@
 
         <!--数据库连接信息 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.11.131:3306/yunrights_no_role?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+                        connectionURL="jdbc:mysql://192.168.11.131:3306/yunrights_api2menu?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
                         userId="root" password="123456">
             <property name="useInformationSchema" value="true"></property>
         </jdbcConnection>
@@ -27,7 +27,7 @@
         </javaTypeResolver>
 
         <!--生成的model 包路径 -->
-        <javaModelGenerator targetPackage="com.zhangbin.yun.sys.modules.rights.model.$do"
+        <javaModelGenerator targetPackage="com.hlcy.yun.sys.modules.rights.model.$do"
                             targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="false"/>
@@ -39,7 +39,7 @@
         </sqlMapGenerator>
 
         <!-- 生成的Dao接口 的包路径 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.zhangbin.yun.sys.modules.rights.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.hlcy.yun.sys.modules.rights.mapper"
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -102,5 +102,12 @@
 <!--        <table tableName="t_sys_group_api_rights" domainObjectName="GroupApiRightsDO" enableCountByExample="false"-->
 <!--               enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">-->
 <!--        </table>-->
+
+        <table tableName="t_sys_dept" domainObjectName="DeptDO" enableCountByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false" enableDeleteByExample="false">
+            <property name="rootClass" value="com.hlcy.yun.common.model.BaseDO"/>
+            <generatedKey column="d_id" sqlStatement="SELECT LAST_INSERT_ID()"/>
+            <columnRenamingRule searchString="d_" replaceString=""/>
+        </table>
     </context>
 </generatorConfiguration>

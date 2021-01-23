@@ -6,8 +6,9 @@
 ```
 
 works：
-点播 释放资源
-sip sdp解析扩展支持y、f等key
+关流 context没有清理干净？？
+ssrc重复问题？？
+yun-sys 考虑将dept从group中抽离出来
 3. code generator
 4. auto-deploy
 

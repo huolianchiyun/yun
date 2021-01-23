@@ -155,9 +155,7 @@ class GroupServiceImpl implements GroupService {
         Assert.isTrue(!isAssociatedUser(deletingGroupIds), "将要删除的组或其子组与用户存在关联，请解除关联关系后，再尝试！");
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
         Set<GroupDO> deletingGroups = posterityGroupWithSelf.stream().filter(e -> ids.contains(e.getId())).collect(Collectors.toSet());
-        deletingGroups.forEach(e -> {
-            checkOperationalRights(e, currentUser);
-        });
+        deletingGroups.forEach(e -> doCheckOperationalRights(e, currentUser));
         groupMapper.deleteByIds(deletingGroupIds);
         groupMenuMapper.deleteByGroupIds(deletingGroupIds);
         userGroupMapper.deleteByGroupIds(deletingGroupIds);
@@ -170,7 +168,7 @@ class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void downloadExcel(Collection<GroupDO> collection, HttpServletResponse response){
+    public void downloadExcel(Collection<GroupDO> collection, HttpServletResponse response) {
         List<GroupDO> groupSorted = new ArrayList<>();
         buildGroupTree(collection).forEach(new CollectChildren<>(groupSorted));
         FileUtil.downloadExcel(groupSorted.stream().map(GroupDO::toLinkedMap).collect(Collectors.toList()), response);
@@ -210,31 +208,35 @@ class GroupServiceImpl implements GroupService {
 
     private void checkOperationalRights(GroupDO group) {
         UserDO currentUser = userMapper.selectByUsername(SecurityUtils.getCurrentUsername());
-        checkOperationalRights(group, currentUser);
+        doCheckOperationalRights(group, currentUser);
     }
 
-    private void checkOperationalRights(GroupDO group, UserDO currentUser) {
-        return;
-//        if (currentUser.getAdmin()) {  // 管理员直接放行
-//            return;
-//        }
-//        Set<GroupDO> currentUserGroups = groupMapper.selectGroupByUserId(currentUser.getId());
-//        String groupCode = group.getGroupCode();
-//        if (Objects.nonNull(group.getId())) {
-//            // 修改组
-//            // 若修改的组是当前用户所属组或其子组且是用户所属组或其父组的群主，则放行
-//            Assert.isTrue(currentUserGroups.stream()
-//                            .filter(e -> groupCode.startsWith(e.getGroupCode()))
-//                            .anyMatch(e -> currentUser.getUsername().equals(e.getGroupMaster())),
-//                    "你不是将要修改组或其父组的群主，故没有操作权限！");
-//        } else {
-//            // 创建组
-//            // 若创建的组是当前用户所属组的子组且用户是父组群主，则放行
-//            Assert.isTrue(currentUserGroups.stream()
-//                            .filter(e -> groupCode.startsWith(e.getGroupCode()) && !groupCode.equals(e.getGroupCode()))
-//                            .anyMatch(e -> currentUser.getUsername().equals(e.getGroupMaster())),
-//                    "你不是将要创建组的父组的群主，故没有操作权限！");
-//        }
+    private void doCheckOperationalRights(GroupDO group, UserDO currentUser) {
+        if (currentUser.getAdmin()) {  // 管理员直接放行
+            return;
+        }
+        if (Objects.nonNull(group.getId())) {
+            // 修改组
+            // 若修改的组是当前用户所属组或其子组且是用户所属组或其父组的群主，则放行
+            Assert.isTrue(hasOperationalRights(currentUser, group.getGroupCode()),
+                    "你不是将要修改组或其父组的群主，故没有操作权限！");
+        } else {
+            // 创建组
+            if (0 != group.getPid()) {
+                // 创建非根节点
+                // 若创建的组是当前用户所属组的子组且用户是父组群主，则放行
+                final String parentGroupCode = groupMapper.selectByPrimaryKey(group.getPid()).getGroupCode();
+                Assert.isTrue(hasOperationalRights(currentUser, parentGroupCode),
+                        "你不是将要创建组的父组的群主，故没有操作权限！");
+            }
+        }
+    }
+
+    private boolean hasOperationalRights(UserDO currentUser, String groupCode) {
+        Set<GroupDO> currentUserGroups = groupMapper.selectGroupByUserId(currentUser.getId());
+        return currentUserGroups.stream()
+                .filter(e -> groupCode.startsWith(e.getGroupCode()))
+                .anyMatch(e -> currentUser.getUsername().equals(e.getGroupMaster()));
     }
 
     /**

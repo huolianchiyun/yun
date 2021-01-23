@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
+
 import static com.hlcy.yun.common.web.response.ResponseUtil.success;
 
 
@@ -57,9 +58,9 @@ public class PlayerController {
     }
 
     @ApiOperation("历史回放进度条拖拽")
-    @PostMapping("/playback/drag/{ssrc}")
-    public ResponseEntity<ResponseData<Void>> playbackDrag(@PathVariable String ssrc) {
-        player.playbackDrag(ssrc);
+    @PostMapping("/playback/drag/{ssrc}/{range}")
+    public ResponseEntity<ResponseData<Void>> playbackDrag(@PathVariable String ssrc, @PathVariable int range) {
+        player.playbackDrag(ssrc, range);
         return success();
     }
 

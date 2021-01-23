@@ -2,41 +2,20 @@ package com.hlcy.yun.gb28181.operation.control;
 
 import com.hlcy.yun.gb28181.bean.api.PtzParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.sip.client.RequestSender;
-import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-import javax.sip.message.Request;
-import java.nio.charset.StandardCharsets;
+/**
+ * 云台控制命令
+ */
+public class PtzCmd extends AbstractControlCmd<PtzParams> {
 
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createFrom;
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createTo;
-
-@Component
-@RequiredArgsConstructor
-public class PtzCmd implements ControlCmd<PtzParams> {
-    private final GB28181Properties properties;
-
-    @Override
-    public void execute(PtzParams ptzParams) {
-        StringBuilder ptzXml = new StringBuilder(200)
-                .append("<?xml version=\"1.0\" ?>")
-                .append("<Control>")
-                .append("<CmdType>DeviceControl</CmdType>")
-                .append("<SN>").append((int) ((Math.random() * 9 + 1) * 100000)).append("</SN>")
-                .append("<DeviceID>").append(ptzParams.getChannelId()).append("</DeviceID>")
-                .append("<PTZCmd>").append(buildPTZCmd(ptzParams)).append("</PTZCmd>")
-                .append("</Control>");
-
-        Request request = SipRequestFactory.getMessageRequest(
-                createTo(ptzParams.getChannelId(), ptzParams.getDeviceIp(), ptzParams.getDevicePort()),
-                createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                ptzParams.getDeviceTransport(),
-                ptzXml.toString().getBytes(StandardCharsets.UTF_8));
-        RequestSender.sendRequest(request);
+    public PtzCmd(GB28181Properties properties) {
+        super(properties);
     }
 
+    @Override
+    protected String buildCmdXML(PtzParams ptzParams) {
+        return "<PTZCmd>" + buildPTZCmd(ptzParams) + "</PTZCmd>";
+    }
 
     private String buildPTZCmd(PtzParams ptzParams) {
         return doBuildPTZCmd(
@@ -57,7 +36,7 @@ public class PtzCmd implements ControlCmd<PtzParams> {
      * @param zoom      镜头放大缩小 0:停止 1:缩小 2:放大
      * @param panSpeed  镜头移动速度 默认 0XFF (0-255)
      * @param tiltSpeed 镜头移动速度 默认 0XFF (0-255)
-     * @param zoomSpeed 镜头缩放速度 默认 0X1 (0-255)
+     * @param zoomSpeed 镜头缩放速度 默认 0X1 (0-15)
      */
     private String doBuildPTZCmd(int pan, int tilt, int zoom, int panSpeed, int tiltSpeed, int zoomSpeed) {
         StringBuilder builder = new StringBuilder("A50F01"); // 字节1、2、3

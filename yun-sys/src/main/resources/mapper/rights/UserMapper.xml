@@ -74,6 +74,13 @@
         )
     </select>
 
+    <select id="selectByDeptId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_user
+        where u_dept_id = #{deptId,jdbcType=BIGINT}
+    </select>
+
     <select id="selectByGroupIds" parameterType="java.util.HashSet" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -143,7 +150,8 @@
         <foreach item="item" collection="list" separator=",">
             (#{item.nickname,jdbcType=VARCHAR}, #{item.username,jdbcType=VARCHAR},
             #{item.gender,jdbcType=TINYINT}, #{item.pwd,jdbcType=VARCHAR}, #{item.phone,jdbcType=VARCHAR},
-            #{item.email,jdbcType=VARCHAR}, #{item.admin,jdbcType=BIT}, #{item.deptId,jdbcType=BIGINT}, #{item.status,jdbcType=BIT}, ${0},
+            #{item.email,jdbcType=VARCHAR}, #{item.admin,jdbcType=BIT}, #{item.deptId,jdbcType=BIGINT},
+            #{item.status,jdbcType=BIT}, ${0},
             #{item.comeFrom,jdbcType=VARCHAR},#{item.creator,jdbcType=VARCHAR}, #{item.updater,jdbcType=VARCHAR},
             #{item.createTime,jdbcType=TIMESTAMP},
             #{item.updateTime,jdbcType=TIMESTAMP}, #{item.pwdResetTime,jdbcType=TIMESTAMP})
