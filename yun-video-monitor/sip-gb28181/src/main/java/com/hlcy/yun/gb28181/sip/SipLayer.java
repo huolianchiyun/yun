@@ -102,8 +102,7 @@ public final class SipLayer implements SipListener {
             SIpPipelineFactory.getResponsePipeline().processMessage(evt);
             return;
         }
-
-        log.error("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());
+        log.warn("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());
     }
 
     /**

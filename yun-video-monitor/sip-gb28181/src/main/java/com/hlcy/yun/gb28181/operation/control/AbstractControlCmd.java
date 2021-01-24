@@ -5,6 +5,7 @@ import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import lombok.RequiredArgsConstructor;
+
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
 
@@ -13,8 +14,12 @@ import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createT
 
 @RequiredArgsConstructor
 public abstract class AbstractControlCmd<T extends DeviceParams> implements ControlCmd<T> {
+    private final String CMD = "${Cmd}";
     protected final GB28181Properties properties;
-    protected final String CMD = "${Cmd}";
+    protected final int bit1 = 0xA5;
+    protected final int bit2 = 0x0F;
+    protected final int bit3 = 0x01;
+
     protected abstract String buildCmdXML(T t);
 
     public void execute(T t) {
@@ -28,7 +33,7 @@ public abstract class AbstractControlCmd<T extends DeviceParams> implements Cont
         RequestSender.sendRequest(request);
     }
 
-    protected String getCmdTemplate(T t) {
+    private String getCmdTemplate(T t) {
         return new StringBuilder(200)
                 .append("<?xml version=\"1.0\" ?>")
                 .append("<Control>")
@@ -38,5 +43,9 @@ public abstract class AbstractControlCmd<T extends DeviceParams> implements Cont
                 .append(CMD)
                 .append("</Control>")
                 .toString();
+    }
+
+    protected StringBuilder getBit123CmdTemplate() {
+        return new StringBuilder().append(String.format("%02X%02X%02X", bit1, bit2, bit3), 0, 6);
     }
 }

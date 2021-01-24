@@ -2,7 +2,6 @@ package com.hlcy.yun.sys.modules.rights.controller;
 
 import com.hlcy.yun.sys.modules.rights.model.$do.DeptDO;
 import com.hlcy.yun.sys.modules.rights.model.criteria.DeptQueryCriteria;
-import com.hlcy.yun.sys.modules.rights.model.dto.DeptDTO;
 import com.hlcy.yun.sys.modules.rights.service.DeptService;
 import com.hlcy.yun.common.web.response.ResponseData;
 

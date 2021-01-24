@@ -6,12 +6,16 @@
 ```
 
 works：
-关流 context没有清理干净？？
-ssrc重复问题？？
-yun-sys 考虑将dept从group中抽离出来
+关流 context没有清理干净？？ --fixed
+ssrc重复问题？？ --fixed
+yun-sys 考虑将dept从group中抽离出来 --done
+sip 后期扩充：SessionDescription  --y=、f= done
+
+
+
 3. code generator
 4. auto-deploy
 
 分布式事务： alibaba Seate
 
-sip 后期扩充：SessionDescription
+

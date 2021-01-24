@@ -13,18 +13,19 @@ public class PresetParams extends DeviceParams {
 
     private PresetType type;
     /**
+     * bit6
      * 预置位数目最大为 255,0 号预留
      */
     private int presetIndex;
 
     @Getter
     public enum PresetType {
-        SETUP(0x81), CALL(0x82), DEL(0x83);
+        SET_PRESET(0x81), CALL_PRESET(0x82), DEL_PRESET(0x83);
 
-        private int code;
+        private int bit4;
 
-        PresetType(int code) {
-            this.code = code;
+        PresetType(int bit4) {
+            this.bit4 = bit4;
         }
     }
 }

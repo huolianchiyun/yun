@@ -39,8 +39,7 @@ public class PtzCmd extends AbstractControlCmd<PtzParams> {
      * @param zoomSpeed 镜头缩放速度 默认 0X1 (0-15)
      */
     private String doBuildPTZCmd(int pan, int tilt, int zoom, int panSpeed, int tiltSpeed, int zoomSpeed) {
-        StringBuilder builder = new StringBuilder("A50F01"); // 字节1、2、3
-
+        final StringBuilder builder = getBit123CmdTemplate();
         // 字节4: 指令码
         int cmdCode = getCmdCode(pan, tilt, zoom);
         builder.append(String.format("%02X", cmdCode), 0, 2);
@@ -56,7 +55,7 @@ public class PtzCmd extends AbstractControlCmd<PtzParams> {
 
         // 字节8:校验码,为前面的第1~7字节的算术和的低8位,即算术和对256取模后的结果。
         // 字节8=(字节1+字节2+字节3+字节4+字节5+字节6+字节7)%256。
-        int checkCode = (0XA5 + 0X0F + 0X01 + cmdCode + panSpeed + tiltSpeed + (zoomSpeed << 4 & 0XF0)) % 0X100;
+        int checkCode = (bit1 + bit2 + bit3 + cmdCode + panSpeed + tiltSpeed + (zoomSpeed << 4 & 0XF0)) % 0X100;
         builder.append(String.format("%02X", checkCode), 0, 2);
 
         return builder.toString();

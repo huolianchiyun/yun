@@ -25,42 +25,28 @@ import static com.hlcy.yun.gb28181.operation.flow.palyer.play.PlaySession.SIP_ME
  * </P>
  */
 public class DeviceInviteResponseProcessor extends ResponseProcessor {
+
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
-        if (!process486Response(event, context)){
-            final ClientTransaction mediaTransaction = context.get(SIP_MEDIA_SESSION_1);
-            final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
-            RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
+        final ClientTransaction mediaTransaction = context.get(SIP_MEDIA_SESSION_1);
+        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
+        RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
 
-            final ClientTransaction deviceTransaction = context.get(PlaySession.SIP_DEVICE_SESSION);
-            final Request ackRequest4Device = SipRequestFactory.getAckRequest(deviceTransaction);
-            RequestSender.sendAckRequest(ackRequest4Device, deviceTransaction);
+        final ClientTransaction deviceTransaction = context.get(PlaySession.SIP_DEVICE_SESSION);
+        final Request ackRequest4Device = SipRequestFactory.getAckRequest(deviceTransaction);
+        RequestSender.sendAckRequest(ackRequest4Device, deviceTransaction);
 
-            final Request inviteRequest4Device = deviceTransaction.getRequest();
-            final GB28181Properties properties = context.getProperties();
-            Request inviteRequest2media = SipRequestFactory.getInviteRequest(
-                    SipRequestFactory.createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaPort()),
-                    SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                    context.getPlayParams().getDeviceTransport(),
-                    inviteRequest4Device.getRawContent());
+        final Request inviteRequest4Device = deviceTransaction.getRequest();
+        final GB28181Properties properties = context.getProperties();
+        Request inviteRequest2media = SipRequestFactory.getInviteRequest(
+                SipRequestFactory.createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaPort()),
+                SipRequestFactory.createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
+                context.getPlayParams().getDeviceTransport(),
+                inviteRequest4Device.getRawContent());
 
-            final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);
+        final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);
 
-            context.put(PlaySession.SIP_MEDIA_SESSION_2, clientTransaction);
-            FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2media));
-        }
-
-    }
-
-    private boolean process486Response(ResponseEvent event, FlowContext context) {
-        if(event.getResponse().getStatusCode() == Response.BUSY_HERE){
-            DeferredResultHolder.setErrorDeferredResultForRequest(
-                    DeferredResultHolder.CALLBACK_CMD_PLAY + context.getPlayParams().getChannelId(),
-                    "设备繁忙，请稍后再试！");
-            // clean up FlowContext
-            FlowContextCache.remove(getCallId(event));
-            return true;
-        }
-        return false;
+        context.put(PlaySession.SIP_MEDIA_SESSION_2, clientTransaction);
+        FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2media));
     }
 }

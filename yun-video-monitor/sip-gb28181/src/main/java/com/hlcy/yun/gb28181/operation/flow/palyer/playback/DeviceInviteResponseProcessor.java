@@ -22,6 +22,7 @@ import javax.sip.message.Request;
  * </P>
  */
 public class DeviceInviteResponseProcessor extends ResponseProcessor {
+
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         final ClientTransaction mediaTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_1);

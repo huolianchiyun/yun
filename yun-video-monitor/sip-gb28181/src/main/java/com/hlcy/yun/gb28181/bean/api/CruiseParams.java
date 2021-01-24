@@ -9,30 +9,36 @@ public class CruiseParams extends DeviceParams {
     private CruiseType type;
 
     /**
+     * bit5
      * 巡航组号：范围 00H~FFH
      */
     private int groupNum;
 
     /**
-     * 预置位号：范围 00H~FFH
+     * bit6
+     * 预置位号：范围 00H~FFH, 为00H时，表示删除对应的整条巡航
      */
     private int presetIndex;
 
-    private int speed;
-
     /**
-     * 巡航停留时间的单位是秒(s)
+     * bit7
+     * 巡航速度或者停留时间（单位：秒），范围：0H ~ FH
      */
-    private int duration;
+    private int speedOrDuration;
 
     @Getter
     public enum CruiseType {
-        ADD(0x84), DEL(0x85), SET_SPEED(0x86), SET_DURATION(0x87), START(0x88);
+        START_CRUISE(0x88),
+        STOP_CRUISE(0x00),
+        ADD_CRUISE_POINT(0x84),
+        DEL_CRUISE_POINT(0x85),
+        SET_CRUISE_SPEED(0x86),
+        SET_CRUISE_DURATION(0x87);
 
-        private int code;
+        private int bit4;
 
-        CruiseType(int code) {
-            this.code = code;
+        CruiseType(int bit4) {
+            this.bit4 = bit4;
         }
     }
 }

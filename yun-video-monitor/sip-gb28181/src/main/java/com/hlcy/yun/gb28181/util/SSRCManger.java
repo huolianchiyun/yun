@@ -51,7 +51,7 @@ public final class SSRCManger {
     /**
      * 释放ssrc，主要用完的ssrc一定要释放，否则会耗尽
      */
-    public static void releaseSSRC(String ssrc) {
+    public static synchronized void releaseSSRC(String ssrc) {
         String last4bit = ssrc.substring(6);
         inuseLast4bitSet.remove(last4bit);
         unusedLast4bitSet.add(last4bit);
@@ -64,8 +64,10 @@ public final class SSRCManger {
     /**
      * 获取后四位数随机数
      */
-    private static String getLast4bit() throws SSRCException {
-        final String last4bit = unusedLast4bitSet.stream().findAny().orElseThrow(() -> new SSRCException("*** No SSRC available ***"));
+    private static synchronized String getLast4bit() throws SSRCException {
+        final String last4bit = unusedLast4bitSet.stream()
+                .findAny()
+                .orElseThrow(() -> new SSRCException("*** No SSRC available ***"));
         unusedLast4bitSet.remove(last4bit);
         inuseLast4bitSet.add(last4bit);
         return last4bit;
