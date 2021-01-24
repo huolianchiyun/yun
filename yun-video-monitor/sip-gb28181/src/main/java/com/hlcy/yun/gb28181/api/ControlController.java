@@ -1,8 +1,9 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
-import com.hlcy.yun.gb28181.bean.api.*;
-import com.hlcy.yun.gb28181.service.ControlOperator;
+import com.hlcy.yun.gb28181.operation.params.*;
+import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.operation.ControlOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
+
 import static com.hlcy.yun.common.web.response.ResponseUtil.success;
 
 @Slf4j
@@ -32,9 +35,11 @@ public class ControlController {
 
     @ApiOperation("手动录像")
     @PostMapping("/record")
-    public ResponseEntity<ResponseData<Void>> recordControl(@RequestBody RecordParams recordParams) {
+    public DeferredResult<ResponseEntity<ResponseData>> recordControl(@RequestBody RecordParams recordParams) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + recordParams.getChannelId(), result);
         operator.operate(recordParams);
-        return success();
+        return result;
     }
 
     @ApiOperation("拉框放大/缩小")

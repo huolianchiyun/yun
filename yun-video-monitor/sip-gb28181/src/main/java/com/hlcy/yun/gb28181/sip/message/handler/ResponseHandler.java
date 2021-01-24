@@ -1,8 +1,8 @@
 package com.hlcy.yun.gb28181.sip.message.handler;
 
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
-import com.hlcy.yun.gb28181.operation.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
 
 import javax.sip.ResponseEvent;
 import javax.sip.header.CSeqHeader;

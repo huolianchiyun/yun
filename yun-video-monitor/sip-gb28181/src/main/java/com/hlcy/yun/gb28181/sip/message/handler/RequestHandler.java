@@ -1,5 +1,7 @@
 package com.hlcy.yun.gb28181.sip.message.handler;
 
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import gov.nist.javax.sip.SipStackImpl;
@@ -8,6 +10,7 @@ import gov.nist.javax.sip.stack.SIPServerTransaction;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
+import javax.sip.header.CallIdHeader;
 import javax.sip.header.HeaderFactory;
 import javax.sip.header.ViaHeader;
 import javax.sip.message.Request;
@@ -22,6 +25,14 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
     protected String name;
 
     public abstract void handle(RequestEvent event);
+
+    protected FlowContext getFlowContext(RequestEvent event) {
+        return FlowContextCache.get(getCallId(event));
+    }
+
+    protected String getCallId(RequestEvent event) {
+        return ((CallIdHeader) event.getRequest().getHeader(CallIdHeader.NAME)).getCallId();
+    }
 
     /**
      * Creates a new Response message of type specified by the statusCode
@@ -41,18 +52,6 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
 
     protected HeaderFactory getHeaderFactory() {
         return SipLayer.getHeaderFactory();
-    }
-
-    /**
-     * Send 200 response
-     * Creates a new Response message of type specified by the statusCode parameter, based on a specific Request message.
-     * This new Response does not contain a body.
-     *
-     * @param event request event
-     * @throws ParseException
-     */
-    protected void send200Response(RequestEvent event) throws ParseException {
-        sendResponse(event, buildResponse(Response.OK, event.getRequest()));
     }
 
     /**

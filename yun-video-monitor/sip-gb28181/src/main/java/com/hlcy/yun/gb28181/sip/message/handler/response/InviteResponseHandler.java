@@ -4,7 +4,6 @@ import com.hlcy.yun.gb28181.sip.message.handler.ResponseHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.ResponseEvent;
-import javax.sip.message.Response;
 
 @Slf4j
 public class InviteResponseHandler extends ResponseHandler {
@@ -15,6 +14,6 @@ public class InviteResponseHandler extends ResponseHandler {
     @Override
     public void doHandle(ResponseEvent event) {
         log.info("Receive a invite response: \n{}", event.getResponse());
-        getFlowContext(event).getProcessor().handle(event);
+        getFlowContext(event).getResponseProcessor().handle(event);
     }
 }

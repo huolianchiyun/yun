@@ -1,6 +1,6 @@
 package com.hlcy.yun.gb28181.sip.message.factory;
 
-import com.hlcy.yun.gb28181.operation.flow.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.operation.response.flow.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import com.hlcy.yun.gb28181.util.UUIDUtil;
 import gov.nist.javax.sip.Utils;

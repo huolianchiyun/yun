@@ -2,7 +2,7 @@ package com.hlcy.yun.gb28181.sip.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.hlcy.yun.gb28181.operation.flow.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.operation.response.flow.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import lombok.extern.slf4j.Slf4j;
 
