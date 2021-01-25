@@ -1,10 +1,11 @@
-package com.hlcy.yun.gb28181.operation.response.flow.query;
+package com.hlcy.yun.gb28181.operation.response.flow.message.query;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.gb28181.bean.RecordInfo;
 import com.hlcy.yun.gb28181.bean.RecordItem;
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.operation.response.flow.message.MessageProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
@@ -18,12 +19,12 @@ import java.util.*;
  * 文件目录检索请求处理器
  */
 @Slf4j
-public class RecordInfoQueryProcessor extends MessageQueryProcessor {
+public class RecordInfoQueryProcessor extends MessageProcessor {
     private final static String CACHE_RECORD_INFO_KEY = "CACHE_RECORD_INFO_";
     private final TimedCache<String, List<RecordItem>> cache = CacheUtil.newTimedCache(60 * 1000);
 
     @Override
-    protected void process(RequestEvent event) {
+    protected void doProcess(RequestEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("Receive a CmdType <RecordInfo> request, message: {}.", event.getRequest());
         }

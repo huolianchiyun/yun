@@ -1,6 +1,6 @@
-package com.hlcy.yun.gb28181.operation.response.flow.notify;
+package com.hlcy.yun.gb28181.operation.response.flow.message.notify;
 
-import com.hlcy.yun.gb28181.operation.response.flow.query.MessageQueryProcessor;
+import com.hlcy.yun.gb28181.operation.response.flow.message.MessageProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
@@ -9,10 +9,15 @@ import javax.sip.RequestEvent;
 import java.text.ParseException;
 
 @Slf4j
-public class MediaStatusNotifyProcessor extends MessageQueryProcessor {
+public class MediaStatusNotifyProcessor extends MessageProcessor {
 
     @Override
     protected void process(RequestEvent event) {
+        doProcess(event);
+    }
+
+    @Override
+    protected void doProcess(RequestEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("Receive a CmdType <MediaStatus> request, message: {}.", event.getRequest());
         }
@@ -32,6 +37,4 @@ public class MediaStatusNotifyProcessor extends MessageQueryProcessor {
             // TODO 是否通知前端历史文件发送完成
         }
     }
-
-
 }

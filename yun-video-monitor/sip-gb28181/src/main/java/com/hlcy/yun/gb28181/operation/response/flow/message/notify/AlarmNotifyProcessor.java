@@ -1,9 +1,9 @@
-package com.hlcy.yun.gb28181.operation.response.flow.notify;
+package com.hlcy.yun.gb28181.operation.response.flow.message.notify;
 
 import com.hlcy.yun.gb28181.bean.Device;
 import com.hlcy.yun.gb28181.notification.PublisherFactory;
 import com.hlcy.yun.gb28181.notification.event.AlarmEvent;
-import com.hlcy.yun.gb28181.operation.response.flow.query.MessageQueryProcessor;
+import com.hlcy.yun.gb28181.operation.response.flow.message.MessageProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
@@ -11,10 +11,10 @@ import org.dom4j.Element;
 import javax.sip.RequestEvent;
 
 @Slf4j
-public class AlarmNotifyProcessor extends MessageQueryProcessor {
+public class AlarmNotifyProcessor extends MessageProcessor {
 
     @Override
-    protected void process(RequestEvent event) {
+    protected void doProcess(RequestEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("Receive a CmdType <Alarm> request, message: {}.", event.getRequest());
         }

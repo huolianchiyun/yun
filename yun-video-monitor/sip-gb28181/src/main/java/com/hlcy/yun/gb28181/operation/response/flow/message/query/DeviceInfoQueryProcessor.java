@@ -1,7 +1,8 @@
-package com.hlcy.yun.gb28181.operation.response.flow.query;
+package com.hlcy.yun.gb28181.operation.response.flow.message.query;
 
 import com.hlcy.yun.gb28181.bean.Device;
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.operation.response.flow.message.MessageProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
@@ -12,10 +13,10 @@ import javax.sip.RequestEvent;
  * 设备信息查询请求处理器
  */
 @Slf4j
-public class DeviceInfoQueryProcessor extends MessageQueryProcessor {
+public class DeviceInfoQueryProcessor extends MessageProcessor {
 
     @Override
-    protected void process(RequestEvent event) {
+    protected void doProcess(RequestEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("Receive a CmdType <DeviceInfo> request, message: {}.", event.getRequest());
         }

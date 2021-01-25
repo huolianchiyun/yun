@@ -1,7 +1,7 @@
 package com.hlcy.yun.gb28181.operation.response.flow;
 
 import com.hlcy.yun.gb28181.operation.response.flow.palyer.play.*;
-import com.hlcy.yun.gb28181.operation.response.flow.query.CatalogQueryProcessor;
+import com.hlcy.yun.gb28181.operation.response.flow.message.query.CatalogQueryProcessor;
 import com.hlcy.yun.gb28181.sip.message.DefaultPipeline;
 
 import javax.sip.RequestEvent;

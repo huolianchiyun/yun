@@ -11,7 +11,7 @@
 
     <modules>
         <module>admin-center</module>
-        <module>sip-GB28181</module>
+        <module>sip-gb28181</module>
     </modules>
 
     <artifactId>yun-video-monitor</artifactId>

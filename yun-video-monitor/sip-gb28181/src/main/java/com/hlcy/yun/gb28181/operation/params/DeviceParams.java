@@ -11,6 +11,11 @@ public class DeviceParams implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 设备 Id
+     */
+    private String deviceId;
+
+    /**
      * 设备通道 Id
      */
     protected String channelId;

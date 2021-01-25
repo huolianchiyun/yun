@@ -1,8 +1,9 @@
-package com.hlcy.yun.gb28181.operation.response.flow.query;
+package com.hlcy.yun.gb28181.operation.response.flow.message.query;
 
 import com.hlcy.yun.gb28181.bean.Device;
 import com.hlcy.yun.gb28181.bean.DeviceChannel;
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.operation.response.flow.message.MessageProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
@@ -14,13 +15,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * 报警查询请求处理器
+ * 设备目录信息查询请求处理器
  */
 @Slf4j
-public class AlarmQueryProcessor extends MessageQueryProcessor {
+public class CatalogQueryProcessor extends MessageProcessor {
 
     @Override
-    protected void process(RequestEvent event) {
+    protected void doProcess(RequestEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("Receive a CmdType <Catalog> request, message: {}.", event.getRequest());
         }
@@ -30,13 +31,6 @@ public class AlarmQueryProcessor extends MessageQueryProcessor {
         setChannelMapForDevice(device, rootElement.element("DeviceList"));
 
         DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_CATALOG + deviceId, device);
-        try {
-            // 200 with no response body
-            send200Response(event);
-        } catch (ParseException e) {
-            log.error("Process a CmdType <Catalog> message({}) failed, cause: {}.", event.getRequest(), e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     private void setChannelMapForDevice(Device device, Element deviceListElement) {

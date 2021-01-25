@@ -17,9 +17,10 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>yun-jain-sip-ri</module>
+        <module>yun-antlr</module>
         <module>yun-common-starter</module>
         <module>yun-sys</module>
-        <module>yun-antlr</module>
         <module>yun-workflow</module>
         <module>yun-monitor</module>
         <module>yun-service-keeper</module>

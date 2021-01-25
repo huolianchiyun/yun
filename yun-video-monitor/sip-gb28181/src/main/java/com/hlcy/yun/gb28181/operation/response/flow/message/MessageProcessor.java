@@ -1,4 +1,4 @@
-package com.hlcy.yun.gb28181.operation.response.flow.query;
+package com.hlcy.yun.gb28181.operation.response.flow.message;
 
 import com.hlcy.yun.gb28181.operation.response.flow.RequestProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
@@ -11,9 +11,24 @@ import org.dom4j.io.SAXReader;
 import javax.sip.RequestEvent;
 import javax.sip.message.Request;
 import java.io.ByteArrayInputStream;
+import java.text.ParseException;
 
 @Slf4j
-public abstract class MessageQueryProcessor extends RequestProcessor {
+public abstract class MessageProcessor extends RequestProcessor {
+
+    @Override
+    protected void process(RequestEvent event) {
+        doProcess(event);
+        try {
+            // 200 with no response body
+            send200Response(event);
+        } catch (ParseException e) {
+            log.error("Process a CmdType <{}> message({}) failed, cause: \n{}", getCmdTypeFrom(event), event.getRequest(), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    protected abstract void doProcess(RequestEvent event);
 
     protected String getCmdTypeFrom(RequestEvent event) {
         return XmlUtil.getTextOfChildTagFrom(getRootElementFrom(event), "CmdType");

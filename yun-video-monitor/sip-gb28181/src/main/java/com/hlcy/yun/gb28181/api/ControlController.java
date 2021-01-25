@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-
 import static com.hlcy.yun.common.web.response.ResponseUtil.success;
 
 @Slf4j
@@ -77,11 +76,22 @@ public class ControlController {
         return success();
     }
 
-    @ApiOperation("预设位")
+    @ApiOperation("预置位")
     @PostMapping("/preset")
-    public ResponseEntity<ResponseData<Void>> presetControl(@RequestBody PresetParams presetParams) {
+    public DeferredResult<ResponseEntity<ResponseData>> presetControl(@RequestBody PresetParams presetParams) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PRESET + presetParams.getChannelId(), result);
         operator.operate(presetParams);
-        return success();
+        return result;
+    }
+
+    @ApiOperation("巡航")
+    @PostMapping("/cruise")
+    public DeferredResult<ResponseEntity<ResponseData>> cruiseControl(@RequestBody CruiseParams cruiseParams) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_CRUISE + cruiseParams.getChannelId(), result);
+        operator.operate(cruiseParams);
+        return result;
     }
 
     @ApiOperation("光圈控制和聚焦控制")
@@ -97,11 +107,4 @@ public class ControlController {
         operator.operate(iFameParams);
         return success();
     }
-    @ApiOperation("光圈控制和聚焦控制")
-    @PostMapping("/ifame")
-    public ResponseEntity<ResponseData<Void>> cruiseControl(@RequestBody CruiseParams cruiseParams) {
-        operator.operate(cruiseParams);
-        return success();
-    }
-
 }
