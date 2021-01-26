@@ -12,7 +12,7 @@ import javax.sip.RequestEvent;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
 
-public class SIpPipelineFactory {
+public class SipPipelineFactory {
     private final static DefaultPipeline<RequestHandler, RequestEvent> REQUEST_PIPELINE = new DefaultPipeline<>();
     private final static DefaultPipeline<ResponseHandler, ResponseEvent> RESPONSE_PIPELINE = new DefaultPipeline<>();
 
@@ -29,6 +29,7 @@ public class SIpPipelineFactory {
         RESPONSE_PIPELINE.addLast("invite", new InviteResponseHandler(Request.INVITE, Request.INVITE));
         RESPONSE_PIPELINE.addLast("cancel", new CancelResponseHandler(Request.CANCEL, Request.CANCEL));
         RESPONSE_PIPELINE.addLast("bye", new ByeResponseHandler(Request.BYE, Request.BYE));
+        // TODO 优化
         RESPONSE_PIPELINE.addLast("unsupported", new UnsupportedResponseHandler("unsupported", "unsupported"));
     }
 

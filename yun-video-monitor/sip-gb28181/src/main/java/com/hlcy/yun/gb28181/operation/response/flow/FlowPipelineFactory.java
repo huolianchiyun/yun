@@ -1,5 +1,6 @@
 package com.hlcy.yun.gb28181.operation.response.flow;
 
+import com.hlcy.yun.gb28181.operation.response.flow.message.notify.KeepaliveNotifyProcessor;
 import com.hlcy.yun.gb28181.operation.response.flow.palyer.play.*;
 import com.hlcy.yun.gb28181.operation.response.flow.message.query.CatalogQueryProcessor;
 import com.hlcy.yun.gb28181.sip.message.DefaultPipeline;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 import static com.hlcy.yun.gb28181.operation.response.flow.Operation.*;
 
-class FlowPipelineFactory {
+public class FlowPipelineFactory {
 
     private static final Map<Operation, DefaultPipeline<RequestProcessor, RequestEvent>> REQUEST_PIPELINE_CONTAINER;
 
@@ -30,7 +31,9 @@ class FlowPipelineFactory {
         requestMap.put(DEVICE_INFO, DEVICE_INFO_PIPELINE);
 
         // Notify
-
+        DefaultPipeline<RequestProcessor, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();
+        CATALOG_PIPELINE.addLast("Keepalive", new KeepaliveNotifyProcessor());
+        requestMap.put(KEEPALIVE, KEEPALIVE_PIPELINE);
 
 
         // Control
@@ -61,11 +64,11 @@ class FlowPipelineFactory {
         RESPONSE_PIPELINE_CONTAINER = Collections.unmodifiableMap(responseMap);
     }
 
-    static DefaultPipeline<RequestProcessor, RequestEvent> getRequestFlowPipeline(Operation operation) {
+    public static DefaultPipeline<RequestProcessor, RequestEvent> getRequestFlowPipeline(Operation operation) {
         return REQUEST_PIPELINE_CONTAINER.getOrDefault(operation, null);
     }
 
-    static DefaultPipeline<ResponseProcessor, ResponseEvent> getResponseFlowPipeline(Operation operation) {
+    public static DefaultPipeline<ResponseProcessor, ResponseEvent> getResponseFlowPipeline(Operation operation) {
         return RESPONSE_PIPELINE_CONTAINER.getOrDefault(operation, null);
     }
 }

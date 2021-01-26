@@ -11,6 +11,8 @@ ssrc重复问题？？ --fixed
 yun-sys 考虑将dept从group中抽离出来 --done
 sip 后期扩充：SessionDescription  --y=、f= done
 
+28181 组件划分 flowcontext与sip界限划分
+
 message request callId same??
 设备注册后 管理中心主动查询device info 和 catalog
 

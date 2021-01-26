@@ -6,8 +6,8 @@ import com.hlcy.yun.gb28181.config.GB28181Properties;
 /**
  * 预置位查询指令
  */
-public class PresetCommand extends AbstractQueryCmd<QueryParams> {
-    public PresetCommand(GB28181Properties properties) {
+public class PresetQueryCmd extends AbstractQueryCmd<QueryParams> {
+    public PresetQueryCmd(GB28181Properties properties) {
         super(properties);
     }
 

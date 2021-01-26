@@ -2,7 +2,7 @@ package com.hlcy.yun.gb28181.sip;
 
 import com.hlcy.yun.gb28181.sip.auth.DigestServerAuthHelper;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.sip.message.SIpPipelineFactory;
+import com.hlcy.yun.gb28181.sip.message.SipPipelineFactory;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +85,7 @@ public final class SipLayer implements SipListener {
     public void processRequest(RequestEvent evt) {
         executor.execute(() -> {
             // process request
-            SIpPipelineFactory.getRequestPipeline().processMessage(evt);
+            SipPipelineFactory.getRequestPipeline().processMessage(evt);
         });
     }
 
@@ -99,7 +99,7 @@ public final class SipLayer implements SipListener {
             return;
         } else if ((status >= 200) && (status < 500)) {
             // process response
-            SIpPipelineFactory.getResponsePipeline().processMessage(evt);
+            SipPipelineFactory.getResponsePipeline().processMessage(evt);
             return;
         }
         log.warn("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());

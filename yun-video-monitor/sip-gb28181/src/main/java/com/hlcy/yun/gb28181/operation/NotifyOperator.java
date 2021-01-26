@@ -8,15 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 设备控制操作器
+ * 设备通知操作器
  */
 @Service
 @RequiredArgsConstructor
 public class NotifyOperator<T extends NotifyParams> implements InitializingBean {
-    private Map<Class, AbstractNotifyCmd> cmdFactory;
+    private Map<Class, AbstractNotifyCmd> cmdFactory = new HashMap<>(5);
     private final GB28181Properties properties;
 
     public static NotifyOperator getInstance() {

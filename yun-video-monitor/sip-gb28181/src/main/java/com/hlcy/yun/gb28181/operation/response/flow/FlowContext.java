@@ -4,6 +4,7 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.gb28181.operation.params.DeviceParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
 
 import javax.sip.ClientTransaction;
 import java.io.Serializable;
@@ -33,9 +34,10 @@ public class FlowContext implements Serializable {
         this.operationalParams = operationalParams;
     }
 
+    //TODO 后续优化
     private FlowContext(Operation operation) {
         this.operation = operation;
-        if (operation == Operation.GUARD || operation == Operation.HOME_POSITION
+        if (operation == Operation.GUARD || operation == Operation.HOME_POSITION || operation == Operation.KEEPALIVE
                 || operation == Operation.RECORD || operation == Operation.RESET_ALARM) {
             this.currentRequestProcessor = FlowPipelineFactory.getRequestFlowPipeline(operation).first();
         } else if (operation == Operation.PLAY || operation == Operation.PLAYBACK) {
@@ -54,7 +56,7 @@ public class FlowContext implements Serializable {
     /**
      * Switch current processor to the next processor.
      */
-    void switch2NextProcessor() {
+    public void switch2NextProcessor() {
         this.currentResponseProcessor = this.currentResponseProcessor.getNextProcessor();
     }
 

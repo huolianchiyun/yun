@@ -1,6 +1,4 @@
-package com.hlcy.yun.gb28181.operation.response.flow;
-
-import gov.nist.javax.sip.header.CSeq;
+package com.hlcy.yun.gb28181.sip.javax;
 
 import javax.sip.*;
 import javax.sip.message.Request;

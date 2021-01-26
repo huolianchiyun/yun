@@ -20,7 +20,7 @@ public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> im
     public void handle(ResponseEvent event) {
         final int status = event.getResponse().getStatusCode();
         if (!(status == Response.OK)) {
-            log.warn("Receive a exception response, status：{}, message: {}.", status, event.getResponse().getReasonPhrase());
+            log.warn("Receive a exception response, status：{}, message: \n{}", status, event.getResponse().getReasonPhrase());
             // clean up play flow environment
             cleanupFlowContext(event);
             return;
@@ -59,11 +59,11 @@ public abstract class ResponseProcessor extends MessageHandler<ResponseEvent> im
         FlowContextCache.remove(getCallId(event));
     }
 
+    protected abstract void process(ResponseEvent event, FlowContext context) throws SdpException;
+
     public ResponseProcessor getNextProcessor() {
         return (ResponseProcessor) next;
     }
-
-    protected abstract void process(ResponseEvent event, FlowContext context) throws SdpException;
 
     protected ClientTransaction getClientTransaction(ResponseEvent event) {
         return event.getClientTransaction();
