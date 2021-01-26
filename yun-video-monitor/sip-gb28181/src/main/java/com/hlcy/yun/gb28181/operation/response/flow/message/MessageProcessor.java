@@ -1,6 +1,8 @@
 package com.hlcy.yun.gb28181.operation.response.flow.message;
 
-import com.hlcy.yun.gb28181.operation.response.flow.RequestProcessor;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowRequestProcessor;
+import com.hlcy.yun.gb28181.sip.client.RequestProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
@@ -14,10 +16,10 @@ import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 
 @Slf4j
-public abstract class MessageProcessor extends RequestProcessor {
+public abstract class MessageProcessor extends FlowRequestProcessor {
 
     @Override
-    protected void process(RequestEvent event) {
+    protected void process(RequestEvent event, FlowContext context) {
         doProcess(event);
         try {
             // 200 with no response body

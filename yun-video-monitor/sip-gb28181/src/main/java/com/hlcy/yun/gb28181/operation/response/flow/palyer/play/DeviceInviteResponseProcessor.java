@@ -1,11 +1,12 @@
 package com.hlcy.yun.gb28181.operation.response.flow.palyer.play;
 
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.operation.response.flow.ResponseProcessor;
+import com.hlcy.yun.gb28181.sip.client.ResponseProcessor;
 
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
@@ -20,12 +21,12 @@ import javax.sip.message.Request;
  * 8:完成三方呼叫控制后,SIP服务器通过B2BUA代理方式建立媒体流接收者和媒体服务器之间的媒体连接。在消息1中增加SSRC值,转发给媒体服务器。<br/>
  * </P>
  */
-public class DeviceInviteResponseProcessor extends ResponseProcessor {
+public class DeviceInviteResponseProcessor extends FlowResponseProcessor {
 
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         final ClientTransaction mediaTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_1);
-        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
+        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBodyByByteArr(event));
         RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
 
         final ClientTransaction deviceTransaction = context.get(PlaySession.SIP_DEVICE_SESSION);
@@ -43,6 +44,6 @@ public class DeviceInviteResponseProcessor extends ResponseProcessor {
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);
 
         context.put(PlaySession.SIP_MEDIA_SESSION_2, clientTransaction);
-        FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2media));
+        FlowContextCacheUtil.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2media));
     }
 }

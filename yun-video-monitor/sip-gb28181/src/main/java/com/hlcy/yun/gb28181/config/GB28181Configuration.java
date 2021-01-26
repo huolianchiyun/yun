@@ -1,6 +1,6 @@
 package com.hlcy.yun.gb28181.config;
 
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,6 +20,6 @@ public class GB28181Configuration implements ApplicationContextAware {
 
     private void init(GB28181Properties properties) {
         SipLayer.start(properties);
-        FlowContextCache.init();
+        FlowContextCacheUtil.init();
     }
 }

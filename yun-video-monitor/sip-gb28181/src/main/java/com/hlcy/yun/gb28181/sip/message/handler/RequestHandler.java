@@ -1,8 +1,7 @@
 package com.hlcy.yun.gb28181.sip.message.handler;
 
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
 import com.hlcy.yun.gb28181.sip.SipLayer;
+import com.hlcy.yun.gb28181.sip.client.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import gov.nist.javax.sip.SipStackImpl;
 import gov.nist.javax.sip.message.SIPRequest;
@@ -22,12 +21,14 @@ import java.text.ParseException;
  */
 @Slf4j
 public abstract class RequestHandler extends MessageHandler<RequestEvent> {
+    private static MessageContextCache<? extends MessageContext> contextCache;
+
     protected String name;
 
     public abstract void handle(RequestEvent event);
 
-    protected FlowContext getFlowContext(RequestEvent event) {
-        return FlowContextCache.get(getCallId(event));
+    protected MessageContext getMessageContext(RequestEvent event) {
+        return contextCache.get(getCallId(event));
     }
 
     protected String getCallId(RequestEvent event) {
@@ -58,7 +59,7 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
      * Responding to request event
      *
      * @param event    request event
-     * @param response
+     * @param response /
      */
     protected void sendResponse(RequestEvent event, Response response) {
         try {
@@ -96,4 +97,7 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
         return name;
     }
 
+    public static void setContextCache(MessageContextCache<? extends MessageContext> contextCache) {
+        RequestHandler.contextCache = contextCache;
+    }
 }

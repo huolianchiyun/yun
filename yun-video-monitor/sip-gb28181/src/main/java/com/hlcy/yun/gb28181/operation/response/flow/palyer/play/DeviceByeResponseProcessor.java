@@ -1,8 +1,8 @@
 package com.hlcy.yun.gb28181.operation.response.flow.palyer.play;
 
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
-import com.hlcy.yun.gb28181.operation.response.flow.ResponseProcessor;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowResponseProcessor;
 
 import javax.sip.ResponseEvent;
 
@@ -12,11 +12,11 @@ import javax.sip.ResponseEvent;
  * 20:媒体流发送者收到BYE消息后回复200OK响应,会话断开。
  * </P>
  */
-public class DeviceByeResponseProcessor extends ResponseProcessor {
+public class DeviceByeResponseProcessor extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         // clean up play flow environment
-        FlowContextCache.remove(getCallId(event));
-        getFlowContext(event).clearSessionCache();
+        FlowContextCacheUtil.remove(getCallId(event));
+        getContext(event).clearSessionCache();
     }
 }

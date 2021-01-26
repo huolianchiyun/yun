@@ -96,7 +96,6 @@ public class RegisterRequestHandler extends RequestHandler {
         return isPass;
     }
 
-
     private Device extractDeviceInfoFrom(Request request) {
         ViaHeader viaHeader = (ViaHeader) request.getHeader(ViaHeader.NAME);
         String received = viaHeader.getReceived();

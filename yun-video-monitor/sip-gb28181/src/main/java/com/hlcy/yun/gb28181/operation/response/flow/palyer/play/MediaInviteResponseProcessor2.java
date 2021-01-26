@@ -2,10 +2,10 @@ package com.hlcy.yun.gb28181.operation.response.flow.palyer.play;
 
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.operation.response.flow.ResponseProcessor;
 
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
@@ -21,15 +21,15 @@ import javax.sip.message.Request;
  * 12:SIP服务器将消息11转发给媒体服务器,完成与媒体服务器的Invite会话建立过程。<br/>
  * </p>
  */
-public class MediaInviteResponseProcessor2 extends ResponseProcessor {
+public class MediaInviteResponseProcessor2 extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         final String ssrc = context.getSsrc();
         DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PLAY + context.getOperationalParams().getChannelId(), ssrc);
 
         final ClientTransaction mediaTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_2);
-        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
+        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBodyByByteArr(event));
         RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
-        FlowContextCache.setNewKey(getCallId(event), ssrc);
+        FlowContextCacheUtil.setNewKey(getCallId(event), ssrc);
     }
 }

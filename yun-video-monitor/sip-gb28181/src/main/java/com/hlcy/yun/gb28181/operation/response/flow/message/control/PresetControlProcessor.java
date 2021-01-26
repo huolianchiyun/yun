@@ -1,7 +1,5 @@
 package com.hlcy.yun.gb28181.operation.response.flow.message.control;
 
-import com.hlcy.yun.gb28181.bean.Device;
-import com.hlcy.yun.gb28181.bean.DeviceChannel;
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.operation.response.flow.message.MessageProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;

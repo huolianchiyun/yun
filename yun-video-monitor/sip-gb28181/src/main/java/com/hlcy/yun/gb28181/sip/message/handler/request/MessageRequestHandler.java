@@ -1,8 +1,8 @@
 package com.hlcy.yun.gb28181.sip.message.handler.request;
 
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.response.flow.FlowPipelineFactory;
 import com.hlcy.yun.gb28181.operation.response.flow.Operation;
+import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,11 +21,11 @@ public class MessageRequestHandler extends RequestHandler {
             log.debug("Receive a message request: \n{}", event.getRequest());
         }
 
-        final FlowContext flowContext = getFlowContext(event);
-        if (flowContext != null) {
-            flowContext.getRequestProcessor().handle(event);
+        final MessageContext context = getMessageContext(event);
+        if (context != null) {
+            context.getRequestProcessor().handle(event);
         } else {
-            // TODO 优化
+            // TODO 优化 jie ou
             FlowPipelineFactory.getRequestFlowPipeline(Operation.KEEPALIVE).first().handle(event);
         }
     }

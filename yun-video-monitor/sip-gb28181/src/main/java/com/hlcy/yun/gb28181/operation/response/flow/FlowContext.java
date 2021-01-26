@@ -4,13 +4,16 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.gb28181.operation.params.DeviceParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.sip.client.RequestProcessor;
+import com.hlcy.yun.gb28181.sip.client.ResponseProcessor;
 import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 
 import javax.sip.ClientTransaction;
 import java.io.Serializable;
 import java.util.Iterator;
 
-public class FlowContext implements Serializable {
+public class FlowContext extends MessageContext implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static GB28181Properties properties;
@@ -20,10 +23,6 @@ public class FlowContext implements Serializable {
     private boolean isRecovered;
 
     private final Operation operation;
-
-    private ResponseProcessor currentResponseProcessor;
-
-    private RequestProcessor currentRequestProcessor;
 
     private DeviceParams operationalParams;
 
@@ -54,9 +53,14 @@ public class FlowContext implements Serializable {
     }
 
     /**
-     * Switch current processor to the next processor.
+     * Switch current response processor to the next response processor.
      */
-    public void switch2NextProcessor() {
+    public void setCurrentRequestProcessor2next() {
+        this.currentRequestProcessor = this.currentRequestProcessor.getNextProcessor();
+    }
+
+    @Override
+    public void setCurrentResponseProcessor2next() {
         this.currentResponseProcessor = this.currentResponseProcessor.getNextProcessor();
     }
 

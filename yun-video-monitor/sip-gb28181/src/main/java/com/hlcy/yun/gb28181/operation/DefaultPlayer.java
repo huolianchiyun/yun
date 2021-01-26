@@ -5,7 +5,7 @@ import com.hlcy.yun.gb28181.operation.params.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.operation.response.flow.Operation;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
 import com.hlcy.yun.gb28181.operation.response.flow.palyer.playback.PlaybackSession;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
@@ -37,7 +37,7 @@ public class DefaultPlayer implements Player {
     @Override
     public void play(PlayParams params) {
         // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
-        final Optional<FlowContext> optional = FlowContextCache.findFlowContextBy(params.getChannelId());
+        final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextBy(params.getChannelId());
         if (optional.isPresent() && StringUtils.hasText(optional.get().getSsrc())) {
             DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(), optional.get().getSsrc());
             return;
@@ -52,7 +52,7 @@ public class DefaultPlayer implements Player {
         final FlowContext flowContext = new FlowContext(Operation.PLAY, params);
         FlowContext.setProperties(properties);
         flowContext.put(SIP_MEDIA_SESSION_1, clientTransaction);
-        FlowContextCache.put(getCallId(inviteMedia), flowContext);
+        FlowContextCacheUtil.put(getCallId(inviteMedia), flowContext);
     }
 
     @Override
@@ -67,12 +67,12 @@ public class DefaultPlayer implements Player {
         final Request bye = getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
 
-        FlowContextCache.setNewKey(ssrc, getCallId(bye));
+        FlowContextCacheUtil.setNewKey(ssrc, getCallId(bye));
         SSRCManger.releaseSSRC(ssrc);
     }
 
     private boolean isClosedMediaStreamOf(String ssrc) {
-        final FlowContext context = FlowContextCache.get(ssrc);
+        final FlowContext context = FlowContextCacheUtil.get(ssrc);
         if (context == null) {
             log.info("媒体流已关闭，SSRC：{}", ssrc);
             return true;
@@ -81,7 +81,7 @@ public class DefaultPlayer implements Player {
     }
 
     private ClientTransaction getMediaByeClientTransaction(String ssrc) {
-        final FlowContext context = FlowContextCache.get(ssrc);
+        final FlowContext context = FlowContextCacheUtil.get(ssrc);
         ClientTransaction clientTransaction = null;
         if (Operation.PLAY == context.getOperation()) {
             clientTransaction = context.get(SIP_MEDIA_SESSION_2);
@@ -104,12 +104,12 @@ public class DefaultPlayer implements Player {
         final FlowContext flowContext = new FlowContext(Operation.PLAYBACK, playbackParams);
         FlowContext.setProperties(properties);
         flowContext.put(PlaybackSession.SIP_MEDIA_SESSION_1, clientTransaction);
-        FlowContextCache.put(getCallId(inviteMedia), flowContext);
+        FlowContextCacheUtil.put(getCallId(inviteMedia), flowContext);
     }
 
     @Override
     public void playbackForwardOrkBack(String ssrc, double scale) {
-        final FlowContext flowContext = FlowContextCache.get(ssrc);
+        final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.get(PlaybackSession.SIP_DEVICE_SESSION);
         // Scale为 1,正常播放;不等于 1,为正常播放速率的倍数;负数为倒放
         String content = "PLAY RTSP/1.0" + "\r\n"
@@ -121,7 +121,7 @@ public class DefaultPlayer implements Player {
 
     @Override
     public void playbackDrag(String ssrc, int range) {
-        final FlowContext flowContext = FlowContextCache.get(ssrc);
+        final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.get(PlaybackSession.SIP_DEVICE_SESSION);
         String content = "PLAY RTSP/1.0" + "\r\n"
                 + "CSeq:4" + "\r\n"
@@ -134,7 +134,7 @@ public class DefaultPlayer implements Player {
 
     @Override
     public void playbackPause(String ssrc) {
-        final FlowContext flowContext = FlowContextCache.get(ssrc);
+        final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.get(PlaybackSession.SIP_DEVICE_SESSION);
         String content = "PAUSE RTSP/1.0" + "\r\n"
                 + "CSeq: 1" + "\r\n"
@@ -145,7 +145,7 @@ public class DefaultPlayer implements Player {
 
     @Override
     public void playbackReplay(String ssrc) {
-        final FlowContext flowContext = FlowContextCache.get(ssrc);
+        final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.get(PlaybackSession.SIP_DEVICE_SESSION);
         String content = "PLAY RTSP/1.0" + "\r\n"
                 + "CSeq: 2" + "\r\n"

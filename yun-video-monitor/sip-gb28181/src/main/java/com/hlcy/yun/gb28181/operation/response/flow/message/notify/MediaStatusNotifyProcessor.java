@@ -12,11 +12,6 @@ import java.text.ParseException;
 public class MediaStatusNotifyProcessor extends MessageProcessor {
 
     @Override
-    protected void process(RequestEvent event) {
-        doProcess(event);
-    }
-
-    @Override
     protected void doProcess(RequestEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("Receive a CmdType <MediaStatus> request, message: {}.", event.getRequest());

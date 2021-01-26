@@ -4,12 +4,13 @@ import com.hlcy.yun.gb28181.operation.params.DeviceParams;
 import com.hlcy.yun.gb28181.exception.SSRCException;
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
-import com.hlcy.yun.gb28181.operation.response.flow.ResponseProcessor;
+import com.hlcy.yun.gb28181.sip.client.ResponseProcessor;
 import gov.nist.javax.sdp.fields.SSRCField;
 import gov.nist.javax.sdp.fields.SessionNameField;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ import java.nio.charset.StandardCharsets;
  * </p>
  */
 @Slf4j
-public class MediaInviteResponseProcessor1 extends ResponseProcessor {
+public class MediaInviteResponseProcessor1 extends FlowResponseProcessor {
 
     /**
      * 流媒体服务器 200OK 响应的消息体
@@ -77,11 +78,11 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
         context.setSsrc(ssrc);
         context.put(PlaySession.SIP_DEVICE_SESSION, clientTransaction);
 
-        FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
+        FlowContextCacheUtil.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
     }
 
     private SessionDescription extractSessionDescAndSetSessionName(ResponseEvent event) throws SdpException {
-        SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
+        SessionDescription sessionDescription = getSessionDescription(getResponseBodyByStr(event));
         sessionDescription.setSessionName(new SessionNameField("Play"));
         return sessionDescription;
     }

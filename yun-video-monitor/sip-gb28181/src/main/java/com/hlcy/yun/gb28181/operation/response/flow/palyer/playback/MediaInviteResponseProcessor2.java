@@ -1,10 +1,10 @@
 package com.hlcy.yun.gb28181.operation.response.flow.palyer.playback;
 
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.operation.response.flow.palyer.play.PlaySession;
-import com.hlcy.yun.gb28181.operation.response.flow.ResponseProcessor;
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 
@@ -24,15 +24,15 @@ import javax.sip.message.Request;
  * 14:媒体流发送者收到Info消息后回复200OK响应;<br/>
  * </p>
  */
-public class MediaInviteResponseProcessor2 extends ResponseProcessor {
+public class MediaInviteResponseProcessor2 extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         final String ssrc = context.getSsrc();
         DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PLAYBACK + context.getOperationalParams().getChannelId(), ssrc);
 
         final ClientTransaction mediaTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_2);
-        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBody2(event));
+        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getResponseBodyByByteArr(event));
         RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
-        FlowContextCache.setNewKey(getCallId(event), ssrc);
+        FlowContextCacheUtil.setNewKey(getCallId(event), ssrc);
     }
 }

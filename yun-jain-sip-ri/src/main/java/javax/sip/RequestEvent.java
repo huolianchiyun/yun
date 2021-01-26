@@ -3,23 +3,23 @@
  * Unpublished - rights reserved under the Copyright Laws of the United States.
  * Copyright © 2003 Sun Microsystems, Inc. All rights reserved.
  * Copyright © 2005 BEA Systems, Inc. All rights reserved.
- *
+ * <p>
  * Use is subject to license terms.
- *
+ * <p>
  * This distribution may include materials developed by third parties.
- *
+ * <p>
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *
+ * <p>
  * Module Name   : JSIP Specification
  * File Name     : RequestEvent.java
  * Author        : Phelim O'Doherty
- *
- *  HISTORY
- *  Version   Date      Author              Comments
- *  1.1     08/10/2002  Phelim O'Doherty    Initial version
- *  1.2     02/15/2005  M. Ranganathan      getDialog get the current
- *                                          dialog.
- *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * <p>
+ * HISTORY
+ * Version   Date      Author              Comments
+ * 1.1     08/10/2002  Phelim O'Doherty    Initial version
+ * 1.2     02/15/2005  M. Ranganathan      getDialog get the current
+ * dialog.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 package javax.sip;
 
@@ -58,38 +58,43 @@ import java.util.EventObject;
  */
 public class RequestEvent extends EventObject {
 
+    // internal variables
+    private Request m_request;
+    private ServerTransaction m_transaction;
+    private Dialog m_dialog;
+
     /**
-    * Constructs a RequestEvent encapsulating the Request that has been received
-    * by the underlying SipProvider. This RequestEvent once created is passed to
-    * {@link SipListener#processRequest(RequestEvent)} method of the SipListener
-    * for application processing.
-    *
-    * @param source - the source of ResponseEvent i.e. the SipProvider
-    * @param serverTransaction - server transaction upon which
-    * this Request was sent
-    * @param request - the Request message received by the SipProvider
-    */
+     * Constructs a RequestEvent encapsulating the Request that has been received
+     * by the underlying SipProvider. This RequestEvent once created is passed to
+     * {@link SipListener#processRequest(RequestEvent)} method of the SipListener
+     * for application processing.
+     *
+     * @param source            - the source of ResponseEvent i.e. the SipProvider
+     * @param serverTransaction - server transaction upon which
+     *                          this Request was sent
+     * @param request           - the Request message received by the SipProvider
+     */
     public RequestEvent(Object source, ServerTransaction serverTransaction, Dialog dialog, Request request) {
         super(source);
         m_transaction = serverTransaction;
         m_request = request;
-        m_dialog  = dialog;
-   }
+        m_dialog = dialog;
+    }
 
     /**
-    * Gets the server transaction associated with this RequestEvent
-    *
-    * @return the server transaction associated with this RequestEvent
-    */
-    public ServerTransaction getServerTransaction(){
+     * Gets the server transaction associated with this RequestEvent
+     *
+     * @return the server transaction associated with this RequestEvent
+     */
+    public ServerTransaction getServerTransaction() {
         return m_transaction;
     }
 
     /**
-    * Gets the Request message associated with this RequestEvent.
-    *
-    * @return the message associated with this RequestEvent.
-    */
+     * Gets the Request message associated with this RequestEvent.
+     *
+     * @return the message associated with this RequestEvent.
+     */
     public Request getRequest() {
         return m_request;
     }
@@ -108,9 +113,4 @@ public class RequestEvent extends EventObject {
         return m_dialog;
     }
 
-
-    // internal variables
-    private Request m_request;
-    private ServerTransaction m_transaction;
-    private Dialog  m_dialog;
 }

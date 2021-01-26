@@ -1,27 +1,32 @@
-package com.hlcy.yun.gb28181.operation.response.flow;
+package com.hlcy.yun.gb28181.sip.client;
 
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
+import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import gov.nist.javax.sip.SipStackImpl;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.stack.SIPServerTransaction;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
+import javax.sip.header.CallIdHeader;
 import javax.sip.header.ViaHeader;
 import javax.sip.message.Request;
 import javax.sip.message.Response;
 import java.text.ParseException;
 
 @Slf4j
-public abstract class RequestProcessor extends MessageHandler<RequestEvent> {
+public abstract class RequestProcessor<C extends MessageContext> extends MessageHandler<RequestEvent> {
 
     @Override
     public void handle(RequestEvent event) {
-        process(event);
+        final C context = getContext(event);
+        process(event, context);
     }
 
-    protected abstract void process(RequestEvent event);
+    protected abstract void process(RequestEvent event, C context);
+
+    protected abstract C getContext(RequestEvent event);
 
     /**
      * Send 200 response
@@ -85,4 +90,11 @@ public abstract class RequestProcessor extends MessageHandler<RequestEvent> {
         return SipLayer.getMessageFactory().createResponse(statusCode, request);
     }
 
+    protected String getCallId(RequestEvent event) {
+        return ((CallIdHeader) event.getRequest().getHeader(CallIdHeader.NAME)).getCallId();
+    }
+
+    public RequestProcessor<MessageContext> getNextProcessor() {
+        return (RequestProcessor<MessageContext>) next;
+    }
 }

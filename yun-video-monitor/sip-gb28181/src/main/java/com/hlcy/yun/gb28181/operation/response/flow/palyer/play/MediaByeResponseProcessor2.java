@@ -1,9 +1,9 @@
 package com.hlcy.yun.gb28181.operation.response.flow.palyer.play;
 
+import com.hlcy.yun.gb28181.operation.response.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.operation.response.flow.ResponseProcessor;
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
 
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
@@ -19,12 +19,12 @@ import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendByeRequest;
  * 19:SIP服务器向媒体流发送者发送BYE消息,断开消息4、5、7建立的同媒体流发送者的Invite会话。<br/>
  * </P>
  */
-public class MediaByeResponseProcessor2 extends ResponseProcessor {
+public class MediaByeResponseProcessor2 extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         final ClientTransaction clientTransaction = context.get(SIP_DEVICE_SESSION);
         final Request bye = SipRequestFactory.getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
-        FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(bye));
+        FlowContextCacheUtil.setNewKey(getCallId(event), SipRequestFactory.getCallId(bye));
     }
 }

@@ -1,9 +1,7 @@
 package com.hlcy.yun.gb28181.sip.message.handler;
 
+import com.hlcy.yun.gb28181.sip.client.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
-
 import javax.sip.ResponseEvent;
 import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
@@ -11,8 +9,11 @@ import javax.sip.header.CallIdHeader;
 /**
  * @implNote 子类要保证线程安全
  */
-public abstract class ResponseHandler extends MessageHandler<ResponseEvent>{
+public abstract class ResponseHandler extends MessageHandler<ResponseEvent> {
+    private static MessageContextCache<? extends MessageContext> contextCache;
+
     protected String name;
+
     // 响应方法: invite, message and so on
     protected String method;
 
@@ -32,8 +33,8 @@ public abstract class ResponseHandler extends MessageHandler<ResponseEvent>{
         doHandle(event);
     }
 
-    protected FlowContext getFlowContext(ResponseEvent event) {
-        return FlowContextCache.get(getCallId(event));
+    protected MessageContext getMessageContext(ResponseEvent event) {
+        return contextCache.get(getCallId(event));
     }
 
     protected String getCallId(ResponseEvent event) {
@@ -46,5 +47,9 @@ public abstract class ResponseHandler extends MessageHandler<ResponseEvent>{
 
     public String getName() {
         return name;
+    }
+
+    public static void setContextCache(MessageContextCache<? extends MessageContext> contextCache) {
+        ResponseHandler.contextCache = contextCache;
     }
 }

@@ -4,10 +4,11 @@ import com.hlcy.yun.gb28181.operation.params.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.exception.SSRCException;
 import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.operation.response.flow.palyer.play.PlaySession;
-import com.hlcy.yun.gb28181.operation.response.flow.ResponseProcessor;
+import com.hlcy.yun.gb28181.sip.client.ResponseProcessor;
 import com.hlcy.yun.gb28181.operation.response.flow.FlowContext;
-import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCache;
+import com.hlcy.yun.gb28181.operation.response.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.sip.client.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
@@ -33,7 +34,7 @@ import java.util.Vector;
  * </p>
  */
 @Slf4j
-public class MediaInviteResponseProcessor1 extends ResponseProcessor {
+public class MediaInviteResponseProcessor1 extends FlowResponseProcessor {
 
     /**
      * <p>
@@ -88,7 +89,7 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) throws SdpException {
         SessionNameField sessionNameField = new SessionNameField("Playback");
-        SessionDescription sessionDescription = getSessionDescription(getResponseBody1(event));
+        SessionDescription sessionDescription = getSessionDescription(getResponseBodyByStr(event));
         sessionDescription.setSessionName(sessionNameField);
 
         final PlaybackParams playbackParams = (PlaybackParams) context.getOperationalParams();
@@ -111,7 +112,7 @@ public class MediaInviteResponseProcessor1 extends ResponseProcessor {
 
         context.setSsrc(ssrc);
         context.put(PlaySession.SIP_DEVICE_SESSION, clientTransaction);
-        FlowContextCache.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
+        FlowContextCacheUtil.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
     }
 
     private String getSSRC(FlowContext context) {
