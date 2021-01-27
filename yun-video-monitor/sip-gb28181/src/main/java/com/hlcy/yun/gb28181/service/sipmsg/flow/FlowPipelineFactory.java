@@ -34,7 +34,7 @@ public class FlowPipelineFactory {
 
         // Notify
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();
-        CATALOG_PIPELINE.addLast("Keepalive", new KeepaliveNotifyProcessor());
+        KEEPALIVE_PIPELINE.addLast("Keepalive", new KeepaliveNotifyProcessor());
         requestMap.put(KEEPALIVE, KEEPALIVE_PIPELINE);
 
         // Control

@@ -31,7 +31,7 @@ public class CruiseCmd extends AbstractControlCmd<CruiseParams> {
         builder.append(String.format("%02X", bit6), 0, 2);
         // 字节7
         final int bit7 = CruiseParams.CruiseType.SET_CRUISE_SPEED == type || CruiseParams.CruiseType.SET_CRUISE_DURATION == type ? params.getSpeedOrDuration() : 0x00;
-        builder.append(String.format("%X", bit7), 0, 1).append("0");
+        builder.append(String.format("%02X", bit7), 0, 2);
 
         // 字节8:校验码,为前面的第1~7字节的算术和的低8位,即算术和对256取模后的结果。
         // 字节8=(字节1+字节2+字节3+字节4+字节5+字节6+字节7)%256。

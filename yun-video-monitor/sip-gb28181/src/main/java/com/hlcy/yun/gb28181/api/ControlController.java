@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+
 import static com.hlcy.yun.common.web.response.ResponseUtil.success;
 
 @Slf4j
@@ -82,6 +83,9 @@ public class ControlController {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PRESET + presetParams.getChannelId(), result);
         operator.operate(presetParams);
+        if (PresetParams.PresetType.CALL_PRESET == presetParams.getType()) {
+            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PRESET + presetParams.getChannelId(), "ok");
+        }
         return result;
     }
 

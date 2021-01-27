@@ -36,7 +36,7 @@ public class PtzParams extends DeviceParams { //TODO 对参数值范围进行校
     private int zoom;
 
     /**
-     * 变倍控制速度相对值，速度范围由慢到快为00H-FFH
+     * 变倍控制速度相对值，速度范围由慢到快为 00H - FFH
      */
     private int zoomSpeed;
 }
