@@ -29,7 +29,7 @@ public class FlowPipelineFactory {
         requestMap.put(CATALOG, CATALOG_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> DEVICE_INFO_PIPELINE = new DefaultPipeline<>();
-        CATALOG_PIPELINE.addLast("DeviceInfo", new CatalogQueryProcessor());
+        DEVICE_INFO_PIPELINE.addLast("DeviceInfo", new CatalogQueryProcessor());
         requestMap.put(DEVICE_INFO, DEVICE_INFO_PIPELINE);
 
         // Notify
@@ -38,9 +38,9 @@ public class FlowPipelineFactory {
         requestMap.put(KEEPALIVE, KEEPALIVE_PIPELINE);
 
         // Control
-        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> _PIPELINE = new DefaultPipeline<>();
-        CATALOG_PIPELINE.addLast("Keepalive", new KeepaliveNotifyProcessor());
-        requestMap.put(KEEPALIVE, KEEPALIVE_PIPELINE);
+//        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> _PIPELINE = new DefaultPipeline<>();
+//        CATALOG_PIPELINE.addLast("Keepalive", new KeepaliveNotifyProcessor());
+//        requestMap.put(KEEPALIVE, KEEPALIVE_PIPELINE);
 
 
         REQUEST_PIPELINE_CONTAINER = Collections.unmodifiableMap(requestMap);
