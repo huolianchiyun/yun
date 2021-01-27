@@ -1,19 +1,10 @@
 package com.hlcy.yun.gb28181.sip.message.handler.request;
 
-import com.hlcy.yun.gb28181.operation.params.CatalogQueryParams;
-import com.hlcy.yun.gb28181.operation.params.DeviceInfoQueryParams;
-import com.hlcy.yun.gb28181.operation.QueryOperator;
 import com.hlcy.yun.gb28181.sip.auth.DigestServerAuthHelper;
+import com.hlcy.yun.gb28181.sip.client.RegisterProcessor;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
-import com.hlcy.yun.gb28181.notification.PublisherFactory;
-import com.hlcy.yun.gb28181.notification.event.LogoutEvent;
-import com.hlcy.yun.gb28181.notification.event.RegisterEvent;
-import com.hlcy.yun.gb28181.bean.Device;
-import gov.nist.javax.sip.address.AddressImpl;
-import gov.nist.javax.sip.address.SipUri;
 import gov.nist.javax.sip.header.Expires;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.sip.RequestEvent;
 import javax.sip.header.*;
 import javax.sip.message.Request;
@@ -24,6 +15,7 @@ import java.util.Locale;
 
 @Slf4j
 public class RegisterRequestHandler extends RequestHandler {
+    private static RegisterProcessor registerProcessor;
 
     @Override
     public void handle(RequestEvent event) {
@@ -39,18 +31,13 @@ public class RegisterRequestHandler extends RequestHandler {
                 sendResponseFor(event);
 
                 Request request = event.getRequest();
-                Device device = extractDeviceInfoFrom(request);
                 if (isLogout(request)) {
                     // 注销处理
-                    log.info("Logout request, the deviceId: {}.", device.getDeviceId());
-                    PublisherFactory.getDeviceEventPublisher().publishEvent(new LogoutEvent(device.getDeviceId()));
+                    registerProcessor.logout(request);
                     return;
                 }
                 // 注册处理
-                log.info("Register request, deviceId: {}.", device.getDeviceId());
-                PublisherFactory.getDeviceEventPublisher().publishEvent(new RegisterEvent(device));
-
-                sendQueryDeviceInfoAndCatalogRequest();
+                registerProcessor.register(request);
             }
         } catch (ParseException e) {
             log.error("Handle a register request({}) failed, cause: {}.", event, e.getMessage());
@@ -96,32 +83,12 @@ public class RegisterRequestHandler extends RequestHandler {
         return isPass;
     }
 
-    private Device extractDeviceInfoFrom(Request request) {
-        ViaHeader viaHeader = (ViaHeader) request.getHeader(ViaHeader.NAME);
-        String received = viaHeader.getReceived();
-        int rPort = viaHeader.getRPort();
-        FromHeader fromHeader = (FromHeader) request.getHeader(FromHeader.NAME);
-        AddressImpl address = (AddressImpl) fromHeader.getAddress();
-        SipUri uri = (SipUri) address.getURI();
-        String deviceId = uri.getUser();
-        return new Device(deviceId)
-                .setIp(viaHeader.getReceived())
-                .setPort(viaHeader.getRPort())
-                .setAddress(received.concat(":").concat(String.valueOf(rPort)))
-                .setTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
-    }
-
     private boolean isLogout(Request request) {
         ExpiresHeader expiresHeader = (ExpiresHeader) request.getHeader(Expires.NAME);
         return expiresHeader != null && expiresHeader.getExpires() == 0;
     }
 
-    @SuppressWarnings("unchecked")
-    private void sendQueryDeviceInfoAndCatalogRequest() {
-        final QueryOperator queryOperator = QueryOperator.getInstance();
-        // 查询设备信息
-        queryOperator.operate(new DeviceInfoQueryParams());
-        // 查询设备目录信息
-        queryOperator.operate(new CatalogQueryParams());
+    public static void setRegisterProcessor(RegisterProcessor registerProcessor) {
+        RegisterRequestHandler.registerProcessor = registerProcessor;
     }
 }

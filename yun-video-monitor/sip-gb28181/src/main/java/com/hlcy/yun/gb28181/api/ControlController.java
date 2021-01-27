@@ -1,9 +1,9 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
-import com.hlcy.yun.gb28181.operation.params.*;
-import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
-import com.hlcy.yun.gb28181.operation.ControlOperator;
+import com.hlcy.yun.gb28181.service.params.*;
+import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.service.ControlOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

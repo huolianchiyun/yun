@@ -1,10 +1,10 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
-import com.hlcy.yun.gb28181.operation.params.PlayParams;
-import com.hlcy.yun.gb28181.operation.params.PlaybackParams;
-import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
-import com.hlcy.yun.gb28181.operation.Player;
+import com.hlcy.yun.gb28181.service.params.PlayParams;
+import com.hlcy.yun.gb28181.service.params.PlaybackParams;
+import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.service.Player;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

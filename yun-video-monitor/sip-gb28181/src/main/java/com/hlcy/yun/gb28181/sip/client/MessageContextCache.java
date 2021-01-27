@@ -37,4 +37,5 @@ public abstract class MessageContextCache<C extends MessageContext> {
     public void remove(String key) {
         CONTEXT_CACHE.remove(key);
     }
+
 }

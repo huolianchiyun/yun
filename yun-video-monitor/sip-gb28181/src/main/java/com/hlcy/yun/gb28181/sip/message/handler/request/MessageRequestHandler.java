@@ -1,11 +1,9 @@
 package com.hlcy.yun.gb28181.sip.message.handler.request;
 
-import com.hlcy.yun.gb28181.operation.response.flow.FlowPipelineFactory;
-import com.hlcy.yun.gb28181.operation.response.flow.Operation;
+import com.hlcy.yun.gb28181.sip.client.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.sip.RequestEvent;
 import javax.sip.message.Request;
 
@@ -13,7 +11,7 @@ import javax.sip.message.Request;
 public class MessageRequestHandler extends RequestHandler {
     @Override
     public void handle(RequestEvent event) {
-        if (!Request.MESSAGE.equals(event.getRequest().getMethod())) {
+        if (!Request.MESSAGE.equals(getMethodFrom(event))) {
             this.next.handle(event);
             return;
         }
@@ -25,8 +23,12 @@ public class MessageRequestHandler extends RequestHandler {
         if (context != null) {
             context.getRequestProcessor().handle(event);
         } else {
-            // TODO 优化 jie ou
-            FlowPipelineFactory.getRequestFlowPipeline(Operation.KEEPALIVE).first().handle(event);
+            final RequestProcessor requestProcessor = processorFactory.getRequestProcessorBy(event);
+            if (requestProcessor != null) {
+                requestProcessor.handle(event);
+            } else {
+                log.warn("A message request is not handled, request \n{}", event.getRequest());
+            }
         }
     }
 }

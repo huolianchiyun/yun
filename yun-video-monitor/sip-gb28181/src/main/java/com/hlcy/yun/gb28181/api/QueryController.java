@@ -1,11 +1,11 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
-import com.hlcy.yun.gb28181.operation.params.CatalogQueryParams;
-import com.hlcy.yun.gb28181.operation.params.DeviceInfoQueryParams;
-import com.hlcy.yun.gb28181.operation.params.QueryParams;
-import com.hlcy.yun.gb28181.operation.response.callback.DeferredResultHolder;
-import com.hlcy.yun.gb28181.operation.QueryOperator;
+import com.hlcy.yun.gb28181.service.params.CatalogQueryParams;
+import com.hlcy.yun.gb28181.service.params.DeviceInfoQueryParams;
+import com.hlcy.yun.gb28181.service.params.QueryParams;
+import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
+import com.hlcy.yun.gb28181.service.QueryOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

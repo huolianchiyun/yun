@@ -2,6 +2,7 @@ package com.hlcy.yun.gb28181.sip.message.handler;
 
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import com.hlcy.yun.gb28181.sip.client.MessageContextCache;
+import com.hlcy.yun.gb28181.sip.client.RequestProcessorFactory;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import gov.nist.javax.sip.SipStackImpl;
 import gov.nist.javax.sip.message.SIPRequest;
@@ -22,6 +23,7 @@ import java.text.ParseException;
 @Slf4j
 public abstract class RequestHandler extends MessageHandler<RequestEvent> {
     private static MessageContextCache<? extends MessageContext> contextCache;
+    protected static RequestProcessorFactory processorFactory;
 
     protected String name;
 
@@ -33,6 +35,15 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
 
     protected String getCallId(RequestEvent event) {
         return ((CallIdHeader) event.getRequest().getHeader(CallIdHeader.NAME)).getCallId();
+    }
+
+    /**
+     * 从获取请求中方法类型
+     * @param event
+     * @return Invite, Message, Register and so on
+     */
+    protected String getMethodFrom(RequestEvent event) {
+        return event.getRequest().getMethod();
     }
 
     /**
@@ -99,5 +110,9 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
 
     public static void setContextCache(MessageContextCache<? extends MessageContext> contextCache) {
         RequestHandler.contextCache = contextCache;
+    }
+
+    public static void setProcessorFactory(RequestProcessorFactory processorFactory) {
+        RequestHandler.processorFactory = processorFactory;
     }
 }
