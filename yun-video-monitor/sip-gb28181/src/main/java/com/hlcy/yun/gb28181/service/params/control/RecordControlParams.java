@@ -12,7 +12,6 @@ import lombok.Setter;
 public class RecordControlParams extends DeviceParams {
     private RecordOperate operate;
 
-
     public enum RecordOperate {
         Record, StopRecord
     }

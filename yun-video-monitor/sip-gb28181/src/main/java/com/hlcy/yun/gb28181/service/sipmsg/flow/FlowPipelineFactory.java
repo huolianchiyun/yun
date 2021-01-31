@@ -5,6 +5,8 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.KeepaliveNotifyPr
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.DeviceInviteRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.MediaByeResponseProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.MediaInviteResponseProcessor;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.DeviceInfoQueryProcessor;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.RecordInfoQueryProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.*;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.CatalogQueryProcessor;
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
@@ -44,8 +46,12 @@ public class FlowPipelineFactory {
         requestMap.put(CATALOG, CATALOG_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> DEVICE_INFO_PIPELINE = new DefaultPipeline<>();
-        DEVICE_INFO_PIPELINE.addLast("DeviceInfo", new CatalogQueryProcessor());
+        DEVICE_INFO_PIPELINE.addLast("DeviceInfo", new DeviceInfoQueryProcessor());
         requestMap.put(DEVICE_INFO, DEVICE_INFO_PIPELINE);
+
+        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> RECORD_INFO_PIPELINE = new DefaultPipeline<>();
+        RECORD_INFO_PIPELINE.addLast("RecordInfo", new RecordInfoQueryProcessor());
+        requestMap.put(RECORD_INFO, RECORD_INFO_PIPELINE);
 
         // Notify
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();

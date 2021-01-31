@@ -38,7 +38,7 @@ public class ControlController {
     @PostMapping("/record")
     public DeferredResult<ResponseEntity<ResponseData>> recordControl(@RequestBody RecordControlParams recordControlParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + recordControlParams.getChannelId(), result);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_RECORD + recordControlParams.getChannelId(), result);
         operator.operate(recordControlParams);
         return result;
     }

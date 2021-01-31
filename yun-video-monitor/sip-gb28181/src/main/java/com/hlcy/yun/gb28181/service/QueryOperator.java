@@ -2,12 +2,14 @@ package com.hlcy.yun.gb28181.service;
 
 import com.hlcy.yun.common.spring.SpringContextHolder;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.service.command.query.RecordInfoQueryCmd;
 import com.hlcy.yun.gb28181.service.params.query.CatalogQueryParams;
 import com.hlcy.yun.gb28181.service.params.query.DeviceInfoQueryParams;
 import com.hlcy.yun.gb28181.service.params.query.QueryParams;
 import com.hlcy.yun.gb28181.service.command.query.AbstractQueryCmd;
 import com.hlcy.yun.gb28181.service.command.query.CatalogQueryCmd;
 import com.hlcy.yun.gb28181.service.command.query.DeviceInfoQueryCmd;
+import com.hlcy.yun.gb28181.service.params.query.RecordInfoQueryParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
@@ -38,5 +40,6 @@ public class QueryOperator<T extends QueryParams> implements InitializingBean {
     public void afterPropertiesSet() {
         cmdFactory.put(CatalogQueryParams.class, new CatalogQueryCmd(properties));
         cmdFactory.put(DeviceInfoQueryParams.class, new DeviceInfoQueryCmd(properties));
+        cmdFactory.put(RecordInfoQueryParams.class, new RecordInfoQueryCmd(properties));
     }
 }

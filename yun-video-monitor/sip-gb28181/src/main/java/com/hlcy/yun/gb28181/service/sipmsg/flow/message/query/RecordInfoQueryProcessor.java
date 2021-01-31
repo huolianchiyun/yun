@@ -26,7 +26,7 @@ public class RecordInfoQueryProcessor extends MessageProcessor {
     @Override
     protected void doProcess(RequestEvent event) {
         if (log.isDebugEnabled()) {
-            log.debug("Receive a CmdType <RecordInfo> request, message: {}.", event.getRequest());
+            log.debug("Receive a CmdType <RecordInfo> request, message: \n{}", event.getRequest());
         }
         Element rootElement = getRootElementFrom(event);
         final String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
@@ -95,14 +95,14 @@ public class RecordInfoQueryProcessor extends MessageProcessor {
             } else {
                     /* 本分支有两种可能：
                      1、录像列表被拆包，且是第一个包,直接保存缓存返回，等待下个包再处理
-                     2、之前有包，但超时清空了，那么这次 sn 批次的响应数据已经不完整，等待过期时间后 redis 自动清空数据*/
+                     2、之前有包，但超时清空了，那么这次 sn 批次的响应数据已经不完整，等待过期时间后 cache 自动清空数据*/
                 cache.put(cacheKey, recordList);
                 return false;
             }
         }
              /*走到这里，有以下可能：
-             1、没有录像信息,第一次收到 record info 的消息即返回响应数据，无 redis 操作
-             2、有录像数据，且第一次即收到完整数据，返回响应数据，无 redis 操作
+             1、没有录像信息,第一次收到 record info 的消息即返回响应数据，无 cache 操作
+             2、有录像数据，且第一次即收到完整数据，返回响应数据，无 cache 操作
              3、有录像数据，在超时时间内收到多次包组装后数量足够，返回数据*/
         return true;
     }
