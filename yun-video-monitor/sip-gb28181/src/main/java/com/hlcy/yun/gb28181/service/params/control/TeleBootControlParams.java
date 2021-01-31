@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,5 +8,5 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TeleBootControlParams extends DeviceParams {
+public class TeleBootControlParams extends ControlParams {
 }

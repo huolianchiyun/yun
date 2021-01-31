@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class DragZoomControlParams extends DeviceParams {
+public class DragZoomControlParams extends ControlParams {
     private ZoomType zoomType;
     /**
      * 播放窗口长度像素值

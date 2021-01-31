@@ -20,6 +20,14 @@ public final class DeferredResultHolder {
 
     public static final String CALLBACK_CMD_RECORD = "Callback_Record:";
 
+    public static final String CALLBACK_CMD_GUARD = "Callback_Guard:";
+
+    public static final String CALLBACK_CMD_RESET_ALARM = "Callback_ResetAlarm";
+
+    public static final String CALLBACK_CMD_HOME_POSITION = "Callback_HomePosition";
+
+    public static final String CALLBACK_CMD_DEVICE_CONFIG = "Callback_DeviceConfig";
+
     public static final String CALLBACK_CMD_PRESET = "Callback_Preset:";
 
     public static final String CALLBACK_CMD_CRUISE = "Callback_Cruise:";

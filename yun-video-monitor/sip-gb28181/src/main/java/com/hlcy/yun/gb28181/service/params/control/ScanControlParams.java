@@ -1,12 +1,11 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class ScanControlParams extends DeviceParams {
+public class ScanControlParams extends ControlParams {
     private ScanType type;
     private int scanGroupNum;
     private int scanSpeed;

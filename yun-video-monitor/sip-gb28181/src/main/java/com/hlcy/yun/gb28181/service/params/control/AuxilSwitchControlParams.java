@@ -1,13 +1,14 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class AuxilSwitchControlParams extends DeviceParams {
+public class AuxilSwitchControlParams extends ControlParams {
+
     private SwitchType type;
+
     /**
      * bit5
      * 辅助开关编号,取值为 1表示雨刷控制，范围：00H ~ FFH

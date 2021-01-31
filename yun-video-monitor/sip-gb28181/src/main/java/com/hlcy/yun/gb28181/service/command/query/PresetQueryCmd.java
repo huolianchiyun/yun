@@ -14,7 +14,6 @@ public class PresetQueryCmd extends AbstractQueryCmd<QueryParams> {
     @Override
     protected String buildCmdXML(QueryParams params) {
 
-
         return null;
     }
 }

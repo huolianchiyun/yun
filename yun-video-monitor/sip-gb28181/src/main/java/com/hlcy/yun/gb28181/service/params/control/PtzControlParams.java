@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class PtzControlParams extends DeviceParams { //TODO 对参数值范围进行校验
+public class PtzControlParams extends ControlParams {
     /**
      * 云台水平方向控制 0:停止 1:左移 2:右移
      */

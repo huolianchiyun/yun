@@ -15,9 +15,9 @@ import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createT
 
 @RequiredArgsConstructor
 public abstract class AbstractQueryCmd<T extends QueryParams> implements Command<T> {
+    private final String CMD = "${Cmd}";
+    private final String CMD_TYPE = "${CmdType}";
     protected final GB28181Properties properties;
-    protected final String CMD = "${Cmd}";
-    protected final String CMD_TYPE = "${CmdType}";
 
     protected abstract String buildCmdXML(T t);
 
@@ -32,7 +32,7 @@ public abstract class AbstractQueryCmd<T extends QueryParams> implements Command
         RequestSender.sendRequest(request);
     }
 
-    protected String getCmdTemplate(T t) {
+    private String getCmdTemplate(T t) {
         return new StringBuilder(200)
                 .append("<?xml version=\"1.0\" ?>")
                 .append("<Query>")

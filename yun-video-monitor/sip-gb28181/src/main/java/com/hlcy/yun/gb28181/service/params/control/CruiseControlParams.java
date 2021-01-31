@@ -1,12 +1,11 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CruiseControlParams extends DeviceParams {
+public class CruiseControlParams extends ControlParams {
     private CruiseType type;
 
     /**

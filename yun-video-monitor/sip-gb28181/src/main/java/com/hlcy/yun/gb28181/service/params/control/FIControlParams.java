@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class FIControlParams extends DeviceParams {
+public class FIControlParams extends ControlParams {
     /**
      * 光圈
      * 0:停止 1:放大 2:缩小

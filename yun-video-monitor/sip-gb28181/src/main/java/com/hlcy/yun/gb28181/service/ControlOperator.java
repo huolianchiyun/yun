@@ -1,7 +1,6 @@
 package com.hlcy.yun.gb28181.service;
 
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.service.params.*;
 import com.hlcy.yun.gb28181.service.command.control.*;
 import com.hlcy.yun.gb28181.service.params.control.*;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
-public class ControlOperator<T extends DeviceParams> implements InitializingBean {
+public class ControlOperator<T extends ControlParams> implements InitializingBean {
     private Map<Class, AbstractControlCmd> cmdFactory = new HashMap<>(13);
     private final GB28181Properties properties;
 
@@ -41,5 +40,6 @@ public class ControlOperator<T extends DeviceParams> implements InitializingBean
         cmdFactory.put(CruiseControlParams.class, new CruiseCmd(properties));
         cmdFactory.put(ScanControlParams.class, new ScanCmd(properties));
         cmdFactory.put(AuxilSwitchControlParams.class, new AuxilSwitchCmd(properties));
+        cmdFactory.put(DeviceConfigControlParams.class, new DeviceConfigCmd(properties));
     }
 }

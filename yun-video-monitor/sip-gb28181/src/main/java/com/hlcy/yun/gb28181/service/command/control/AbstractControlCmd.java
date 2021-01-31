@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.service.command.control;
 import com.hlcy.yun.gb28181.service.command.Command;
 import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.service.params.control.ControlParams;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +15,18 @@ import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createF
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createTo;
 
 @RequiredArgsConstructor
-public abstract class AbstractControlCmd<T extends DeviceParams> implements Command<T> {
+public abstract class AbstractControlCmd<T extends ControlParams> implements Command<T> {
     private final String CMD = "${Cmd}";
+    private final String CMD_TYPE = "${CmdType}";
     protected final GB28181Properties properties;
-    protected final int bit1 = 0xA5;
-    protected final int bit2 = 0x0F;
-    protected final int bit3 = 0x01;
+    final int bit1 = 0xA5;
+    final int bit2 = 0x0F;
+    final int bit3 = 0x01;
 
     protected abstract String buildCmdXML(T t);
 
     public void execute(T t) {
-        final String cmd = getCmdTemplate(t).replace(CMD, buildCmdXML(t));
+        final String cmd = getCmdTemplate(t).replace(CMD, buildCmdXML(t)).replace(CMD_TYPE, t.getCmdType());
 
         Request request = SipRequestFactory.getMessageRequest(
                 createTo(t.getChannelId(), t.getDeviceIp(), t.getDevicePort()),
@@ -38,7 +40,7 @@ public abstract class AbstractControlCmd<T extends DeviceParams> implements Comm
         return new StringBuilder(200)
                 .append("<?xml version=\"1.0\" ?>")
                 .append("<Control>")
-                .append("<CmdType>DeviceControl</CmdType>")
+                .append("<CmdType>").append(CMD_TYPE).append("</CmdType>")
                 .append("<SN>").append((int) ((Math.random() * 9 + 1) * 100000)).append("</SN>")
                 .append("<DeviceID>").append(t.getChannelId()).append("</DeviceID>")
                 .append(CMD)
@@ -46,7 +48,7 @@ public abstract class AbstractControlCmd<T extends DeviceParams> implements Comm
                 .toString();
     }
 
-    protected StringBuilder getBit123CmdTemplate() {
+    StringBuilder getBit123CmdTemplate() {
         return new StringBuilder().append(String.format("%02X%02X%02X", bit1, bit2, bit3), 0, 6);
     }
 }

@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.service.params.control;
 
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class HomePositionControlParams extends DeviceParams {
+public class HomePositionControlParams extends ControlParams {
     /**
      * 看守位使能 1:开启, 0:关闭(必选)
      */
