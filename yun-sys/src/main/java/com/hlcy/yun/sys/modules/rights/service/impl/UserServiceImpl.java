@@ -118,12 +118,14 @@ class UserServiceImpl implements UserService {
     @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#userPwd.username")
     public void updatePwd(UserPwdVO userPwd) throws Exception {
         final String currentUsername = SecurityUtils.getCurrentUsername();
+        // currentUsername == anonymousUser 说明是在未登录状态下修改密码，比如：登录界面处修改
         Assert.isTrue(RightsConstants.ANONYMOUS_USER.equals(currentUsername) || userPwd.getUsername().equals(currentUsername), "只允许修改自己密码！");
         String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getOldPwd());
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, userPwd.getNewPwd());
         UserDO userDB = queryByUsername(userPwd.getUsername());
         Assert.notNull(userDB, "用户不存在， 请确认用户名输入是否正确！");
         Assert.isTrue(passwordEncoder.matches(oldPass, userDB.getPwd()), "修改失败，旧密码错误");
+
         userMapper.updateByPrimaryKeySelective(new UserDO(userDB.getId(), passwordEncoder.encode(newPass), LocalDateTime.now()));
         // 清除用户token，使其重新登录
         onlineUserService.checkLoginOnUser(userDB.getUsername(), null);
@@ -133,7 +135,7 @@ class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = BIND_USER_HASH_KEY_PREFIX0, key = "#username")
     public void resetPwd(String username) {
-        userMapper.resetPwd( new UserDO(username, passwordEncoder.encode("123456"), LocalDateTime.now()));
+        userMapper.resetPwd(new UserDO(username, passwordEncoder.encode("123456"), LocalDateTime.now()));
     }
 
     @Override
@@ -157,7 +159,7 @@ class UserServiceImpl implements UserService {
         final long difference = LocalDate.now().until(expiredDate, ChronoUnit.DAYS);
         if (difference >= 0 && difference <= 10) {
             return Meta.error(String.format("你的密码将于 %s 过期，请尽快修改, 以免影响你后续登录！", expiredDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        }else if(difference < 0){
+        } else if (difference < 0) {
             return Meta.noApiRights(String.format("你的密码已经于 %s 过期， 将无法登录，请重置密码或联系管理员处理！", expiredDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
         }
         return Meta.ok();

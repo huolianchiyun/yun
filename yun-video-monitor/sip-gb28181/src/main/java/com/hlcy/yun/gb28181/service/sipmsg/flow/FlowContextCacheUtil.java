@@ -1,12 +1,19 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow;
 
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import com.hlcy.yun.gb28181.sip.client.MessageContextCache;
+import com.hlcy.yun.gb28181.sip.biz.MessageContextCache;
+import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.sdp.SdpFactory;
+import javax.sdp.SdpParseException;
+import javax.sdp.SessionDescription;
+import javax.sip.header.CallIdHeader;
+import javax.sip.message.Message;
 import java.io.*;
 import java.util.Iterator;
 import java.util.Optional;
@@ -15,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 public final class FlowContextCacheUtil {
 
-    private static FlowContextCache flowContextCache;
+    private static volatile FlowContextCache flowContextCache;
 
     public static void init() {
         new FlowContextCache().init();
@@ -43,14 +50,57 @@ public final class FlowContextCacheUtil {
 
     static class FlowContextCache extends MessageContextCache<FlowContext> {
         private final static String CONTEXT_CACHE_STORE_PATH = System.getProperty("user.dir")
-                .concat(System.getProperty("file.separator"))
-                .concat("CONTEXT_CACHE");
+                .concat(System.getProperty("file.separator")).concat("CONTEXT_CACHE");
+        private final SdpFactory sdpFactory = SdpFactory.getInstance();
+        private final TimedCache<String, FlowContext> CONTEXT_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
+
+        void init() {
+            // FIXME
+//            recoverContextCache();
+//            setShutdownAction();
+            flowContextCache = this;
+        }
+
+        public void put(String key, FlowContext context) {
+            CONTEXT_CACHE.put(key, context);
+        }
+
+        public void setNewKey(String oldKey, String newKey) {
+            final FlowContext context = CONTEXT_CACHE.get(oldKey);
+            CONTEXT_CACHE.put(newKey, context);
+            CONTEXT_CACHE.remove(oldKey);
+        }
+
+        public FlowContext get(String key) {
+            return CONTEXT_CACHE.get(key);
+        }
+
+        public void remove(String key) {
+            CONTEXT_CACHE.remove(key);
+        }
 
         @Override
-        public void init() {
-            recoverContextCache();
-            setShutdownAction();
-            flowContextCache = this;
+        public MessageContext get(Message message) {
+            FlowContext flowContext = get(getCallId(message));
+            if (flowContext == null) {
+                try {
+                    // get voice broadcast flow context
+                    final SessionDescription sdp = getSessionDescription(new String(message.getRawContent()));
+                    final String deviceChannelId = sdp.getOrigin().getUsername();
+                    flowContext = get(deviceChannelId);
+                } catch (SdpParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            return flowContext;
+        }
+
+        private String getCallId(Message message) {
+            return ((CallIdHeader) message.getHeader(CallIdHeader.NAME)).getCallId();
+        }
+
+        protected SessionDescription getSessionDescription(String sdpMessageBody) throws SdpParseException {
+            return sdpFactory.createSessionDescription(sdpMessageBody);
         }
 
         public void recoverContextCache() {

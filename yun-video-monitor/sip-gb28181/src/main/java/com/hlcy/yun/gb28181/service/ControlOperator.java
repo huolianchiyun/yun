@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.service;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.service.params.*;
 import com.hlcy.yun.gb28181.service.command.control.*;
+import com.hlcy.yun.gb28181.service.params.control.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
@@ -21,24 +22,24 @@ public class ControlOperator<T extends DeviceParams> implements InitializingBean
 
     @SuppressWarnings("unchecked")
     public void operate(T operateParam) {
-        final AbstractControlCmd abstractControlCmd = cmdFactory.get(operateParam.getClass());
-        abstractControlCmd.execute(operateParam);
+        final AbstractControlCmd cmd = cmdFactory.get(operateParam.getClass());
+        cmd.execute(operateParam);
     }
 
     @Override
     public void afterPropertiesSet() {
-        cmdFactory.put(PtzParams.class, new PtzCmd(properties));
-        cmdFactory.put(TeleBootParams.class, new TeleBootCmd(properties));
-        cmdFactory.put(RecordParams.class, new RecordCmd(properties));
-        cmdFactory.put(IFameParams.class, new IFameCmd(properties));
-        cmdFactory.put(HomePositionParams.class, new HomePositionCmd(properties));
-        cmdFactory.put(GuardParams.class, new GuardCmd(properties));
-        cmdFactory.put(DragZoomParams.class, new DragZoomCmd(properties));
-        cmdFactory.put(AlarmParams.class, new ResetAlarmCmd(properties));
-        cmdFactory.put(FIParams.class, new PresetCmd(properties));
-        cmdFactory.put(PresetParams.class, new PresetCmd(properties));
-        cmdFactory.put(CruiseParams.class, new CruiseCmd(properties));
-        cmdFactory.put(ScanParams.class, new ScanCmd(properties));
-        cmdFactory.put(AuxilSwitchParams.class, new AuxilSwitchCmd(properties));
+        cmdFactory.put(PtzControlParams.class, new PtzCmd(properties));
+        cmdFactory.put(TeleBootControlParams.class, new TeleBootCmd(properties));
+        cmdFactory.put(RecordControlParams.class, new RecordCmd(properties));
+        cmdFactory.put(IFameControlParams.class, new IFameCmd(properties));
+        cmdFactory.put(HomePositionControlParams.class, new HomePositionCmd(properties));
+        cmdFactory.put(GuardControlParams.class, new GuardCmd(properties));
+        cmdFactory.put(DragZoomControlParams.class, new DragZoomCmd(properties));
+        cmdFactory.put(ResetAlarmControlParams.class, new ResetAlarmCmd(properties));
+        cmdFactory.put(FIControlParams.class, new FICmd(properties));
+        cmdFactory.put(PresetControlParams.class, new PresetCmd(properties));
+        cmdFactory.put(CruiseControlParams.class, new CruiseCmd(properties));
+        cmdFactory.put(ScanControlParams.class, new ScanCmd(properties));
+        cmdFactory.put(AuxilSwitchControlParams.class, new AuxilSwitchCmd(properties));
     }
 }

@@ -19,7 +19,7 @@ public class DeviceByeResponseProcessor extends FlowResponseProcessor {
 
     @Override
     public void cleanupContext(ResponseEvent event) {
-        FlowContextCacheUtil.remove(getCallId(event));
+        FlowContextCacheUtil.remove(getCallId(event.getResponse()));
         getContext(event).clearSessionCache();
     }
 }

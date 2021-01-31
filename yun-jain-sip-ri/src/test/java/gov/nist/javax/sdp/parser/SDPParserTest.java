@@ -32,7 +32,8 @@ public class SDPParserTest {
                 "Content-Type: application/sdp;level=1\r\n" +
                 "Content-Length: 145\r\n\r\n" +
                 "v=0\r\n" +
-                "o=- 30576 0 in ip4 127.0.0.1\r\n" +
+                "o=64010000002020000001 0 0 IN IP4 172.18.16.3\r\n" +
+//                "o=- 30576 0 in ip4 127.0.0.1\r\n" +
                 "s=tia-p25-sutosucall\r\n" +
                 "c=in ip4 127.0.0.1\r\n" +
                 "t=0 0\r\n" +

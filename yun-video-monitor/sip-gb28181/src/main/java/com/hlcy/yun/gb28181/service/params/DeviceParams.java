@@ -16,7 +16,7 @@ public class DeviceParams implements Serializable {
     private String deviceId;
 
     /**
-     * 设备通道 Id
+     * 设备通道 Id，视频通道或语音通道
      */
     protected String channelId;
 

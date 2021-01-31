@@ -1,9 +1,10 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
-import com.hlcy.yun.gb28181.service.params.CatalogQueryParams;
-import com.hlcy.yun.gb28181.service.params.DeviceInfoQueryParams;
-import com.hlcy.yun.gb28181.service.params.QueryParams;
+import com.hlcy.yun.gb28181.service.params.query.CatalogQueryParams;
+import com.hlcy.yun.gb28181.service.params.query.DeviceInfoQueryParams;
+import com.hlcy.yun.gb28181.service.params.query.QueryParams;
+import com.hlcy.yun.gb28181.service.params.query.RecordInfoQueryParams;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.QueryOperator;
 import io.swagger.annotations.Api;
@@ -36,6 +37,15 @@ public class QueryController {
     public DeferredResult<ResponseEntity<ResponseData>> queryDeviceInfo(@RequestBody DeviceInfoQueryParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_DEVICE_INFO + params.getChannelId(), result);
+        operator.operate(params);
+        return result;
+    }
+
+    @GetMapping("/recordInfo")
+    @ApiOperation("查询设备历史录像")
+    public DeferredResult<ResponseEntity<ResponseData>> queryRecordInfo(@RequestBody RecordInfoQueryParams params) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + params.getChannelId(), result);
         operator.operate(params);
         return result;
     }

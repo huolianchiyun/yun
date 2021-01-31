@@ -1,13 +1,13 @@
 package com.hlcy.yun.gb28181.service.command.control;
 
 
-import com.hlcy.yun.gb28181.service.params.DragZoomParams;
+import com.hlcy.yun.gb28181.service.params.control.DragZoomControlParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 
 /**
  * 拖动放大/缩放指令
  */
-public class DragZoomCmd extends AbstractControlCmd<DragZoomParams> {
+public class DragZoomCmd extends AbstractControlCmd<DragZoomControlParams> {
     private final String InStartTag = "<DragZoomIn>";
     private final String InEndTag = "</DragZoomIn>";
     private final String OutStartTag = "<DragZoomOut>";
@@ -18,7 +18,7 @@ public class DragZoomCmd extends AbstractControlCmd<DragZoomParams> {
     }
 
     @Override
-    protected String buildCmdXML(DragZoomParams dragZoomParams) {
+    protected String buildCmdXML(DragZoomControlParams dragZoomParams) {
 
         return new StringBuilder(200)
                 .append(getStartTag(dragZoomParams.getZoomType()))
@@ -27,16 +27,16 @@ public class DragZoomCmd extends AbstractControlCmd<DragZoomParams> {
                 .append("<MidPointX>").append(dragZoomParams.getMidPointX()).append("</MidPointX>")
                 .append("<MidPointY>").append(dragZoomParams.getMidPointY()).append("</MidPointY>")
                 .append("<LengthX>").append(dragZoomParams.getLengthX()).append("</LengthX>")
-                .append("<LengthY>").append(dragZoomParams.getLengthY()).append("</Length>")
+                .append("<LengthY>").append(dragZoomParams.getLengthY()).append("</LengthY>")
                 .append(getEndTag(dragZoomParams.getZoomType()))
                 .toString();
     }
 
-    private String getStartTag(DragZoomParams.ZoomType zoomType) {
-        return DragZoomParams.ZoomType.IN == zoomType ? InStartTag : OutStartTag;
+    private String getStartTag(DragZoomControlParams.ZoomType zoomType) {
+        return DragZoomControlParams.ZoomType.IN == zoomType ? InStartTag : OutStartTag;
     }
 
-    private String getEndTag(DragZoomParams.ZoomType zoomType) {
-        return DragZoomParams.ZoomType.IN == zoomType ? InEndTag : OutEndTag;
+    private String getEndTag(DragZoomControlParams.ZoomType zoomType) {
+        return DragZoomControlParams.ZoomType.IN == zoomType ? InEndTag : OutEndTag;
     }
 }

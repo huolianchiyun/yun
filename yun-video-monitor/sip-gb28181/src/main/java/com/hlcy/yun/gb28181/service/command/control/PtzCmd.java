@@ -1,30 +1,30 @@
 package com.hlcy.yun.gb28181.service.command.control;
 
-import com.hlcy.yun.gb28181.service.params.PtzParams;
+import com.hlcy.yun.gb28181.service.params.control.PtzControlParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 
 /**
  * 云台控制命令
  */
-public class PtzCmd extends AbstractControlCmd<PtzParams> {
+public class PtzCmd extends AbstractControlCmd<PtzControlParams> {
 
     public PtzCmd(GB28181Properties properties) {
         super(properties);
     }
 
     @Override
-    protected String buildCmdXML(PtzParams ptzParams) {
-        return "<PTZCmd>" + buildPTZCmd(ptzParams) + "</PTZCmd>";
+    protected String buildCmdXML(PtzControlParams ptzControlParams) {
+        return "<PTZCmd>" + buildPTZCmd(ptzControlParams) + "</PTZCmd>";
     }
 
-    private String buildPTZCmd(PtzParams ptzParams) {
+    private String buildPTZCmd(PtzControlParams ptzControlParams) {
         return doBuildPTZCmd(
-                ptzParams.getPan(),
-                ptzParams.getTilt(),
-                ptzParams.getZoom(),
-                ptzParams.getPanSpeed(),
-                ptzParams.getTiltSpeed(),
-                ptzParams.getZoomSpeed());
+                ptzControlParams.getPan(),
+                ptzControlParams.getTilt(),
+                ptzControlParams.getZoom(),
+                ptzControlParams.getPanSpeed(),
+                ptzControlParams.getTiltSpeed(),
+                ptzControlParams.getZoomSpeed());
     }
 
     /**

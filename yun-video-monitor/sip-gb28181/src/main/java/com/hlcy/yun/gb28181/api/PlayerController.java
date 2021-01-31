@@ -1,8 +1,8 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
-import com.hlcy.yun.gb28181.service.params.PlayParams;
-import com.hlcy.yun.gb28181.service.params.PlaybackParams;
+import com.hlcy.yun.gb28181.service.params.player.PlayParams;
+import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.Player;
 import io.swagger.annotations.Api;
@@ -35,7 +35,7 @@ public class PlayerController {
     }
 
     @PostMapping("/stop/{ssrc}")
-    @ApiOperation("点播或历史回放停止（流媒体无人观看停止专用接口")
+    @ApiOperation("点播或历史回放停止（流媒体无人观看停止专用接口)")
     public ResponseEntity<ResponseData<Void>> stop(@PathVariable String ssrc) {
         player.stop(ssrc);
         return success();

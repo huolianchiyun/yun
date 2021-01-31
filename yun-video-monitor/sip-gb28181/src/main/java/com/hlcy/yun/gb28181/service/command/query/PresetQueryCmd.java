@@ -1,6 +1,6 @@
 package com.hlcy.yun.gb28181.service.command.query;
 
-import com.hlcy.yun.gb28181.service.params.QueryParams;
+import com.hlcy.yun.gb28181.service.params.query.QueryParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 
 /**

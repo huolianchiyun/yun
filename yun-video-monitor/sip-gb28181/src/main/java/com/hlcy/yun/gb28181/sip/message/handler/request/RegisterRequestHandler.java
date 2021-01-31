@@ -1,7 +1,7 @@
 package com.hlcy.yun.gb28181.sip.message.handler.request;
 
 import com.hlcy.yun.gb28181.sip.auth.DigestServerAuthHelper;
-import com.hlcy.yun.gb28181.sip.client.RegisterProcessor;
+import com.hlcy.yun.gb28181.sip.biz.RegisterProcessor;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import gov.nist.javax.sip.header.Expires;
 import lombok.extern.slf4j.Slf4j;

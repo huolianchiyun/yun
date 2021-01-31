@@ -2,6 +2,7 @@ package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
 import com.hlcy.yun.gb28181.service.params.*;
+import com.hlcy.yun.gb28181.service.params.control.*;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.ControlOperator;
 import io.swagger.annotations.Api;
@@ -28,87 +29,101 @@ public class ControlController {
 
     @ApiOperation("云台控制")
     @PostMapping("/ptz")
-    public ResponseEntity<ResponseData<Void>> ptzControl(@RequestBody PtzParams ptzParams) {
-        operator.operate(ptzParams);
+    public ResponseEntity<ResponseData<Void>> ptzControl(@RequestBody PtzControlParams ptzControlParams) {
+        operator.operate(ptzControlParams);
         return success();
     }
 
     @ApiOperation("手动录像")
     @PostMapping("/record")
-    public DeferredResult<ResponseEntity<ResponseData>> recordControl(@RequestBody RecordParams recordParams) {
+    public DeferredResult<ResponseEntity<ResponseData>> recordControl(@RequestBody RecordControlParams recordControlParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + recordParams.getChannelId(), result);
-        operator.operate(recordParams);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + recordControlParams.getChannelId(), result);
+        operator.operate(recordControlParams);
         return result;
     }
 
     @ApiOperation("拉框放大/缩小")
     @PostMapping("/zoom")
-    public ResponseEntity<ResponseData<Void>> zoomControl(@RequestBody DragZoomParams dragZoomParams) {
-        operator.operate(dragZoomParams);
+    public ResponseEntity<ResponseData<Void>> zoomControl(@RequestBody DragZoomControlParams dragZoomControlParams) {
+        operator.operate(dragZoomControlParams);
         return success();
     }
 
     @ApiOperation("远程启动控制")
     @PostMapping("/teleBoot")
-    public ResponseEntity<ResponseData<Void>> teleBootControl(@RequestBody TeleBootParams teleBootParams) {
-        operator.operate(teleBootParams);
+    public ResponseEntity<ResponseData<Void>> teleBootControl(@RequestBody TeleBootControlParams teleBootControlParams) {
+        operator.operate(teleBootControlParams);
         return success();
     }
 
     @ApiOperation("看守位控制")
     @PostMapping("/homePosition")
-    public ResponseEntity<ResponseData<Void>> homePositionControl(@RequestBody HomePositionParams homePositionParams) {
-        operator.operate(homePositionParams);
+    public ResponseEntity<ResponseData<Void>> homePositionControl(@RequestBody HomePositionControlParams homePositionControlParams) {
+        operator.operate(homePositionControlParams);
         return success();
     }
 
     @ApiOperation("告警复位")
     @PostMapping("/resetAlarm")
-    public ResponseEntity<ResponseData<Void>> resetAlarmControl(@RequestBody AlarmParams AlarmParams) {
-        operator.operate(AlarmParams);
+    public ResponseEntity<ResponseData<Void>> resetAlarmControl(@RequestBody ResetAlarmControlParams ResetAlarmControlParams) {
+        operator.operate(ResetAlarmControlParams);
         return success();
     }
 
     @ApiOperation("报警布防/撤防")
     @PostMapping("/guard")
-    public ResponseEntity<ResponseData<Void>> guardControl(@RequestBody GuardParams guardParams) {
-        operator.operate(guardParams);
+    public ResponseEntity<ResponseData<Void>> guardControl(@RequestBody GuardControlParams guardControlParams) {
+        operator.operate(guardControlParams);
         return success();
     }
 
     @ApiOperation("预置位")
     @PostMapping("/preset")
-    public DeferredResult<ResponseEntity<ResponseData>> presetControl(@RequestBody PresetParams presetParams) {
+    public DeferredResult<ResponseEntity<ResponseData>> presetControl(@RequestBody PresetControlParams presetControlParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PRESET + presetParams.getChannelId(), result);
-        operator.operate(presetParams);
-        if (PresetParams.PresetType.CALL_PRESET == presetParams.getType()) {
-            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PRESET + presetParams.getChannelId(), "ok");
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PRESET + presetControlParams.getChannelId(), result);
+        operator.operate(presetControlParams);
+        if (PresetControlParams.PresetType.CALL_PRESET == presetControlParams.getType()) {
+            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PRESET + presetControlParams.getChannelId(), "ok");
         }
         return result;
     }
 
     @ApiOperation("巡航")
     @PostMapping("/cruise")
-    public DeferredResult<ResponseEntity<ResponseData>> cruiseControl(@RequestBody CruiseParams cruiseParams) {
+    public DeferredResult<ResponseEntity<ResponseData>> cruiseControl(@RequestBody CruiseControlParams cruiseControlParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_CRUISE + cruiseParams.getChannelId(), result);
-        operator.operate(cruiseParams);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_CRUISE + cruiseControlParams.getChannelId(), result);
+        operator.operate(cruiseControlParams);
         return result;
     }
 
     @ApiOperation("光圈控制和聚焦控制")
     @PostMapping("/fi")
-    public ResponseEntity<ResponseData<Void>> fiControl(@RequestBody FIParams fiParams) {
-        operator.operate(fiParams);
+    public ResponseEntity<ResponseData<Void>> fiControl(@RequestBody FIControlParams fiControlParams) {
+        operator.operate(fiControlParams);
         return success();
     }
 
     @ApiOperation("强制关键帧")
     @PostMapping("/ifame")
-    public ResponseEntity<ResponseData<Void>> iframeControl(@RequestBody IFameParams iFameParams) {
-        operator.operate(iFameParams);
+    public ResponseEntity<ResponseData<Void>> iframeControl(@RequestBody IFameControlParams iFameControlParams) {
+        operator.operate(iFameControlParams);
+        return success();
+    }
+
+    @ApiOperation("辅助开关")
+    @PostMapping("/switch")
+    public ResponseEntity<ResponseData<Void>> switchControl(@RequestBody AuxilSwitchControlParams auxilSwitchControlParams) {
+        operator.operate(auxilSwitchControlParams);
+        return success();
+    }
+
+    @ApiOperation("水平扫描")
+    @PostMapping("/scan")
+    public ResponseEntity<ResponseData<Void>> scanControl(@RequestBody ScanControlParams scanControlParams) {
+        operator.operate(scanControlParams);
         return success();
     }
 }

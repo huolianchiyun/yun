@@ -262,13 +262,15 @@ class GroupServiceImpl implements GroupService {
     private void updateAssociatedMenu(GroupDO group, boolean isCreat) {
         Set<GroupMenuDO> groupMenus = Optional.ofNullable(group.getMenus()).orElseGet(HashSet::new)
                 .stream().map(e -> new GroupMenuDO(group.getId(), e.getId())).collect(Collectors.toSet());
-        if (!isCreat) {
-            // 清除之前绑定的菜单
-            groupMenuMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
-        }
-        if (CollectionUtil.isNotEmpty(groupMenus)) {
-            // 重新绑定新的菜单
-            groupMenuMapper.batchInsert(groupMenus);
+        if (groupMenus != null) {
+            if (!isCreat) {
+                // 清除之前绑定的菜单
+                groupMenuMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
+            }
+            if(!groupMenus.isEmpty()){
+                // 重新绑定新的菜单
+                groupMenuMapper.batchInsert(groupMenus);
+            }
         }
     }
 
@@ -279,14 +281,16 @@ class GroupServiceImpl implements GroupService {
      * @param isCreate 是否是创建组
      */
     private void updateAssociatedUser(GroupDO group, boolean isCreate) {
-        if (!isCreate) {
-            userGroupMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
-        }
-        if (CollectionUtil.isNotEmpty(group.getUsers())) {
-            Set<UserGroupDO> userGroups = group.getUsers().stream()
-                    .map(e -> new UserGroupDO(e.getId(), group.getId()))
-                    .collect(Collectors.toSet());
-            userGroupMapper.batchInsert(userGroups);
+        if (group.getUsers() != null) {
+            if (!isCreate) {
+                userGroupMapper.deleteByGroupIds(CollectionUtil.newHashSet(group.getId()));
+            }
+            if(!group.getUsers().isEmpty()){
+                Set<UserGroupDO> userGroups = group.getUsers().stream()
+                        .map(e -> new UserGroupDO(e.getId(), group.getId()))
+                        .collect(Collectors.toSet());
+                userGroupMapper.batchInsert(userGroups);
+            }
         }
     }
 

@@ -148,8 +148,9 @@ public class DataRightsHelper implements Dialect {
     }
 
     private Method getMethodByMethodNameAndParamType(Class<?> clazz, String methodName, Object paramObj) {
-        Method targetMethod;
-        targetMethod = ClassUtil.getDeclaredMethod(clazz, methodName, paramObj != null ? paramObj.getClass() : null);
-        return targetMethod;
+        if (paramObj == null) {
+            return ClassUtil.getDeclaredMethod(clazz, methodName, (Class<?>) null);
+        }
+        return ClassUtil.getDeclaredMethod(clazz, methodName, paramObj.getClass());
     }
 }

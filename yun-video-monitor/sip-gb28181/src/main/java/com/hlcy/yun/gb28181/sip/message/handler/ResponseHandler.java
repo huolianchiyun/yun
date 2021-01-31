@@ -1,7 +1,7 @@
 package com.hlcy.yun.gb28181.sip.message.handler;
 
-import com.hlcy.yun.gb28181.sip.client.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
+
 import javax.sip.ResponseEvent;
 import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
@@ -10,8 +10,7 @@ import javax.sip.header.CallIdHeader;
  * @implNote 子类要保证线程安全
  */
 public abstract class ResponseHandler extends MessageHandler<ResponseEvent> {
-    private static MessageContextCache<? extends MessageContext> contextCache;
-
+    private static MessageContextManager contextManager;
     protected String name;
 
     // 响应方法: invite, message and so on
@@ -34,7 +33,7 @@ public abstract class ResponseHandler extends MessageHandler<ResponseEvent> {
     }
 
     protected MessageContext getMessageContext(ResponseEvent event) {
-        return contextCache.get(getCallId(event));
+        return contextManager.get(event.getResponse());
     }
 
     protected String getCallId(ResponseEvent event) {
@@ -49,7 +48,7 @@ public abstract class ResponseHandler extends MessageHandler<ResponseEvent> {
         return name;
     }
 
-    public static void setContextCache(MessageContextCache<? extends MessageContext> contextCache) {
-        ResponseHandler.contextCache = contextCache;
+    public static void setContextManager(MessageContextManager contextManager) {
+        ResponseHandler.contextManager = contextManager;
     }
 }

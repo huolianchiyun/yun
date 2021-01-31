@@ -1,7 +1,7 @@
 package com.hlcy.yun.gb28181.service;
 
-import com.hlcy.yun.gb28181.service.params.PlayParams;
-import com.hlcy.yun.gb28181.service.params.PlaybackParams;
+import com.hlcy.yun.gb28181.service.params.player.PlayParams;
+import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
 
 public interface Player {
 

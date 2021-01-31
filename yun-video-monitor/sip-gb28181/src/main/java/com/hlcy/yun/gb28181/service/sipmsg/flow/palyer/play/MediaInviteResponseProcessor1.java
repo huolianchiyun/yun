@@ -6,7 +6,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowResponseProcessor;
-import com.hlcy.yun.gb28181.sip.client.RequestSender;
+import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
@@ -77,11 +77,11 @@ public class MediaInviteResponseProcessor1 extends FlowResponseProcessor {
         context.setSsrc(ssrc);
         context.put(PlaySession.SIP_DEVICE_SESSION, clientTransaction);
 
-        FlowContextCacheUtil.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
+        FlowContextCacheUtil.setNewKey(getCallId(event.getResponse()), SipRequestFactory.getCallId(inviteRequest2device));
     }
 
     private SessionDescription extractSessionDescAndSetSessionName(ResponseEvent event) throws SdpException {
-        SessionDescription sessionDescription = getSessionDescription(getResponseBodyByStr(event));
+        SessionDescription sessionDescription = getSessionDescription(getMessageBodyByStr(event.getResponse()));
         sessionDescription.setSessionName(new SessionNameField("Play"));
         return sessionDescription;
     }

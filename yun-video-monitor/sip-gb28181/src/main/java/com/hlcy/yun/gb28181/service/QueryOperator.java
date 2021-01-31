@@ -2,9 +2,9 @@ package com.hlcy.yun.gb28181.service;
 
 import com.hlcy.yun.common.spring.SpringContextHolder;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.service.params.CatalogQueryParams;
-import com.hlcy.yun.gb28181.service.params.DeviceInfoQueryParams;
-import com.hlcy.yun.gb28181.service.params.QueryParams;
+import com.hlcy.yun.gb28181.service.params.query.CatalogQueryParams;
+import com.hlcy.yun.gb28181.service.params.query.DeviceInfoQueryParams;
+import com.hlcy.yun.gb28181.service.params.query.QueryParams;
 import com.hlcy.yun.gb28181.service.command.query.AbstractQueryCmd;
 import com.hlcy.yun.gb28181.service.command.query.CatalogQueryCmd;
 import com.hlcy.yun.gb28181.service.command.query.DeviceInfoQueryCmd;
@@ -30,8 +30,8 @@ public class QueryOperator<T extends QueryParams> implements InitializingBean {
 
     @SuppressWarnings("unchecked")
     public void operate(T operateParam) {
-        final AbstractQueryCmd abstractQueryCmd = cmdFactory.get(operateParam.getClass());
-        abstractQueryCmd.execute(operateParam);
+        final AbstractQueryCmd cmd = cmdFactory.get(operateParam.getClass());
+        cmd.execute(operateParam);
     }
 
     @Override

@@ -1,9 +1,10 @@
 package com.hlcy.yun.gb28181.service;
 
-import com.hlcy.yun.common.spring.SpringContextHolder;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.service.command.notify.AbstractNotifyCmd;
-import com.hlcy.yun.gb28181.service.params.NotifyParams;
+import com.hlcy.yun.gb28181.service.command.notify.VoiceBroadcastNotifyCmd;
+import com.hlcy.yun.gb28181.service.params.notify.NotifyParams;
+import com.hlcy.yun.gb28181.service.params.notify.VoiceBroadcastNotifyParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
@@ -20,18 +21,19 @@ public class NotifyOperator<T extends NotifyParams> implements InitializingBean 
     private Map<Class, AbstractNotifyCmd> cmdFactory = new HashMap<>(5);
     private final GB28181Properties properties;
 
-    public static NotifyOperator getInstance() {
-        return SpringContextHolder.getBean(NotifyOperator.class);
-    }
-
     @SuppressWarnings("unchecked")
     public void operate(T operateParam) {
-        final AbstractNotifyCmd abstractNotifyCmd = cmdFactory.get(operateParam.getClass());
-        abstractNotifyCmd.execute(operateParam);
+        final AbstractNotifyCmd cmd = cmdFactory.get(operateParam.getClass());
+        cmd.execute(operateParam);
     }
 
     @Override
     public void afterPropertiesSet() {
-        // TODO init cmdFactory
+        cmdFactory.put(VoiceBroadcastNotifyParams.class, new VoiceBroadcastNotifyCmd(properties));
+    }
+
+    public void stopVoiceBroadcast(String ssrc) {
+        final VoiceBroadcastNotifyCmd cmd = (VoiceBroadcastNotifyCmd) cmdFactory.get(VoiceBroadcastNotifyParams.class);
+        cmd.stop(ssrc);
     }
 }

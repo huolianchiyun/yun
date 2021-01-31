@@ -1,22 +1,22 @@
 package com.hlcy.yun.gb28181.service.command.control;
 
-import com.hlcy.yun.gb28181.service.params.FIParams;
+import com.hlcy.yun.gb28181.service.params.control.FIControlParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 
 /**
  * 光圈控制和聚焦控制指令
  */
-public class FICmd extends AbstractControlCmd<FIParams> {
+public class FICmd extends AbstractControlCmd<FIControlParams> {
     public FICmd(GB28181Properties properties) {
         super(properties);
     }
 
     @Override
-    protected String buildCmdXML(FIParams params) {
+    protected String buildCmdXML(FIControlParams params) {
         return "<PTZCmd>" + buildFICmd(params) + "</PTZCmd>";
     }
 
-    private String buildFICmd(FIParams params) {
+    private String buildFICmd(FIControlParams params) {
         final StringBuilder builder = getBit123CmdTemplate();
 
         // 字节4

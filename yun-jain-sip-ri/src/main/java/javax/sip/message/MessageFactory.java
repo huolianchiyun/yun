@@ -60,10 +60,10 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the method or the body.
      */
-    public Request createRequest(URI requestURI, String method, CallIdHeader
+    Request createRequest(URI requestURI, String method, CallIdHeader
             callId, CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
-                                 MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
-                                 Object content) throws ParseException;
+                          MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
+                          Object content) throws ParseException;
 
     /**
      * Creates a new Request message of type specified by the method paramater,
@@ -84,10 +84,10 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the method or the body.
      */
-    public Request createRequest(URI requestURI, String method, CallIdHeader
+    Request createRequest(URI requestURI, String method, CallIdHeader
             callId, CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
-                                 MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
-                                 byte[] content) throws ParseException;
+                          MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
+                          byte[] content) throws ParseException;
 
     /**
      * Creates a new Request message of type specified by the method paramater,
@@ -105,9 +105,9 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the method.
      */
-    public Request createRequest(URI requestURI, String method, CallIdHeader
+    Request createRequest(URI requestURI, String method, CallIdHeader
             callId, CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
-                                 MaxForwardsHeader maxForwards) throws ParseException;
+                          MaxForwardsHeader maxForwards) throws ParseException;
 
 
 // generic create message method
@@ -124,7 +124,7 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the request.
      */
-    public Request createRequest(String request) throws ParseException;
+    Request createRequest(String request) throws ParseException;
 
 
 // Standard Response Creation methods
@@ -147,10 +147,10 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the statusCode or the body.
      */
-    public Response createResponse(int statusCode, CallIdHeader callId,
-                                   CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
-                                   MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
-                                   Object content) throws ParseException;
+    Response createResponse(int statusCode, CallIdHeader callId,
+                            CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
+                            MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
+                            Object content) throws ParseException;
 
     /**
      * Creates a new Response message of type specified by the statusCode
@@ -170,10 +170,10 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the statusCode or the body.
      */
-    public Response createResponse(int statusCode, CallIdHeader callId,
-                                   CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
-                                   MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
-                                   byte[] content) throws ParseException;
+    Response createResponse(int statusCode, CallIdHeader callId,
+                            CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
+                            MaxForwardsHeader maxForwards, ContentTypeHeader contentType,
+                            byte[] content) throws ParseException;
 
 
     /**
@@ -191,9 +191,9 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the statusCode.
      */
-    public Response createResponse(int statusCode, CallIdHeader callId,
-                                   CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
-                                   MaxForwardsHeader maxForwards) throws ParseException;
+    Response createResponse(int statusCode, CallIdHeader callId,
+                            CSeqHeader cSeq, FromHeader from, ToHeader to, List via,
+                            MaxForwardsHeader maxForwards) throws ParseException;
 
 // Response Creation methods based on a Request
 
@@ -212,8 +212,8 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the statusCode or the body.
      */
-    public Response createResponse(int statusCode, Request request,
-                                   ContentTypeHeader contentType, Object content) throws ParseException;
+    Response createResponse(int statusCode, Request request,
+                            ContentTypeHeader contentType, Object content) throws ParseException;
 
     /**
      * Creates a new Response message of type specified by the statusCode
@@ -230,8 +230,8 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the statusCode or the body.
      */
-    public Response createResponse(int statusCode, Request request,
-                                   ContentTypeHeader contentType, byte[] content) throws ParseException;
+    Response createResponse(int statusCode, Request request,
+                            ContentTypeHeader contentType, byte[] content) throws ParseException;
 
     /**
      * Creates a new Response message of type specified by the statusCode
@@ -245,7 +245,7 @@ public interface MessageFactory {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the statusCode.
      */
-    public Response createResponse(int statusCode, Request request)
+    Response createResponse(int statusCode, Request request)
                                                 throws ParseException;
 
 
@@ -261,7 +261,7 @@ public interface MessageFactory {
      * @since v1.2
      *
      */
-    public Response createResponse(String response) throws ParseException;
+    Response createResponse(String response) throws ParseException;
 
 
 

@@ -1,6 +1,6 @@
 package com.hlcy.yun.gb28181.sip.message.handler.request;
 
-import com.hlcy.yun.gb28181.sip.client.RequestProcessor;
+import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +23,16 @@ public class MessageRequestHandler extends RequestHandler {
         if (context != null) {
             context.getRequestProcessor().handle(event);
         } else {
-            final RequestProcessor requestProcessor = processorFactory.getRequestProcessorBy(event);
-            if (requestProcessor != null) {
-                requestProcessor.handle(event);
-            } else {
-                log.warn("A message request is not handled, request \n{}", event.getRequest());
-            }
+            singleProcessorProcess(event);
+        }
+    }
+
+    private void singleProcessorProcess(RequestEvent event) {
+        final RequestProcessor requestProcessor = processorFactory.getRequestProcessor(event);
+        if (requestProcessor != null) {
+            requestProcessor.handle(event);
+        } else {
+            log.warn("A message request is not handled, request \n{}", event.getRequest());
         }
     }
 }

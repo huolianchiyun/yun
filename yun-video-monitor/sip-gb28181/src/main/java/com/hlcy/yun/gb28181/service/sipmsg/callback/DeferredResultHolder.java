@@ -19,11 +19,14 @@ public final class DeferredResultHolder {
     public static final String CALLBACK_CMD_RECORD_INFO = "Callback_RecordInfo:";
 
     public static final String CALLBACK_CMD_PRESET = "Callback_Preset:";
+
     public static final String CALLBACK_CMD_CRUISE = "Callback_Cruise:";
 
     public static final String CALLBACK_CMD_PLAY = "Callback_Play:";
 
     public static final String CALLBACK_CMD_PLAYBACK = "Callback_Playback:";
+
+    public static final String CALLBACK_CMD_VOICE = "Callback_Voice:";
 
 
     public static void put(String requestId, DeferredResult<ResponseEntity<ResponseData>> result) {

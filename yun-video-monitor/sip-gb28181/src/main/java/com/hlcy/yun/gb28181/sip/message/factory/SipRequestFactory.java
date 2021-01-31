@@ -28,6 +28,8 @@ public final class SipRequestFactory {
 
     private static final String CONTENT_SUBTYPE_MANSCDP = "MANSCDP+xml";
 
+    private static final String CONTENT_SUBTYPE_MANSRTSP = "MANSRTSP";
+
     private static final byte[] EMPTY_CONTENT = new byte[0];
 
     private static SipFactory sipFactory;
@@ -85,7 +87,7 @@ public final class SipRequestFactory {
             final Request info = dialog.createRequest(Request.INFO);
             HeaderFactory headerFactory = SipLayer.getHeaderFactory();
             info.setContentLength(headerFactory.createContentLengthHeader(content.length));
-            ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader(CONTENT_TYPE, CONTENT_SUBTYPE_SDP);
+            ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader(CONTENT_TYPE, CONTENT_SUBTYPE_MANSRTSP);
             info.setContent(content, contentTypeHeader);
             return info;
         } catch (InvalidArgumentException | SipException | ParseException e) {
@@ -94,11 +96,11 @@ public final class SipRequestFactory {
         }
     }
 
-    public static Request getByeRequest(ClientTransaction clientTransaction) {
-        if (isRecoveredTransaction(clientTransaction)) {
-            return toByeRequest(clientTransaction.getRequest());
+    public static Request getByeRequest(Transaction transaction) {
+        if (isRecoveredTransaction(transaction)) {
+            return toByeRequest(transaction.getRequest());
         }
-        final Dialog dialog = clientTransaction.getDialog();
+        final Dialog dialog = transaction.getDialog();
         try {
             return dialog.createRequest(Request.BYE);
         } catch (SipException e) {
@@ -107,8 +109,8 @@ public final class SipRequestFactory {
         }
     }
 
-    private static boolean isRecoveredTransaction(ClientTransaction clientTransaction) {
-        return clientTransaction.getClass().isAssignableFrom(RecoveredClientTransaction.class);
+    private static boolean isRecoveredTransaction(Transaction transaction) {
+        return transaction.getClass().isAssignableFrom(RecoveredClientTransaction.class);
     }
 
     private static Request toByeRequest(Request request) {

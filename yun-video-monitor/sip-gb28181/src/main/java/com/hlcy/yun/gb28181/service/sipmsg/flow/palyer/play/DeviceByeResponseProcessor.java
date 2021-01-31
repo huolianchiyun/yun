@@ -16,7 +16,7 @@ public class DeviceByeResponseProcessor extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
         // clean up play flow environment
-        FlowContextCacheUtil.remove(getCallId(event));
+        FlowContextCacheUtil.remove(getCallId(event.getResponse()));
         getContext(event).clearSessionCache();
     }
 }

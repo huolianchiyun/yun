@@ -4,7 +4,7 @@ import com.hlcy.yun.gb28181.bean.Device;
 import com.hlcy.yun.gb28181.notification.PublisherFactory;
 import com.hlcy.yun.gb28181.notification.event.LogoutEvent;
 import com.hlcy.yun.gb28181.notification.event.RegisterEvent;
-import com.hlcy.yun.gb28181.sip.client.RegisterProcessor;
+import com.hlcy.yun.gb28181.sip.biz.RegisterProcessor;
 import gov.nist.javax.sip.address.AddressImpl;
 import gov.nist.javax.sip.address.SipUri;
 import lombok.extern.slf4j.Slf4j;

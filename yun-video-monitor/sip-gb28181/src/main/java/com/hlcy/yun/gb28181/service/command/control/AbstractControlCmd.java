@@ -3,7 +3,7 @@ package com.hlcy.yun.gb28181.service.command.control;
 import com.hlcy.yun.gb28181.service.command.Command;
 import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.sip.client.RequestSender;
+import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import lombok.RequiredArgsConstructor;
 

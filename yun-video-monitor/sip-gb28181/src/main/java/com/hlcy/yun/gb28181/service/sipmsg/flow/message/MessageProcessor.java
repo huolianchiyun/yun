@@ -19,16 +19,23 @@ public abstract class MessageProcessor extends FlowRequestProcessor {
 
     @Override
     protected void process(RequestEvent event, FlowContext context) {
-        doProcess(event);
         try {
-            // 200 with no response body
-            send200Response(event);
-        } catch (ParseException e) {
-            log.error("Process a CmdType <{}> message({}) failed, cause: \n{}", getCmdTypeFrom(event), event.getRequest(), e.getMessage());
-            e.printStackTrace();
+            doProcess(event);
+        } finally {
+            try {   // 200 with no response body
+                send200Response(event);
+            } catch (ParseException e) {
+                log.error("Process a CmdType <{}> message({}) failed, cause: \n{}", getCmdTypeFrom(event), event.getRequest(), e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
+    /**
+     * 此方法仅写业务逻辑，无需回复 200 ok，系统默认自动回复
+     *
+     * @param event /
+     */
     protected abstract void doProcess(RequestEvent event);
 
     public static String getCmdTypeFrom(RequestEvent event) {

@@ -4,28 +4,26 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.sip.client.RequestProcessor;
-import com.hlcy.yun.gb28181.sip.client.ResponseProcessor;
+import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
+import com.hlcy.yun.gb28181.sip.biz.ResponseProcessor;
 import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 
 import javax.sip.ClientTransaction;
+import javax.sip.ServerTransaction;
 import java.io.Serializable;
 import java.util.Iterator;
 
 public class FlowContext extends MessageContext implements Serializable {
     private static final long serialVersionUID = 1L;
-
     private static GB28181Properties properties;
 
-    private final TimedCache<Enum, ClientTransaction> SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
-
-    private boolean isRecovered;
-
-    private final Operation operation;
+    private final TimedCache<Enum, ClientTransaction> CLIENT_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
+    private final TimedCache<Enum, ServerTransaction> SERVER_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
 
     private DeviceParams operationalParams;
-
+    private final Operation operation;
+    private boolean isRecovered;
     private String ssrc;
 
     public FlowContext(Operation operation, DeviceParams operationalParams) {
@@ -96,24 +94,32 @@ public class FlowContext extends MessageContext implements Serializable {
         isRecovered = recovered;
     }
 
-    public ClientTransaction get(Enum key) {
-        final ClientTransaction clientTransaction = SESSION_CACHE.get(key);
+    public ClientTransaction getClientTransaction(Enum key) {
+        final ClientTransaction clientTransaction = CLIENT_SESSION_CACHE.get(key);
         if (isRecovered) {
             return new RecoveredClientTransaction(clientTransaction);
         }
         return clientTransaction;
     }
 
+    public ServerTransaction getServerTransaction(Enum key) {
+        return SERVER_SESSION_CACHE.get(key);
+    }
+
     public void put(Enum key, ClientTransaction transaction) {
-        SESSION_CACHE.put(key, transaction);
+        CLIENT_SESSION_CACHE.put(key, transaction);
+    }
+
+    public void put(Enum key, ServerTransaction transaction) {
+        SERVER_SESSION_CACHE.put(key, transaction);
     }
 
     public Iterator<ClientTransaction> iterator() {
-        return SESSION_CACHE.iterator();
+        return CLIENT_SESSION_CACHE.iterator();
     }
 
     public void clearSessionCache() {
-        SESSION_CACHE.clear();
+        CLIENT_SESSION_CACHE.clear();
     }
 
 }

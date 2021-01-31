@@ -9,7 +9,7 @@ import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
 
-import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendByeRequest;
+import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
 
 /**
  * 客户端主动发起的实时视音频点播流程: 16->17<br/>
@@ -21,10 +21,10 @@ import static com.hlcy.yun.gb28181.sip.client.RequestSender.sendByeRequest;
 public class MediaByeResponseProcessor1 extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
-        final ClientTransaction clientTransaction = context.get(PlaySession.SIP_MEDIA_SESSION_1);
+        final ClientTransaction clientTransaction = context.getClientTransaction(PlaySession.SIP_MEDIA_SESSION_1);
         final Request bye = SipRequestFactory.getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
 
-        FlowContextCacheUtil.setNewKey(getCallId(event), SipRequestFactory.getCallId(bye));
+        FlowContextCacheUtil.setNewKey(getCallId(event.getResponse()), SipRequestFactory.getCallId(bye));
     }
 }

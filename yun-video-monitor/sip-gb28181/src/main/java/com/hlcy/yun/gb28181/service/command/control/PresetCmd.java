@@ -1,32 +1,32 @@
 package com.hlcy.yun.gb28181.service.command.control;
 
-import com.hlcy.yun.gb28181.service.params.PresetParams;
+import com.hlcy.yun.gb28181.service.params.control.PresetControlParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 
 /**
  * 预置位指令
  */
-public class PresetCmd extends AbstractControlCmd<PresetParams> {
+public class PresetCmd extends AbstractControlCmd<PresetControlParams> {
     public PresetCmd(GB28181Properties properties) {
         super(properties);
     }
 
     @Override
-    protected String buildCmdXML(PresetParams presetParams) {
-        return "<PTZCmd>" + buildPresetCmd(presetParams) + "</PTZCmd>";
+    protected String buildCmdXML(PresetControlParams presetControlParams) {
+        return "<PTZCmd>" + buildPresetCmd(presetControlParams) + "</PTZCmd>";
     }
 
-    private String buildPresetCmd(PresetParams presetParams) {
+    private String buildPresetCmd(PresetControlParams presetControlParams) {
         final StringBuilder builder = getBit123CmdTemplate();
 
         // 字节4
-        final int bit4 = presetParams.getType().getBit4();
+        final int bit4 = presetControlParams.getType().getBit4();
         builder.append(String.format("%02X", bit4), 0, 2);
         // 字节5
         int bit5 = 0x00;
         builder.append(String.format("%02X", bit5), 0, 2);
         // 字节6
-        final int bit6 = presetParams.getPresetIndex();
+        final int bit6 = presetControlParams.getPresetIndex();
         builder.append(String.format("%02X", bit6), 0, 2);
         // 字节7
         int bit7 = 0X00;

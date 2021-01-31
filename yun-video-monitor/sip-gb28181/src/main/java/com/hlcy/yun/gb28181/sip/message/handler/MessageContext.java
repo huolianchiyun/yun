@@ -1,7 +1,7 @@
 package com.hlcy.yun.gb28181.sip.message.handler;
 
-import com.hlcy.yun.gb28181.sip.client.RequestProcessor;
-import com.hlcy.yun.gb28181.sip.client.ResponseProcessor;
+import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
+import com.hlcy.yun.gb28181.sip.biz.ResponseProcessor;
 
 /**
  * MessageContext 用于关联 RequestProcessor 和 ResponseProcessor

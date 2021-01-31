@@ -32,7 +32,7 @@ public class SubscribeRequestHandler extends RequestHandler {
                 log.debug("Response: ({}) of the subscribe request: {}", response, request);
             }
             sendResponse(event, response);
-        }catch (InvalidArgumentException | ParseException e) {
+        }catch (InvalidArgumentException e) {
             log.error("Handle a subscribe request({}) failed, cause: {}", event, e.getMessage());
             e.printStackTrace();
         }

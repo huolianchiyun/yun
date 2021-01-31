@@ -1,29 +1,29 @@
 package com.hlcy.yun.gb28181.service.command.control;
 
-import com.hlcy.yun.gb28181.service.params.AuxilSwitchParams;
+import com.hlcy.yun.gb28181.service.params.control.AuxilSwitchControlParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 
 /**
  * 辅助开关控制指令
  */
-public class AuxilSwitchCmd extends AbstractControlCmd<AuxilSwitchParams> {
+public class AuxilSwitchCmd extends AbstractControlCmd<AuxilSwitchControlParams> {
     public AuxilSwitchCmd(GB28181Properties properties) {
         super(properties);
     }
 
     @Override
-    protected String buildCmdXML(AuxilSwitchParams params) {
+    protected String buildCmdXML(AuxilSwitchControlParams params) {
         return "<PTZCmd>" + buildPAuxilSwitchCmd(params) + "</PTZCmd>";
     }
 
-    private String buildPAuxilSwitchCmd(AuxilSwitchParams params) {
+    private String buildPAuxilSwitchCmd(AuxilSwitchControlParams params) {
         final StringBuilder builder = getBit123CmdTemplate();
         // 字节4
         int bit4 = params.getType().getBit4();
         builder.append(String.format("%02X", bit4), 0, 2);
         // 字节5
         int bit5 = params.getSwitchNum();
-        builder.append(String.format("%02X", 0), bit5, 2);
+        builder.append(String.format("%02X", bit5), 0, 2);
         // 字节6
         builder.append(String.format("%02X", 0), 0, 2);
         // 字节7

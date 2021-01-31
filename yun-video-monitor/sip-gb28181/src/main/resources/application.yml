@@ -41,4 +41,5 @@ gb28181:
   sipPassword: admin123
   mediaId: mediaId001
   mediaIp: 192.168.11.1
-  mediaPort: 10000
+  media-video-port: 10000
+  media-audio-Port: 10000

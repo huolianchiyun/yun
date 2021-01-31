@@ -1,18 +1,18 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback;
 
-import com.hlcy.yun.gb28181.service.params.PlaybackParams;
+import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.exception.SSRCException;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowResponseProcessor;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
-import com.hlcy.yun.gb28181.sip.client.RequestSender;
+import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import gov.nist.javax.sdp.fields.SSRCField;
 import gov.nist.javax.sdp.fields.SessionNameField;
+import gov.nist.javax.sdp.fields.TimeField;
 import gov.nist.javax.sdp.fields.URIField;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Vector;
 
 /**
@@ -88,11 +88,14 @@ public class MediaInviteResponseProcessor1 extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) throws SdpException {
         SessionNameField sessionNameField = new SessionNameField("Playback");
-        SessionDescription sessionDescription = getSessionDescription(getResponseBodyByStr(event));
+        SessionDescription sessionDescription = getSessionDescription(getMessageBodyByStr(event.getResponse()));
         sessionDescription.setSessionName(sessionNameField);
 
         final PlaybackParams playbackParams = (PlaybackParams) context.getOperationalParams();
-        sessionDescription.setTimeDescriptions(new Vector<>(Arrays.asList(playbackParams.getStartTimestamp(), playbackParams.getEndTimestamp())));
+        final TimeField timeField = new TimeField();
+        timeField.setStartTime(playbackParams.getStartTimestamp());
+        timeField.setStopTime(playbackParams.getEndTimestamp());
+        sessionDescription.setTimeDescriptions(new Vector<>(Collections.singletonList(timeField)));
 
         final String ssrc = getSSRC(context);
         sessionDescription.setSSRC(new SSRCField(ssrc));
@@ -110,8 +113,8 @@ public class MediaInviteResponseProcessor1 extends FlowResponseProcessor {
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2device);
 
         context.setSsrc(ssrc);
-        context.put(PlaySession.SIP_DEVICE_SESSION, clientTransaction);
-        FlowContextCacheUtil.setNewKey(getCallId(event), SipRequestFactory.getCallId(inviteRequest2device));
+        context.put(PlaybackSession.SIP_DEVICE_SESSION, clientTransaction);
+        FlowContextCacheUtil.setNewKey(getCallId(event.getResponse()), SipRequestFactory.getCallId(inviteRequest2device));
     }
 
     private String getSSRC(FlowContext context) {

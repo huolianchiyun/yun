@@ -28,7 +28,9 @@ public class GB28181Properties implements Serializable {
 
     private String mediaIp;
 
-    private Integer mediaPort;
+    private Integer mediaVideoPort;
+
+    private Integer mediaAudioPort;
 
     private Integer ptzSpeed;
 
