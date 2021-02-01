@@ -1,5 +1,6 @@
 package com.hlcy.yun.gb28181.service.params;
 
+import com.hlcy.yun.gb28181.sip.message.factory.Transport;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,5 +34,6 @@ public class DeviceParams implements Serializable {
     /**
      * 传输协议：UDP/TCP
      */
-    protected String deviceTransport;
+    protected Transport deviceTransport;
+
 }

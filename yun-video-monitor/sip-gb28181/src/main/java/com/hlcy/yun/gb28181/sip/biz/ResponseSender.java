@@ -1,6 +1,7 @@
 package com.hlcy.yun.gb28181.sip.biz;
 
 import com.hlcy.yun.gb28181.sip.SipLayer;
+import com.hlcy.yun.gb28181.sip.message.factory.Transport;
 import gov.nist.javax.sip.SipStackImpl;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.stack.SIPServerTransaction;
@@ -40,7 +41,7 @@ public final class ResponseSender {
 
     private static ServerTransaction getServerTransaction(RequestEvent event) {
         Request request = event.getRequest();
-        final SipLayer.Transport transport = SipLayer.getTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
+        final Transport transport = SipLayer.getTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
         ServerTransaction serverTransaction = event.getServerTransaction();
         if (serverTransaction == null) {
             final SipProvider sipProvider = SipLayer.getSipProvider(transport);

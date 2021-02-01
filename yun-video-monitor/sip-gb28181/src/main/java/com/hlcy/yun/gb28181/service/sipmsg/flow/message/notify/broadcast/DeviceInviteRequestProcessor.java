@@ -23,12 +23,10 @@ public class DeviceInviteRequestProcessor extends FlowRequestProcessor {
         final ServerTransaction serverTransaction = event.getServerTransaction();
         context.put(VoiceSession.SIP_DEVICE_SESSION, serverTransaction);
 
-        // 向媒体服务器发送Invite消息,此消息携带Device invite request sdp 消息体。
         Request invite2Media = getInviteRequest(
                 createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
                 createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                params.getDeviceTransport(),
-                event.getRequest().getRawContent());
+                params.getDeviceTransport());
         final ClientTransaction clientTransaction = sendRequest(invite2Media);
 
         context.put(VoiceSession.SIP_MEDIA_SESSION, clientTransaction);

@@ -1,7 +1,7 @@
 package com.hlcy.yun.gb28181.notification.event;
 
 import com.alibaba.fastjson.JSON;
-import com.hlcy.yun.gb28181.bean.Device;
+import com.hlcy.yun.gb28181.bean.DeviceInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +11,9 @@ import java.util.Map;
 @Getter
 @Setter
 public class RegisterEvent extends AbstractDeviceEvent implements EventMap {
-    private Device device;
+    private DeviceInfo device;
 
-    public RegisterEvent(Device device) {
+    public RegisterEvent(DeviceInfo device) {
         this.device = device;
         this.deviceId = device.getDeviceId();
         this.type = "register";
@@ -28,6 +28,6 @@ public class RegisterEvent extends AbstractDeviceEvent implements EventMap {
     }
 
     public static RegisterEvent valueOf(Map<String, String> map) {
-        return new RegisterEvent(JSON.parseObject(map.get("device"), Device.class));
+        return new RegisterEvent(JSON.parseObject(map.get("device"), DeviceInfo.class));
     }
 }

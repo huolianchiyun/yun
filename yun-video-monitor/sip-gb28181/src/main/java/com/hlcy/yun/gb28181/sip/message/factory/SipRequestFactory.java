@@ -38,27 +38,27 @@ public final class SipRequestFactory {
         SipRequestFactory.sipFactory = sipFactory;
     }
 
-    public static Request getMessageRequest(To to, From from, String transport) {
+    public static Request getMessageRequest(To to, From from, Transport transport) {
         return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_MANSCDP, Request.MESSAGE, transport, EMPTY_CONTENT);
     }
 
-    public static Request getMessageRequest(To to, From from, String transport, byte[] content) {
+    public static Request getMessageRequest(To to, From from, Transport transport, byte[] content) {
         return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_MANSCDP, Request.MESSAGE, transport, content);
     }
 
-    public static Request getMessageRequest(To to, From from, String subject, String viaBranch, String transport, byte[] content) {
+    public static Request getMessageRequest(To to, From from, String subject, String viaBranch, Transport transport, byte[] content) {
         return createRequest(to, from, subject, viaBranch, CONTENT_TYPE, CONTENT_SUBTYPE_MANSCDP, Request.MESSAGE, transport, content);
     }
 
-    public static Request getInviteRequest(To to, From from, String transport) {
+    public static Request getInviteRequest(To to, From from, Transport transport) {
         return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, EMPTY_CONTENT);
     }
 
-    public static Request getInviteRequest(To to, From from, String transport, byte[] content) {
+    public static Request getInviteRequest(To to, From from, Transport transport, byte[] content) {
         return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, content);
     }
 
-    public static Request getInviteRequest(To to, From from, String subject, String viaBranch, String transport, byte[] content) {
+    public static Request getInviteRequest(To to, From from, String subject, String viaBranch, Transport transport, byte[] content) {
         return createRequest(to, from, subject, viaBranch, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, content);
     }
 
@@ -175,7 +175,7 @@ public final class SipRequestFactory {
      * @return {@link Request}
      */
     private static Request createRequest(To to, From from, String subject, String viaBranch, String
-            contentType, String contentSubType, String method, String transport, byte[] content) {
+            contentType, String contentSubType, String method, Transport transport, byte[] content) {
         try {
             final AddressFactory addressFactory = SipLayer.getAddressFactory();
             // sip uri
@@ -192,10 +192,10 @@ public final class SipRequestFactory {
             CSeqHeader cSeqHeader = headerFactory.createCSeqHeader(1L, method);
 
             // Call-ID
-            CallIdHeader callIdHeader = SipLayer.getSipProvider(SipLayer.getTransport(transport)).getNewCallId();
+            CallIdHeader callIdHeader = SipLayer.getSipProvider(transport).getNewCallId();
 
             // Via
-            ViaHeader viaHeader = headerFactory.createViaHeader(from.host.ip, from.host.port, transport, viaBranch); // viaBranch may be null, but not empty.
+            ViaHeader viaHeader = headerFactory.createViaHeader(from.host.ip, from.host.port, transport.toString(), viaBranch); // viaBranch may be null, but not empty.
             viaHeader.setRPort();
             List<ViaHeader> viaHeaders = Collections.singletonList(viaHeader);
 

@@ -1,6 +1,6 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow.message.query;
 
-import com.hlcy.yun.gb28181.bean.Device;
+import com.hlcy.yun.gb28181.bean.DeviceInfo;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 
 import javax.sip.RequestEvent;
+
+import static com.hlcy.yun.gb28181.util.XmlUtil.getTextOfChildTagFrom;
 
 /**
  * 设备信息查询请求处理器
@@ -21,13 +23,14 @@ public class DeviceInfoQueryProcessor extends MessageProcessor {
             log.debug("Receive a CmdType <DeviceInfo> request, message: {}.", event.getRequest());
         }
         Element rootElement = getRootElementFrom(event);
-        String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
-        Device device = new Device(deviceId)
-                .setName(XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceName"))
-                .setManufacturer(XmlUtil.getTextOfChildTagFrom(rootElement, "Manufacturer"))
-                .setModel(XmlUtil.getTextOfChildTagFrom(rootElement, "Model"))
-                .setFirmware(XmlUtil.getTextOfChildTagFrom(rootElement, "Firmware"));
+        String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
+        DeviceInfo device = new DeviceInfo()
+                .setDeviceId(deviceId)
+                .setDeviceName(getTextOfChildTagFrom(rootElement, "DeviceName"))
+                .setManufacturer(getTextOfChildTagFrom(rootElement, "Manufacturer"))
+                .setModel(getTextOfChildTagFrom(rootElement, "Model"))
+                .setFirmware(getTextOfChildTagFrom(rootElement, "Firmware"));
 
-        DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_DEVICE_INFO + deviceId, device);
+        DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_QUERY_DEVICE_INFO + deviceId, device);
     }
 }

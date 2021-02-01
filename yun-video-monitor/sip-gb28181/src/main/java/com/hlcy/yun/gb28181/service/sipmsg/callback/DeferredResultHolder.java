@@ -12,11 +12,13 @@ import static com.hlcy.yun.common.web.response.ResponseUtil.*;
 public final class DeferredResultHolder {
     private static final Map<String, List<DeferredResult<ResponseEntity<ResponseData>>>> REQUEST_DEFERRED_RESULT_CACHE = new ConcurrentHashMap<>();
 
-    public static final String CALLBACK_CMD_CATALOG = "Callback_Catalog:";
+    public static final String CALLBACK_CMD_QUERY_CATALOG = "Callback_Catalog:";
 
-    public static final String CALLBACK_CMD_DEVICE_INFO = "Callback_DeviceInfo:";
+    public static final String CALLBACK_CMD_QUERY_DEVICE_INFO = "Callback_DeviceInfo:";
 
-    public static final String CALLBACK_CMD_RECORD_INFO = "Callback_RecordInfo:";
+    public static final String CALLBACK_CMD_QUERY_RECORD_INFO = "Callback_RecordInfo:";
+
+    public static final String CALLBACK_CMD_Query_ALARM = "Callback_Alarm:";
 
     public static final String CALLBACK_CMD_RECORD = "Callback_Record:";
 

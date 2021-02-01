@@ -9,11 +9,15 @@ import com.hlcy.yun.gb28181.sip.biz.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.sdp.SdpException;
 import javax.sdp.SdpFactory;
 import javax.sdp.SdpParseException;
 import javax.sdp.SessionDescription;
+import javax.sip.ResponseEvent;
+import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
 import javax.sip.message.Message;
+import javax.sip.message.Request;
 import java.io.*;
 import java.util.Iterator;
 import java.util.Optional;
@@ -83,13 +87,17 @@ public final class FlowContextCacheUtil {
         public MessageContext get(Message message) {
             FlowContext flowContext = get(getCallId(message));
             if (flowContext == null) {
-                try {
-                    // get voice broadcast flow context
-                    final SessionDescription sdp = getSessionDescription(new String(message.getRawContent()));
-                    final String deviceChannelId = sdp.getOrigin().getUsername();
-                    flowContext = get(deviceChannelId);
-                } catch (SdpParseException e) {
-                    e.printStackTrace();
+                if (Request.INVITE.equalsIgnoreCase(getMethodFrom(message))) {
+                    try {
+                        // get voice broadcast flow context
+                        final SessionDescription sdp = getSessionDescription(new String(message.getRawContent()));
+                        if (sdp.getMediaDescriptions(false).toString().contains("audio")) {
+                            final String deviceChannelId = sdp.getOrigin().getUsername();
+                            flowContext = get(deviceChannelId);
+                        }
+                    } catch (SdpException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             return flowContext;
@@ -99,7 +107,11 @@ public final class FlowContextCacheUtil {
             return ((CallIdHeader) message.getHeader(CallIdHeader.NAME)).getCallId();
         }
 
-        protected SessionDescription getSessionDescription(String sdpMessageBody) throws SdpParseException {
+        private String getMethodFrom(Message message) {
+            return ((CSeqHeader) message.getHeader(CSeqHeader.NAME)).getMethod();
+        }
+
+        SessionDescription getSessionDescription(String sdpMessageBody) throws SdpParseException {
             return sdpFactory.createSessionDescription(sdpMessageBody);
         }
 

@@ -25,27 +25,27 @@ public class QueryController {
 
     @GetMapping("/catalog")
     @ApiOperation("查询设备目录")
-    public DeferredResult<ResponseEntity<ResponseData>> queryCatalog(@RequestBody CatalogQueryParams params) {
+    public DeferredResult<ResponseEntity<ResponseData>> queryCatalog(CatalogQueryParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_CATALOG + params.getChannelId(), result);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_QUERY_CATALOG + params.getChannelId(), result);
         operator.operate(params);
         return result;
     }
 
     @GetMapping("/deviceInfo")
     @ApiOperation("查询设备信息")
-    public DeferredResult<ResponseEntity<ResponseData>> queryDeviceInfo(@RequestBody DeviceInfoQueryParams params) {
+    public DeferredResult<ResponseEntity<ResponseData>> queryDeviceInfo(DeviceInfoQueryParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_DEVICE_INFO + params.getChannelId(), result);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_QUERY_DEVICE_INFO + params.getChannelId(), result);
         operator.operate(params);
         return result;
     }
 
     @GetMapping("/recordInfo")
     @ApiOperation("查询设备历史录像")
-    public DeferredResult<ResponseEntity<ResponseData>> queryRecordInfo(@RequestBody RecordInfoQueryParams params) {
+    public DeferredResult<ResponseEntity<ResponseData>> queryRecordInfo(RecordInfoQueryParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + params.getChannelId(), result);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_QUERY_RECORD_INFO + params.getChannelId(), result);
         operator.operate(params);
         return result;
     }

@@ -33,7 +33,7 @@ public class RecordInfoQueryProcessor extends MessageProcessor {
         RecordInfo recordInfo = extractRecordInfoFrom(rootElement);
         final String sn = XmlUtil.getTextOfChildTagFrom(rootElement, "SN");
         if (isFullRecordList(recordInfo, sn)) {
-            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + deviceId, recordInfo);
+            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_QUERY_RECORD_INFO + deviceId, recordInfo);
         }
     }
 

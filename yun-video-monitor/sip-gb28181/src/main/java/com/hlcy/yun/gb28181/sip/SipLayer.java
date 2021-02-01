@@ -2,6 +2,7 @@ package com.hlcy.yun.gb28181.sip;
 
 import com.hlcy.yun.gb28181.sip.auth.DigestServerAuthHelper;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.sip.message.factory.Transport;
 import com.hlcy.yun.gb28181.sip.message.SipPipelineFactory;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
@@ -180,15 +181,6 @@ public final class SipLayer implements SipListener {
         LinkedBlockingQueue<Runnable> processQueue = new LinkedBlockingQueue<Runnable>(10000);
         this.executor = new ThreadPoolExecutor(2, maximumPoolSize, 30L,
                 TimeUnit.SECONDS, processQueue, new ThreadPoolExecutor.CallerRunsPolicy());
-    }
-
-    public enum Transport {
-        TCP("TCP"), UDP("UDP");
-        private String name;
-
-        Transport(String name) {
-            this.name = name;
-        }
     }
 
     public static Transport getTransport(String transport) {

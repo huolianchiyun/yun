@@ -47,7 +47,7 @@ public class FlowPipelineFactory {
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> DEVICE_INFO_PIPELINE = new DefaultPipeline<>();
         DEVICE_INFO_PIPELINE.addLast("DeviceInfo", new DeviceInfoQueryProcessor());
-        requestMap.put(DEVICE_INFO, DEVICE_INFO_PIPELINE);
+        requestMap.put(DEVICEINFO, DEVICE_INFO_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> RECORD_INFO_PIPELINE = new DefaultPipeline<>();
         RECORD_INFO_PIPELINE.addLast("RecordInfo", new RecordInfoQueryProcessor());
