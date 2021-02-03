@@ -69,10 +69,10 @@ public class RegisterRequestHandler extends RequestHandler {
         final Request request = event.getRequest();
         // 未携带授权头或者密码错误 均回复 401
         if (request.getHeader(ProxyAuthorizationHeader.NAME) == null) {
-            log.warn("Will reply 401 after not carrying authorization.");
+            log.warn("Will reply 401 after not carrying authorization, request:\n{}", request);
             isPass = false;
         } else if (!DigestServerAuthHelper.authenticatePlainTextPassword(request)) {
-            log.warn("Will reply 401 after sip sever's password isn't correct.");
+            log.warn("Will reply 401 after sip sever's password isn't correct, request：\n{}", request);
             isPass = false;
         }
         if (!isPass) {

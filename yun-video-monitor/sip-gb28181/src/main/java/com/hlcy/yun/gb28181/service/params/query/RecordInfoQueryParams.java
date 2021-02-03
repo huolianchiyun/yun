@@ -1,7 +1,9 @@
 package com.hlcy.yun.gb28181.service.params.query;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Setter
@@ -12,8 +14,10 @@ public class RecordInfoQueryParams extends QueryParams {
         super("RecordInfo");
     }
 
+    @ApiModelProperty(required = true)
     private LocalDateTime startTime;
 
+    @ApiModelProperty(required = true)
     private LocalDateTime endTime;
 
     private String filePath;
@@ -25,6 +29,7 @@ public class RecordInfoQueryParams extends QueryParams {
     /**
      * 录像产生类型(可选) time 或 alarm 或 manual或 all
      */
+    @ApiModelProperty(required = true)
     private TriggerType type = TriggerType.time;
 
     /**

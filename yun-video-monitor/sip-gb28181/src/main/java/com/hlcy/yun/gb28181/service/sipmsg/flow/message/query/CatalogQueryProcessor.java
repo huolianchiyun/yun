@@ -29,14 +29,28 @@ public class CatalogQueryProcessor extends MessageProcessor {
             log.debug("Receive a CmdType <Catalog> request, message: {}.", event.getRequest());
         }
         Element rootElement = getRootElementFrom(event);
-        String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
 
-        final Catalog catalog = extractCatalogFrom(rootElement);
-
-        final String sn = XmlUtil.getTextOfChildTagFrom(rootElement, "SN");
-        if (isFullDeviceList(catalog, sn)) {
-            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_QUERY_CATALOG + deviceId, catalog);
+        if (!isMessageError(rootElement)) {
+            final Catalog catalog = extractCatalogFrom(rootElement);
+            final String sn = getTextOfChildTagFrom(rootElement, "SN");
+            if (isFullDeviceList(catalog, sn)) {
+                DeferredResultHolder.setDeferredResultForRequest(
+                        DeferredResultHolder.CALLBACK_CMD_QUERY_CATALOG + getTextOfChildTagFrom(rootElement, "DeviceID"), catalog);
+            }
         }
+    }
+
+    private boolean isMessageError(Element rootElement) {
+        final String result = getTextOfChildTagFrom(rootElement, "Result");
+        if (!"OK".equalsIgnoreCase(result)) {
+            String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
+            DeferredResultHolder.setErrorDeferredResultForRequest(
+                    DeferredResultHolder.CALLBACK_CMD_QUERY_CATALOG + deviceId,
+                    getTextOfChildTagFrom(rootElement, "Reason"));
+            cache.remove(CACHE_CATALOG_KEY + deviceId + ":" + getTextOfChildTagFrom(rootElement, "SN"));
+            return true;
+        }
+        return false;
     }
 
     private Catalog extractCatalogFrom(Element rootElement) {

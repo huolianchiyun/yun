@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.hlcy.yun.gb28181.util.XmlUtil.getTextOfChildTagFrom;
+
 /**
  * 文件目录检索请求处理器
  */
@@ -29,19 +31,33 @@ public class RecordInfoQueryProcessor extends MessageProcessor {
             log.debug("Receive a CmdType <RecordInfo> request, message: \n{}", event.getRequest());
         }
         Element rootElement = getRootElementFrom(event);
-        final String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
-        RecordInfo recordInfo = extractRecordInfoFrom(rootElement);
-        final String sn = XmlUtil.getTextOfChildTagFrom(rootElement, "SN");
-        if (isFullRecordList(recordInfo, sn)) {
-            DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_QUERY_RECORD_INFO + deviceId, recordInfo);
+
+        if (!isMessageError(rootElement)) {
+            RecordInfo recordInfo = extractRecordInfoFrom(rootElement);
+            final String sn = getTextOfChildTagFrom(rootElement, "SN");
+            if (isFullRecordList(recordInfo, sn)) {
+                DeferredResultHolder.setDeferredResultForRequest(
+                        DeferredResultHolder.CALLBACK_CMD_QUERY_RECORD_INFO + getTextOfChildTagFrom(rootElement, "DeviceID"), recordInfo);
+            }
         }
+    }
+
+    private boolean isMessageError(Element rootElement) {
+        final String result = getTextOfChildTagFrom(rootElement, "Result");
+        if (!"OK".equalsIgnoreCase(result)) {
+            final String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
+            DeferredResultHolder.setErrorDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_CRUISE + deviceId, getTextOfChildTagFrom(rootElement, "Reason"));
+            cache.remove(CACHE_RECORD_INFO_KEY + deviceId + ":" + getTextOfChildTagFrom(rootElement, "SN"));
+            return true;
+        }
+        return false;
     }
 
     private RecordInfo extractRecordInfoFrom(Element rootElement) {
         RecordInfo recordInfo = new RecordInfo()
-                .setDeviceId(XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID"))
-                .setName(XmlUtil.getTextOfChildTagFrom(rootElement, "Name"))
-                .setSumNum(Integer.parseInt(XmlUtil.getTextOfChildTagFrom(rootElement, "SumNum")));
+                .setDeviceId(getTextOfChildTagFrom(rootElement, "DeviceID"))
+                .setName(getTextOfChildTagFrom(rootElement, "Name"))
+                .setSumNum(Integer.parseInt(getTextOfChildTagFrom(rootElement, "SumNum")));
 
         Element recordListElement = rootElement.element("RecordList");
         JUMP_END:
@@ -54,17 +70,17 @@ public class RecordInfoQueryProcessor extends MessageProcessor {
                     Element recordItem = recordListIterator.next();
                     if (recordItem.element("DeviceID") == null) continue;
                     recordList.add(new RecordItem()
-                            .setDeviceId(XmlUtil.getTextOfChildTagFrom(recordItem, "DeviceID"))
-                            .setName(XmlUtil.getTextOfChildTagFrom(recordItem, "Name"))
-                            .setFilePath(XmlUtil.getTextOfChildTagFrom(recordItem, "FilePath"))
-                            .setAddress(XmlUtil.getTextOfChildTagFrom(recordItem, "Address"))
-                            .setStartTime(LocalDateTime.parse(XmlUtil.getTextOfChildTagFrom(recordItem, "StartTime"))
+                            .setDeviceId(getTextOfChildTagFrom(recordItem, "DeviceID"))
+                            .setName(getTextOfChildTagFrom(recordItem, "Name"))
+                            .setFilePath(getTextOfChildTagFrom(recordItem, "FilePath"))
+                            .setAddress(getTextOfChildTagFrom(recordItem, "Address"))
+                            .setStartTime(LocalDateTime.parse(getTextOfChildTagFrom(recordItem, "StartTime"))
                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                            .setEndTime(LocalDateTime.parse(XmlUtil.getTextOfChildTagFrom(recordItem, "EndTime"))
+                            .setEndTime(LocalDateTime.parse(getTextOfChildTagFrom(recordItem, "EndTime"))
                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                             .setSecrecy(Integer.parseInt(XmlUtil.getOrDefaultTextOf(recordItem.element("Secrecy"), "0")))
-                            .setType(XmlUtil.getTextOfChildTagFrom(recordItem, "Type"))
-                            .setRecorderId(XmlUtil.getTextOfChildTagFrom(recordItem, "RecorderID")));
+                            .setType(getTextOfChildTagFrom(recordItem, "Type"))
+                            .setRecorderId(getTextOfChildTagFrom(recordItem, "RecorderID")));
                 }
                 recordInfo.setRecordList(recordList);
             }

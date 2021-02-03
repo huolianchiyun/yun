@@ -26,7 +26,7 @@ public class NotifyController {
 
     @GetMapping("/voice/broadcast")
     @ApiOperation("语音广播通知")
-    public DeferredResult<ResponseEntity<ResponseData>> notifyVoiceBroadcast(@RequestBody VoiceBroadcastNotifyParams params) {
+    public DeferredResult<ResponseEntity<ResponseData>> notifyVoiceBroadcast(VoiceBroadcastNotifyParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_VOICE + params.getChannelId(), result);
         operator.operate(params);

@@ -3,6 +3,8 @@ package com.hlcy.yun.gb28181.service.command.query;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.service.params.query.RecordInfoQueryParams;
 
+import java.time.LocalDateTime;
+
 /**
  * 设备录像（历史视频）查询
  */
@@ -15,8 +17,8 @@ public class RecordInfoQueryCmd extends AbstractQueryCmd<RecordInfoQueryParams> 
     @Override
     protected String buildCmdXML(RecordInfoQueryParams params) {
         final StringBuilder cmd = new StringBuilder(200)
-                .append("<StartTime>").append(params.getStartTime()).append("</StartTime>")
-                .append("<EndTime>").append(params.getStartTime()).append("</EndTime>");
+                .append("<StartTime>").append(params.getStartTime().withNano(0)).append("</StartTime>")
+                .append("<EndTime>").append(params.getStartTime().withNano(0)).append("</EndTime>");
         final String filePath = params.getFilePath();
         if (filePath != null && !filePath.isEmpty()) {
             cmd.append("<FilePath>").append(filePath).append("</FilePath>");
