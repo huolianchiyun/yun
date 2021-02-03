@@ -32,7 +32,7 @@ public class GB28181Properties implements Serializable {
 
     private Integer mediaAudioPort;
 
-    private Integer ptzSpeed;
+    private String mediaPullStreamApi;
 
     public void setSipIp(String sipIp) throws UnknownHostException {
         if (sipIp == null || sipIp.isEmpty()) {

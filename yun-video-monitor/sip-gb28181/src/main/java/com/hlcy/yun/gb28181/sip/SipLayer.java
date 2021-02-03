@@ -103,7 +103,7 @@ public final class SipLayer implements SipListener {
             SipPipelineFactory.getResponsePipeline().processMessage(evt);
             return;
         }
-        log.warn("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());
+        log.error("Receive a exception response, status：{}, message: {}.", status, response.getReasonPhrase());
     }
 
     /**
@@ -112,7 +112,7 @@ public final class SipLayer implements SipListener {
      * message.
      */
     public void processTimeout(TimeoutEvent evt) {
-        log.error("Previous message not sent: timeout, message: {}", evt.toString());
+        log.error("Previous message not sent: timeout, message: {}", evt.getClientTransaction().getRequest());
     }
 
     /**
@@ -120,7 +120,7 @@ public final class SipLayer implements SipListener {
      * message transmission error.
      */
     public void processIOException(IOExceptionEvent evt) {
-        log.error("Previous message not sent: I/O Exception, message: {}", evt.toString());
+        log.error("Previous message not sent: I/O Exception, message: {}", evt.getSource());
     }
 
     /**

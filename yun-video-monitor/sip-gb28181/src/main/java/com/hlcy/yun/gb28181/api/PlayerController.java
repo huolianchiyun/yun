@@ -29,7 +29,8 @@ public class PlayerController {
     @ApiOperation("点播")
     public DeferredResult<ResponseEntity<ResponseData>> play(@RequestBody PlayParams playParams) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_PLAY + playParams.getChannelId(), result);
+        DeferredResultHolder.put(
+                DeferredResultHolder.CALLBACK_CMD_PLAY + playParams.getChannelId(), result);
         player.play(playParams);
         return result;
     }

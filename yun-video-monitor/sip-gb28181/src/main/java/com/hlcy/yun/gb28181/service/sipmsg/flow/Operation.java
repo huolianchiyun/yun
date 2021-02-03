@@ -3,7 +3,7 @@ package com.hlcy.yun.gb28181.service.sipmsg.flow;
 public enum Operation {
     PLAY("Play"), PLAYBACK("Playback"),
     RECORD("record"), GUARD("guard"), RESET_ALARM("ResetAlarm"), HOME_POSITION("HomePosition"), PRESET("Preset"),
-    CATALOG("Catalog"), DEVICEINFO("DeviceInfo"), RECORD_INFO("RecordInfo"),
+    CATALOG("Catalog"), DEVICEINFO("DeviceInfo"), RECORDINFO("RecordInfo"),
     KEEPALIVE("Keepalive"), BROADCAST("Broadcast");
 
     private String code;

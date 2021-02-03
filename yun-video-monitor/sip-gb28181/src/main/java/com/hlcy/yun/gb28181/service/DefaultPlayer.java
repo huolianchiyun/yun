@@ -1,5 +1,7 @@
 package com.hlcy.yun.gb28181.service;
 
+import com.hlcy.yun.common.utils.http.RestHttpClient;
+import com.hlcy.yun.gb28181.bean.PlayResponse;
 import com.hlcy.yun.gb28181.service.params.player.PlayParams;
 import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
@@ -13,6 +15,8 @@ import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -40,21 +44,45 @@ public class DefaultPlayer implements Player {
             // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
             final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextBy(params.getChannelId());
             if (optional.isPresent() && StringUtils.hasText(optional.get().getSsrc())) {
-                DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(), optional.get().getSsrc());
+                DeferredResultHolder.setDeferredResultForRequest(
+                        DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(),
+                        new PlayResponse(optional.get().getSsrc(), properties.getMediaIp()));
                 return;
             }
         }
-        // 2:向媒体服务器发送Invite消息,此消息不携带SDP消息体。
-        Request inviteMedia = getInviteRequest(
-                createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
-                createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                params.getDeviceTransport());
-        final ClientTransaction clientTransaction = sendRequest(inviteMedia);
 
-        final FlowContext flowContext = new FlowContext(Operation.PLAY, params);
-        FlowContext.setProperties(properties);
-        flowContext.put(SIP_MEDIA_SESSION_1, clientTransaction);
-        FlowContextCacheUtil.put(getCallId(inviteMedia), flowContext);
+        if (!handleMediaPullStream(params)) {
+            // 2:向媒体服务器发送Invite消息,此消息不携带SDP消息体。
+            Request inviteMedia = getInviteRequest(
+                    createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
+                    createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
+                    params.getDeviceTransport());
+            final ClientTransaction clientTransaction = sendRequest(inviteMedia);
+
+            final FlowContext flowContext = new FlowContext(Operation.PLAY, params);
+            FlowContext.setProperties(properties);
+            flowContext.put(SIP_MEDIA_SESSION_1, clientTransaction);
+            FlowContextCacheUtil.put(getCallId(inviteMedia), flowContext);
+        }
+    }
+
+    private boolean handleMediaPullStream(PlayParams params) {
+        if (!StringUtils.isEmpty(params.getFormat())) {
+            final String ssrc = SSRCManger.getPlaySSRC();
+            // 是否让流媒体主动拉流
+            final String url = properties.getMediaPullStreamApi()
+                    .replace("${mediaIp}", properties.getMediaIp())
+                    .replace("${ssrc}", ssrc)
+                    .replace("${deviceIp}", params.getDeviceIp());
+            final String response = RestHttpClient.exchange(url, HttpMethod.GET, ParameterizedTypeReference.forType(String.class), null);
+
+            FlowContextCacheUtil.put(ssrc, new FlowContext(Operation.PLAY, params, true));
+            DeferredResultHolder.setDeferredResultForRequest(
+                    DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(),
+                    new PlayResponse(ssrc, properties.getMediaIp()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -65,18 +93,30 @@ public class DefaultPlayer implements Player {
             return;
         }
 
-        final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
-        final Request bye = getByeRequest(clientTransaction);
-        sendByeRequest(bye, clientTransaction);
+        if (!handleMediaPullStreamClose(ssrc)) {
+            final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
+            final Request bye = getByeRequest(clientTransaction);
+            sendByeRequest(bye, clientTransaction);
 
-        FlowContextCacheUtil.setNewKey(ssrc, getCallId(bye));
-        SSRCManger.releaseSSRC(ssrc);
+            FlowContextCacheUtil.setNewKey(ssrc, getCallId(bye));
+            SSRCManger.releaseSSRC(ssrc);
+        }
     }
 
     private boolean isClosedMediaStreamOf(String ssrc) {
         final FlowContext context = FlowContextCacheUtil.get(ssrc);
         if (context == null) {
             log.info("媒体流已关闭，SSRC：{}", ssrc);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleMediaPullStreamClose(String ssrc) {
+        final FlowContext context = FlowContextCacheUtil.get(ssrc);
+        if (context.isMediaPullStream()) {
+            log.info("*** Media pull stream close, ssrc:{} ***", ssrc);
+            SSRCManger.releaseSSRC(ssrc);
             return true;
         }
         return false;

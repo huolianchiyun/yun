@@ -51,7 +51,7 @@ public class FlowPipelineFactory {
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> RECORD_INFO_PIPELINE = new DefaultPipeline<>();
         RECORD_INFO_PIPELINE.addLast("RecordInfo", new RecordInfoQueryProcessor());
-        requestMap.put(RECORD_INFO, RECORD_INFO_PIPELINE);
+        requestMap.put(RECORDINFO, RECORD_INFO_PIPELINE);
 
         // Notify
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();

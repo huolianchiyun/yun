@@ -25,6 +25,13 @@ public class FlowContext extends MessageContext implements Serializable {
     private final Operation operation;
     private boolean isRecovered;
     private String ssrc;
+    private boolean mediaPullStream;
+
+    public FlowContext(Operation operation, DeviceParams operationalParams, boolean mediaPullStream) {
+        this(operation);
+        this.operationalParams = operationalParams;
+        this.mediaPullStream = mediaPullStream;
+    }
 
     public FlowContext(Operation operation, DeviceParams operationalParams) {
         this(operation);
@@ -92,6 +99,10 @@ public class FlowContext extends MessageContext implements Serializable {
 
     void setRecovered(boolean recovered) {
         isRecovered = recovered;
+    }
+
+    public boolean isMediaPullStream() {
+        return mediaPullStream;
     }
 
     public ClientTransaction getClientTransaction(Enum key) {

@@ -28,7 +28,6 @@ spring:
     async:
       request-timeout: 60000
 
-
 gb28181:
   sipIp: 192.168.11.1
   sipPort: 5060
@@ -43,3 +42,4 @@ gb28181:
   mediaIp: 192.168.11.1
   media-video-port: 10000
   media-audio-Port: 10000
+  media-pull-stream-api: http://${mediaIp}/index/api/addStreamProxy?secret=123456&vhost=__defaultVhost__&app=proxy&stream=${ssrc}&url=rtsp://admin:shipin123@${deviceIp}/h264/ch1/sub/av_stream&rtp_type=1
