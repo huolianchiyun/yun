@@ -3,14 +3,8 @@ package com.hlcy.yun.gb28181.config;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-//import org.springframework.format.FormatterRegistry;
-////import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-////import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-////import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
