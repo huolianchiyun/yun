@@ -18,7 +18,7 @@ public class RecordInfoQueryCmd extends AbstractQueryCmd<RecordInfoQueryParams> 
     protected String buildCmdXML(RecordInfoQueryParams params) {
         final StringBuilder cmd = new StringBuilder(200)
                 .append("<StartTime>").append(params.getStartTime().withNano(0)).append("</StartTime>")
-                .append("<EndTime>").append(params.getStartTime().withNano(0)).append("</EndTime>");
+                .append("<EndTime>").append(params.getEndTime().withNano(0)).append("</EndTime>");
         final String filePath = params.getFilePath();
         if (filePath != null && !filePath.isEmpty()) {
             cmd.append("<FilePath>").append(filePath).append("</FilePath>");

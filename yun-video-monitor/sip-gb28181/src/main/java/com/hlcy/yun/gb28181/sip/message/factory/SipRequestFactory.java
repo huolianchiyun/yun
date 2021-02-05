@@ -85,6 +85,10 @@ public final class SipRequestFactory {
         final Dialog dialog = clientTransaction.getDialog();
         try {
             final Request info = dialog.createRequest(Request.INFO);
+            final CSeqHeader cSeqHeader = (CSeqHeader) clientTransaction.getRequest().getHeader(CSeqHeader.NAME);
+            CSeqHeader infoSeqHeader = (CSeqHeader) info.getHeader(CSeqHeader.NAME);
+            infoSeqHeader.setSeqNumber(cSeqHeader.getSeqNumber() + 1);
+
             HeaderFactory headerFactory = SipLayer.getHeaderFactory();
             info.setContentLength(headerFactory.createContentLengthHeader(content.length));
             ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader(CONTENT_TYPE, CONTENT_SUBTYPE_MANSRTSP);

@@ -25,14 +25,15 @@ import javax.sip.message.Request;
 public class MediaInviteResponseProcessor2 extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
+        final ClientTransaction mediaTransaction = context.getClientTransaction(PlaySession.SIP_MEDIA_SESSION_2);
+        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getMessageBodyByByteArr(event.getResponse()));
+        RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
+
         final String ssrc = context.getSsrc();
         DeferredResultHolder.setDeferredResultForRequest(
                 DeferredResultHolder.CALLBACK_CMD_PLAY + context.getOperationalParams().getChannelId(),
                 new PlayResponse(ssrc, context.getProperties().getMediaIp()));
 
-        final ClientTransaction mediaTransaction = context.getClientTransaction(PlaySession.SIP_MEDIA_SESSION_2);
-        final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getMessageBodyByByteArr(event.getResponse()));
-        RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);
         FlowContextCacheUtil.setNewKey(getCallId(event.getResponse()), ssrc);
     }
 }

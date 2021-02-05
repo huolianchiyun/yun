@@ -44,9 +44,9 @@ public class RecordInfoQueryProcessor extends MessageProcessor {
 
     private boolean isMessageError(Element rootElement) {
         final String result = getTextOfChildTagFrom(rootElement, "Result");
-        if (!"OK".equalsIgnoreCase(result)) {
+        if ("Error".equalsIgnoreCase(result)) {
             final String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
-            DeferredResultHolder.setErrorDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_CRUISE + deviceId, getTextOfChildTagFrom(rootElement, "Reason"));
+            DeferredResultHolder.setErrorDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_QUERY_RECORD_INFO + deviceId, getTextOfChildTagFrom(rootElement, "Reason"));
             cache.remove(CACHE_RECORD_INFO_KEY + deviceId + ":" + getTextOfChildTagFrom(rootElement, "SN"));
             return true;
         }

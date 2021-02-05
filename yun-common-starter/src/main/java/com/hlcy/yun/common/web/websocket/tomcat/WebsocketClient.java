@@ -2,12 +2,14 @@ package com.hlcy.yun.common.web.websocket.tomcat;
 
 import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.hlcy.yun.common.web.websocket.Sender;
-import com.hlcy.yun.common.web.websocket.WebsocketConst;
-import com.hlcy.yun.common.web.websocket.WebsocketSender;
-import com.hlcy.yun.common.web.websocket.SocketMsg;
+import com.hlcy.yun.common.utils.str.StringUtils;
+import com.hlcy.yun.common.web.websocket.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationListener;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -27,9 +29,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 @ServerEndpoint(WebsocketConst.WEBSOCKET_BASE_URL + "/{sid}")
-public class WebsocketClient implements Sender, InitializingBean {
-
+public class WebsocketClient implements Sender, ApplicationListener<ApplicationStartedEvent> {
+    private  static WebsocketEventPublisher publisher;
     private static final AtomicInteger onlineCount = new AtomicInteger();
+
     /**
      * 存放每个客户端对应的 WebSocket 对象。
      */
@@ -103,6 +106,9 @@ public class WebsocketClient implements Sender, InitializingBean {
     @OnMessage
     public void onMessage(String message, Session session) {
         log.info("收到来 {} 的信息: {}", sid, message);
+        if (StringUtils.isNotBlank(message)) {
+            publisher.publishEvent(new WebsocketReceiveEvent("Tomcat-Websocket").setMessage(message).setUid(sid));
+        }
         //群发消息
 //        for (Map.Entry<String, WebSocketClient> item : WEB_SOCKET_CLIENT_MAP.entrySet()) {
 //            item.getValue().sendMessage(message);
@@ -144,7 +150,8 @@ public class WebsocketClient implements Sender, InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void onApplicationEvent(ApplicationStartedEvent event) {
+        WebsocketClient.publisher = event.getApplicationContext().getBean(WebsocketEventPublisher.class);
         ReflectUtil.setFieldValue(WebsocketSender.class, "sender", this);
         log.info("*** *** Tomcat-Websocket started， 监听端口同 Web application port *** ***");
     }

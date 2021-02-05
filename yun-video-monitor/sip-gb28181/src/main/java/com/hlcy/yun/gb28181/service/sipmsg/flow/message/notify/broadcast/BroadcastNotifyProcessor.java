@@ -35,7 +35,9 @@ public class BroadcastNotifyProcessor extends MessageProcessor {
 
     private void cleanContextCache(String deviceId) {
         final FlowContext flowContext = FlowContextCacheUtil.get(deviceId);
-        flowContext.clearSessionCache();
-        FlowContextCacheUtil.remove(deviceId);
+        if(flowContext != null){
+            flowContext.clearSessionCache();
+            FlowContextCacheUtil.remove(deviceId);
+        }
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 
 @EnableMonitor
-@EnableWebSocket(EnableWebSocket.WebSocketType.Netty)
+@EnableWebSocket
 @RestController
 @Api(hidden = true)
 @SpringBootApplication

@@ -10,7 +10,6 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.PlaybackSession;
-import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,7 @@ import org.springframework.util.StringUtils;
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
@@ -74,12 +74,19 @@ public class DefaultPlayer implements Player {
                     .replace("${mediaIp}", properties.getMediaIp())
                     .replace("${ssrc}", ssrc)
                     .replace("${deviceIp}", params.getDeviceIp());
-            final String response = RestHttpClient.exchange(url, HttpMethod.GET, ParameterizedTypeReference.forType(String.class), null);
-
-            FlowContextCacheUtil.put(ssrc, new FlowContext(Operation.PLAY, params, true));
-            DeferredResultHolder.setDeferredResultForRequest(
-                    DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(),
-                    new PlayResponse(ssrc, properties.getMediaIp()));
+            final Map response = RestHttpClient.exchange(url, HttpMethod.GET, new ParameterizedTypeReference<Map<String, Object>>() {
+            }, null);
+            if (Integer.parseInt(response.get("code").toString()) == 0) {
+                FlowContextCacheUtil.put(ssrc, new FlowContext(Operation.PLAY, params, true));
+                DeferredResultHolder.setDeferredResultForRequest(
+                        DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(),
+                        new PlayResponse(ssrc, properties.getMediaIp()));
+            } else {
+                log.error("*** 流媒体主动从设备拉流失败， response：{}", response);
+                DeferredResultHolder.setErrorDeferredResultForRequest(
+                        DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(),
+                        String.format("*** 流媒体主动从设备拉流失败， response：%s", response));
+            }
             return true;
         }
         return false;
@@ -154,45 +161,45 @@ public class DefaultPlayer implements Player {
         final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION);
         // Scale为 1,正常播放;不等于 1,为正常播放速率的倍数;负数为倒放
-        String content = "PLAY MANSRTSP/1.0" + "\r\n"
+        String content = "PLAY RTSP/1.0" + "\r\n"
                 + "CSeq: 3" + "\r\n"
                 + "Scale: " + scale;
         final Request infoRequest = SipRequestFactory.getInfoRequest(deviceTransaction, content.getBytes(StandardCharsets.UTF_8));
-        RequestSender.sendRequest(infoRequest);
+        flowContext.put(PlaybackSession.SIP_DEVICE_SESSION, sendRequest(infoRequest));
     }
 
     @Override
     public void playbackDrag(String ssrc, int range) {
         final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION);
-        String content = "PLAY MANSRTSP/1.0" + "\r\n"
+        String content = "PLAY RTSP/1.0" + "\r\n"
                 + "CSeq:4" + "\r\n"
                 + "Range: npt="
                 + range
                 + "-";
         final Request infoRequest = SipRequestFactory.getInfoRequest(deviceTransaction, content.getBytes(StandardCharsets.UTF_8));
-        RequestSender.sendRequest(infoRequest);
+        flowContext.put(PlaybackSession.SIP_DEVICE_SESSION, sendRequest(infoRequest));
     }
 
     @Override
     public void playbackPause(String ssrc) {
         final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
-        final ClientTransaction deviceTransaction = flowContext.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION);
-        String content = "PAUSE MANSRTSP/1.0" + "\r\n"
+        ClientTransaction deviceTransaction = flowContext.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION);
+        String content = "PAUSE RTSP/1.0" + "\r\n"
                 + "CSeq: 1" + "\r\n"
                 + "PauseTime: now";
         final Request infoRequest = SipRequestFactory.getInfoRequest(deviceTransaction, content.getBytes(StandardCharsets.UTF_8));
-        RequestSender.sendRequest(infoRequest);
+        flowContext.put(PlaybackSession.SIP_DEVICE_SESSION, sendRequest(infoRequest));
     }
 
     @Override
     public void playbackReplay(String ssrc) {
         final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION);
-        String content = "PLAY MANSRTSP/1.0" + "\r\n"
+        String content = "PLAY RTSP/1.0" + "\r\n"
                 + "CSeq: 2" + "\r\n"
                 + "Range: npt=now-";
         final Request infoRequest = SipRequestFactory.getInfoRequest(deviceTransaction, content.getBytes(StandardCharsets.UTF_8));
-        RequestSender.sendRequest(infoRequest);
+        flowContext.put(PlaybackSession.SIP_DEVICE_SESSION, sendRequest(infoRequest));
     }
 }
