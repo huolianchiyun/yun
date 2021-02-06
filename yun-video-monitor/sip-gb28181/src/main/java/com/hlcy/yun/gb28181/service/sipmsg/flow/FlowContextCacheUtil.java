@@ -9,15 +9,12 @@ import com.hlcy.yun.gb28181.sip.biz.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.sdp.SdpException;
 import javax.sdp.SdpFactory;
 import javax.sdp.SdpParseException;
 import javax.sdp.SessionDescription;
-import javax.sip.ResponseEvent;
 import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
 import javax.sip.message.Message;
-import javax.sip.message.Request;
 import java.io.*;
 import java.util.Iterator;
 import java.util.Optional;
@@ -51,11 +48,12 @@ public final class FlowContextCacheUtil {
     public static Optional<FlowContext> findFlowContextBy(String channelId) {
         return flowContextCache.findFlowContextBy(channelId);
     }
+
     public static Optional<FlowContext> findFlowContextByCallId(String callId) {
         return flowContextCache.findFlowContextBy(callId);
     }
 
-    static class FlowContextCache extends MessageContextCache<FlowContext> {
+    static class FlowContextCache extends MessageContextCache {
         private final static String CONTEXT_CACHE_STORE_PATH = System.getProperty("user.dir")
                 .concat(System.getProperty("file.separator")).concat("CONTEXT_CACHE");
         private final SdpFactory sdpFactory = SdpFactory.getInstance();
@@ -88,22 +86,7 @@ public final class FlowContextCacheUtil {
 
         @Override
         public MessageContext get(Message message) {
-            FlowContext flowContext = get(getCallId(message));
-            if (flowContext == null) {
-                if (Request.INVITE.equalsIgnoreCase(getMethodFrom(message))) {
-                    try {
-                        // get voice broadcast flow context
-                        final SessionDescription sdp = getSessionDescription(new String(message.getRawContent()));
-                        if (sdp.getMediaDescriptions(false).toString().contains("audio")) {
-                            final String deviceChannelId = sdp.getOrigin().getUsername();
-                            flowContext = get(deviceChannelId);
-                        }
-                    } catch (SdpException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return flowContext;
+            return get(getCallId(message));
         }
 
         private String getCallId(Message message) {
@@ -159,7 +142,7 @@ public final class FlowContextCacheUtil {
             while (cacheObjIterator.hasNext()) {
                 final FlowContext context = cacheObjIterator.next().getValue();
                 if (context.getOperationalParams().getChannelId().equals(channelId))
-                    return Optional.ofNullable(context);
+                    return Optional.of(context);
             }
             return Optional.empty();
         }

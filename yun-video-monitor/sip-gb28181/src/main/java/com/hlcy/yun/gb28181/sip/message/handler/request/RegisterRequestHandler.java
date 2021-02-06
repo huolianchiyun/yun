@@ -9,7 +9,6 @@ import javax.sip.RequestEvent;
 import javax.sip.header.*;
 import javax.sip.message.Request;
 import javax.sip.message.Response;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -26,22 +25,17 @@ public class RegisterRequestHandler extends RequestHandler {
         if (log.isDebugEnabled()) {
             log.debug("Receive a register request: {}.", event.getRequest());
         }
-        try {
-            if (checkAuthorizedRequest(event)) {
-                sendResponse(event);
+        if (checkAuthorizedRequest(event)) {
+            sendResponse(event);
 
-                Request request = event.getRequest();
-                if (isLogout(request)) {
-                    // 注销处理
-                    registerProcessor.logout(request);
-                    return;
-                }
-                // 注册处理
-                registerProcessor.register(request);
+            Request request = event.getRequest();
+            if (isLogout(request)) {
+                // 注销处理
+                registerProcessor.logout(request);
+                return;
             }
-        } catch (ParseException e) {
-            log.error("Handle a register request({}) failed, cause: {}.", event, e.getMessage());
-            e.printStackTrace();
+            // 注册处理
+            registerProcessor.register(request);
         }
     }
 
@@ -62,9 +56,8 @@ public class RegisterRequestHandler extends RequestHandler {
      *
      * @param event request event
      * @return true if the request has authentication, Otherwise false.
-     * @throws ParseException
      */
-    private boolean checkAuthorizedRequest(RequestEvent event) throws ParseException {
+    private boolean checkAuthorizedRequest(RequestEvent event) {
         boolean isPass = true;
         final Request request = event.getRequest();
         // 未携带授权头或者密码错误 均回复 401

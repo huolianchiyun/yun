@@ -13,6 +13,7 @@ public class DefaultPipeline<T extends MessageHandler<E>, E> implements Pipeline
 
     @Override
     public Pipeline addFirst(String name, T handler) {
+        handler.setPipeline(this);
         if (this.head == null){
             this.head = this.tail = handler;
             return this;
@@ -27,6 +28,7 @@ public class DefaultPipeline<T extends MessageHandler<E>, E> implements Pipeline
 
     @Override
     public Pipeline addLast(String name, T handler) {
+        handler.setPipeline(this);
         if (this.tail == null){
             this.head = this.tail = handler;
             return this;
@@ -41,6 +43,7 @@ public class DefaultPipeline<T extends MessageHandler<E>, E> implements Pipeline
 
     @Override
     public Pipeline addBefore(String baseName, String name, T handler) {
+        handler.setPipeline(this);
         final T baseHandler = handlerMap.get(baseName);
         baseHandler.prev.next = handler;
         handler.prev = baseHandler.prev;
@@ -52,6 +55,7 @@ public class DefaultPipeline<T extends MessageHandler<E>, E> implements Pipeline
 
     @Override
     public Pipeline addAfter(String baseName, String name, T handler) {
+        handler.setPipeline(this);
         final T baseHandler = handlerMap.get(baseName);
         baseHandler.next.prev = handler;
         handler.next = baseHandler.next;

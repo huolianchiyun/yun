@@ -14,6 +14,6 @@ public class CancelResponseHandler extends ResponseHandler {
     @Override
     protected void doHandle(ResponseEvent event) {
         log.info("Receive a cancel response: \n{}", event.getResponse());
-        getMessageContext(event).getResponseProcessor().handle(event);
+        getMessageContext(event).responseProcessor().handle(event);
     }
 }

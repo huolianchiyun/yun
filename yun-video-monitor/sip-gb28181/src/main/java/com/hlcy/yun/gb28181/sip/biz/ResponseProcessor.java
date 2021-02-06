@@ -27,7 +27,7 @@ public abstract class ResponseProcessor<C extends MessageContext> extends Messag
         final C context = getContext(event);
         try {
             process(event, context);
-            context.setCurrentResponseProcessor2next();
+            context.switchResponseProcessor2next();
             cleanupContext(event);
         } catch (SdpException e) {
             e.printStackTrace();

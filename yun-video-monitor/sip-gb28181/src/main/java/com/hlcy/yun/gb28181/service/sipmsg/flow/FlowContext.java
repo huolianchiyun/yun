@@ -7,6 +7,7 @@ import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.biz.ResponseProcessor;
 import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.sip.message.Pipeline;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 
 import javax.sip.ClientTransaction;
@@ -14,18 +15,20 @@ import javax.sip.ServerTransaction;
 import java.io.Serializable;
 import java.util.Iterator;
 
-public class FlowContext extends MessageContext implements Serializable {
+public class FlowContext implements Serializable, MessageContext {
     private static final long serialVersionUID = 1L;
     private static GB28181Properties properties;
 
     private final TimedCache<Enum, ClientTransaction> CLIENT_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
     private final TimedCache<Enum, ServerTransaction> SERVER_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
 
-    private DeviceParams operationalParams;
+    private RequestProcessor currentRequestProcessor;
+    private ResponseProcessor currentResponseProcessor;
     private final Operation operation;
+    private DeviceParams operationalParams;
+    private boolean mediaPullStream;
     private boolean isRecovered;
     private String ssrc;
-    private boolean mediaPullStream;
 
     public FlowContext(Operation operation, DeviceParams operationalParams, boolean mediaPullStream) {
         this(operation);
@@ -38,7 +41,6 @@ public class FlowContext extends MessageContext implements Serializable {
         this.operationalParams = operationalParams;
     }
 
-    //TODO 后续优化
     private FlowContext(Operation operation) {
         this.operation = operation;
         if (operation == Operation.GUARD || operation == Operation.HOME_POSITION || operation == Operation.KEEPALIVE
@@ -46,27 +48,30 @@ public class FlowContext extends MessageContext implements Serializable {
             this.currentRequestProcessor = FlowPipelineFactory.getRequestFlowPipeline(operation).first();
         } else if (operation == Operation.PLAY || operation == Operation.PLAYBACK) {
             this.currentResponseProcessor = FlowPipelineFactory.getResponseFlowPipeline(operation).first();
+        } else if (operation == Operation.BROADCAST) {
+            this.currentRequestProcessor = FlowPipelineFactory.getRequestFlowPipeline(operation).first();
+            this.currentResponseProcessor = FlowPipelineFactory.getResponseFlowPipeline(operation).first();
         }
     }
 
-    public ResponseProcessor getResponseProcessor() {
+    public ResponseProcessor responseProcessor() {
         return currentResponseProcessor;
     }
 
-    public RequestProcessor getRequestProcessor() {
+    public RequestProcessor requestProcessor() {
         return currentRequestProcessor;
     }
 
     /**
      * Switch current response processor to the next response processor.
      */
-    public void setCurrentRequestProcessor2next() {
-        this.currentRequestProcessor = this.currentRequestProcessor.getNextProcessor();
+    public void switchResponseProcessor2next() {
+        this.currentResponseProcessor = this.currentResponseProcessor.getNextProcessor();
     }
 
     @Override
-    public void setCurrentResponseProcessor2next() {
-        this.currentResponseProcessor = this.currentResponseProcessor.getNextProcessor();
+    public Pipeline pipeline() {
+        return null;
     }
 
     void setCurrentProcessorToFirstByeProcessor() {

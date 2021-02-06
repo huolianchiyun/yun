@@ -26,7 +26,8 @@ public class DeviceInviteRequestProcessor extends FlowRequestProcessor {
         Request invite2Media = getInviteRequest(
                 createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
                 createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
-                params.getDeviceTransport());
+                params.getDeviceTransport(),
+                serverTransaction.getRequest().getRawContent());
         final ClientTransaction clientTransaction = sendRequest(invite2Media);
 
         context.put(VoiceSession.SIP_MEDIA_SESSION, clientTransaction);

@@ -17,8 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-public
-final class SipMessageFactoryHelper {
+public final class SipMessageFactoryHelper {
     private static final AddressFactory addressFactory = SipLayer.getAddressFactory();
     private static final HeaderFactory headerFactory = SipLayer.getHeaderFactory();
     private static SipFactory sipFactory;

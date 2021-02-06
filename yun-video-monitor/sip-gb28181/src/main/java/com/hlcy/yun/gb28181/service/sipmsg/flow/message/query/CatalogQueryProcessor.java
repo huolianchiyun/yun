@@ -42,7 +42,7 @@ public class CatalogQueryProcessor extends MessageProcessor {
 
     private boolean isMessageError(Element rootElement) {
         final String result = getTextOfChildTagFrom(rootElement, "Result");
-        if (!"OK".equalsIgnoreCase(result)) {
+        if ("ERROR".equalsIgnoreCase(result)) {
             String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
             DeferredResultHolder.setErrorDeferredResultForRequest(
                     DeferredResultHolder.CALLBACK_CMD_QUERY_CATALOG + deviceId,

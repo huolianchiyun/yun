@@ -34,32 +34,29 @@ public class FlowPipelineFactory {
         final Map<Operation, DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent>> requestMap = new HashMap<>();
 
         // Control
-//        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPA_PIPELINE = new DefaultPipeline<>();
-//        CATALOG_PIPELINE.addLast("Keepalive", new KeepaliveNotifyProcessor());
-//        requestMap.put(KEEPALIVE, KEEPALIVE_PIPELINE);
 
         // Query
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> CATALOG_PIPELINE = new DefaultPipeline<>();
-        CATALOG_PIPELINE.addLast("Catalog", new CatalogQueryProcessor());
+        CATALOG_PIPELINE.addLast(CATALOG.code(), new CatalogQueryProcessor());
         requestMap.put(CATALOG, CATALOG_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> DEVICE_INFO_PIPELINE = new DefaultPipeline<>();
-        DEVICE_INFO_PIPELINE.addLast("DeviceInfo", new DeviceInfoQueryProcessor());
-        requestMap.put(DEVICEINFO, DEVICE_INFO_PIPELINE);
+        DEVICE_INFO_PIPELINE.addLast(DEVICE_INFO.code(), new DeviceInfoQueryProcessor());
+        requestMap.put(DEVICE_INFO, DEVICE_INFO_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> RECORD_INFO_PIPELINE = new DefaultPipeline<>();
-        RECORD_INFO_PIPELINE.addLast("RecordInfo", new RecordInfoQueryProcessor());
-        requestMap.put(RECORDINFO, RECORD_INFO_PIPELINE);
+        RECORD_INFO_PIPELINE.addLast(RECORD_INFO.code(), new RecordInfoQueryProcessor());
+        requestMap.put(RECORD_INFO, RECORD_INFO_PIPELINE);
 
         // Notify
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();
-        KEEPALIVE_PIPELINE.addLast("Keepalive", new KeepaliveNotifyProcessor());
+        KEEPALIVE_PIPELINE.addLast(KEEPALIVE.code(), new KeepaliveNotifyProcessor());
         requestMap.put(KEEPALIVE, KEEPALIVE_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> VOICE_BROADCAST_PIPELINE = new DefaultPipeline<>();
-        VOICE_BROADCAST_PIPELINE.addLast("3", new BroadcastNotifyProcessor());
-        VOICE_BROADCAST_PIPELINE.addLast("5-6", new DeviceInviteRequestProcessor());
-        VOICE_BROADCAST_PIPELINE.addLast("15-16", new DeviceAckRequestProcessor());
+        VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.code(), new BroadcastNotifyProcessor());
+        VOICE_BROADCAST_PIPELINE.addLast("invite", new DeviceInviteRequestProcessor());
+        VOICE_BROADCAST_PIPELINE.addLast("ack", new DeviceAckRequestProcessor());
         requestMap.put(BROADCAST, VOICE_BROADCAST_PIPELINE);
 
         REQUEST_PIPELINE_CONTAINER = Collections.unmodifiableMap(requestMap);

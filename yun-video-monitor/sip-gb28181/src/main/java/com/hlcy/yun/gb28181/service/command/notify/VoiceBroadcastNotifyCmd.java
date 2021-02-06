@@ -12,11 +12,11 @@ import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
-import javax.sip.ClientTransaction;
 import javax.sip.ServerTransaction;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
 
+import static com.hlcy.yun.gb28181.service.sipmsg.flow.Operation.BROADCAST;
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.*;
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.getCallId;
@@ -54,12 +54,15 @@ public class VoiceBroadcastNotifyCmd extends AbstractNotifyCmd<VoiceBroadcastNot
                 createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
                 params.getDeviceTransport(),
                 cmd.getBytes(StandardCharsets.UTF_8));
-        final ClientTransaction clientTransaction = RequestSender.sendRequest(request);
+        RequestSender.sendRequest(request);
 
-        final FlowContext flowContext = new FlowContext(Operation.BROADCAST, params);
+        cacheFlowContext(params);
+    }
+
+    private void cacheFlowContext(VoiceBroadcastNotifyParams params) {
+        final FlowContext flowContext = new FlowContext(BROADCAST, params);
         FlowContext.setProperties(properties);
-        flowContext.put(VoiceSession.SIP_DEVICE_SESSION, clientTransaction);
-        FlowContextCacheUtil.put(params.getChannelId(), flowContext);
+        FlowContextCacheUtil.put(BROADCAST.name() + params.getDeviceId(), flowContext);
     }
 
     public void stop(String ssrc) {

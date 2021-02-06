@@ -1,6 +1,6 @@
 package com.hlcy.yun.gb28181.config;
 
-import com.hlcy.yun.gb28181.service.RequestProcessorFactoryImpl;
+import com.hlcy.yun.gb28181.service.GB28181RequestProcessorFactory;
 import com.hlcy.yun.gb28181.service.sipmsg.RegisterProcessorImpl;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.sip.ServerBootstrap;
@@ -25,7 +25,7 @@ public class GB28181Configuration implements ApplicationContextAware {
         new ServerBootstrap()
                 .setProperties(properties)
                 .setRegisterProcessor(new RegisterProcessorImpl())
-                .setRequestProcessorFactory(new RequestProcessorFactoryImpl())
+                .setRequestProcessorFactory(new GB28181RequestProcessorFactory())
                 .setInitializer(FlowContextCacheUtil::init)
                 .start();
     }

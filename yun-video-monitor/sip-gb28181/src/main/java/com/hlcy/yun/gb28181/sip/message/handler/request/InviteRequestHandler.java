@@ -1,10 +1,13 @@
 package com.hlcy.yun.gb28181.sip.message.handler.request;
 
-import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
+import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.sip.RequestEvent;
 import javax.sip.message.Request;
 
+@Slf4j
 public class InviteRequestHandler extends RequestHandler {
     @Override
     public void handle(RequestEvent event) {
@@ -12,9 +15,11 @@ public class InviteRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-        MessageContext messageContext = getMessageContext(event);
-        if (messageContext != null) {
-            messageContext.getRequestProcessor().handle(event);
+        final RequestProcessor requestProcessor = processorFactory.getRequestProcessor(event);
+        if (requestProcessor != null) {
+            requestProcessor.handle(event);
+        } else {
+            log.warn("A invite request has no corresponding processor, the request will be ignored, request \n{}", event.getRequest());
         }
     }
 }

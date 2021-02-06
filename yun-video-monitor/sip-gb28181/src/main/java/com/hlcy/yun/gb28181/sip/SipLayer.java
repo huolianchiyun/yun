@@ -42,7 +42,7 @@ public final class SipLayer implements SipListener {
      */
     private ThreadPoolExecutor executor;
 
-    public static void start(GB28181Properties properties) {
+    static void start(GB28181Properties properties) {
         try {
             new SipLayer(properties);
         } catch (PeerUnavailableException | TransportNotSupportedException | InvalidArgumentException | ObjectInUseException | TooManyListenersException e) {
@@ -181,7 +181,7 @@ public final class SipLayer implements SipListener {
 
     private void initThreadPool() {
         int maximumPoolSize = Runtime.getRuntime().availableProcessors() * 10;
-        LinkedBlockingQueue<Runnable> processQueue = new LinkedBlockingQueue<Runnable>(10000);
+        LinkedBlockingQueue<Runnable> processQueue = new LinkedBlockingQueue<>(10000);
         this.executor = new ThreadPoolExecutor(2, maximumPoolSize, 30L,
                 TimeUnit.SECONDS, processQueue, new ThreadPoolExecutor.CallerRunsPolicy());
     }

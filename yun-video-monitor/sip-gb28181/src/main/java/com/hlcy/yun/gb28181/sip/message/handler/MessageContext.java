@@ -2,22 +2,18 @@ package com.hlcy.yun.gb28181.sip.message.handler;
 
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.biz.ResponseProcessor;
+import com.hlcy.yun.gb28181.sip.message.Pipeline;
 
 /**
  * MessageContext 用于关联 RequestProcessor 和 ResponseProcessor
  */
-public abstract class MessageContext {
+public interface MessageContext {
 
-    protected RequestProcessor currentRequestProcessor;
+    RequestProcessor requestProcessor();
 
-    protected ResponseProcessor currentResponseProcessor;
+    ResponseProcessor responseProcessor();
 
-    public abstract RequestProcessor getRequestProcessor();
+    void switchResponseProcessor2next();
 
-    public abstract ResponseProcessor getResponseProcessor();
-
-    public abstract void setCurrentRequestProcessor2next();
-
-    public abstract void setCurrentResponseProcessor2next();
-
+    Pipeline pipeline();
 }

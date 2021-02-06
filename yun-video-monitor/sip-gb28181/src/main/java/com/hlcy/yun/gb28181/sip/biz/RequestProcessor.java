@@ -23,9 +23,6 @@ public abstract class RequestProcessor<C extends MessageContext> extends Message
     public void handle(RequestEvent event) {
         final C context = getContext(event);
         process(event, context);
-        if (context != null) {
-            context.setCurrentRequestProcessor2next();
-        }
     }
 
     protected abstract void process(RequestEvent event, C context);

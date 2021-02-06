@@ -14,6 +14,6 @@ public class ByeResponseHandler extends ResponseHandler {
     @Override
     public void doHandle(ResponseEvent event) {
         log.info("Receive a bye response: \n{}", event.getResponse());
-        getMessageContext(event).getResponseProcessor().handle(event);
+        getMessageContext(event).responseProcessor().handle(event);
     }
 }
