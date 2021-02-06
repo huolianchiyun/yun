@@ -5,6 +5,7 @@ import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipMessageFactoryHelper;
 import com.hlcy.yun.gb28181.sip.message.factory.Transport;
 import com.hlcy.yun.gb28181.sip.message.SipPipelineFactory;
+import com.hlcy.yun.gb28181.sip.subscribe.SipEventNotifier;
 import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
 
@@ -113,6 +114,7 @@ public final class SipLayer implements SipListener {
      */
     public void processTimeout(TimeoutEvent evt) {
         log.error("Previous message not sent: timeout, message: {}", evt.getClientTransaction().getRequest());
+        SipEventNotifier.notify(evt);
     }
 
     /**
@@ -121,13 +123,14 @@ public final class SipLayer implements SipListener {
      */
     public void processIOException(IOExceptionEvent evt) {
         log.error("Previous message not sent: I/O Exception, message: {}", evt.getSource());
+        SipEventNotifier.notify(evt);
     }
 
     /**
      * This method is called by the SIP stack when a dialog (session) ends.
      */
     public void processDialogTerminated(DialogTerminatedEvent evt) {
-        // TODO Auto-generated method stub
+        SipEventNotifier.notify(evt);
     }
 
     /**

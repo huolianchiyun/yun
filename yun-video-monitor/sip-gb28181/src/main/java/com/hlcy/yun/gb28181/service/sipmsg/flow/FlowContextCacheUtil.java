@@ -51,6 +51,9 @@ public final class FlowContextCacheUtil {
     public static Optional<FlowContext> findFlowContextBy(String channelId) {
         return flowContextCache.findFlowContextBy(channelId);
     }
+    public static Optional<FlowContext> findFlowContextByCallId(String callId) {
+        return flowContextCache.findFlowContextBy(callId);
+    }
 
     static class FlowContextCache extends MessageContextCache<FlowContext> {
         private final static String CONTEXT_CACHE_STORE_PATH = System.getProperty("user.dir")

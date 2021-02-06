@@ -30,8 +30,8 @@ public class VoiceBroadcastNotifyCmd extends AbstractNotifyCmd<VoiceBroadcastNot
 
     @Override
     protected String buildCmdXML(VoiceBroadcastNotifyParams voiceBroadcastNotifyParams) {
-        return "<SourceID>" + properties.getSipId() + "</SourceID>"
-                + "<TargetID>" + voiceBroadcastNotifyParams.getChannelId() + "</TargetID>";  // 音频通道ID
+        return "<SourceID>" + properties.getSipId() + "</SourceID>"  // 语音输入设备的设备编码， 摄像机注册的sip编号
+                + "<TargetID>" + voiceBroadcastNotifyParams.getChannelId() + "</TargetID>";  // 语音输出设备的设备编码
     }
 
     protected String getCmdTemplate(VoiceBroadcastNotifyParams params) {

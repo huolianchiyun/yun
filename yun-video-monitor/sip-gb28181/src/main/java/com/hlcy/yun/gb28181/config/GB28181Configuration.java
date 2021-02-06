@@ -3,9 +3,7 @@ package com.hlcy.yun.gb28181.config;
 import com.hlcy.yun.gb28181.service.RequestProcessorFactoryImpl;
 import com.hlcy.yun.gb28181.service.sipmsg.RegisterProcessorImpl;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
-import com.hlcy.yun.gb28181.sip.SipLayer;
-import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
-import com.hlcy.yun.gb28181.sip.message.handler.request.RegisterRequestHandler;
+import com.hlcy.yun.gb28181.sip.ServerBootstrap;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -20,13 +18,15 @@ public class GB28181Configuration implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        init(applicationContext.getBean(GB28181Properties.class));
+        bootSipServer(applicationContext.getBean(GB28181Properties.class));
     }
 
-    private void init(GB28181Properties properties) {
-        SipLayer.start(properties);
-        FlowContextCacheUtil.init();
-        RequestHandler.setProcessorFactory(new RequestProcessorFactoryImpl());
-        RegisterRequestHandler.setRegisterProcessor(new RegisterProcessorImpl());
+    private void bootSipServer(GB28181Properties properties) {
+        new ServerBootstrap()
+                .setProperties(properties)
+                .setRegisterProcessor(new RegisterProcessorImpl())
+                .setRequestProcessorFactory(new RequestProcessorFactoryImpl())
+                .setInitializer(FlowContextCacheUtil::init)
+                .start();
     }
 }

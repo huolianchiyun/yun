@@ -18,18 +18,6 @@ public class AckRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-        if (log.isDebugEnabled()) {
-            log.debug("Receive a ack request: {}.", event.getRequest());
-        }
-        Request request = event.getRequest();
-        Dialog dialog = event.getDialog();
-        try {
-            CSeq csReq = (CSeq) request.getHeader(CSeq.NAME);
-            Request ackRequest = dialog.createAck(csReq.getSeqNumber());
-            dialog.sendAck(ackRequest);
-            log.info("send a ack to callee: {}", ackRequest);
-        } catch (SipException | InvalidArgumentException e) {
-            e.printStackTrace();
-        }
+        log.debug("Receive a ack request: \n{}", event.getRequest());
     }
 }
