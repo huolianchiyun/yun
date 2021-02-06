@@ -33,6 +33,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
 import springfox.documentation.spring.web.plugins.SpringIntegrationPluginNotPresentInClassPathCondition;
 import springfox.documentation.spring.web.scanners.ApiDocumentationScanner;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -42,6 +43,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.toList;
 import static springfox.documentation.builders.BuilderDefaults.nullToEmptyList;
 import static springfox.documentation.builders.BuilderDefaults.nullToEmptyMap;
@@ -52,7 +54,7 @@ import static springfox.documentation.spi.service.contexts.Orderings.pluginOrder
 public class ApiRightsConfig {
     @Configuration
     @ConditionalOnProperty(prefix = "yun.api.rights", name = "update", havingValue = "false")
-    static class OnlyInitApiGroup{
+    static class OnlyInitApiGroup {
         @Autowired
         public OnlyInitApiGroup(List<Docket> dockets) {
             nullToEmptyList(dockets).forEach(docket -> {
@@ -67,9 +69,10 @@ public class ApiRightsConfig {
     @Conditional(SpringIntegrationPluginNotPresentInClassPathCondition.class)
     static class ApiRightsInit extends AbstractDocumentationPluginsBootstrapper implements SmartLifecycle {
         private final AtomicBoolean initialized = new AtomicBoolean(false);
-        private final  List<Docket> dockets;
-        private final  List<RequestMappingInfoHandlerMapping> handlerMappings;
-        private final  JdbcTemplate jdbcTemplate;
+        private final List<Docket> dockets;
+        private final List<RequestMappingInfoHandlerMapping> handlerMappings;
+        private final JdbcTemplate jdbcTemplate;
+        private boolean isFirstUpdateApiRights = true;
 
         @Autowired
         public ApiRightsInit(
@@ -136,6 +139,8 @@ public class ApiRightsConfig {
                         .map(toUrlAuthorizeMap()).collect(Collectors.toMap(KV::getKey, KV::getValue));
                 bootstrapDocumentationPlugins();
                 LocalDateTime now = LocalDateTime.now();
+
+
                 nullToEmptyList(dockets).forEach(docket -> {
                     ApiInfo apiInfo = (ApiInfo) ReflectUtil.getFieldValue(docket, "apiInfo");
                     ApiRightsService.groups.add(new NameValue<>(apiInfo.getTitle(), docket.getGroupName()));
@@ -176,7 +181,10 @@ public class ApiRightsConfig {
             Connection connection = DataSourceUtils.getConnection(Objects.requireNonNull(jdbcTemplate.getDataSource()));
             connection.setAutoCommit(false);
             try {
-                jdbcTemplate.update("delete from t_sys_api_rights");
+                if (isFirstUpdateApiRights) {
+                    jdbcTemplate.update("delete from t_sys_api_rights");
+                    isFirstUpdateApiRights = false;
+                }
                 jdbcTemplate.batchUpdate("insert into t_sys_api_rights (api_group, api_tag, api_url, api_authorization, api_description, api_create_time) values (?, ?, ?, ?, ?, ?)", batchArgs);
                 connection.commit();
                 log.info("*** update API access rights to database successfully ***");
