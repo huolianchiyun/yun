@@ -28,7 +28,7 @@ public class RegisterRequestHandler extends RequestHandler {
         }
         try {
             if (checkAuthorizedRequest(event)) {
-                sendResponseFor(event);
+                sendResponse(event);
 
                 Request request = event.getRequest();
                 if (isLogout(request)) {
@@ -45,7 +45,7 @@ public class RegisterRequestHandler extends RequestHandler {
         }
     }
 
-    private void sendResponseFor(RequestEvent event) throws ParseException {
+    private void sendResponse(RequestEvent event) {
         final Request request = event.getRequest();
         Response response = buildResponse(Response.OK, request);
         // 添加date头

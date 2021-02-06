@@ -5,7 +5,10 @@ import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.sip.header.ContactHeader;
 import javax.sip.header.ContentTypeHeader;
+import javax.sip.header.Header;
+import javax.sip.header.ToHeader;
 import javax.sip.message.Request;
 import javax.sip.message.Response;
 import java.text.ParseException;
@@ -45,10 +48,17 @@ public final class SipResponseFactory {
      * @param contentType -
      *                    the new ContentTypeHeader object of the content type value of
      *                    this Message.
+     * @param isConcat    -  add a ContactHeader in Response
      */
-    public static Response buildResponse(int statusCode, Request request, ContentTypeHeader contentType, Object content) {
+    public static Response buildResponse(int statusCode, Request request, ContentTypeHeader contentType, Object content, boolean isConcat) {
         try {
-            return SipLayer.getMessageFactory().createResponse(statusCode, request, contentType, content);
+            final Response response = SipLayer.getMessageFactory().createResponse(statusCode, request, contentType, content);
+            if (isConcat) {
+                final ToHeader toHeader = (ToHeader) request.getHeader(ToHeader.NAME);
+                final ContactHeader contactHeader = SipMessageFactoryHelper.buildContactHeader(toHeader.getAddress());
+                response.addHeader(contactHeader);
+            }
+            return response;
         } catch (ParseException e) {
             throw new IllegalArgumentException("An error has been reached unexpectedly while parsing the statusCode", e);
         }

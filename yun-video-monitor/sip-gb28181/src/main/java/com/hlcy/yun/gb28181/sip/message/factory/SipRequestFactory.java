@@ -2,11 +2,9 @@ package com.hlcy.yun.gb28181.sip.message.factory;
 
 import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
-import com.hlcy.yun.gb28181.util.UUIDUtil;
 import gov.nist.javax.sip.Utils;
 import gov.nist.javax.sip.header.*;
 import gov.nist.javax.sip.message.SIPRequest;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
@@ -32,11 +30,6 @@ public final class SipRequestFactory {
 
     private static final byte[] EMPTY_CONTENT = new byte[0];
 
-    private static SipFactory sipFactory;
-
-    public static void setSipFactory(SipFactory sipFactory) {
-        SipRequestFactory.sipFactory = sipFactory;
-    }
 
     public static Request getMessageRequest(To to, From from, Transport transport) {
         return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_MANSCDP, Request.MESSAGE, transport, EMPTY_CONTENT);
@@ -181,50 +174,33 @@ public final class SipRequestFactory {
     private static Request createRequest(To to, From from, String subject, String viaBranch, String
             contentType, String contentSubType, String method, Transport transport, byte[] content) {
         try {
-            final AddressFactory addressFactory = SipLayer.getAddressFactory();
             // sip uri
-            SipURI requestURI = addressFactory.createSipURI(to.user, to.host.toAddress());
-
-            HeaderFactory headerFactory = SipLayer.getHeaderFactory();
-
+            final SipURI sipURI = SipMessageFactoryHelper.buildSipURI(to);
             // To
-            SipURI toSipURI = addressFactory.createSipURI(to.user, to.host.toAddress());
-            Address toAddress = addressFactory.createAddress(toSipURI);
-            ToHeader toHeader = headerFactory.createToHeader(toAddress, to.tag);
-
+            final ToHeader toHeader = SipMessageFactoryHelper.buildToHeader(to);
             // CSeq
-            CSeqHeader cSeqHeader = headerFactory.createCSeqHeader(1L, method);
-
+            CSeqHeader cSeqHeader = SipMessageFactoryHelper.buildCSeqHeader(1L, method);
             // Call-ID
-            CallIdHeader callIdHeader = SipLayer.getSipProvider(transport).getNewCallId();
-
-            // Via
-            ViaHeader viaHeader = headerFactory.createViaHeader(from.host.ip, from.host.port, transport.toString(), viaBranch); // viaBranch may be null, but not empty.
-            viaHeader.setRPort();
-            List<ViaHeader> viaHeaders = Collections.singletonList(viaHeader);
-
+            CallIdHeader callIdHeader = SipMessageFactoryHelper.buildCallIdHeader(transport);
+            // via
+            final List<ViaHeader> viaHeaders = SipMessageFactoryHelper.buildViaHeaders(from, viaBranch, transport);
             // From
-            SipURI fromSipURI = addressFactory.createSipURI(from.user, from.host.toAddress());
-            Address fromAddress = addressFactory.createAddress(fromSipURI);
-            FromHeader fromHeader = headerFactory.createFromHeader(fromAddress, from.tag);
-
+            final FromHeader fromHeader = SipMessageFactoryHelper.buildFromHeader(from);
             // Content-Type
-            ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader(contentType, contentSubType);
-
+            final ContentTypeHeader contentTypeHeader = SipMessageFactoryHelper.buildContentTypeHeader(contentType, contentSubType);
             // Max-Forwards
-            MaxForwardsHeader maxForwards = headerFactory.createMaxForwardsHeader(70);
+            final MaxForwardsHeader maxForwards = SipMessageFactoryHelper.buildMaxForwardsHeader();
 
-            final Request request = sipFactory.createMessageFactory().createRequest(requestURI, method, callIdHeader, cSeqHeader, fromHeader, toHeader,
+            final Request request = SipMessageFactoryHelper.buildRequest(sipURI, method, callIdHeader, cSeqHeader, fromHeader, toHeader,
                     viaHeaders, maxForwards, contentTypeHeader, content);
 
             // Contact
-            Address concatAddress = addressFactory.createAddress(addressFactory.createSipURI(from.user, from.host.toAddress()));
-            final ContactHeader contactHeader = headerFactory.createContactHeader(concatAddress);
+            final ContactHeader contactHeader = SipMessageFactoryHelper.buildContactHeader(from);
             request.addHeader(contactHeader);
 
             // Subject
             if (subject != null && !subject.isEmpty()) {
-                final SubjectHeader subjectHeader = headerFactory.createSubjectHeader(subject);
+                final SubjectHeader subjectHeader = SipMessageFactoryHelper.buildSubjectHeader(subject);
                 request.addHeader(subjectHeader);
             }
 
@@ -233,71 +209,6 @@ public final class SipRequestFactory {
             log.error("Create a request exception, cause: {} \ncreate params: \nto:{} \nfrom:{} \nsubject:{} \ncontentType:{} \ncontentSubType:{} \nmethod:{} \ntransport:{} \ncontent:{}.",
                     e.getMessage(), to, from, subject, contentType, contentSubType, method, transport, new String(content));
             throw new RuntimeException("Create a request exception.", e);
-        }
-    }
-
-    @Getter
-    static class To {
-        private String user;
-        private Host host;
-        private String tag;
-
-        /**
-         * To constructor
-         *
-         * @param user /
-         * @param host /
-         * @param tag  this value may be null, but not empty.
-         */
-        To(String user, Host host, String tag) {
-            this(user, host);
-            this.tag = tag;
-        }
-
-        To(String user, Host host) {
-            this.user = user;
-            this.host = host;
-        }
-    }
-
-    @Getter
-    static class From {
-        // SIP服务 or 设备 or 流媒体的编码
-        private String user;
-        private Host host;
-        private String tag;
-
-        /**
-         * From constructor
-         *
-         * @param user /
-         * @param host /
-         * @param tag  this value may be null, but not empty.
-         */
-        From(String user, Host host, String tag) {
-            this(user, host);
-            this.tag = tag;
-        }
-
-        From(String user, Host host) {
-            this.user = user;
-            this.host = host;
-            this.tag = UUIDUtil.getUUID();
-        }
-    }
-
-    @Getter
-    static class Host {
-        private String ip;
-        private int port;
-
-        Host(String ip, int port) {
-            this.ip = ip;
-            this.port = port;
-        }
-
-        private String toAddress() {
-            return ip + ":" + port;
         }
     }
 }

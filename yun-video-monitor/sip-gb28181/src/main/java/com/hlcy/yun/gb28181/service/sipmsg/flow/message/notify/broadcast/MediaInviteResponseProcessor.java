@@ -12,6 +12,7 @@ import gov.nist.javax.sdp.fields.SSRCField;
 import gov.nist.javax.sip.header.ContentType;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.sdp.SSRC;
 import javax.sdp.SdpException;
 import javax.sdp.SessionDescription;
 import javax.sip.ResponseEvent;
@@ -31,20 +32,18 @@ public class MediaInviteResponseProcessor extends FlowResponseProcessor {
     protected void process(ResponseEvent event, FlowContext context) throws SdpException {
         SessionDescription mediaSdp = extractSessionDescAndSetSessionName(event.getResponse());
 
-        String ssrc = getSSRC(context);
-        context.setSsrc(ssrc);
-        mediaSdp.setSSRC(new SSRCField(ssrc));
-
         final ServerTransaction deviceTransaction = context.getServerTransaction(VoiceSession.SIP_DEVICE_SESSION);
         final Request deviceInviteRequest = deviceTransaction.getRequest();
-
         SessionDescription deviceSdp = extractSessionDescAndSetSessionName(deviceInviteRequest);
-        deviceSdp.setSSRC(new SSRCField(ssrc));
+
+        final SSRC ssrc = deviceSdp.getSSRC();
+        mediaSdp.setSSRC(ssrc);
+        context.setSsrc(ssrc.getValue());
 
         DeferredResultHolder.setDeferredResultForRequest(
                 DeferredResultHolder.CALLBACK_CMD_VOICE + context.getOperationalParams().getChannelId(),
                 new BroadcastResponse(
-                        ssrc,
+                        ssrc.getValue(),
                         context.getProperties().getMediaIp(),
                         mediaSdp.toString(),
                         deviceSdp.toString()
@@ -54,7 +53,8 @@ public class MediaInviteResponseProcessor extends FlowResponseProcessor {
                 Response.OK,
                 deviceInviteRequest,
                 (ContentTypeHeader) deviceInviteRequest.getHeader(ContentType.NAME),
-                deviceSdp);
+                deviceSdp,
+                true);
         ResponseSender.sendResponse(deviceTransaction, inviteResponse2Device);
 
         FlowContextCacheUtil.setNewKey(getCallId(event.getResponse()), getCallId(inviteResponse2Device));

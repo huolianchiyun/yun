@@ -123,7 +123,7 @@ public interface ContactHeader extends HeaderAddress, Parameters, Header {
      * @throws InvalidArgumentException if supplied value is less than zero.
      */
 
-    public void setExpires(int expires) throws InvalidArgumentException;
+    void setExpires(int expires) throws InvalidArgumentException;
 
 
 
@@ -137,7 +137,7 @@ public interface ContactHeader extends HeaderAddress, Parameters, Header {
      * Header.
      */
 
-    public int getExpires();
+    int getExpires();
 
 
 
@@ -165,7 +165,7 @@ public interface ContactHeader extends HeaderAddress, Parameters, Header {
      * @throws InvalidArgumentException if the q-value parameter value is not
      * <code>-1</code> or between <code>0 and 1</code>.
      */
-    public void setQValue(float qValue) throws InvalidArgumentException;
+    void setQValue(float qValue) throws InvalidArgumentException;
 
 
 
@@ -189,7 +189,7 @@ public interface ContactHeader extends HeaderAddress, Parameters, Header {
 
      */
 
-    public float getQValue();
+    float getQValue();
 
 
 
@@ -199,7 +199,7 @@ public interface ContactHeader extends HeaderAddress, Parameters, Header {
        *
        * @since v1.2
        */
-    public void setWildCard();
+      void setWildCard();
 
        /**
         * Returns a boolean value that indicates if the contact header
@@ -207,12 +207,12 @@ public interface ContactHeader extends HeaderAddress, Parameters, Header {
         * @return true if this is a wildcard address, false otherwise.
         * @since v1.2
         */
-    public boolean isWildCard();
+       boolean isWildCard();
 
     /**
      * Name of ContactHeader
      */
-    public final static String NAME = "Contact";
+    String NAME = "Contact";
 
 
 
