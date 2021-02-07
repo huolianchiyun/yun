@@ -31,6 +31,10 @@ public class XmlUtil {
         return document;
     }
 
+    public static Element getChild(Element parentTag, String childTagName) {
+        return parentTag.element(childTagName);
+    }
+
     /**
      * 获取 child tag element对象的 text的值
      *

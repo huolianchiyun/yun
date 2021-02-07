@@ -15,5 +15,9 @@ public interface MessageContext {
 
     void switchResponseProcessor2next();
 
-    Pipeline pipeline();
+    Pipeline Pipeline(PipelineType type);
+
+    enum PipelineType {
+        REQUEST, RESPONSE
+    }
 }

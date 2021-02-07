@@ -15,6 +15,9 @@ import javax.sip.ServerTransaction;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.REQUEST;
+import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.RESPONSE;
+
 public class FlowContext implements Serializable, MessageContext {
     private static final long serialVersionUID = 1L;
     private static GB28181Properties properties;
@@ -24,6 +27,7 @@ public class FlowContext implements Serializable, MessageContext {
 
     private RequestProcessor currentRequestProcessor;
     private ResponseProcessor currentResponseProcessor;
+
     private final Operation operation;
     private DeviceParams operationalParams;
     private boolean mediaPullStream;
@@ -70,7 +74,12 @@ public class FlowContext implements Serializable, MessageContext {
     }
 
     @Override
-    public Pipeline pipeline() {
+    public Pipeline Pipeline(PipelineType type) {
+        if (REQUEST == type) {
+            return FlowPipelineFactory.getRequestFlowPipeline(operation);
+        } else if (RESPONSE == type) {
+            FlowPipelineFactory.getResponseFlowPipeline(operation);
+        }
         return null;
     }
 

@@ -27,7 +27,9 @@ public class BroadcastNotifyProcessor extends MessageProcessor {
         String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
         String result = getTextOfChildTagFrom(rootElement, "Result");
         if ("ERROR".equalsIgnoreCase(result)) {
-            setErrorDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_VOICE + deviceId, "设备广播异常， 响应结果：ERROR");
+            setErrorDeferredResultForRequest(
+                    DeferredResultHolder.CALLBACK_CMD_VOICE + deviceId,
+                    String.format("设备广播异常， 原因：%s",  getTextOfChildTagFrom(rootElement.element("Info"), "Reason")));
             cleanContextCache(deviceId);
         }
     }

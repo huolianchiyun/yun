@@ -20,7 +20,7 @@ public class DeviceInviteRequestProcessor extends FlowRequestProcessor {
     protected void process(RequestEvent event, FlowContext context) {
         final GB28181Properties properties = context.getProperties();
         final DeviceParams params = context.getOperationalParams();
-        final ServerTransaction serverTransaction = event.getServerTransaction();
+        final ServerTransaction serverTransaction = getServerTransaction(event);
         context.put(VoiceSession.SIP_DEVICE_SESSION, serverTransaction);
 
         Request invite2Media = getInviteRequest(

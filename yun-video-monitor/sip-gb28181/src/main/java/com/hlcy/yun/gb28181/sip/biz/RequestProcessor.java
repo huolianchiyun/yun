@@ -56,7 +56,7 @@ public abstract class RequestProcessor<C extends MessageContext> extends Message
         }
     }
 
-    private ServerTransaction getServerTransaction(RequestEvent event) {
+    protected ServerTransaction getServerTransaction(RequestEvent event) {
         Request request = event.getRequest();
         final Transport transport = SipLayer.getTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
         ServerTransaction serverTransaction = event.getServerTransaction();

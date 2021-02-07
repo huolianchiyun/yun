@@ -16,7 +16,6 @@ public class DefaultPipeline<T extends MessageHandler<E>, E> implements Pipeline
         handler.setPipeline(this);
         if (this.head == null){
             this.head = this.tail = handler;
-            return this;
         }
         handler.prev = null;
         handler.next = head;
@@ -31,7 +30,6 @@ public class DefaultPipeline<T extends MessageHandler<E>, E> implements Pipeline
         handler.setPipeline(this);
         if (this.tail == null){
             this.head = this.tail = handler;
-            return this;
         }
         handler.next = null;
         handler.prev = tail;
