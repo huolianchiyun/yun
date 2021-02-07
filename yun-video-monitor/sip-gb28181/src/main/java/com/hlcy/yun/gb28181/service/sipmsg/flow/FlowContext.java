@@ -7,6 +7,7 @@ import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.biz.ResponseProcessor;
 import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import com.hlcy.yun.gb28181.sip.message.Pipeline;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 
@@ -18,7 +19,7 @@ import java.util.Iterator;
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.REQUEST;
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.RESPONSE;
 
-public class FlowContext implements Serializable, MessageContext {
+public class FlowContext implements MessageContext, Serializable {
     private static final long serialVersionUID = 1L;
     private static GB28181Properties properties;
 
@@ -74,11 +75,11 @@ public class FlowContext implements Serializable, MessageContext {
     }
 
     @Override
-    public Pipeline Pipeline(PipelineType type) {
+    public Pipeline<? extends MessageHandler> pipeline(PipelineType type) {
         if (REQUEST == type) {
             return FlowPipelineFactory.getRequestFlowPipeline(operation);
         } else if (RESPONSE == type) {
-            FlowPipelineFactory.getResponseFlowPipeline(operation);
+            return FlowPipelineFactory.getResponseFlowPipeline(operation);
         }
         return null;
     }

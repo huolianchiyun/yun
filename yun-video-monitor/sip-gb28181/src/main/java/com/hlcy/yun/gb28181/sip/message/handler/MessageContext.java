@@ -2,6 +2,7 @@ package com.hlcy.yun.gb28181.sip.message.handler;
 
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.biz.ResponseProcessor;
+import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import com.hlcy.yun.gb28181.sip.message.Pipeline;
 
 /**
@@ -15,7 +16,7 @@ public interface MessageContext {
 
     void switchResponseProcessor2next();
 
-    Pipeline Pipeline(PipelineType type);
+    Pipeline<? extends MessageHandler> pipeline(PipelineType type);
 
     enum PipelineType {
         REQUEST, RESPONSE

@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class MessageHandler<E> {
     private final SdpFactory sdpFactory = SdpFactory.getInstance();
-    protected Pipeline pipeline;
+    protected Pipeline<? extends MessageHandler> pipeline;
     protected MessageHandler<E> prev;
     protected MessageHandler<E> next;
 
@@ -32,11 +32,11 @@ public abstract class MessageHandler<E> {
         return new String(event.getRawContent()).getBytes(StandardCharsets.UTF_8);
     }
 
-    public Pipeline getPipeline() {
+    public Pipeline<? extends MessageHandler> getPipeline() {
         return pipeline;
     }
 
-    public void setPipeline(Pipeline pipeline) {
+    public void setPipeline(Pipeline<? extends MessageHandler> pipeline) {
         this.pipeline = pipeline;
     }
 }
