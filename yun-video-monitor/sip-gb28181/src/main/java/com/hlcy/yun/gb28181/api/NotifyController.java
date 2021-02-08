@@ -36,7 +36,6 @@ public class NotifyController {
     @PostMapping("/stop/{ssrc}")
     @ApiOperation("语音广播停止通知")
     public ResponseEntity<ResponseData<Void>> stop(@PathVariable String ssrc) {
-        // TODO 用户未手动关闭，该场景如何处理
         operator.stopVoiceBroadcast(ssrc);
         return success();
     }

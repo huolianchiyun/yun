@@ -19,7 +19,7 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Optional;
 
-// TODO 考虑缓存中的垃圾清理--可以尝试向设备发送消息，设备不会认为是垃圾数据，考虑清除
+// TODO 考虑缓存中的垃圾清理--可以尝试向设备发送消息，设备不回认为是垃圾数据，考虑清除
 @Slf4j
 public final class FlowContextCacheUtil {
 

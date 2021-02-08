@@ -113,7 +113,11 @@ public class DefaultPlayer implements Player {
     private boolean isClosedMediaStreamOf(String ssrc) {
         final FlowContext context = FlowContextCacheUtil.get(ssrc);
         if (context == null) {
-            log.info("媒体流已关闭，SSRC：{}", ssrc);
+            log.info("视频流已关闭，SSRC：{}", ssrc);
+            return true;
+        }
+        if (context.isCleanup() > 1) {
+            log.info("视频流正在关闭中... ...，SSRC：{}", ssrc);
             return true;
         }
         return false;

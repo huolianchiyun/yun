@@ -27,13 +27,13 @@ public class NotifyOperator<T extends NotifyParams> implements InitializingBean 
         cmd.execute(operateParam);
     }
 
-    @Override
-    public void afterPropertiesSet() {
-        cmdFactory.put(VoiceBroadcastNotifyParams.class, new VoiceBroadcastNotifyCmd(properties));
-    }
-
     public void stopVoiceBroadcast(String ssrc) {
         final VoiceBroadcastNotifyCmd cmd = (VoiceBroadcastNotifyCmd) cmdFactory.get(VoiceBroadcastNotifyParams.class);
         cmd.stop(ssrc);
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        cmdFactory.put(VoiceBroadcastNotifyParams.class, new VoiceBroadcastNotifyCmd(properties));
     }
 }

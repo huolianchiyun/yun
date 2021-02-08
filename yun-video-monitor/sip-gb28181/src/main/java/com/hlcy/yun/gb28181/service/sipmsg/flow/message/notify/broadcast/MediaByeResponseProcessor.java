@@ -14,7 +14,7 @@ public class MediaByeResponseProcessor extends FlowResponseProcessor {
 
     @Override
     public void cleanupContext(ResponseEvent event) {
-        FlowContextCacheUtil.remove(getCallId(event.getResponse()));
         getContext(event).clearSessionCache();
+        FlowContextCacheUtil.remove(getCallId(event.getResponse()));
     }
 }

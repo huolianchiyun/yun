@@ -13,6 +13,7 @@ import com.hlcy.yun.gb28181.sip.message.DefaultPipeline;
 
 import javax.sip.RequestEvent;
 import javax.sip.ResponseEvent;
+import javax.sip.message.Request;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +56,9 @@ public class FlowPipelineFactory {
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> VOICE_BROADCAST_PIPELINE = new DefaultPipeline<>();
         VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.code(), new BroadcastNotifyProcessor());
-        VOICE_BROADCAST_PIPELINE.addLast("invite", new DeviceInviteRequestProcessor());
-        VOICE_BROADCAST_PIPELINE.addLast("ack", new DeviceAckRequestProcessor());
+        VOICE_BROADCAST_PIPELINE.addLast(Request.INVITE, new DeviceInviteRequestProcessor());
+        VOICE_BROADCAST_PIPELINE.addLast(Request.ACK, new DeviceAckRequestProcessor());
+        VOICE_BROADCAST_PIPELINE.addLast(Request.BYE, new DeviceByeRequestProcessor());  // 支持设备主动发 bye
         requestMap.put(BROADCAST, VOICE_BROADCAST_PIPELINE);
 
         REQUEST_PIPELINE_CONTAINER = Collections.unmodifiableMap(requestMap);

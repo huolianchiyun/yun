@@ -2,6 +2,7 @@ package com.hlcy.yun.gb28181.sip.message.handler.request;
 
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.sip.InvalidArgumentException;
 import javax.sip.RequestEvent;
 import javax.sip.header.ExpiresHeader;
@@ -18,21 +19,20 @@ public class SubscribeRequestHandler extends RequestHandler {
             this.next.handle(event);
             return;
         }
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Receive a subscribe request: {}", event.getRequest());
         }
         try {
             Response response = buildResponse(Response.OK, request);
             if (response != null) {
-                ExpiresHeader expireHeader = null;
-                    expireHeader = getHeaderFactory().createExpiresHeader(30);
+                ExpiresHeader expireHeader = getHeaderFactory().createExpiresHeader(30);
                 response.setExpires(expireHeader);
             }
             if (log.isDebugEnabled()) {
                 log.debug("Response: ({}) of the subscribe request: {}", response, request);
             }
             sendResponse(event, response);
-        }catch (InvalidArgumentException e) {
+        } catch (InvalidArgumentException e) {
             log.error("Handle a subscribe request({}) failed, cause: {}", event, e.getMessage());
             e.printStackTrace();
         }

@@ -15,6 +15,7 @@ import javax.sip.ClientTransaction;
 import javax.sip.ServerTransaction;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.REQUEST;
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.RESPONSE;
@@ -22,6 +23,11 @@ import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineTy
 public class FlowContext implements MessageContext, Serializable {
     private static final long serialVersionUID = 1L;
     private static GB28181Properties properties;
+
+    /**
+     * context cleanup state
+     */
+    private volatile AtomicInteger cleanup = new AtomicInteger(0);
 
     private final TimedCache<Enum, ClientTransaction> CLIENT_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
     private final TimedCache<Enum, ServerTransaction> SERVER_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
@@ -146,6 +152,15 @@ public class FlowContext implements MessageContext, Serializable {
 
     public void clearSessionCache() {
         CLIENT_SESSION_CACHE.clear();
+    }
+
+    /**
+     * context is in clean up state
+     *
+     * @return result, if it greater than one, it is in the cleanup state, otherwise it not in the cleanup state.
+     */
+    public int isCleanup() {
+        return cleanup.incrementAndGet();
     }
 
 }

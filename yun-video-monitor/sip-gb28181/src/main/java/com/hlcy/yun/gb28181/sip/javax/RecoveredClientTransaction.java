@@ -25,8 +25,12 @@ public class RecoveredClientTransaction implements ClientTransaction {
     }
 
     @Override
-    public Request createAck() throws SipException, InvalidArgumentException {
-        return delegate.getDialog().createAck(1);
+    public Request createAck() throws SipException {
+        try {
+            return delegate.getDialog().createAck(1);
+        } catch (InvalidArgumentException e) {
+            throw new SipException("Creates a new Ack message from the Request associated with this client transaction exception, cause:" + e.getMessage(), e);
+        }
     }
 
     @Override

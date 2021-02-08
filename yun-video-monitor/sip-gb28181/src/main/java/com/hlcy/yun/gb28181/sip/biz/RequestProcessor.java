@@ -35,10 +35,14 @@ public abstract class RequestProcessor<C extends MessageContext> extends Message
      * This new Response does not contain a body.
      *
      * @param event request event
-     * @throws ParseException
      */
-    protected void send200Response(RequestEvent event) throws ParseException {
-        sendResponse(event, buildResponse(Response.OK, event.getRequest()));
+    protected void send200Response(RequestEvent event) {
+        try {
+            sendResponse(event, buildResponse(Response.OK, event.getRequest()));
+        } catch (ParseException e) {
+            log.error("200 Responding to request event failed, cause: {}", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**

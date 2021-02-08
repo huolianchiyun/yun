@@ -25,7 +25,7 @@ public class AckRequestHandler extends RequestHandler {
 
         final MessageContext messageContext = getMessageContext(event);
         if (messageContext != null) {
-            final MessageHandler ack = messageContext.pipeline(REQUEST).get("ack");
+            final MessageHandler ack = messageContext.pipeline(REQUEST).get(Request.ACK);
             //noinspection unchecked
             ack.handle(event);
         } else {

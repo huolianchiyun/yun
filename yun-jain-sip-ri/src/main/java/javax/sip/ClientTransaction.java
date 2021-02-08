@@ -88,7 +88,7 @@ public interface ClientTransaction extends Transaction {
      * reason.
      * @see Request
      */
-    public void sendRequest() throws SipException;
+    void sendRequest() throws SipException;
 
     /**
      * Creates a new Cancel message from the Request associated with this client
@@ -134,7 +134,7 @@ public interface ClientTransaction extends Transaction {
      * @throws SipException if this method is called to cancel a request that
      * can't be cancelled i.e. ACK.
      */
-    public Request createCancel() throws SipException;
+    Request createCancel() throws SipException;
 
     /**
      * Creates a new Ack message from the Request associated with this client
@@ -153,7 +153,7 @@ public interface ClientTransaction extends Transaction {
      * send the ACK for non-2xx responses that need to be acknowledged.
      * That is the application should never need to use this method.
      */
-    public Request createAck() throws SipException, InvalidArgumentException;
+    Request createAck() throws SipException;
 
 }
 

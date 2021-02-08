@@ -22,12 +22,8 @@ public abstract class MessageProcessor extends FlowRequestProcessor {
         try {
             doProcess(event);
         } finally {
-            try {   // 200 with no response body
-                send200Response(event);
-            } catch (ParseException e) {
-                log.error("Process a CmdType <{}> message({}) failed, cause: \n{}", getCmdTypeFrom(event), event.getRequest(), e.getMessage());
-                e.printStackTrace();
-            }
+            // 200 with no response body
+            send200Response(event);
         }
     }
 

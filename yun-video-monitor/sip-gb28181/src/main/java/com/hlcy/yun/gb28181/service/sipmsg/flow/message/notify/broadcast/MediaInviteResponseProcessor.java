@@ -53,7 +53,7 @@ public class MediaInviteResponseProcessor extends FlowResponseProcessor {
                 Response.OK,
                 deviceInviteRequest,
                 (ContentTypeHeader) deviceInviteRequest.getHeader(ContentType.NAME),
-                deviceSdp,
+                mediaSdp,
                 true);
         ResponseSender.sendResponse(deviceTransaction, inviteResponse2Device);
 
@@ -62,16 +62,5 @@ public class MediaInviteResponseProcessor extends FlowResponseProcessor {
 
     private SessionDescription extractSessionDescAndSetSessionName(Message message) throws SdpException {
         return getSessionDescription(getMessageBodyByStr(message));
-    }
-
-    private String getSSRC(FlowContext context) {
-        try {
-            return SSRCManger.getPlayBackSSRC();
-        } catch (SSRCException e) {
-            log.warn(e.getMessage());
-            DeferredResultHolder.setErrorDeferredResultForRequest(
-                    DeferredResultHolder.CALLBACK_CMD_VOICE + context.getOperationalParams().getChannelId(), e.getMessage());
-            throw e;
-        }
     }
 }

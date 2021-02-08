@@ -4,11 +4,9 @@ import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.service.params.notify.VoiceBroadcastNotifyParams;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.VoiceSession;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.util.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
@@ -66,7 +64,7 @@ public class VoiceBroadcastNotifyCmd extends AbstractNotifyCmd<VoiceBroadcastNot
     }
 
     public void stop(String ssrc) {
-        if (isClosedVoiceBroadcast(ssrc)) {
+        if (isClosedBroadcastOf(ssrc)) {
             return;
         }
 
@@ -75,13 +73,16 @@ public class VoiceBroadcastNotifyCmd extends AbstractNotifyCmd<VoiceBroadcastNot
         sendByeRequest(bye, transaction);
 
         FlowContextCacheUtil.setNewKey(ssrc, getCallId(bye));
-        SSRCManger.releaseSSRC(ssrc);
     }
 
-    private boolean isClosedVoiceBroadcast(String ssrc) {
+    private boolean isClosedBroadcastOf(String ssrc) {
         final FlowContext context = FlowContextCacheUtil.get(ssrc);
         if (context == null) {
-            log.info("媒体流已关闭，SSRC：{}", ssrc);
+            log.info("语音广播已关闭，SSRC：{}", ssrc);
+            return true;
+        }
+        if (context.isCleanup() > 1) {
+            log.info("语音广播正在关闭中... ...，SSRC：{}", ssrc);
             return true;
         }
         return false;
