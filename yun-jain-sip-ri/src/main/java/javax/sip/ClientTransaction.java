@@ -135,25 +135,5 @@ public interface ClientTransaction extends Transaction {
      * can't be cancelled i.e. ACK.
      */
     Request createCancel() throws SipException;
-
-    /**
-     * Creates a new Ack message from the Request associated with this client
-     * transaction. This ACK can be used to acknowledge the 2xx response to the
-     * request sent by this transaction.
-     *
-     * @return the new ACK Request specific to the Request of this client
-     * transaction.
-     * @throws SipException if this method is called before a final response
-     * is received for the transaction.
-     * @deprecated Since v1.2. As a transaction that received
-     * a 2xx response terminates immediately, it cannot be used for creating
-     * the corresponding ACK. If this transaction created a dialog, the
-     * {@link Dialog#createAck(long)} method
-     * should be used. Otherwise the stack will automatically create and
-     * send the ACK for non-2xx responses that need to be acknowledged.
-     * That is the application should never need to use this method.
-     */
-    Request createAck() throws SipException;
-
 }
 

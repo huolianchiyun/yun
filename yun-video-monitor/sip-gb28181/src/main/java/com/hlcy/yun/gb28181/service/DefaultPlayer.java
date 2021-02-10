@@ -44,10 +44,14 @@ public class DefaultPlayer implements Player {
             // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
             final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextBy(params.getChannelId());
             if (optional.isPresent() && StringUtils.hasText(optional.get().getSsrc())) {
-                DeferredResultHolder.setDeferredResultForRequest(
-                        DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(),
-                        new PlayResponse(optional.get().getSsrc(), properties.getMediaIp()));
-                return;
+                // TODO 去流媒体检测该ssrc是否推流，若推，則返回，否則清理環境
+                final FlowContext flowContext = optional.get();
+                if (!flowContext.expire()) {
+                    DeferredResultHolder.setDeferredResultForRequest(
+                            DeferredResultHolder.CALLBACK_CMD_PLAY + params.getChannelId(),
+                            new PlayResponse(optional.get().getSsrc(), properties.getMediaIp()));
+                    return;
+                }
             }
         }
 
@@ -94,13 +98,12 @@ public class DefaultPlayer implements Player {
 
     @Override
     public void stop(String ssrc) {
-        // 点播 15:SIP服务器收到BYE消息后向媒体服务器发送BYE消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
-        // 回放 23:SIP服务器收到 BYE 消息后向媒体服务器发送 BYE 消息,断开消息8、9、12建立的同媒体服务器的Invite会话。
         if (isClosedMediaStreamOf(ssrc)) {
             return;
         }
 
         if (!handleMediaPullStreamClose(ssrc)) {
+
             final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
             final Request bye = getByeRequest(clientTransaction);
             sendByeRequest(bye, clientTransaction);
@@ -116,7 +119,7 @@ public class DefaultPlayer implements Player {
             log.info("视频流已关闭，SSRC：{}", ssrc);
             return true;
         }
-        if (context.isCleanup() > 1) {
+        if (context.isCleanup()) {
             log.info("视频流正在关闭中... ...，SSRC：{}", ssrc);
             return true;
         }
@@ -147,7 +150,6 @@ public class DefaultPlayer implements Player {
 
     @Override
     public void playback(PlaybackParams playbackParams) {
-        // 2:SIP服务器收到Invite请求后,通过三方呼叫控制建立媒体服务器和媒体流发送者之间的媒体连接。向媒体服务器发送Invite消息,此消息不携带SDP消息体。
         Request inviteMedia = getInviteRequest(
                 createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
                 createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),

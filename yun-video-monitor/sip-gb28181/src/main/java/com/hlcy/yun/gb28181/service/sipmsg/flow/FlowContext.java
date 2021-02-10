@@ -152,15 +152,19 @@ public class FlowContext implements MessageContext, Serializable {
 
     public void clearSessionCache() {
         CLIENT_SESSION_CACHE.clear();
+        SERVER_SESSION_CACHE.clear();
     }
 
     /**
      * context is in clean up state
      *
-     * @return result, if it greater than one, it is in the cleanup state, otherwise it not in the cleanup state.
+     * @return true, if it greater than one, it is in the cleanup state, otherwise false, it not in the cleanup state.
      */
-    public int isCleanup() {
-        return cleanup.incrementAndGet();
+    public boolean isCleanup() {
+        return cleanup.incrementAndGet() > 1;
     }
 
+    public boolean expire() {
+        return cleanup.get() > 1;
+    }
 }

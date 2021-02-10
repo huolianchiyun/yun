@@ -81,7 +81,7 @@ public class VoiceBroadcastNotifyCmd extends AbstractNotifyCmd<VoiceBroadcastNot
             log.info("语音广播已关闭，SSRC：{}", ssrc);
             return true;
         }
-        if (context.isCleanup() > 1) {
+        if (context.isCleanup()) {
             log.info("语音广播正在关闭中... ...，SSRC：{}", ssrc);
             return true;
         }

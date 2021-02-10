@@ -21,12 +21,12 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    *
    * @param newRespondTo ResponseInterface to send messages to.
    */
-  public abstract void setResponseInterface(ServerResponseInterface newRespondTo);
+  void setResponseInterface(ServerResponseInterface newRespondTo);
 
   /**
    * Returns this transaction.
    */
-  public abstract MessageChannel getRequestChannel();
+  MessageChannel getRequestChannel();
 
   /**
    * Deterines if the message is a part of this transaction.
@@ -35,14 +35,15 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    *
    * @return true if the message is part of this transaction, false if not.
    */
-  public abstract boolean isMessagePartOfTransaction(SIPMessage messageToTest);
+  boolean isMessagePartOfTransaction(SIPMessage messageToTest);
 
   /**
    * Send a request message through this transaction and onto the client.
    *
    * @param messageToSend Request to process and send.
    */
-  public abstract void sendMessage(SIPMessage messageToSend) throws IOException;
+  @Override
+  void sendMessage(SIPMessage messageToSend) throws IOException;
 
   /**
    * Process a new response message through this transaction. If necessary, this message will
@@ -51,67 +52,69 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    * @param transactionResponse Response to process.
    * @param sourceChannel Channel that received this message.
    */
-  public abstract void processResponse(SIPResponse transactionResponse,
-                                       MessageChannel sourceChannel,
-                                       SIPDialog dialog);
+  void processResponse(SIPResponse transactionResponse,
+                       MessageChannel sourceChannel,
+                       SIPDialog dialog);
 
   /*
    * (non-Javadoc)
    *
    * @see javax.sip.ClientTransaction#sendRequest()
    */
-  public abstract void sendRequest() throws SipException;
+  @Override
+  void sendRequest() throws SipException;
 
   /*
    * (non-Javadoc)
    *
    * @see javax.sip.ClientTransaction#createCancel()
    */
-  public abstract Request createCancel() throws SipException;
+  @Override
+  Request createCancel() throws SipException;
 
   /*
    * (non-Javadoc)
    *
    * @see javax.sip.ClientTransaction#createAck()
    */
-  public abstract Request createAck() throws SipException;
+  Request createAck() throws SipException;
 
   /**
    * Set the port of the recipient.
    */
-  public abstract void setViaPort(int port);
+  void setViaPort(int port);
 
   /**
    * Set the port of the recipient.
    */
-  public abstract void setViaHost(String host);
+  void setViaHost(String host);
 
   /**
    * Get the port of the recipient.
    */
-  public abstract int getViaPort();
+  int getViaPort();
 
   /**
    * Get the host of the recipient.
    */
-  public abstract String getViaHost();
+  String getViaHost();
 
   /**
    * get the via header for an outgoing request.
    */
-  public abstract Via getOutgoingViaHeader();
+  Via getOutgoingViaHeader();
 
   /**
    * This is called by the stack after a non-invite client transaction goes to completed state.
    */
-  public abstract void clearState();
+  void clearState();
 
   /**
    * Sets a timeout after which the connection is closed (provided the server does not use the
    * connection for outgoing requests in this time period) and calls the superclass to set
    * state.
    */
-  public abstract void setState(int newState);
+  void setState(int newState);
 
   /*
    * Terminate a transaction. This marks the tx as terminated The tx scanner will run and remove
@@ -119,12 +122,12 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    *
    * @see javax.sip.Transaction#terminate()
    */
-  public abstract void terminate() throws ObjectInUseException;
+  void terminate() throws ObjectInUseException;
 
   /**
    * Stop the ExPIRES timer if it is running.
    */
-  public abstract void stopExpiresTimer();
+  void stopExpiresTimer();
 
   /**
    * Check if the From tag of the response matches the from tag of the original message. A
@@ -134,7 +137,7 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    * @param sipResponse the response to check.
    * @return true if the check passes.
    */
-  public abstract boolean checkFromTag(SIPResponse sipResponse);
+  boolean checkFromTag(SIPResponse sipResponse);
 
   /*
    * (non-Javadoc)
@@ -142,14 +145,14 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    * @see gov.nist.javax.sip.stack.ServerResponseInterface#processResponse(gov.nist.javax.sip.message.SIPResponse,
    *      gov.nist.javax.sip.stack.MessageChannel)
    */
-  public abstract void processResponse(SIPResponse sipResponse, MessageChannel incomingChannel);
+  void processResponse(SIPResponse sipResponse, MessageChannel incomingChannel);
 
   /*
    * (non-Javadoc)
    *
    * @see gov.nist.javax.sip.stack.SIPTransaction#getDialog()
    */
-  public abstract Dialog getDialog();
+  Dialog getDialog();
 
   /*
    * (non-Javadoc)
@@ -157,7 +160,7 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    * @see gov.nist.javax.sip.stack.SIPTransaction#setDialog(gov.nist.javax.sip.stack.SIPDialog,
    *      gov.nist.javax.sip.message.SIPMessage)
    */
-  public abstract SIPDialog getDialog(String dialogId);
+  SIPDialog getDialog(String dialogId);
 
   /*
    * (non-Javadoc)
@@ -165,23 +168,23 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    * @see gov.nist.javax.sip.stack.SIPTransaction#setDialog(gov.nist.javax.sip.stack.SIPDialog,
    *      gov.nist.javax.sip.message.SIPMessage)
    */
-  public abstract void setDialog(SIPDialog sipDialog, String dialogId);
+  void setDialog(SIPDialog sipDialog, String dialogId);
 
-  public abstract SIPDialog getDefaultDialog();
+  SIPDialog getDefaultDialog();
 
   /**
    * Set the next hop ( if it has already been computed).
    *
    * @param hop -- the hop that has been previously computed.
    */
-  public abstract void setNextHop(Hop hop);
+  void setNextHop(Hop hop);
 
   /**
    * Reeturn the previously computed next hop (avoid computing it twice).
    *
    * @return -- next hop previously computed.
    */
-  public abstract Hop getNextHop();
+  Hop getNextHop();
 
   /**
    * Set this flag if you want your Listener to get Timeout.RETRANSMIT notifications each time a
@@ -189,47 +192,47 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    *
    * @param notifyOnRetransmit the notifyOnRetransmit to set
    */
-  public abstract void setNotifyOnRetransmit(boolean notifyOnRetransmit);
+  void setNotifyOnRetransmit(boolean notifyOnRetransmit);
 
   /**
    * @return the notifyOnRetransmit
    */
-  public abstract boolean isNotifyOnRetransmit();
+  boolean isNotifyOnRetransmit();
 
-  public abstract void alertIfStillInCallingStateBy(int count);
+  void alertIfStillInCallingStateBy(int count);
 
   //jeand : cleanup method to clear the state of the tx once it has been removed from the stack
-  public abstract void cleanUp();
+  void cleanUp();
 
   /**
    * @return the originalRequestFromTag
    */
-  public abstract String getOriginalRequestFromTag();
+  String getOriginalRequestFromTag();
 
   /**
    * @return the originalRequestFromTag
    */
-  public abstract String getOriginalRequestCallId();
+  String getOriginalRequestCallId();
 
   /**
    * @return the originalRequestFromTag
    */
-  public abstract Event getOriginalRequestEvent();
+  Event getOriginalRequestEvent();
 
   /**
    * @return the originalRequestFromTag
    */
-  public abstract Contact getOriginalRequestContact();
+  Contact getOriginalRequestContact();
 
   /**
    * @return the originalRequestFromTag
    */
-  public abstract String getOriginalRequestScheme();
+  String getOriginalRequestScheme();
 
   /**
    * will terminate a null state dialog when the transaction terminates
    * Default: true
    * @param enabled
    */
-  public abstract void setTerminateDialogOnCleanUp(boolean enabled);
+  void setTerminateDialogOnCleanUp(boolean enabled);
 }
