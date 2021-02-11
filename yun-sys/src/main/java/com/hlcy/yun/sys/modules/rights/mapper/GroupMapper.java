@@ -20,20 +20,8 @@ public interface GroupMapper extends PageMapper<GroupDO>{
 
     Set<GroupDO> selectByPrimaryKeys(Set<Long> ids);
 
-    /**
-     * 根据用户 Id 查询用户所属组，但部门类型的组除外
-     * @param userId /
-     * @return {@link Set<GroupDO>}
-     */
-    Set<GroupDO> selectGroupByUserId(Long userId);
-    /**
-     * 根据用户 Id 查询用户所属组（含部门）
-     * @param userId /
-     * @return {@link Set<GroupDO>}
-     */
-    Set<GroupDO> selectByUserId(Long userId);
 
-    Set<GroupDO> selectByUserIdForUserMapper(Long userId);
+    Set<GroupDO> selectByUserId(Long userId);
 
     /**
      * 根据用户名查询用户所属组 groupCode

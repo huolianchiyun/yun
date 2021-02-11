@@ -62,28 +62,12 @@
         where g_pid = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="selectGroupByUserId" parameterType="java.lang.Long" resultMap="CascadeResultMap0">
-        select
-        <include refid="Base_Column_List"/>
-        from t_sys_group where g_id in (
-        select group_id from t_sys_user_group where user_id = #{userId}
-        ) and g_group_type !='${@com.hlcy.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
-    </select>
-
-    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="CascadeResultMap0">
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_sys_group where g_id in (
         select group_id from t_sys_user_group where user_id = #{userId}
         )
-    </select>
-
-    <select id="selectByUserIdForUserMapper" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from t_sys_group where g_id in (
-        select group_id from t_sys_user_group where user_id = #{userId}
-        ) and g_group_type !='${@com.hlcy.yun.sys.modules.rights.common.constant.RightsConstants@DEPT_TYPE}'
     </select>
 
     <select id="selectGroupCodesByUsername" parameterType="java.lang.String" resultType="java.lang.String">

@@ -81,7 +81,7 @@ class GroupServiceImpl implements GroupService {
     @Override
     @Cacheable(value = BIND_USER + GROUP, key = "'" + UserIdKey + "' + #p0")
     public List<GroupDO> queryByUserId(Long userId) {
-        return new ArrayList<>(Optional.ofNullable(groupMapper.selectGroupByUserId(userId)).orElseGet(HashSet::new));
+        return new ArrayList<>(Optional.ofNullable(groupMapper.selectByUserId(userId)).orElseGet(HashSet::new));
     }
 
     @Override
@@ -233,7 +233,7 @@ class GroupServiceImpl implements GroupService {
     }
 
     private boolean hasOperationalRights(UserDO currentUser, String groupCode) {
-        Set<GroupDO> currentUserGroups = groupMapper.selectGroupByUserId(currentUser.getId());
+        Set<GroupDO> currentUserGroups = groupMapper.selectByUserId(currentUser.getId());
         return currentUserGroups.stream()
                 .filter(e -> groupCode.startsWith(e.getGroupCode()))
                 .anyMatch(e -> currentUser.getUsername().equals(e.getGroupMaster()));
