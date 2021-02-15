@@ -12,7 +12,6 @@ works：
 
 
 3、cruise time error？？
-5、sip 重启 如何给之前的设备bye？？
 6、对参数值范围进行校验
 
 抓拍、录像流媒体 负载均衡 --初步方案： 共享ssrc，ssrc附带流媒体IP
