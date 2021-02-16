@@ -43,10 +43,10 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-  boot:
-    admin:
-      client:
-        url: http://localhost:8080
+#  boot:
+#    admin:
+#      client:
+#        url: http://localhost:8080
 
 management:
   endpoints:

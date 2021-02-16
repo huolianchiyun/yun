@@ -13,10 +13,10 @@ spring:
     timeout: 5000
     lettuce:
       pool:
-        max-active: 8
-        max-wait: -1
-        max-idle: 8
-        min-idle: 0
+        max-active: 10 #连接池最大连接数（使用负值表示没有限制）
+        max-idle: 5 #连接池中的最大空闲连接
+        min-idle: 3 #连接池中的最小空闲连接
+        max-wait: -1 #连接池最大阻塞等待时间（使用负值表示没有限制）
     my:
       #设置 redis 数据默认过期时间，默认2小时
       expiration-time: 7200000

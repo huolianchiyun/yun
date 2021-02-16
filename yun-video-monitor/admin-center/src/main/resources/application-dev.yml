@@ -26,6 +26,7 @@ spring:
       test-on-return: false
       # 检测连接是否有效
       validation-query: select 1
+      logAbandoned: true
       # 配置监控统计
       webStatFilter:
         enabled: true
@@ -128,21 +129,6 @@ websocket:
 # IP 本地解析
 ip:
   local-parsing: true
-
-gb28181:
-  sipIp: 192.168.11.1
-  sipPort: 5060
-  # 根据国标6.1.2中规定，domain宜采用ID统一编码的前十位编码。国标附录D中定义前8位为中心编码（由省级、市级、区级、基层编号组成，参照GB/T 2260-2007）
-  # 后两位为行业编码，定义参照附录D.3
-  # 3701020049标识山东济南历下区 信息行业接入
-  sipDomain: 3701020049
-  sipId: 37010200492000000001
-  # 默认设备认证密码，后续扩展使用设备单独密码
-  sipPassword: admin123
-  mediaIp: 192.168.0.102
-  mediaPort: 10000
-  ptz:
-   speed: 50
 
 # 文件存储路径
 file:
