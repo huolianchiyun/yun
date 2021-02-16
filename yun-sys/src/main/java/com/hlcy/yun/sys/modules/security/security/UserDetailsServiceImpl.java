@@ -22,17 +22,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final GroupService groupService;
 
-    private final LoginProperties loginProperties;
+    private final UserInfoCache userInfoCache;
 
-    public void setEnableCache(boolean enableCache) {
-        this.loginProperties.setCacheEnable(enableCache);
-    }
+    private final LoginProperties loginProperties;
 
     @Override
     public MyUserDetails loadUserByUsername(String username) {
         MyUserDetails myUserDetails = null;
-        if (loginProperties.isCacheEnable() && UserInfoCache.containsKey(username)) {
-            myUserDetails = UserInfoCache.get(username);
+        if (loginProperties.isEnableCache()) {
+            myUserDetails = userInfoCache.get(username);
         }
         if (Objects.isNull(myUserDetails)) {
             UserDO user = userService.queryByUsername(username);
@@ -42,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             final Meta meta = userService.verifyPasswordExpired(username);
             Assert.isTrue(Meta.Status.NoApiRights != meta.getStatus(), meta.getMessage());
             myUserDetails = new MyUserDetails(user, groupService.getGrantedAuthorities(user));
-            UserInfoCache.put(username, myUserDetails);
+            userInfoCache.put(username, myUserDetails);
         }
         return myUserDetails;
     }

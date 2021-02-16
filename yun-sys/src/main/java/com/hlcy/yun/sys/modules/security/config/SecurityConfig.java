@@ -2,12 +2,9 @@ package com.hlcy.yun.sys.modules.security.config;
 
 import com.hlcy.yun.sys.modules.common.annotation.AnonymousAccess;
 import com.hlcy.yun.sys.modules.common.enums.RequestMethodEnum;
-import com.hlcy.yun.sys.modules.security.config.bean.SecurityProperties;
 import com.hlcy.yun.sys.modules.security.security.JwtAccessDeniedHandler;
 import com.hlcy.yun.sys.modules.security.security.JwtAuthenticationEntryPoint;
 import com.hlcy.yun.sys.modules.security.security.TokenConfigurer;
-import com.hlcy.yun.sys.modules.security.security.TokenProvider;
-import com.hlcy.yun.sys.modules.security.service.OnlineUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -30,23 +27,18 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import java.util.*;
 
-/**
- * WebSecurityConfigurerAdapter
- * 主要职责就是配置配置哪些资源不需要权限限制啊，哪些需要啊等等
- */
+
 @Configuration
-@EnableWebSecurity  // 开启Spring Security的功能
+@EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)  // 开启注解控制权限
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint authenticationErrorHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
-    private final SecurityProperties properties;
-    private final OnlineUserService onlineUserService;
+    private final TokenConfigurer tokenConfigurer;
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -122,7 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(anonymousUrls.get(RequestMethodEnum.ALL.getType()).toArray(new String[0])).permitAll()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()
-                .and().apply(securityConfigurerAdapter());
+                .and().apply(tokenConfigurer);
     }
 
     private Map<String, Set<String>> getAnonymousUrl(Map<RequestMappingInfo, HandlerMethod> handlerMethodMap) {
@@ -170,7 +162,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return anonymousUrls;
     }
 
-    private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider, properties, onlineUserService);
-    }
 }

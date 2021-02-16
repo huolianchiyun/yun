@@ -15,31 +15,24 @@ import com.hlcy.yun.common.constant.Constants;
 import com.hlcy.yun.common.page.PageInfo;
 import com.hlcy.yun.sys.modules.rights.model.$do.GroupDO;
 import com.hlcy.yun.sys.modules.security.config.bean.SecurityProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 
 import static com.hlcy.yun.sys.modules.common.xcache.CacheKey.BIND_USER_HASH_KEY_PREFIX;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class OnlineUserService {
 
     private final SecurityProperties properties;
-    private RedisUtils redisUtils;
-
-    @Autowired(required = false)
-    public void setRedisUtils(RedisUtils redisUtils) {
-        this.redisUtils = redisUtils;
-    }
-
-    public OnlineUserService(SecurityProperties properties) {
-        this.properties = properties;
-    }
+    private final UserInfoCache userInfoCache;
+    private final RedisUtils redisUtils;
 
     /**
      * 保存在线用户信息
@@ -120,7 +113,7 @@ public class OnlineUserService {
         String key = properties.getOnlineKey() + token;
         OnlineUser onlineUser = (OnlineUser) redisUtils.get(key);
         if (onlineUser != null && StringUtils.isNotEmpty(onlineUser.getUserName())) {
-            UserInfoCache.cleanCacheFor(onlineUser.getUserName());
+            userInfoCache.cleanCacheByUsername(onlineUser.getUserName());
             redisUtils.del(BIND_USER_HASH_KEY_PREFIX + onlineUser.getUserName());
         }
         redisUtils.del(key);
@@ -131,9 +124,8 @@ public class OnlineUserService {
      *
      * @param all      /
      * @param response /
-     * @throws IOException /
      */
-    public void download(List<OnlineUser> all, HttpServletResponse response) throws IOException {
+    public void download(List<OnlineUser> all, HttpServletResponse response) {
         List<Map<String, Object>> list = new ArrayList<>();
         for (OnlineUser user : all) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -165,7 +157,7 @@ public class OnlineUserService {
      */
     public void checkLoginOnUser(String userName, String ignoreToken) {
         List<OnlineUser> onlineUsers = getAllOnlineUsersWithNoPage(userName);
-          if (onlineUsers == null || onlineUsers.isEmpty()) {
+        if (onlineUsers == null || onlineUsers.isEmpty()) {
             return;
         }
         for (OnlineUser onlineUser : onlineUsers) {

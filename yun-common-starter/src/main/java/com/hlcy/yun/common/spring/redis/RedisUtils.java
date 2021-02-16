@@ -268,12 +268,12 @@ public class RedisUtils {
     /**
      * HashGet
      *
-     * @param key  键 不能为null
-     * @param item 项 不能为null
+     * @param key     键 不能为null
+     * @param hashKey 项 不能为null
      * @return 值
      */
-    public Object hget(String key, String item) {
-        return redisTemplate.opsForHash().get(key, item);
+    public Object hget(String key, String hashKey) {
+        return redisTemplate.opsForHash().get(key, hashKey);
     }
 
     /**
@@ -326,16 +326,16 @@ public class RedisUtils {
     }
 
     /**
-     * 向一张hash表中放入数据,如果不存在将创建
+     * 向一张 hash表中放入数据,如果不存在将创建
      *
-     * @param key   键
-     * @param item  项
-     * @param value 值
+     * @param key     键
+     * @param hashKey 项
+     * @param value   值
      * @return true 成功 false失败
      */
-    public boolean hset(String key, String item, Object value) {
+    public boolean hset(String key, String hashKey, Object value) {
         try {
-            redisTemplate.opsForHash().put(key, item, value);
+            redisTemplate.opsForHash().put(key, hashKey, value);
             return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -344,17 +344,17 @@ public class RedisUtils {
     }
 
     /**
-     * 向一张hash表中放入数据,如果不存在将创建
+     * 向一张 hash表中放入数据,如果不存在将创建
      *
-     * @param key   键
-     * @param item  项
-     * @param value 值
-     * @param time  时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
+     * @param key     键
+     * @param hashKey 项
+     * @param value   值
+     * @param time    时间(秒) 注意:如果已存在的 hash表有时间,这里将会替换原有的时间
      * @return true 成功 false失败
      */
-    public boolean hset(String key, String item, Object value, long time) {
+    public boolean hset(String key, String hashKey, Object value, long time) {
         try {
-            redisTemplate.opsForHash().put(key, item, value);
+            redisTemplate.opsForHash().put(key, hashKey, value);
             if (time > 0) {
                 expire(key, time);
             }
@@ -366,24 +366,24 @@ public class RedisUtils {
     }
 
     /**
-     * 删除hash表中的值
+     * 删除 hash表中的值
      *
-     * @param key  键 不能为null
-     * @param item 项 可以使多个 不能为null
+     * @param key      键 不能为null
+     * @param hashKeys 项 可以使多个 不能为null
      */
-    public void hdel(String key, Object... item) {
-        redisTemplate.opsForHash().delete(key, item);
+    public void hdel(String key, Object... hashKeys) {
+        redisTemplate.opsForHash().delete(key, hashKeys);
     }
 
     /**
      * 判断hash表中是否有该项的值
      *
-     * @param key  键 不能为null
-     * @param item 项 不能为null
+     * @param key     键 不能为null
+     * @param hashKey 项 不能为null
      * @return true 存在 false不存在
      */
-    public boolean hHasKey(String key, String item) {
-        return redisTemplate.opsForHash().hasKey(key, item);
+    public boolean hHasKey(String key, String hashKey) {
+        return redisTemplate.opsForHash().hasKey(key, hashKey);
     }
 
     /**
@@ -657,7 +657,7 @@ public class RedisUtils {
     }
 
     /**
-     * 移除N个值为value
+     * 移除 N个值为 value
      *
      * @param key   键
      * @param count 移除多少个

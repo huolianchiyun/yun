@@ -65,7 +65,8 @@ mybatis:
 # 登录相关配置
 login:
   # 登录缓存
-  cache-enable: true
+  enable-cache: true
+  type-cache: redis
   #  是否限制单用户登录
   single: true
   #  验证码

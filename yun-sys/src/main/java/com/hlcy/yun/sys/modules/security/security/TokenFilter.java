@@ -6,6 +6,8 @@ import com.hlcy.yun.sys.modules.security.config.bean.SecurityProperties;
 import com.hlcy.yun.sys.modules.security.service.OnlineUserService;
 import com.hlcy.yun.sys.modules.security.model.dto.OnlineUser;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -24,23 +26,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Objects;
 
+@Slf4j
+@RequiredArgsConstructor
 public class TokenFilter extends GenericFilterBean {
-    private static final Logger log = LoggerFactory.getLogger(TokenFilter.class);
-    public static final String SEC_WEBSOCKET_PROTOCOL = "sec-websocket-protocol";
+    private static final String SEC_WEBSOCKET_PROTOCOL = "sec-websocket-protocol";
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
+    private final UserInfoCache userInfoCache;
     private final OnlineUserService onlineUserService;
-
-    /**
-     * @param tokenProvider     Token
-     * @param properties        JWT
-     * @param onlineUserService 用户在线
-     */
-    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, OnlineUserService onlineUserService) {
-        this.properties = properties;
-        this.onlineUserService = onlineUserService;
-        this.tokenProvider = tokenProvider;
-    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -62,7 +55,7 @@ public class TokenFilter extends GenericFilterBean {
                 cleanUserCache = true;
             } finally {
                 if (cleanUserCache || Objects.isNull(onlineUser)) {
-                    UserInfoCache.cleanCacheFor(String.valueOf(tokenProvider.getClaims(token).get(TokenProvider.AUTHORITIES_KEY)));
+                    userInfoCache.cleanCacheByUsername(String.valueOf(tokenProvider.getClaims(token).get(TokenProvider.AUTHORITIES_KEY)));
                 }
             }
             if (onlineUser != null && StringUtils.hasText(token)) {

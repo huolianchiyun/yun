@@ -100,7 +100,7 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
-    public Claims getClaims(String token) {
+    Claims getClaims(String token) {
         return jwtParser
                 .parseClaimsJws(token)
                 .getBody();
@@ -109,7 +109,7 @@ public class TokenProvider implements InitializingBean {
     /**
      * @param token 需要检查的token
      */
-    public void checkRenewal(String token) {
+    void checkRenewal(String token) {
         // 判断是否续期token,计算token的过期时间
         long time = redisUtils.getExpire(properties.getOnlineKey() + token) * 1000;
         Date expireDate = DateUtil.offset(new Date(), DateField.MILLISECOND, (int) time);

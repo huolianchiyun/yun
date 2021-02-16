@@ -23,14 +23,20 @@ public class LoginProperties {
     /**
      * 用户登录信息缓存
      */
-    private boolean cacheEnable;
+    private boolean enableCache;
+
+    private CacheType typeCache;
 
     public boolean isSingleLogin() {
         return singleLogin;
     }
 
-    public boolean isCacheEnable() {
-        return cacheEnable;
+    public boolean isEnableCache() {
+        return enableCache;
+    }
+
+    public void setTypeCache(CacheType typeCache) {
+        this.typeCache = typeCache;
     }
 
     /**
@@ -88,5 +94,9 @@ public class LoginProperties {
             captcha.setFont(new Font(loginCode.getFontName(), Font.PLAIN, loginCode.getFontSize()));
         }
         return captcha;
+    }
+
+    public enum CacheType{
+        redis, memory
     }
 }

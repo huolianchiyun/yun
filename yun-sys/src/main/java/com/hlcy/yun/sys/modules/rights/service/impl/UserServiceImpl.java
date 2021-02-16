@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -56,6 +57,7 @@ class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CaptchaService verificationCodeService;
     private final OnlineUserService onlineUserService;
+    private final UserInfoCache userInfoCache;
     private final RedisUtils redisUtils;
 
     @Override
@@ -111,7 +113,7 @@ class UserServiceImpl implements UserService {
         checkOperationalRights(user);
         userMapper.updateByPrimaryKeySelective(user);
         associateDeptAndGroup(user, false);
-        UserInfoCache.cleanCacheFor(user.getUsername());
+        userInfoCache.cleanCacheByUsername(user.getUsername());
     }
 
     @Override
@@ -129,7 +131,7 @@ class UserServiceImpl implements UserService {
         userMapper.updateByPrimaryKeySelective(new UserDO(userDB.getId(), passwordEncoder.encode(newPass), LocalDateTime.now()));
         // 清除用户token，使其重新登录
         onlineUserService.checkLoginOnUser(userDB.getUsername(), null);
-        UserInfoCache.cleanCacheFor(userDB.getUsername());
+        userInfoCache.cleanCacheByUsername(userDB.getUsername());
     }
 
     @Override
@@ -147,7 +149,7 @@ class UserServiceImpl implements UserService {
         Assert.isTrue(passwordEncoder.matches(password, userDb.getPwd()), "密码错误");
         verificationCodeService.validate(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + userEmail.getEmail(), userEmail.getCaptcha());
         userMapper.updateByPrimaryKeySelective(new UserDO(userDb.getId(), userEmail.getEmail()));
-        UserInfoCache.cleanCacheFor(userDb.getUsername());
+        userInfoCache.cleanCacheByUsername(userDb.getUsername());
     }
 
     @Override
@@ -233,7 +235,7 @@ class UserServiceImpl implements UserService {
         if (CollectionUtil.isNotEmpty(userSet)) {
             Set<String> usernameSet = userSet.stream().map(UserDO::getUsername).collect(Collectors.toSet());
             redisUtils.delByKeys(BIND_USER_HASH_KEY_PREFIX, usernameSet);
-            usernameSet.forEach(UserInfoCache::cleanCacheFor);
+            usernameSet.forEach(userInfoCache::cleanCacheByUsername);
         }
     }
 }
