@@ -69,9 +69,9 @@ login:
   type-cache: redis
   #  是否限制单用户登录
   single: true
-  #  验证码
+  #  验证码 验证码类型配置 查看 LoginProperties 类
   login-code:
-    #  验证码类型配置 查看 LoginProperties 类
+    #  LoginCodeEnum：arithmetic, chinese, chinese_gif, gif, spec
     code-type: arithmetic
     #  登录图形验证码有效时间/分钟
     expiration: 2
