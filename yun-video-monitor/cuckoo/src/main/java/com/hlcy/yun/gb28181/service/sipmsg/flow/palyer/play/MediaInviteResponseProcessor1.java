@@ -9,7 +9,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.util.SSRCManger;
+import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 import gov.nist.javax.sdp.fields.SSRCField;
 import gov.nist.javax.sdp.fields.SessionNameField;
 import lombok.extern.slf4j.Slf4j;

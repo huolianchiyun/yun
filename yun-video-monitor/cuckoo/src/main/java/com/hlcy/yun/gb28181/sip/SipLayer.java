@@ -6,7 +6,7 @@ import com.hlcy.yun.gb28181.sip.message.factory.SipMessageFactoryHelper;
 import com.hlcy.yun.gb28181.sip.message.factory.Transport;
 import com.hlcy.yun.gb28181.sip.message.SipPipelineFactory;
 import com.hlcy.yun.gb28181.sip.subscribe.SipEventNotifier;
-import com.hlcy.yun.gb28181.util.SSRCManger;
+import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;

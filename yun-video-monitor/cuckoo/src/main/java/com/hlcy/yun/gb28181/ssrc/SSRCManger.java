@@ -1,4 +1,4 @@
-package com.hlcy.yun.gb28181.util;
+package com.hlcy.yun.gb28181.ssrc;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import com.hlcy.yun.gb28181.exception.SSRCException;

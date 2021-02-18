@@ -4,7 +4,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.util.SSRCManger;
+import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;

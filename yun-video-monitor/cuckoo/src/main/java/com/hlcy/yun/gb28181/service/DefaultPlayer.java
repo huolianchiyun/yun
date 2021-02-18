@@ -11,7 +11,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.PlaybackSession;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
-import com.hlcy.yun.gb28181.util.SSRCManger;
+import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;

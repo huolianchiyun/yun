@@ -1,6 +1,6 @@
 package com.hlcy.yun;
 
-import com.hlcy.yun.gb28181.util.SSRCManger;
+import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;

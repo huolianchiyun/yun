@@ -12,7 +12,7 @@ import java.io.StringReader;
  * 基于dom4j的工具包
  */
 @Slf4j
-public class XmlUtil {
+public final class XmlUtil {
     /**
      * 解析 XML为 Document 对象
      *
