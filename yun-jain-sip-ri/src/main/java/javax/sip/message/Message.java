@@ -91,7 +91,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @param header the new Header to be added to the existing Headers List.
      */
-    public void addHeader(Header header);
+    void addHeader(Header header);
 
     /**
      * Adds the new Header to the end of existing list of Headers contained in this
@@ -111,7 +111,7 @@ public interface Message extends Cloneable, Serializable {
      *   already exists.
      * @since v1.2
      */
-    public void addLast(Header header) throws SipException, NullPointerException ;
+    void addLast(Header header) throws SipException, NullPointerException ;
 
     /**
      * Adds the new Header to the head of the existing list of Headers
@@ -129,7 +129,7 @@ public interface Message extends Cloneable, Serializable {
      * @param header the new Header to be added to the existing Headers List.
      * @since v1.2
      */
-    public void addFirst(Header header) throws SipException, NullPointerException;
+    void addFirst(Header header) throws SipException, NullPointerException;
 
     /**
      * Removes the first header from a list of headers.
@@ -139,7 +139,7 @@ public interface Message extends Cloneable, Serializable {
      * @param headerName the name of the header to be removed.
      * @since v1.2
      */
-    public void removeFirst(String headerName) throws NullPointerException;
+    void removeFirst(String headerName) throws NullPointerException;
 
 
     /**
@@ -150,7 +150,7 @@ public interface Message extends Cloneable, Serializable {
      * @param headerName the name of the header to be removed.
      * @since v1.2
      */
-    public void removeLast(String headerName) throws NullPointerException;
+    void removeLast(String headerName) throws NullPointerException;
 
     /**
      * Removes the Header of the supplied name from the list of headers in
@@ -162,7 +162,7 @@ public interface Message extends Cloneable, Serializable {
      * @param headerName the new string value name of the Header to be
      * removed.
      */
-    public void removeHeader(String headerName);
+    void removeHeader(String headerName);
 
     /**
      * Gets a ListIterator over the set of all all the header names in this Message.
@@ -171,7 +171,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @return the ListIterator over the set of all the Header Names in the Message.
      */
-    public ListIterator getHeaderNames();
+    ListIterator getHeaderNames();
 
     /**
      * Gets a ListIterator over all the Headers of the newly specified name
@@ -183,7 +183,7 @@ public interface Message extends Cloneable, Serializable {
      * the Message, this method returns an empty ListIterator if no Headers
      * exist of this header type.
      */
-    public ListIterator getHeaders(String headerName);
+    ListIterator getHeaders(String headerName);
 
     /**
      * Gets the Header of the specified name in this Message. If multiple
@@ -194,7 +194,7 @@ public interface Message extends Cloneable, Serializable {
      * @return the Header of the specified name in the Message, this method
      * returns null if the Header does not exist.
      */
-    public Header getHeader(String headerName);
+    Header getHeader(String headerName);
 
     /**
      * Returns a ListIterator over all the UnrecognizedHeaders in this Message. Note
@@ -217,7 +217,7 @@ public interface Message extends Cloneable, Serializable {
      * represented as Strings, this method returns an empty ListIterator if no
      * UnrecognizedHeaders exist.
      */
-    public ListIterator getUnrecognizedHeaders();
+    ListIterator getUnrecognizedHeaders();
 
     /**
      * Sets the new Header to replace existings Header of that type in
@@ -231,7 +231,7 @@ public interface Message extends Cloneable, Serializable {
      * @param header the new Header to replace any existing Headers of that
      * type.
      */
-    public void setHeader(Header header);
+    void setHeader(Header header);
 
 // Content manipulation methods of the Message
 
@@ -250,7 +250,7 @@ public interface Message extends Cloneable, Serializable {
      * content length value of this Message.
      *
      */
-    public void setContentLength(ContentLengthHeader contentLength);
+    void setContentLength(ContentLengthHeader contentLength);
 
     /**
      * Gets the ContentLengthHeader of the body content of this Message. This is
@@ -258,7 +258,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @return the ContentLengthHeader of the message body.
      */
-    public ContentLengthHeader getContentLength();
+    ContentLengthHeader getContentLength();
 
     /**
      * Sets the ContentLanguageHeader of this Message. This overrides the
@@ -269,7 +269,7 @@ public interface Message extends Cloneable, Serializable {
      * @param contentLanguage the new ContentLanguageHeader object containing the
      * content language value of this Message.
      */
-    public void setContentLanguage(ContentLanguageHeader contentLanguage);
+    void setContentLanguage(ContentLanguageHeader contentLanguage);
 
     /**
      * Gets the ContentLanguageHeader of this Message. This is the same as
@@ -277,7 +277,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @return the ContentLanguageHeader of the message body.
      */
-    public ContentLanguageHeader getContentLanguage();
+    ContentLanguageHeader getContentLanguage();
 
     /**
      * Sets the ContentEncodingHeader of this Message. This overrides the
@@ -288,7 +288,7 @@ public interface Message extends Cloneable, Serializable {
      * @param contentEncoding the new ContentEncodingHeader object containing the
      * content encoding values of this Message.
      */
-    public void setContentEncoding(ContentEncodingHeader contentEncoding);
+    void setContentEncoding(ContentEncodingHeader contentEncoding);
 
     /**
      * Gets the ContentEncodingHeader of this Message. This is the same as
@@ -296,7 +296,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @return the ContentEncodingHeader of the message body.
      */
-    public ContentEncodingHeader getContentEncoding();
+    ContentEncodingHeader getContentEncoding();
 
     /**
      * Sets the ContentDispositionHeader of this Message. This overrides the
@@ -307,7 +307,7 @@ public interface Message extends Cloneable, Serializable {
      * @param contentDisposition the new ContentDispositionHeader object
      * containing the content disposition value of this Message.
      */
-    public void setContentDisposition(ContentDispositionHeader contentDisposition);
+    void setContentDisposition(ContentDispositionHeader contentDisposition);
 
     /**
      * Gets the ContentDispositionHeader of this Message. This is the same as
@@ -315,7 +315,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @return the ContentDispositionHeader of the message body.
      */
-    public ContentDispositionHeader getContentDisposition();
+    ContentDispositionHeader getContentDisposition();
 
 
     /**
@@ -328,7 +328,7 @@ public interface Message extends Cloneable, Serializable {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the body.
      */
-    public void setContent(Object content, ContentTypeHeader contentTypeHeader)
+    void setContent(Object content, ContentTypeHeader contentTypeHeader)
                                              throws ParseException;
 
     /**
@@ -337,7 +337,7 @@ public interface Message extends Cloneable, Serializable {
      * @return the body content of the Message as a byte array, this method
      * returns null if a body does not exist.
      */
-    public byte[] getRawContent();
+    byte[] getRawContent();
 
     /**
      * Gets the body content of the Message as an Object.
@@ -345,13 +345,13 @@ public interface Message extends Cloneable, Serializable {
      * @return the body content of the Message as an Object, this method
      * returns null if a body does not exist.
      */
-    public Object getContent();
+    Object getContent();
 
     /**
      * Removes the body content from this Message and all associated entity
      * headers, if a body exists, this method returns sliently if no body exists.
      */
-    public void removeContent();
+    void removeContent();
 
 
 // Additional Utility methods
@@ -364,7 +364,7 @@ public interface Message extends Cloneable, Serializable {
      * @param expires the new ExpiresHeader object containing the expires
      * values of this Message.
      */
-    public void setExpires(ExpiresHeader expires);
+    void setExpires(ExpiresHeader expires);
 
     /**
      * Gets the ExpiresHeader of this Message. This is the same as
@@ -372,7 +372,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @return the ExpiresHeader of the message body.
      */
-    public ExpiresHeader getExpires();
+    ExpiresHeader getExpires();
 
     /**
      * Sets the protocol version of SIP being used by this Message.
@@ -382,14 +382,14 @@ public interface Message extends Cloneable, Serializable {
      * @throws ParseException which signals that an error has been reached
      * unexpectedly while parsing the version argument.
      */
-    public void setSIPVersion(String version) throws ParseException;
+    void setSIPVersion(String version) throws ParseException;
 
     /**
      * Gets the protocol version of SIP being used by this Message.
      *
      * @return the protocol version of the SIP protocol of this message.
      */
-    public String getSIPVersion();
+    String getSIPVersion();
 
 
 // Java Utility methods for Message
@@ -418,7 +418,7 @@ public interface Message extends Cloneable, Serializable {
      *
      * @return a deep copy of Message
      */
-    public Object clone();
+    Object clone();
 
     /**
      * Compare this SIP Message for equality with another.
@@ -431,7 +431,7 @@ public interface Message extends Cloneable, Serializable {
      * this (on the basis of comparing the headers above),
      * <code>false</code> otherwise.
      */
-    public boolean equals(Object object);
+    boolean equals(Object object);
 
     /**
      * Gets a integer hashcode representation of the Header. This method
@@ -442,12 +442,12 @@ public interface Message extends Cloneable, Serializable {
      * @return integer representation of the Message hashcode
      * @since v1.2
      */
-    public int hashCode();
+    int hashCode();
 
     /**
      * Gets string representation of Message
      * @return string representation of Message
      */
-    public String toString();
+    String toString();
 
 }

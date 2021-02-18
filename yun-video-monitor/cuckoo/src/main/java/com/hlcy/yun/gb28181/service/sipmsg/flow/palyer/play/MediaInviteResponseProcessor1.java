@@ -60,7 +60,7 @@ public class MediaInviteResponseProcessor1 extends FlowResponseProcessor {
             return SSRCManger.getPlaySSRC();
         } catch (SSRCException e) {
             log.warn(e.getMessage());
-            DeferredResultHolder.setErrorDeferredResultForRequest(context.getCallbackKey(), e.getMessage());
+            DeferredResultHolder.setErrorDeferredResultForRequest(context.getOperationalParams().getCallbackKey(), e.getMessage());
             throw e;
         }
     }

@@ -34,13 +34,13 @@ public abstract class ResponseProcessor<C extends MessageContext> extends Messag
         }
     }
 
-    public void cleanupContextWhenClientResponseException(ResponseEvent event) {
+    protected void cleanupContextWhenClientResponseException(ResponseEvent event) {
         // 子类需要时重写实现
     }
 
     protected abstract void process(ResponseEvent event, C context) throws SdpException;
 
-    public void cleanupContext(ResponseEvent event) {
+    protected void cleanupContext(ResponseEvent event) {
         // 子类需要时重写实现
     }
 

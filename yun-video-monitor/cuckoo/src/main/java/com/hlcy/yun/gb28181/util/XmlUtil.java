@@ -6,6 +6,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import javax.sip.message.Request;
+import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 
 /**
@@ -71,4 +73,9 @@ public final class XmlUtil {
         return element != null ? element.getText() : (defaultVal == null ? "" : defaultVal);
     }
 
+    public static Document getDocument(byte[] xmlBytes) throws DocumentException {
+        SAXReader reader = new SAXReader();
+        reader.setEncoding("gbk");
+        return reader.read(new ByteArrayInputStream(xmlBytes));
+    }
 }

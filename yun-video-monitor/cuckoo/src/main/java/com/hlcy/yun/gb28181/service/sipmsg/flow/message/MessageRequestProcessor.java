@@ -1,5 +1,6 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow.message;
 
+import com.hlcy.yun.gb28181.service.sipmsg.MANSCDPXmlParser;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowRequestProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
@@ -24,6 +25,7 @@ public abstract class MessageRequestProcessor extends FlowRequestProcessor {
         } finally {
             // 200 with no response body
             send200Response(event);
+            cleanupContext(event);
         }
     }
 
@@ -34,22 +36,15 @@ public abstract class MessageRequestProcessor extends FlowRequestProcessor {
      */
     protected abstract void doProcess(RequestEvent event);
 
-    public static String getCmdTypeFrom(RequestEvent event) {
-        return XmlUtil.getTextOfChildTagFrom(getRootElementFrom(event), "CmdType");
+    protected void cleanupContext(RequestEvent event){
+
     }
 
-    protected static Element getRootElementFrom(RequestEvent event) {
-        Request request = event.getRequest();
-        SAXReader reader = new SAXReader();
-        reader.setEncoding("gbk");
-        Document xml;
-        try {
-            xml = reader.read(new ByteArrayInputStream(request.getRawContent()));
-        } catch (DocumentException e) {
-            log.error("Parse a message request({}) XML-Content Exception, cause: {}.", event, e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(String.format("Parse a message request(%s) XML-Content Exception", event.getRequest()), e);
-        }
-        return xml.getRootElement();
+    protected String getCmdTypeFrom(RequestEvent event) {
+        return MANSCDPXmlParser.getCmdTypeFrom(event);
+    }
+
+    protected Element getRootElementFrom(RequestEvent event) {
+        return MANSCDPXmlParser.getRootElementFrom(event);
     }
 }

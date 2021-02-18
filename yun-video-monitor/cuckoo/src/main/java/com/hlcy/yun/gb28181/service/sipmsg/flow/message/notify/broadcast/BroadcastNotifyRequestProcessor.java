@@ -31,7 +31,7 @@ public class BroadcastNotifyRequestProcessor extends MessageRequestProcessor {
     private void processError(String deviceId, String errorReason) {
         final FlowContext flowContext = FlowContextCacheUtil.get(BROADCAST + deviceId);
         if (flowContext != null) {
-            setErrorDeferredResultForRequest(flowContext.getCallbackKey(), String.format("设备广播异常， 原因：%s", errorReason));
+            setErrorDeferredResultForRequest(flowContext.getOperationalParams().getCallbackKey(), String.format("设备广播异常， 原因：%s", errorReason));
 
             flowContext.clearSessionCache();
             FlowContextCacheUtil.remove(deviceId);

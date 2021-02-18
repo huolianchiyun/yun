@@ -37,7 +37,6 @@ public class FlowContext implements MessageContext, Serializable {
 
     private final Operation operation;
     private DeviceParams operationalParams;
-    private String callbackKey;
     private boolean mediaPullStream;
     private boolean isRecovered;
     private String ssrc;
@@ -50,9 +49,23 @@ public class FlowContext implements MessageContext, Serializable {
 
     /**
      * FlowContext constructor
-     * @param operation /
+     *
+     * @param operation         /
      * @param operationalParams /
-     * @param responseProcessor Current response handler for FlowContext
+     * @param requestProcessor  Current request processor for FlowContext
+     * @param responseProcessor Current response processor for FlowContext
+     */
+    public FlowContext(Operation operation, DeviceParams operationalParams, RequestProcessor requestProcessor, ResponseProcessor responseProcessor) {
+        this(operation, operationalParams, responseProcessor);
+        this.currentRequestProcessor = requestProcessor;
+    }
+
+    /**
+     * FlowContext constructor
+     *
+     * @param operation         /
+     * @param operationalParams /
+     * @param responseProcessor Current response processor for FlowContext
      */
     public FlowContext(Operation operation, DeviceParams operationalParams, ResponseProcessor responseProcessor) {
         this.operation = operation;
@@ -77,10 +90,13 @@ public class FlowContext implements MessageContext, Serializable {
         }
     }
 
+    @Override
     public ResponseProcessor responseProcessor() {
         return currentResponseProcessor;
     }
 
+
+    @Override
     public RequestProcessor requestProcessor() {
         return currentRequestProcessor;
     }
@@ -88,6 +104,7 @@ public class FlowContext implements MessageContext, Serializable {
     /**
      * Switch current response processor to the next response processor.
      */
+    @Override
     public void switchResponseProcessor2next() {
         if (this.currentResponseProcessor != null) {
             this.currentResponseProcessor = this.currentResponseProcessor.getNextProcessor();
@@ -138,14 +155,6 @@ public class FlowContext implements MessageContext, Serializable {
 
     public boolean isMediaPullStream() {
         return mediaPullStream;
-    }
-
-    public String getCallbackKey() {
-        return callbackKey;
-    }
-
-    public void setCallbackKey(String callbackKey) {
-        this.callbackKey = callbackKey;
     }
 
     public ClientTransaction getClientTransaction(Enum key) {

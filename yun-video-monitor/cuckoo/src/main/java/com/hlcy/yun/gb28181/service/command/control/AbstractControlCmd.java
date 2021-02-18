@@ -1,12 +1,8 @@
 package com.hlcy.yun.gb28181.service.command.control;
 
 import com.hlcy.yun.gb28181.service.command.Command;
-import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.service.params.control.ControlParams;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
 
-import static com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession.SIP_MEDIA_SESSION_1;
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.*;
 
 @RequiredArgsConstructor
@@ -49,11 +44,15 @@ public abstract class AbstractControlCmd<T extends ControlParams> implements Com
                 .append("<?xml version=\"1.0\" ?>")
                 .append("<Control>")
                 .append("<CmdType>").append(CMD_TYPE).append("</CmdType>")
-                .append("<SN>").append((int) ((Math.random() * 9 + 1) * 100000)).append("</SN>")
+                .append("<SN>").append(productSN()).append("</SN>")
                 .append("<DeviceID>").append(t.getChannelId()).append("</DeviceID>")
                 .append(CMD)
-                .append("</Control>")
+                .append("</Control>\r\n")
                 .toString();
+    }
+
+    private synchronized static String productSN() {
+        return String.valueOf((Math.random() * 9 + 1) * 100000);
     }
 
     StringBuilder getBit123CmdTemplate() {

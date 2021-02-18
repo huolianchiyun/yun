@@ -14,7 +14,7 @@ public abstract class FlowResponseProcessor extends ResponseProcessor<FlowContex
         final String ssrc = flowContext.getSsrc();
         // 当 ssrc 未获取，flow 执行异常时，清理 flow context
         if (ssrc == null || ssrc.isEmpty()) {
-            final String callbackKey = flowContext.getCallbackKey();
+            final String callbackKey = flowContext.getOperationalParams().getCallbackKey();
             if (callbackKey != null) {
                 final Response response = event.getResponse();
                 DeferredResultHolder.setErrorDeferredResultForRequest(callbackKey,
