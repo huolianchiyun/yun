@@ -37,7 +37,7 @@ public class RecordInfoQueryRequestProcessor extends MessageRequestProcessor {
             final String sn = getTextOfChildTagFrom(rootElement, "SN");
             if (isFullRecordList(recordInfo, sn)) {
                 DeferredResultHolder.setDeferredResultForRequest(
-                        DeferredResultHolder.CALLBACK_CMD_QUERY_RECORD_INFO + getTextOfChildTagFrom(rootElement, "DeviceID"), recordInfo);
+                        DeferredResultHolder.CALLBACK_CMD_QUERY_RECORD_INFO + getTextOfChildTagFrom(rootElement, "DeviceID"), recordInfo.toSort());
             }
         }
     }

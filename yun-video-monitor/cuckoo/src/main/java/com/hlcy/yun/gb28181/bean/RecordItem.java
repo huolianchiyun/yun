@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class RecordItem {
+public class RecordItem implements Comparable<RecordItem> {
 
     private String deviceId;
 
@@ -26,4 +26,9 @@ public class RecordItem {
     private String type;
 
     private String recorderId;
+
+    @Override
+    public int compareTo(RecordItem o) {
+        return startTime.compareTo(o.getStartTime());
+    }
 }

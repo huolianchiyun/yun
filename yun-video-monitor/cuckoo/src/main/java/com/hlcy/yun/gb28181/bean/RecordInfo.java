@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -19,4 +20,10 @@ public class RecordInfo {
 
     private List<RecordItem> recordList;
 
+    public RecordInfo toSort() {
+        if (recordList != null && !recordList.isEmpty()) {
+            Collections.sort(recordList);
+        }
+        return this;
+    }
 }

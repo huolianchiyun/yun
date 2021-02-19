@@ -101,6 +101,7 @@ public class ControlController {
         return result;
     }
 
+
     @ApiOperation("看守位控制")
     @PostMapping("/homePosition")
     public DeferredResult<ResponseEntity<ResponseData>> homePositionControl(@RequestBody HomePositionControlParams params) {

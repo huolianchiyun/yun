@@ -34,6 +34,8 @@ public class GB28181Properties implements Serializable {
 
     private String mediaPullStreamApi;
 
+    private String mediaTestSsrcValid;
+
     public void setSipIp(String sipIp) throws UnknownHostException {
         if (sipIp == null || sipIp.isEmpty()) {
             this.sipIp = InetAddress.getLocalHost().getHostAddress();

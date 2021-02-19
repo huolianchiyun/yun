@@ -1,6 +1,7 @@
 package com.hlcy.yun.gb28181.service;
 
-import com.hlcy.yun.common.utils.http.RestHttpClient;
+import com.alibaba.fastjson.JSONObject;
+import com.hlcy.yun.gb28181.client.MediaClient;
 import com.hlcy.yun.gb28181.bean.PlayResponse;
 import com.hlcy.yun.gb28181.service.params.player.PlayParams;
 import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
@@ -14,15 +15,12 @@ import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
@@ -37,25 +35,30 @@ import static com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession.S
 public class DefaultPlayer implements Player {
     private final GB28181Properties properties;
 
+    private final MediaClient mediaClient;
+
     @Override
     public void play(PlayParams params) {
         if (!params.isNewStream()) {
             // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
             final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextByOperationAndChannelId(Operation.PLAY, params.getChannelId());
             if (optional.isPresent() && StringUtils.hasText(optional.get().getSsrc())) {
-                // TODO 去流媒体检测该ssrc是否推流，若推，則返回，否則清理環境
                 final FlowContext flowContext = optional.get();
                 if (!flowContext.expire()) {
-                    log.info("*** 设备:{}, 已经推流，返回之前的SSRC：{}", flowContext.getOperationalParams().getChannelId(), flowContext.getSsrc());
-                    DeferredResultHolder.setDeferredResultForRequest(
-                            params.getCallbackKey(),
-                            new PlayResponse(optional.get().getSsrc(), properties.getMediaIp()));
-                    return;
+                    if (mediaClient.isValidTestSsrc(flowContext.getSsrc())) {
+                        log.info("*** 设备:{}, 已经推流，返回之前的SSRC：{}", flowContext.getOperationalParams().getChannelId(), flowContext.getSsrc());
+                        DeferredResultHolder.setDeferredResultForRequest(
+                                params.getCallbackKey(),
+                                new PlayResponse(optional.get().getSsrc(), properties.getMediaIp()));
+                        return;
+                    }else {
+                        stop(flowContext.getSsrc());
+                    }
                 }
             }
         }
 
-        if (!handleMediaPullStream(params)) {
+        if (!handleMediaMakeDevicePushStream(params)) {
             Request inviteMedia = getInviteRequest(
                     createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
                     createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
@@ -69,26 +72,21 @@ public class DefaultPlayer implements Player {
         }
     }
 
-    private boolean handleMediaPullStream(PlayParams params) {
+    private boolean handleMediaMakeDevicePushStream(PlayParams params) {
         if (!StringUtils.isEmpty(params.getFormat())) {
             final String ssrc = SSRCManger.getPlaySSRC();
             // 是否让流媒体主动拉流
-            final String url = properties.getMediaPullStreamApi()
-                    .replace("${mediaIp}", properties.getMediaIp())
-                    .replace("${ssrc}", ssrc)
-                    .replace("${deviceIp}", params.getDeviceIp());
-            final Map response = RestHttpClient.exchange(url, HttpMethod.GET, new ParameterizedTypeReference<Map<String, Object>>() {
-            }, null);
-            if (Integer.parseInt(response.get("code").toString()) == 0) {
+            final JSONObject response = mediaClient.mediaMakeDevicePushStream(ssrc, params.getDeviceIp());
+            if (response.getIntValue("code") == 0) {
                 FlowContextCacheUtil.put(ssrc, new FlowContext(Operation.PLAY, params, true));
                 DeferredResultHolder.setDeferredResultForRequest(
                         params.getCallbackKey(),
                         new PlayResponse(ssrc, properties.getMediaIp()));
             } else {
-                log.error("*** 流媒体主动从设备拉流失败， response：{}", response);
+                log.error("*** 流媒体使设备推流失败， response：{}", response);
                 DeferredResultHolder.setErrorDeferredResultForRequest(
                         params.getCallbackKey(),
-                        String.format("*** 流媒体主动从设备拉流失败， response：%s", response));
+                        String.format("*** 流媒体使设备推流失败， response：%s", response));
             }
             return true;
         }
