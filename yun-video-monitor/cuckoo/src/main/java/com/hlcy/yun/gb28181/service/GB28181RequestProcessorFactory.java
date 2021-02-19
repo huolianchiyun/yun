@@ -7,6 +7,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowPipelineFactory;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessorFactory;
+import com.hlcy.yun.gb28181.sip.message.DefaultPipeline;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 
 import javax.sdp.SdpException;
@@ -27,7 +28,10 @@ public class GB28181RequestProcessorFactory implements RequestProcessorFactory {
             final String cmdType = MANSCDPXmlParser.getCmdTypeFrom(event);
             final Operation operation = Operation.get(cmdType);
             if (operation != null) {
-                return FlowPipelineFactory.getRequestFlowPipeline(operation).get(operation.code());
+                final DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> pipeline = FlowPipelineFactory.getRequestFlowPipeline(operation);
+                if (pipeline != null) {
+                    return pipeline.get(operation.code());
+                }
             }
 
             final FlowContext flowContext = FlowContextCacheUtil.get(MANSCDPXmlParser.getSN(event.getRequest()));

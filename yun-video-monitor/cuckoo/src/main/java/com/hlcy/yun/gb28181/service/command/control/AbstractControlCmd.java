@@ -26,6 +26,7 @@ public abstract class AbstractControlCmd<T extends ControlParams> implements Com
     protected void cacheFlowContext(T t, Request request) {
     }
 
+    @Override
     public void execute(T t) {
         final String cmd = getCmdTemplate(t).replace(CMD, buildCmdXML(t)).replace(CMD_TYPE, t.getCmdType());
 
@@ -52,7 +53,7 @@ public abstract class AbstractControlCmd<T extends ControlParams> implements Com
     }
 
     private synchronized static String productSN() {
-        return String.valueOf((Math.random() * 9 + 1) * 100000);
+        return String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
     }
 
     StringBuilder getBit123CmdTemplate() {

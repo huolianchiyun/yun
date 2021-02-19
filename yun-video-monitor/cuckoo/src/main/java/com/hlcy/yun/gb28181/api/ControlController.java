@@ -58,9 +58,54 @@ public class ControlController {
 
     @ApiOperation("强制关键帧")
     @PostMapping("/iframe")
-    public  DeferredResult<ResponseEntity<ResponseData>> iframeControl(@RequestBody IFrameControlParams params) {
+    public DeferredResult<ResponseEntity<ResponseData>> iframeControl(@RequestBody IFrameControlParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_IFRAME + params.getChannelId()).getCallbackKey(), result);
+        operator.operate(params);
+        return result;
+    }
+
+    @ApiOperation("预置位")
+    @PostMapping("/preset")
+    public DeferredResult<ResponseEntity<ResponseData>> presetControl(@RequestBody PresetControlParams params) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_PRESET + params.getChannelId()).getCallbackKey(), result);
+        operator.operate(params);
+        return result;
+    }
+
+    @ApiOperation("巡航")
+    @PostMapping("/cruise")
+    public DeferredResult<ResponseEntity<ResponseData>> cruiseControl(@RequestBody CruiseControlParams params) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_CRUISE + params.getChannelId()).getCallbackKey(), result);
+        operator.operate(params);
+        return result;
+    }
+
+    @ApiOperation("光圈控制和聚焦控制")
+    @PostMapping("/fi")
+    public DeferredResult<ResponseEntity<ResponseData>> fiControl(@RequestBody FIControlParams params) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_FI + params.getChannelId()).getCallbackKey(), result);
+        operator.operate(params);
+        return result;
+    }
+
+    @ApiOperation("辅助开关")
+    @PostMapping("/switch")
+    public DeferredResult<ResponseEntity<ResponseData>> switchControl(@RequestBody AuxilSwitchControlParams params) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_SWITCH + params.getChannelId()).getCallbackKey(), result);
+        operator.operate(params);
+        return result;
+    }
+
+    @ApiOperation("看守位控制")
+    @PostMapping("/homePosition")
+    public DeferredResult<ResponseEntity<ResponseData>> homePositionControl(@RequestBody HomePositionControlParams params) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_HOME_POSITION + params.getChannelId()).getCallbackKey(), result);
         operator.operate(params);
         return result;
     }
@@ -92,56 +137,11 @@ public class ControlController {
         return result;
     }
 
-    @ApiOperation("看守位控制")
-    @PostMapping("/homePosition")
-    public DeferredResult<ResponseEntity<ResponseData>> homePositionControl(@RequestBody HomePositionControlParams params) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_HOME_POSITION + params.getChannelId()).getCallbackKey(), result);
-        operator.operate(params);
-        return result;
-    }
-
     @ApiOperation("设备配置控制")
     @PostMapping("/deviceConfig")
     public DeferredResult<ResponseEntity<ResponseData>> deviceConfigControl(@RequestBody DeviceConfigControlParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_DEVICE_CONFIG + params.getChannelId()).getCallbackKey(), result);
-        operator.operate(params);
-        return result;
-    }
-
-    @ApiOperation("预置位")
-    @PostMapping("/preset")
-    public DeferredResult<ResponseEntity<ResponseData>> presetControl(@RequestBody PresetControlParams params) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_PRESET + params.getChannelId()).getCallbackKey(), result);
-        operator.operate(params);
-        return result;
-    }
-
-    @ApiOperation("巡航")
-    @PostMapping("/cruise")
-    public DeferredResult<ResponseEntity<ResponseData>> cruiseControl(@RequestBody CruiseControlParams params) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_CRUISE + params.getChannelId(), result);
-        operator.operate(params);
-        return result;
-    }
-
-    @ApiOperation("光圈控制和聚焦控制")
-    @PostMapping("/fi")
-    public DeferredResult<ResponseEntity<ResponseData>> fiControl(@RequestBody FIControlParams params) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_FI + params.getChannelId()).getCallbackKey(), result);
-        operator.operate(params);
-        return result;
-    }
-
-    @ApiOperation("辅助开关")
-    @PostMapping("/switch")
-    public DeferredResult<ResponseEntity<ResponseData>> switchControl(@RequestBody AuxilSwitchControlParams params) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_SWITCH + params.getChannelId()).getCallbackKey(), result);
         operator.operate(params);
         return result;
     }

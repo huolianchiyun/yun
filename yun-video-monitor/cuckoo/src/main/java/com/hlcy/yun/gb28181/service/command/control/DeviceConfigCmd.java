@@ -2,9 +2,11 @@ package com.hlcy.yun.gb28181.service.command.control;
 
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.service.params.control.DeviceConfigControlParams;
+import com.hlcy.yun.gb28181.service.sipmsg.MANSCDPXmlParser;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.message.DefaultMessageRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.DefaultMessageResponseProcessor;
 
 import javax.sip.message.Request;
@@ -43,7 +45,12 @@ public class DeviceConfigCmd extends AbstractControlCmd<DeviceConfigControlParam
 
     @Override
     protected void cacheFlowContext(DeviceConfigControlParams deviceConfigControlParams, Request request) {
-        final FlowContext flowContext = new FlowContext(Operation.DEVICE_CONFIG, deviceConfigControlParams, new DefaultMessageResponseProcessor());
+        final FlowContext flowContext = new FlowContext(
+                Operation.DEVICE_CONFIG,
+                deviceConfigControlParams,
+                new DefaultMessageRequestProcessor(),
+                new DefaultMessageResponseProcessor().setResponseCallback(false));
         FlowContextCacheUtil.put(getCallId(request), flowContext);
+        FlowContextCacheUtil.put(MANSCDPXmlParser.getSN(request), flowContext);
     }
 }

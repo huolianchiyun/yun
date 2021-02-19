@@ -33,9 +33,6 @@ public class FlowPipelineFactory {
 
     private static void initRequestPipelineContainer() {
         final Map<Operation, DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent>> requestMap = new HashMap<>();
-
-        // Control
-
         // Query
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> CATALOG_PIPELINE = new DefaultPipeline<>();
         CATALOG_PIPELINE.addLast(CATALOG.code(), new CatalogQueryRequestProcessor());

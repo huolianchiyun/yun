@@ -29,17 +29,18 @@ public class ControlOperator<T extends ControlParams> implements InitializingBea
     public void afterPropertiesSet() {
         cmdFactory.put(PtzControlParams.class, new PtzCmd(properties));
         cmdFactory.put(TeleBootControlParams.class, new TeleBootCmd(properties));
-        cmdFactory.put(RecordControlParams.class, new RecordCmd(properties));
         cmdFactory.put(IFrameControlParams.class, new IFrameCmd(properties));
-        cmdFactory.put(HomePositionControlParams.class, new HomePositionCmd(properties));
-        cmdFactory.put(GuardControlParams.class, new GuardCmd(properties));
         cmdFactory.put(DragZoomControlParams.class, new DragZoomCmd(properties));
-        cmdFactory.put(ResetAlarmControlParams.class, new ResetAlarmCmd(properties));
-        cmdFactory.put(FIControlParams.class, new FICmd(properties));
         cmdFactory.put(PresetControlParams.class, new PresetCmd(properties));
+        cmdFactory.put(FIControlParams.class, new FICmd(properties));
         cmdFactory.put(CruiseControlParams.class, new CruiseCmd(properties));
         cmdFactory.put(ScanControlParams.class, new ScanCmd(properties));
         cmdFactory.put(AuxilSwitchControlParams.class, new AuxilSwitchCmd(properties));
+
+        cmdFactory.put(HomePositionControlParams.class, new HomePositionCmd(properties));
+        cmdFactory.put(GuardControlParams.class, new GuardCmd(properties));
+        cmdFactory.put(RecordControlParams.class, new RecordCmd(properties));
+        cmdFactory.put(ResetAlarmControlParams.class, new ResetAlarmCmd(properties));
         cmdFactory.put(DeviceConfigControlParams.class, new DeviceConfigCmd(properties));
     }
 }
