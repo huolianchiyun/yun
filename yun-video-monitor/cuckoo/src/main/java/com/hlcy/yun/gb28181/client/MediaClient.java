@@ -26,7 +26,8 @@ public class MediaClient {
     }
 
     public boolean isValidTestSsrc(String ssrc) {
-        final String url = test_ssrc_validity_url.replace("${ssrc}", ssrc);
+        final String ssrcHex = "0" + Integer.toHexString(Integer.parseInt(ssrc)).toUpperCase();
+        final String url = test_ssrc_validity_url.replace("${ssrc}", ssrcHex);
         final JSONObject response = RestHttpClient.exchange(url, HttpMethod.GET, new ParameterizedTypeReference<JSONObject>() {
         }, null);
         if (response.getIntValue("code") == 0 && response.getBooleanValue("exist")) {
