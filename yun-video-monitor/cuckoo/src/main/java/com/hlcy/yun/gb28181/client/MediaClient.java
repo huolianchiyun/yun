@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.client;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hlcy.yun.common.utils.http.RestHttpClient;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
