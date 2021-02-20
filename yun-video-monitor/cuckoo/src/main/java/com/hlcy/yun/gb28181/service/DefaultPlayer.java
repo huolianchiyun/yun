@@ -51,7 +51,7 @@ public class DefaultPlayer implements Player {
                                 params.getCallbackKey(),
                                 new PlayResponse(optional.get().getSsrc(), properties.getMediaIp()));
                         return;
-                    }else {
+                    } else {
                         stop(flowContext.getSsrc());
                     }
                 }
@@ -172,7 +172,7 @@ public class DefaultPlayer implements Player {
         final ClientTransaction deviceTransaction = flowContext.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION);
         String content = "PLAY RTSP/1.0" + "\r\n"
                 + "CSeq: 3" + "\r\n"
-                + "Scale: " + scale;
+                + "Scale: " + scale + "\r\n";
         final Request infoRequest = SipRequestFactory.getInfoRequest(deviceTransaction, content.getBytes(StandardCharsets.UTF_8));
         flowContext.put(PlaybackSession.SIP_DEVICE_SESSION, sendRequest(infoRequest));
     }
@@ -182,7 +182,7 @@ public class DefaultPlayer implements Player {
         final FlowContext flowContext = FlowContextCacheUtil.get(ssrc);
         final ClientTransaction deviceTransaction = flowContext.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION);
         String content = "PLAY RTSP/1.0" + "\r\n"
-                + "CSeq:4" + "\r\n"
+                + "CSeq: 4" + "\r\n"
                 + "Range: npt="
                 + range
                 + "-";
