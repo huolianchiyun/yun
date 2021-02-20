@@ -42,6 +42,7 @@ public class UserInfoRedisCache implements UserInfoCache {
      * 清理所有用户的缓存信息<br>
      * 如发生角色授权信息变化，可以简便的全部失效缓存
      */
+    @Override
     public void cleanAll() {
         redisUtils.del(KEY);
     }

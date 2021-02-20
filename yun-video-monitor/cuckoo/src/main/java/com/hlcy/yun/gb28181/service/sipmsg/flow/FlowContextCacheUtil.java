@@ -8,6 +8,7 @@ import cn.hutool.core.io.IoUtil;
 import com.hlcy.yun.gb28181.sip.biz.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import javax.sdp.SdpFactory;
 import javax.sdp.SdpParseException;
@@ -154,7 +155,7 @@ public final class FlowContextCacheUtil {
                 final Iterator<CacheObj<String, FlowContext>> cacheObjIterator = CONTEXT_CACHE.cacheObjIterator();
                 while (cacheObjIterator.hasNext()) {
                     final FlowContext context = cacheObjIterator.next().getValue();
-                    if (context.getSsrc().equals(ssrc)) {
+                    if (!StringUtils.isEmpty(context.getSsrc()) && context.getSsrc().equals(ssrc)) {
                         return Optional.of(context);
                     }
                 }

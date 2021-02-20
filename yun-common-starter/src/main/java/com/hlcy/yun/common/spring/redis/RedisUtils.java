@@ -5,7 +5,6 @@ import com.hlcy.yun.common.utils.str.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -73,7 +72,7 @@ public class RedisUtils {
      * @param key 键 不能为null
      * @return 时间(秒) 返回0代表为永久有效
      */
-    public long getExpire(Object key) {
+    public long getExpire(String key) {
         return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
@@ -93,7 +92,7 @@ public class RedisUtils {
             result.add(new String(cursor.next()));
         }
         try {
-            RedisConnectionUtils.releaseConnection(rc, factory);
+            RedisConnectionUtils.releaseConnection(rc, factory, false);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -131,7 +130,7 @@ public class RedisUtils {
             cursor.next();
         }
         try {
-            RedisConnectionUtils.releaseConnection(rc, factory);
+            RedisConnectionUtils.releaseConnection(rc, factory, false);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -677,21 +676,16 @@ public class RedisUtils {
      * @param prefix 前缀
      * @param keySet key集合
      */
-    public <T> void delByKeys(String prefix, Set<T> keySet) {
+    public void multiDelByKeyPrefix(String prefix, Set<String> keySet) {
         if (CollectionUtil.isEmpty(keySet)) return;
-        List<Object> keys = redisTemplate.opsForValue().multiGet(
-                keySet.stream().map(key -> new StringBuffer(prefix).append(key).toString())
-                        .collect(Collectors.toSet()))
-                .stream().filter(key -> key != null).collect(Collectors.toList());
-        if (CollectionUtil.isEmpty(keys)) {
-            long count = redisTemplate.delete(keys);
-            // 此处提示可自行删除
-            if (log.isDebugEnabled()) {
-                log.debug("--------------------------------------------");
-                log.debug("成功删除缓存：" + keys.toString());
-                log.debug("缓存删除数量：" + count + "个");
-                log.debug("--------------------------------------------");
-            }
+        Set<Object> keys = keySet.stream().map(key -> prefix + key).collect(Collectors.toSet());
+        long count = redisTemplate.delete(keys);
+        // 此处提示可自行删除
+        if (log.isDebugEnabled()) {
+            log.debug("--------------------------------------------");
+            log.debug("成功删除缓存：" + keys.toString());
+            log.debug("缓存删除数量：" + count + "个");
+            log.debug("--------------------------------------------");
         }
     }
 

@@ -18,6 +18,8 @@ import java.lang.reflect.Field;
 @Slf4j
 @Component
 public class RightsBeanPostProcessor implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent> {
+
+    @Override
     @SneakyThrows
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         if (bean instanceof DataSource) {
@@ -29,6 +31,7 @@ public class RightsBeanPostProcessor implements BeanPostProcessor, ApplicationLi
         return bean;  // you can return any other object as well
     }
 
+    @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
         return bean;  // you can return any other object as well
     }

@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -234,7 +233,7 @@ class UserServiceImpl implements UserService {
     private void cleanUserCache(Set<UserDO> userSet) {
         if (CollectionUtil.isNotEmpty(userSet)) {
             Set<String> usernameSet = userSet.stream().map(UserDO::getUsername).collect(Collectors.toSet());
-            redisUtils.delByKeys(BIND_USER_HASH_KEY_PREFIX, usernameSet);
+            redisUtils.multiDelByKeyPrefix(BIND_USER_HASH_KEY_PREFIX, usernameSet);
             usernameSet.forEach(userInfoCache::cleanCacheByUsername);
         }
     }

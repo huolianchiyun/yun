@@ -39,7 +39,7 @@ public class MediaClient {
 
     @PostConstruct
     private void init() {
-        make_device_push_stream_url = properties.getMediaPullStreamApi().replace("${mediaIp}", properties.getMediaIp());
-        test_ssrc_validity_url = properties.getMediaPullStreamApi().replace("${mediaIp}", properties.getMediaIp());
+        make_device_push_stream_url = properties.getMediaMakeDevicePushStreamApi().replace("${mediaIp}", properties.getMediaIp());
+        test_ssrc_validity_url = properties.getMediaTestSsrcValidityApi().replace("${mediaIp}", properties.getMediaIp());
     }
 }

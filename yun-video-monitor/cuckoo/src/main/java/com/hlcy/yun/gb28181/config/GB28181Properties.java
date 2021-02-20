@@ -1,6 +1,7 @@
 package com.hlcy.yun.gb28181.config;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -32,9 +33,9 @@ public class GB28181Properties implements Serializable {
 
     private Integer mediaAudioPort;
 
-    private String mediaPullStreamApi;
+    private String mediaMakeDevicePushStreamApi;
 
-    private String mediaTestSsrcValid;
+    private String mediaTestSsrcValidityApi;
 
     public void setSipIp(String sipIp) throws UnknownHostException {
         if (sipIp == null || sipIp.isEmpty()) {

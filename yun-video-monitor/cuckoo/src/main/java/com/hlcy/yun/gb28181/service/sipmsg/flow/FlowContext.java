@@ -10,6 +10,7 @@ import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import com.hlcy.yun.gb28181.sip.message.Pipeline;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
+import lombok.NoArgsConstructor;
 
 import javax.sip.ClientTransaction;
 import javax.sip.ServerTransaction;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.REQUEST;
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.RESPONSE;
 
+@NoArgsConstructor
 public class FlowContext implements MessageContext, Serializable {
     private static final long serialVersionUID = 1L;
     private static GB28181Properties properties;
@@ -35,7 +37,7 @@ public class FlowContext implements MessageContext, Serializable {
     private RequestProcessor currentRequestProcessor;
     private ResponseProcessor currentResponseProcessor;
 
-    private final Operation operation;
+    private Operation operation;
     private DeviceParams operationalParams;
     private boolean mediaPullStream;
     private boolean isRecovered;
