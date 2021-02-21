@@ -79,7 +79,7 @@ public interface Transaction extends Serializable{
      * dialog exists.
      * @see Dialog
      */
-    public Dialog getDialog();
+    Dialog getDialog();
 
     /**
      * Returns the current state of the transaction. Returns the current
@@ -89,7 +89,7 @@ public interface Transaction extends Serializable{
      * @return a TransactionState object determining the current state of the
      * transaction.
      */
-    public TransactionState getState();
+    TransactionState getState();
 
 
     /**
@@ -100,7 +100,7 @@ public interface Transaction extends Serializable{
      * @throws UnsupportedOperationException if this method is not supported
      * by the underlying implementation.
      */
-    public int getRetransmitTimer() throws UnsupportedOperationException;
+    int getRetransmitTimer() throws UnsupportedOperationException;
 
     /**
      * Sets the value of the retransmit timer to the newly supplied timer value.
@@ -117,7 +117,7 @@ public interface Transaction extends Serializable{
      * @throws UnsupportedOperationException if this method is not supported
      * by the underlying implementation.
      */
-    public void setRetransmitTimer(int retransmitTimer)
+    void setRetransmitTimer(int retransmitTimer)
                                 throws UnsupportedOperationException;
 
     /**
@@ -134,7 +134,7 @@ public interface Transaction extends Serializable{
      *
      * @return the new branch that uniquely identifies this transaction.
      */
-    public String getBranchId();
+    String getBranchId();
 
 
     /**
@@ -148,7 +148,7 @@ public interface Transaction extends Serializable{
      * @return the Request message that created this transaction.
      *
      */
-    public Request getRequest();
+    Request getRequest();
 
 
     /**
@@ -164,7 +164,7 @@ public interface Transaction extends Serializable{
      *
      */
 
-    public void setApplicationData(Object applicationData);
+    void setApplicationData(Object applicationData);
 
 
     /**
@@ -176,7 +176,7 @@ public interface Transaction extends Serializable{
      * @since v1.2
      *
      */
-    public Object getApplicationData();
+    Object getApplicationData();
 
     /**
      * Terminate this transaction and immediately release all stack resources
@@ -190,7 +190,7 @@ public interface Transaction extends Serializable{
      * it is associated to a dialog.
      * @since v1.2
      */
-    public void terminate() throws ObjectInUseException;
+    void terminate() throws ObjectInUseException;
 
 
 }

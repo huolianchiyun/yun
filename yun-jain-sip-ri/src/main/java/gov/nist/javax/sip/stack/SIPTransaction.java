@@ -94,6 +94,7 @@ public interface SIPTransaction extends TransactionExt {
    */
   TransactionState TERMINATED_STATE = TransactionState.TERMINATED;
 
+  @Override
   String getBranchId();
 
   void cleanUp();
@@ -118,6 +119,7 @@ public interface SIPTransaction extends TransactionExt {
    *
    * @return the request that generated this transaction.
    */
+  @Override
   Request getRequest();
 
   /**
@@ -207,6 +209,7 @@ public interface SIPTransaction extends TransactionExt {
    *
    * @return Current state of this transaction.
    */
+  @Override
   TransactionState getState();
 
   /**
@@ -280,6 +283,7 @@ public interface SIPTransaction extends TransactionExt {
    * @return the Dialog Object of this Transaction object.
    * @see Dialog
    */
+  @Override
   Dialog getDialog();
 
   /**
@@ -298,6 +302,7 @@ public interface SIPTransaction extends TransactionExt {
    *
    * @return the integer value of the retransmit timer in milliseconds.
    */
+  @Override
   int getRetransmitTimer();
 
   /**
@@ -360,6 +365,7 @@ public interface SIPTransaction extends TransactionExt {
    * @param retransmitTimer -
    *          the new integer value of the retransmit timer in milliseconds.
    */
+  @Override
   void setRetransmitTimer(int retransmitTimer);
 
   /**
@@ -383,6 +389,7 @@ public interface SIPTransaction extends TransactionExt {
    *
    */
 
+  @Override
   void setApplicationData(Object applicationData);
 
   /**
@@ -390,6 +397,7 @@ public interface SIPTransaction extends TransactionExt {
    *
    * @return stored application data.
    */
+  @Override
   Object getApplicationData();
 
   /**

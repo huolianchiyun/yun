@@ -5,6 +5,8 @@ import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import com.hlcy.yun.common.spring.SpringContextHolder;
+import com.hlcy.yun.common.spring.redis.RedisUtils;
 import com.hlcy.yun.gb28181.sip.biz.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +29,7 @@ public final class FlowContextCacheUtil {
     private static volatile FlowContextCache flowContextCache;
 
     public static void init() {
-        new FlowContextCache().init();
+//        new FlowContextCache().init();
     }
 
     public static void put(String key, FlowContext context) {
@@ -55,9 +57,9 @@ public final class FlowContextCacheUtil {
     }
 
     static class FlowContextCache extends MessageContextCache {
-        private final static String CONTEXT_CACHE_STORE_PATH = System.getProperty("user.dir")
-                .concat(System.getProperty("file.separator")).concat("CONTEXT_CACHE");
-        private final SdpFactory sdpFactory = SdpFactory.getInstance();
+//        private final static String CONTEXT_CACHE_STORE_PATH = System.getProperty("user.dir")
+//                .concat(System.getProperty("file.separator")).concat("CONTEXT_CACHE");
+//        private final SdpFactory sdpFactory = SdpFactory.getInstance();
         private final TimedCache<String, FlowContext> CONTEXT_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
 
         void init() {
@@ -69,6 +71,8 @@ public final class FlowContextCacheUtil {
 
         public void put(String key, FlowContext context) {
             CONTEXT_CACHE.put(key, context);
+            final RedisUtils redisUtils = SpringContextHolder.getBean(RedisUtils.class);
+            redisUtils.hset("1122", "3344", context);
         }
 
         public void setNewKey(String oldKey, String newKey) {
@@ -94,49 +98,41 @@ public final class FlowContextCacheUtil {
             return ((CallIdHeader) message.getHeader(CallIdHeader.NAME)).getCallId();
         }
 
-        private String getMethodFrom(Message message) {
-            return ((CSeqHeader) message.getHeader(CSeqHeader.NAME)).getMethod();
-        }
+//        public void recoverContextCache() {
+//            final File file = new File(CONTEXT_CACHE_STORE_PATH);
+//            if (file.exists()) {
+//                try (FileInputStream in = new FileInputStream(file)) {
+//                    TimedCache<String, FlowContext> temp = IoUtil.readObj(in);
+//                    temp.forEach(e -> {
+//                        final String ssrc = e.getSsrc();
+//                        if (ssrc != null && ssrc.length() > 0) {
+//                            e.setRecovered(true);
+//                            e.setCurrentProcessorToFirstByeProcessor();
+//                            CONTEXT_CACHE.put(ssrc, e);
+//                        }
+//                    });
+//                    temp.clear();
+//                    log.info("*** Load data from file to CONTEXT_CACHE when application start up, size: {} ***", CONTEXT_CACHE.size());
+//                } catch (IOException e) {
+//                    log.error("*** Load data from file to CONTEXT_CACHE exception  ***");
+//                    System.exit(-1);
+//                }
+//                FileUtil.del(file);
+//            }
+//        }
 
-        SessionDescription getSessionDescription(String sdpMessageBody) throws SdpParseException {
-            return sdpFactory.createSessionDescription(sdpMessageBody);
-        }
-
-        public void recoverContextCache() {
-            final File file = new File(CONTEXT_CACHE_STORE_PATH);
-            if (file.exists()) {
-                try (FileInputStream in = new FileInputStream(file)) {
-                    TimedCache<String, FlowContext> temp = IoUtil.readObj(in);
-                    temp.forEach(e -> {
-                        final String ssrc = e.getSsrc();
-                        if (ssrc != null && ssrc.length() > 0) {
-                            e.setRecovered(true);
-                            e.setCurrentProcessorToFirstByeProcessor();
-                            CONTEXT_CACHE.put(ssrc, e);
-                        }
-                    });
-                    temp.clear();
-                    log.info("*** Load data from file to CONTEXT_CACHE when application start up, size: {} ***", CONTEXT_CACHE.size());
-                } catch (IOException e) {
-                    log.error("*** Load data from file to CONTEXT_CACHE exception  ***");
-                    System.exit(-1);
-                }
-                FileUtil.del(file);
-            }
-        }
-
-        private void setShutdownAction() {
-            // Write CONTEXT_CACHE into file when application close
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    IoUtil.writeObj(new FileOutputStream(new File(CONTEXT_CACHE_STORE_PATH)), true, CONTEXT_CACHE);
-                    log.info("*** Write CONTEXT_CACHE to file when application close, size: {} ***", CONTEXT_CACHE.size());
-                } catch (FileNotFoundException e) {
-                    log.error("*** Write CONTEXT_CACHE to file exception ***");
-                    e.printStackTrace();
-                }
-            }));
-        }
+//        private void setShutdownAction() {
+//            // Write CONTEXT_CACHE into file when application close
+//            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//                try {
+//                    IoUtil.writeObj(new FileOutputStream(new File(CONTEXT_CACHE_STORE_PATH)), true, CONTEXT_CACHE);
+//                    log.info("*** Write CONTEXT_CACHE to file when application close, size: {} ***", CONTEXT_CACHE.size());
+//                } catch (FileNotFoundException e) {
+//                    log.error("*** Write CONTEXT_CACHE to file exception ***");
+//                    e.printStackTrace();
+//                }
+//            }));
+//        }
 
         Optional<FlowContext> findFlowContextByOperationAndChannelId(Operation operation, String channelId) {
             final Iterator<CacheObj<String, FlowContext>> cacheObjIterator = CONTEXT_CACHE.cacheObjIterator();

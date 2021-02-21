@@ -97,6 +97,7 @@ public interface SIPServerTransaction extends SIPTransaction, ServerTransaction,
    *
    * @return the state of the transaction.
    */
+  @Override
   public  TransactionState getState();
 
   /**
@@ -113,6 +114,7 @@ public interface SIPServerTransaction extends SIPTransaction, ServerTransaction,
    *
    * @see gov.nist.javax.sip.stack.SIPTransaction#getDialog()
    */
+  @Override
   public  Dialog getDialog();
 
   /*
@@ -128,6 +130,7 @@ public interface SIPServerTransaction extends SIPTransaction, ServerTransaction,
    *
    * @see javax.sip.Transaction#terminate()
    */
+  @Override
   public  void terminate() throws ObjectInUseException;
 
   public  byte[] getReliableProvisionalResponse();

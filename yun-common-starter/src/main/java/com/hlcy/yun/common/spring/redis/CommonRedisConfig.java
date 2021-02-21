@@ -50,11 +50,11 @@ public class CommonRedisConfig {
     /**
      * key 序列化器
      */
-    static class StringRedisSerializer implements RedisSerializer<Object> {
+    public static class StringRedisSerializer implements RedisSerializer<Object> {
 
         private final Charset charset;
 
-        StringRedisSerializer() {
+        public StringRedisSerializer() {
             this(StandardCharsets.UTF_8);
         }
 

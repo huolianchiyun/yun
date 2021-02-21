@@ -122,6 +122,7 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    *
    * @see javax.sip.Transaction#terminate()
    */
+  @Override
   void terminate() throws ObjectInUseException;
 
   /**
@@ -152,6 +153,7 @@ public interface SIPClientTransaction extends ClientTransactionExt, SIPTransacti
    *
    * @see gov.nist.javax.sip.stack.SIPTransaction#getDialog()
    */
+  @Override
   Dialog getDialog();
 
   /*
