@@ -106,7 +106,6 @@ public class DefaultPlayer implements Player {
                 sendByeRequest(bye, clientTransaction);
                 FlowContextCacheUtil.setNewKey(ssrc, getCallId(bye));
             }
-            SSRCManger.releaseSSRC(ssrc);
         }
     }
 
@@ -124,8 +123,8 @@ public class DefaultPlayer implements Player {
     }
 
     private boolean handleMediaMakeDevicePushStreamClose(String ssrc) {
-        final FlowContext context = FlowContextCacheUtil.get(ssrc);
-        if (context.isMediaPullStream()) {
+        final Optional<FlowContext> contextOptional = FlowContextCacheUtil.findFlowContextBySsrc(ssrc);
+        if (contextOptional.isPresent() && contextOptional.get().isMediaPullStream()) {
             log.info("*** Media make device push stream close, ssrc:{} ***", ssrc);
             SSRCManger.releaseSSRC(ssrc);
             return true;

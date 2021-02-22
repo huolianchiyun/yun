@@ -71,6 +71,7 @@ public final class FlowContextCacheUtil {
             FlowContext flowContext = (FlowContext) redisUtils.hget(KEY, ssrc);
             if (flowContext != null) {
                 flowContext.setFromDeserialization(true);
+                flowContextCache.put(ssrc, flowContext);
                 return Optional.of(flowContext);
             }
         }

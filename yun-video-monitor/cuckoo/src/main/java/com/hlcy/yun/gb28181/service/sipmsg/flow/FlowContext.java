@@ -180,8 +180,12 @@ public class FlowContext implements MessageContext, Serializable {
     }
 
     public void clearSessionCache() {
-        CLIENT_SESSION_CACHE.clear();
-        SERVER_SESSION_CACHE.clear();
+        if(CLIENT_SESSION_CACHE != null){
+            CLIENT_SESSION_CACHE.clear();
+        }
+        if(SERVER_SESSION_CACHE != null){
+            SERVER_SESSION_CACHE.clear();
+        }
     }
 
     /**

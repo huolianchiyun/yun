@@ -14,7 +14,7 @@ import javax.sip.message.Request;
 public class MediaByeResponseProcessor1 extends FlowResponseProcessor {
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
-        final ClientTransaction clientTransaction = context.getClientTransaction(PlaySession.SIP_MEDIA_SESSION_1);
+        final ClientTransaction clientTransaction = context.getClientTransaction(PlaybackSession.SIP_MEDIA_SESSION_1);
         final Request bye = SipRequestFactory.getByeRequest(clientTransaction);
         RequestSender.sendByeRequest(bye, clientTransaction);
 
