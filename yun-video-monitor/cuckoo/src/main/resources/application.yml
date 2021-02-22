@@ -1,5 +1,6 @@
 server:
   port: 8888
+
 spring:
   application:
     name: gb28181
@@ -45,3 +46,7 @@ gb28181:
   media-audio-Port: 5090
   media-make-device-push-stream-api: http://${mediaIp}/index/api/addStreamProxy?secret=123456&vhost=__defaultVhost__&app=proxy&stream=${ssrc}&url=rtsp://admin:shipin123@${deviceIp}/h264/ch1/sub/av_stream&rtp_type=1
   media-test-ssrc-validity-api: http://${mediaIp}/index/api/getRtpInfo?secret=123456&stream_id=${ssrc}
+
+#是否开启 swagger-ui
+swagger:
+  enable: true
