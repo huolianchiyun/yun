@@ -3,10 +3,10 @@ package com.hlcy.yun.gb28181.sip.javax;
 import javax.sip.*;
 import javax.sip.message.Request;
 
-public class RecoveredClientTransaction implements ClientTransaction {
+public class DeserializeClientTransaction implements ClientTransaction {
     private ClientTransaction delegate;
 
-    public RecoveredClientTransaction(ClientTransaction delegate) {
+    public DeserializeClientTransaction(ClientTransaction delegate) {
         this.delegate = delegate;
     }
 

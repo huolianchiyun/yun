@@ -2,7 +2,7 @@ package com.hlcy.yun.gb28181.sip.biz;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.sip.javax.DeserializeClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +36,7 @@ public final class RequestSender {
     }
 
     public static void sendByeRequest(Request bye, Transaction transaction) {
-        if (transaction.getClass().isAssignableFrom(RecoveredClientTransaction.class)) {
+        if (transaction.getClass().isAssignableFrom(DeserializeClientTransaction.class)) {
             sendRequest(bye);
             return;
         }

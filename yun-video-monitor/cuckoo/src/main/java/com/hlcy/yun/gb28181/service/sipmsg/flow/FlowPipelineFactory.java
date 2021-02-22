@@ -70,7 +70,7 @@ public class FlowPipelineFactory {
         PLAY_PIPELINE.addLast("9-10-11-12", new MediaInviteResponseProcessor2());
         PLAY_PIPELINE.addLast(PLAY.name(), new MediaByeResponseProcessor1());  // "16-17"
         PLAY_PIPELINE.addLast("18-19", new MediaByeResponseProcessor2());
-        PLAY_PIPELINE.addLast("20", new DeviceByeResponseProcessor());
+        PLAY_PIPELINE.addLast("DeviceByResponseProcessor", new DeviceByeResponseProcessor());  // 20
         responseMap.put(PLAY, PLAY_PIPELINE);
 
         // Playback
@@ -80,7 +80,7 @@ public class FlowPipelineFactory {
         PLAYBACK_PIPELINE.addLast("9-10-11-12", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaInviteResponseProcessor2());
         PLAYBACK_PIPELINE.addLast(PLAYBACK.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaByeResponseProcessor1());  // "24-25"
         PLAYBACK_PIPELINE.addLast("26-27", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaByeResponseProcessor2());
-        PLAYBACK_PIPELINE.addLast("28", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.DeviceByeResponseProcessor());
+        PLAYBACK_PIPELINE.addLast("DeviceByResponseProcessor", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.DeviceByeResponseProcessor());
         responseMap.put(PLAYBACK, PLAYBACK_PIPELINE);
 
         // Broadcast
@@ -97,7 +97,7 @@ public class FlowPipelineFactory {
         return REQUEST_PIPELINE_CONTAINER.getOrDefault(operation, null);
     }
 
-    static DefaultPipeline<ResponseProcessor<FlowContext>, ResponseEvent> getResponseFlowPipeline(Operation operation) {
+    public static DefaultPipeline<ResponseProcessor<FlowContext>, ResponseEvent> getResponseFlowPipeline(Operation operation) {
         return RESPONSE_PIPELINE_CONTAINER.getOrDefault(operation, null);
     }
 }

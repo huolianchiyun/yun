@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.ssrc;
 
-import cn.hutool.core.collection.ConcurrentHashSet;
 import com.hlcy.yun.gb28181.exception.SSRCException;
 
 import java.util.Queue;
@@ -15,25 +14,42 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public final class SSRCManger {
 
-    private final static Set<String> inuseLast4bitSet = new ConcurrentHashSet<>();
-
-    private final static Queue<String> unusedLast4bitQueue;
+    private final static Queue<String> UNUSED_LAST4BIT_PLAY_POOL;
+    private final static Queue<String> UNUSED_LAST4BIT_PLAYBACK_POOL;
 
     private static String ssrc4to8bit;
 
-
     static {
-        unusedLast4bitQueue = new ConcurrentLinkedQueue<>();
+        UNUSED_LAST4BIT_PLAY_POOL = new ConcurrentLinkedQueue<>();
+        UNUSED_LAST4BIT_PLAYBACK_POOL = new ConcurrentLinkedQueue<>();
         for (int i = 1; i < 10000; i++) {
             if (i < 10) {
-                unusedLast4bitQueue.add("000" + i);
+                UNUSED_LAST4BIT_PLAY_POOL.add("000" + i);
+                UNUSED_LAST4BIT_PLAYBACK_POOL.add("000" + i);
             } else if (i < 100) {
-                unusedLast4bitQueue.add("00" + i);
+                UNUSED_LAST4BIT_PLAY_POOL.add("00" + i);
+                UNUSED_LAST4BIT_PLAYBACK_POOL.add("00" + i);
             } else if (i < 1000) {
-                unusedLast4bitQueue.add("0" + i);
+                UNUSED_LAST4BIT_PLAY_POOL.add("0" + i);
+                UNUSED_LAST4BIT_PLAYBACK_POOL.add("0" + i);
             } else {
-                unusedLast4bitQueue.add(String.valueOf(i));
+                UNUSED_LAST4BIT_PLAY_POOL.add(String.valueOf(i));
+                UNUSED_LAST4BIT_PLAYBACK_POOL.add(String.valueOf(i));
             }
+        }
+    }
+
+    public static void init(String ssrc4to8bit, Set<String> inuseSSRCSet) {
+        SSRCManger.ssrc4to8bit = ssrc4to8bit;
+        inuseSSRCSet.forEach(SSRCManger::removeInuse);
+    }
+
+    private static void removeInuse(String ssrc) {
+        String last4bit = ssrc.trim().substring(ssrc.length() - 4);
+        if (ssrc.startsWith("0")) {
+            UNUSED_LAST4BIT_PLAY_POOL.remove(last4bit);
+        } else {
+            UNUSED_LAST4BIT_PLAYBACK_POOL.remove(last4bit);
         }
     }
 
@@ -41,25 +57,35 @@ public final class SSRCManger {
      * 获取视频预览的SSRC值,第一位固定为 0
      */
     public static String getPlaySSRC() throws SSRCException {
-        return "0" + ssrc4to8bit + getLast4bit();
+        return "0" + ssrc4to8bit + getLast4bitOfPlay();
     }
 
     /**
      * 获取录像回放的SSRC值,第一位固定为 1
      */
     public static String getPlayBackSSRC() throws SSRCException {
-        return "1" + ssrc4to8bit + getLast4bit();
+        return "1" + ssrc4to8bit + getLast4bitOfPlayBack();
     }
 
     /**
      * 获取后四位数随机数
      */
-    private static synchronized String getLast4bit() throws SSRCException {
-        final String last4bit = unusedLast4bitQueue.poll();
+    private static synchronized String getLast4bitOfPlay() throws SSRCException {
+        final String last4bit = UNUSED_LAST4BIT_PLAY_POOL.poll();
         if (last4bit == null) {
-            throw new SSRCException("*** No SSRC available ***");
+            throw new SSRCException("*** No SSRC available for play ***");
         }
-        inuseLast4bitSet.add(last4bit);
+        return last4bit;
+    }
+
+    /**
+     * 获取后四位数随机数
+     */
+    private static synchronized String getLast4bitOfPlayBack() throws SSRCException {
+        final String last4bit = UNUSED_LAST4BIT_PLAYBACK_POOL.poll();
+        if (last4bit == null) {
+            throw new SSRCException("*** No SSRC available for playback***");
+        }
         return last4bit;
     }
 
@@ -68,11 +94,10 @@ public final class SSRCManger {
      */
     public static synchronized void releaseSSRC(String ssrc) {
         String last4bit = ssrc.trim().substring(ssrc.length() - 4);
-        inuseLast4bitSet.remove(last4bit);
-        unusedLast4bitQueue.add(last4bit);
-    }
-
-    public static void setSsrc4to8bit(String ssrc4to8bit) {
-        SSRCManger.ssrc4to8bit = ssrc4to8bit;
+        if (ssrc.startsWith("0")) {
+            UNUSED_LAST4BIT_PLAY_POOL.add(last4bit);
+        } else {
+            UNUSED_LAST4BIT_PLAYBACK_POOL.add(last4bit);
+        }
     }
 }

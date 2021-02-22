@@ -6,7 +6,7 @@ import com.hlcy.yun.gb28181.service.params.DeviceParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.biz.RequestProcessor;
 import com.hlcy.yun.gb28181.sip.biz.ResponseProcessor;
-import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.sip.javax.DeserializeClientTransaction;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import com.hlcy.yun.gb28181.sip.message.Pipeline;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
@@ -24,6 +24,7 @@ import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineTy
 @NoArgsConstructor
 public class FlowContext implements MessageContext, Serializable {
     private static final long serialVersionUID = 1L;
+    private boolean fromDeserialization;
     private static GB28181Properties properties;
 
     /**
@@ -32,7 +33,7 @@ public class FlowContext implements MessageContext, Serializable {
     private volatile AtomicInteger cleanup = new AtomicInteger(0);
 
     private final TimedCache<Enum, ClientTransaction> CLIENT_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
-    private final TimedCache<Enum, ServerTransaction> SERVER_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
+    private transient final TimedCache<Enum, ServerTransaction> SERVER_SESSION_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
 
     private RequestProcessor currentRequestProcessor;
     private ResponseProcessor currentResponseProcessor;
@@ -40,7 +41,6 @@ public class FlowContext implements MessageContext, Serializable {
     private Operation operation;
     private DeviceParams operationalParams;
     private boolean mediaPullStream;
-    private boolean isRecovered;
     private String ssrc;
 
     public FlowContext(Operation operation, DeviceParams operationalParams, boolean mediaPullStream) {
@@ -151,18 +151,14 @@ public class FlowContext implements MessageContext, Serializable {
         this.ssrc = ssrc;
     }
 
-    void setRecovered(boolean recovered) {
-        isRecovered = recovered;
-    }
-
     public boolean isMediaPullStream() {
         return mediaPullStream;
     }
 
     public ClientTransaction getClientTransaction(Enum key) {
         final ClientTransaction clientTransaction = CLIENT_SESSION_CACHE.get(key);
-        if (isRecovered) {
-            return new RecoveredClientTransaction(clientTransaction);
+        if (fromDeserialization) {
+            return new DeserializeClientTransaction(clientTransaction);
         }
         return clientTransaction;
     }
@@ -204,5 +200,17 @@ public class FlowContext implements MessageContext, Serializable {
      */
     public boolean expire() {
         return cleanup.get() > 1;
+    }
+
+    public boolean isFromDeserialization() {
+        return fromDeserialization;
+    }
+
+    void setFromDeserialization(boolean fromDeserialization) {
+        this.fromDeserialization = fromDeserialization;
+    }
+
+    public void setCurrentResponseProcessor(ResponseProcessor currentResponseProcessor) {
+        this.currentResponseProcessor = currentResponseProcessor;
     }
 }

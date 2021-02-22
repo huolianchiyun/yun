@@ -15,6 +15,8 @@ import java.net.UnknownHostException;
 public class GB28181Properties implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private String ssrcFlowContextInRedisKey;
+
     private String sipIp;
 
     private Integer sipPort;

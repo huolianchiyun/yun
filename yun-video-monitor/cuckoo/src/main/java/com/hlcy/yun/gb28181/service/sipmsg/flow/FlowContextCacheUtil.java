@@ -3,76 +3,89 @@ package com.hlcy.yun.gb28181.service.sipmsg.flow;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.cache.impl.TimedCache;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import com.hlcy.yun.common.spring.SpringContextHolder;
 import com.hlcy.yun.common.spring.redis.RedisUtils;
+import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.biz.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
+import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-import javax.sdp.SdpFactory;
-import javax.sdp.SdpParseException;
-import javax.sdp.SessionDescription;
-import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
 import javax.sip.message.Message;
-import java.io.*;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-// TODO 考虑缓存中的垃圾清理--可以尝试向设备发送消息，设备不回认为是垃圾数据，考虑清除
+// TODO 考虑缓存中的垃圾清理
 @Slf4j
 public final class FlowContextCacheUtil {
-
+    private static String KEY;
     private static volatile FlowContextCache flowContextCache;
+    private static RedisUtils redisUtils;
 
     public static void init() {
-//        new FlowContextCache().init();
-    }
+        // 后续初始化预留
+        redisUtils = SpringContextHolder.getBean(RedisUtils.class);
+        final GB28181Properties properties = SpringContextHolder.getBean(GB28181Properties.class);
+        KEY = properties.getSsrcFlowContextInRedisKey();
+        new FlowContextCache().init();
 
-    public static void put(String key, FlowContext context) {
-        flowContextCache.put(key, context);
-    }
-
-    public static void setNewKey(String oldKey, String newKey) {
-        flowContextCache.setNewKey(oldKey, newKey);
+        final Set<String> ssrcSet = redisUtils.hkeys(KEY).stream().map(Object::toString).collect(Collectors.toSet());
+        SSRCManger.init(properties.getSipDomain().substring(3, 8), ssrcSet);
     }
 
     public static FlowContext get(String key) {
         return flowContextCache.get(key);
     }
 
+    public static void put(String key, FlowContext context) {
+        flowContextCache.put(key, context);
+    }
+
+    public static void putSerialize(String key, FlowContext context) {
+        redisUtils.hset(KEY, key, context);
+    }
+
+    public static void setNewKey(String oldKey, String newKey) {
+        flowContextCache.setNewKey(oldKey, newKey);
+    }
+
     public static void remove(String key) {
         flowContextCache.remove(key);
+        redisUtils.hdel(KEY, key);
     }
 
     public static Optional<FlowContext> findFlowContextByOperationAndChannelId(Operation operation, String channelId) {
+        // 先不考虑，本地缓存找不到，再去redis获取，因为ssrc 对应不看时，流媒体回调stop释放ssrc，
+        // 但极端情况有问题，设备通道已达最大值，且ssrc全存储redis，在获取通道，设备将响应繁忙。这也做的目的提升性能
         return flowContextCache.findFlowContextByOperationAndChannelId(operation, channelId);
     }
 
     public static Optional<FlowContext> findFlowContextBySsrc(String ssrc) {
-        return flowContextCache.findFlowContextBySsrc(ssrc);
+        final Optional<FlowContext> context = flowContextCache.findFlowContextBySsrc(ssrc);
+        if (!context.isPresent()) {
+            FlowContext flowContext = (FlowContext) redisUtils.hget(KEY, ssrc);
+            if (flowContext != null) {
+                flowContext.setFromDeserialization(true);
+                return Optional.of(flowContext);
+            }
+        }
+        return context;
     }
 
     static class FlowContextCache extends MessageContextCache {
-//        private final static String CONTEXT_CACHE_STORE_PATH = System.getProperty("user.dir")
-//                .concat(System.getProperty("file.separator")).concat("CONTEXT_CACHE");
-//        private final SdpFactory sdpFactory = SdpFactory.getInstance();
         private final TimedCache<String, FlowContext> CONTEXT_CACHE = CacheUtil.newTimedCache(Integer.MAX_VALUE);
 
         void init() {
-            // FIXME
-//            recoverContextCache();
-//            setShutdownAction();
             flowContextCache = this;
         }
 
         public void put(String key, FlowContext context) {
             CONTEXT_CACHE.put(key, context);
-            final RedisUtils redisUtils = SpringContextHolder.getBean(RedisUtils.class);
-            redisUtils.hset("1122", "3344", context);
         }
 
         public void setNewKey(String oldKey, String newKey) {
@@ -97,42 +110,6 @@ public final class FlowContextCacheUtil {
         private String getCallId(Message message) {
             return ((CallIdHeader) message.getHeader(CallIdHeader.NAME)).getCallId();
         }
-
-//        public void recoverContextCache() {
-//            final File file = new File(CONTEXT_CACHE_STORE_PATH);
-//            if (file.exists()) {
-//                try (FileInputStream in = new FileInputStream(file)) {
-//                    TimedCache<String, FlowContext> temp = IoUtil.readObj(in);
-//                    temp.forEach(e -> {
-//                        final String ssrc = e.getSsrc();
-//                        if (ssrc != null && ssrc.length() > 0) {
-//                            e.setRecovered(true);
-//                            e.setCurrentProcessorToFirstByeProcessor();
-//                            CONTEXT_CACHE.put(ssrc, e);
-//                        }
-//                    });
-//                    temp.clear();
-//                    log.info("*** Load data from file to CONTEXT_CACHE when application start up, size: {} ***", CONTEXT_CACHE.size());
-//                } catch (IOException e) {
-//                    log.error("*** Load data from file to CONTEXT_CACHE exception  ***");
-//                    System.exit(-1);
-//                }
-//                FileUtil.del(file);
-//            }
-//        }
-
-//        private void setShutdownAction() {
-//            // Write CONTEXT_CACHE into file when application close
-//            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//                try {
-//                    IoUtil.writeObj(new FileOutputStream(new File(CONTEXT_CACHE_STORE_PATH)), true, CONTEXT_CACHE);
-//                    log.info("*** Write CONTEXT_CACHE to file when application close, size: {} ***", CONTEXT_CACHE.size());
-//                } catch (FileNotFoundException e) {
-//                    log.error("*** Write CONTEXT_CACHE to file exception ***");
-//                    e.printStackTrace();
-//                }
-//            }));
-//        }
 
         Optional<FlowContext> findFlowContextByOperationAndChannelId(Operation operation, String channelId) {
             final Iterator<CacheObj<String, FlowContext>> cacheObjIterator = CONTEXT_CACHE.cacheObjIterator();

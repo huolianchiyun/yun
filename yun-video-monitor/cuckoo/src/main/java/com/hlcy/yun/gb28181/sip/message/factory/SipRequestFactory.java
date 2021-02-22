@@ -1,6 +1,6 @@
 package com.hlcy.yun.gb28181.sip.message.factory;
 
-import com.hlcy.yun.gb28181.sip.javax.RecoveredClientTransaction;
+import com.hlcy.yun.gb28181.sip.javax.DeserializeClientTransaction;
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import gov.nist.javax.sip.Utils;
 import gov.nist.javax.sip.header.*;
@@ -8,13 +8,10 @@ import gov.nist.javax.sip.message.SIPRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
-import javax.sip.address.Address;
-import javax.sip.address.AddressFactory;
 import javax.sip.address.SipURI;
 import javax.sip.header.*;
 import javax.sip.message.Request;
 import java.text.ParseException;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -94,7 +91,7 @@ public final class SipRequestFactory {
     }
 
     public static Request getByeRequest(Transaction transaction) {
-        if (isRecoveredTransaction(transaction)) {
+        if (isDeserializeTransaction(transaction)) {
             return toByeRequest(transaction.getRequest());
         }
         final Dialog dialog = transaction.getDialog();
@@ -106,8 +103,8 @@ public final class SipRequestFactory {
         }
     }
 
-    private static boolean isRecoveredTransaction(Transaction transaction) {
-        return transaction.getClass().isAssignableFrom(RecoveredClientTransaction.class);
+    private static boolean isDeserializeTransaction(Transaction transaction) {
+        return transaction.getClass().isAssignableFrom(DeserializeClientTransaction.class);
     }
 
     private static Request toByeRequest(Request request) {

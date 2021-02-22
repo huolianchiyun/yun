@@ -23,11 +23,11 @@ import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+import static com.hlcy.yun.gb28181.service.sipmsg.flow.FlowPipelineFactory.getResponseFlowPipeline;
+import static com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession.*;
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendRequest;
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.*;
-import static com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession.SIP_MEDIA_SESSION_1;
-import static com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession.SIP_MEDIA_SESSION_2;
 
 @Slf4j
 @Service
@@ -99,7 +99,7 @@ public class DefaultPlayer implements Player {
             return;
         }
 
-        if (!handleMediaPullStreamClose(ssrc)) {
+        if (!handleMediaMakeDevicePushStreamClose(ssrc)) {
             final ClientTransaction clientTransaction = getMediaByeClientTransaction(ssrc);
             if (clientTransaction != null) {
                 final Request bye = getByeRequest(clientTransaction);
@@ -123,10 +123,10 @@ public class DefaultPlayer implements Player {
         return false;
     }
 
-    private boolean handleMediaPullStreamClose(String ssrc) {
+    private boolean handleMediaMakeDevicePushStreamClose(String ssrc) {
         final FlowContext context = FlowContextCacheUtil.get(ssrc);
         if (context.isMediaPullStream()) {
-            log.info("*** Media pull stream close, ssrc:{} ***", ssrc);
+            log.info("*** Media make device push stream close, ssrc:{} ***", ssrc);
             SSRCManger.releaseSSRC(ssrc);
             return true;
         }
@@ -139,15 +139,23 @@ public class DefaultPlayer implements Player {
         if (optional.isPresent()) {
             final FlowContext context = optional.get();
             if (Operation.PLAY == context.getOperation()) {
-                clientTransaction = context.getClientTransaction(SIP_MEDIA_SESSION_2);
+                clientTransaction = context.isFromDeserialization()
+                        ? context.getClientTransaction(SIP_DEVICE_SESSION)
+                        : context.getClientTransaction(SIP_MEDIA_SESSION_2);
             } else if (Operation.PLAYBACK == context.getOperation()) {
-                clientTransaction = context.getClientTransaction(PlaybackSession.SIP_MEDIA_SESSION_2);
+                clientTransaction = context.isFromDeserialization()
+                        ? context.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION)
+                        : context.getClientTransaction(PlaybackSession.SIP_MEDIA_SESSION_2);
             }
             if (clientTransaction == null) {
-                log.warn("The clientTransaction of SIP_MEDIA_SESSION_2 has been lost, SSRC: {}", ssrc);
+                log.warn("*** The clientTransaction of {} has been lost, SSRC: {}", context.getOperation(), ssrc);
+            }
+            if (context.isFromDeserialization()) {
+                // 将当前响应处理器切换为 device by response
+                context.setCurrentResponseProcessor(getResponseFlowPipeline(context.getOperation()).get("DeviceByResponseProcessor"));
             }
         } else {
-            log.warn("The flow context has been lost, SSRC: {}", ssrc);
+            log.warn("*** The FlowContext has been lost when get clientTransaction, SSRC: {}", ssrc);
         }
         return clientTransaction;
     }

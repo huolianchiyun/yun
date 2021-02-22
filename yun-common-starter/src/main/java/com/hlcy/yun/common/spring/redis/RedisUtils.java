@@ -287,6 +287,16 @@ public class RedisUtils {
     }
 
     /**
+     * 获取 key对应的所有 hashkey
+     *
+     * @param key 键
+     * @return hkeys
+     */
+    public Set<Object> hkeys(String key) {
+        return redisTemplate.opsForHash().keys(key);
+    }
+
+    /**
      * HashSet
      *
      * @param key 键
@@ -388,25 +398,25 @@ public class RedisUtils {
     /**
      * hash递增 如果不存在,就会创建一个 并把新增后的值返回
      *
-     * @param key  键
-     * @param item 项
-     * @param by   要增加几(大于0)
+     * @param key     键
+     * @param hashKey 项
+     * @param delta   要增加几(大于0)
      * @return
      */
-    public double hincr(String key, String item, double by) {
-        return redisTemplate.opsForHash().increment(key, item, by);
+    public double hincr(String key, String hashKey, double delta) {
+        return redisTemplate.opsForHash().increment(key, hashKey, delta);
     }
 
     /**
      * hash递减
      *
-     * @param key  键
-     * @param item 项
-     * @param by   要减少记(小于0)
+     * @param key     键
+     * @param hashKey 项
+     * @param delta   要减少记(小于0)
      * @return
      */
-    public double hdecr(String key, String item, double by) {
-        return redisTemplate.opsForHash().increment(key, item, -by);
+    public double hdecr(String key, String hashKey, double delta) {
+        return redisTemplate.opsForHash().increment(key, hashKey, -delta);
     }
 
     // ============================set=============================

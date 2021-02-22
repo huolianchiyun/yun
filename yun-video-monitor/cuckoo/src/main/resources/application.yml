@@ -29,6 +29,7 @@ spring:
       request-timeout: 60000
 
 gb28181:
+  ssrc-flow-context-in-redis-key: H::SSRC:FlowContext01
   sipIp: 192.168.11.1
   sipPort: 5060
   # 根据国标6.1.2中规定，domain宜采用ID统一编码的前十位编码。国标附录D中定义前8位为中心编码（由省级、市级、区级、基层编号组成，参照GB/T 2260-2007）
@@ -40,7 +41,7 @@ gb28181:
   sipPassword: admin123
   mediaId: mediaId001
   mediaIp: 192.168.11.1
-  media-video-port: 10000
-  media-audio-Port: 10000
+  media-video-port: 5090
+  media-audio-Port: 5090
   media-make-device-push-stream-api: http://${mediaIp}/index/api/addStreamProxy?secret=123456&vhost=__defaultVhost__&app=proxy&stream=${ssrc}&url=rtsp://admin:shipin123@${deviceIp}/h264/ch1/sub/av_stream&rtp_type=1
   media-test-ssrc-validity-api: http://${mediaIp}/index/api/getRtpInfo?secret=123456&stream_id=${ssrc}

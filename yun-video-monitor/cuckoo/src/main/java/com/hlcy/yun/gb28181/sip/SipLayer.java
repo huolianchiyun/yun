@@ -77,13 +77,12 @@ public final class SipLayer implements SipListener {
         initThreadPool();
 
         SipMessageFactoryHelper.setSipFactory(sipFactory);
-
-        SSRCManger.setSsrc4to8bit(properties.getSipDomain().substring(3, 8));
     }
 
     /**
      * This method is called by the SIP stack when a new request arrives.
      */
+    @Override
     public void processRequest(RequestEvent evt) {
         executor.execute(() -> {
             // process request
@@ -94,6 +93,7 @@ public final class SipLayer implements SipListener {
     /**
      * This method is called by the SIP stack when a response arrives.
      */
+    @Override
     public void processResponse(ResponseEvent evt) {
         Response response = evt.getResponse();
         int status = response.getStatusCode();
@@ -112,6 +112,7 @@ public final class SipLayer implements SipListener {
      * to a message. Note that this is treated differently from an error
      * message.
      */
+    @Override
     public void processTimeout(TimeoutEvent evt) {
         log.error("Previous message not sent: timeout, message: {}", evt.getClientTransaction().getRequest());
         SipEventNotifier.notify(evt);
@@ -121,6 +122,7 @@ public final class SipLayer implements SipListener {
      * This method is called by the SIP stack when there's an asynchronous
      * message transmission error.
      */
+    @Override
     public void processIOException(IOExceptionEvent evt) {
         log.error("Previous message not sent: I/O Exception, message: {}", evt.getSource());
         SipEventNotifier.notify(evt);
@@ -129,6 +131,7 @@ public final class SipLayer implements SipListener {
     /**
      * This method is called by the SIP stack when a dialog (session) ends.
      */
+    @Override
     public void processDialogTerminated(DialogTerminatedEvent evt) {
         SipEventNotifier.notify(evt);
     }
@@ -136,6 +139,7 @@ public final class SipLayer implements SipListener {
     /**
      * This method is called by the SIP stack when a transaction ends.
      */
+    @Override
     public void processTransactionTerminated(TransactionTerminatedEvent evt) {
         // TODO Auto-generated method stub
     }
