@@ -1,36 +1,34 @@
 /*
-* Conditions Of Use
-*
-* This software was developed by employees of the National Institute of
-* Standards and Technology (NIST), an agency of the Federal Government.
-* Pursuant to title 15 Untied States Code Section 105, works of NIST
-* employees are not subject to copyright protection in the United States
-* and are considered to be in the public domain.  As a result, a formal
-* license is not needed to use the software.
-*
-* This software is provided by NIST as a service and is expressly
-* provided "AS IS."  NIST MAKES NO WARRANTY OF ANY KIND, EXPRESS, IMPLIED
-* OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT
-* AND DATA ACCURACY.  NIST does not warrant or make any representations
-* regarding the use of the software or the results thereof, including but
-* not limited to the correctness, accuracy, reliability or usefulness of
-* the software.
-*
-* Permission to use this software is contingent upon your acceptance
-* of the terms of this agreement
-*
-* .
-*
-*/
+ * Conditions Of Use
+ *
+ * This software was developed by employees of the National Institute of
+ * Standards and Technology (NIST), an agency of the Federal Government.
+ * Pursuant to title 15 Untied States Code Section 105, works of NIST
+ * employees are not subject to copyright protection in the United States
+ * and are considered to be in the public domain.  As a result, a formal
+ * license is not needed to use the software.
+ *
+ * This software is provided by NIST as a service and is expressly
+ * provided "AS IS."  NIST MAKES NO WARRANTY OF ANY KIND, EXPRESS, IMPLIED
+ * OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT
+ * AND DATA ACCURACY.  NIST does not warrant or make any representations
+ * regarding the use of the software or the results thereof, including but
+ * not limited to the correctness, accuracy, reliability or usefulness of
+ * the software.
+ *
+ * Permission to use this software is contingent upon your acceptance
+ * of the terms of this agreement
+ *
+ * .
+ *
+ */
 package gov.nist.javax.sip.clientauthutils;
 
 import gov.nist.core.InternalErrorHandler;
 
 import javax.sip.address.URI;
-import javax.sip.header.HeaderFactory;
-import javax.sip.header.ProxyAuthenticateHeader;
-import javax.sip.header.ProxyAuthorizationHeader;
+import javax.sip.header.*;
 import javax.sip.message.Request;
 import javax.sip.message.Response;
 import java.security.MessageDigest;
@@ -45,7 +43,7 @@ import java.util.Random;
  * @author Marc Bednarek
  */
 
-public class DigestServerAuthenticationHelper  {
+public class DigestServerAuthenticationHelper {
 
     private MessageDigest messageDigest;
 
@@ -53,19 +51,20 @@ public class DigestServerAuthenticationHelper  {
     public static final String DEFAULT_SCHEME = "Digest";
 
 
-
-
-    /** to hex converter */
-    private static final char[] toHex = { '0', '1', '2', '3', '4', '5', '6',
-            '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    /**
+     * to hex converter
+     */
+    private static final char[] toHex = {'0', '1', '2', '3', '4', '5', '6',
+            '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     /**
      * Default constructor.
+     *
      * @throws NoSuchAlgorithmException
      */
     public DigestServerAuthenticationHelper()
-        throws NoSuchAlgorithmException {
-            messageDigest = MessageDigest.getInstance(DEFAULT_ALGORITHM);
+            throws NoSuchAlgorithmException {
+        messageDigest = MessageDigest.getInstance(DEFAULT_ALGORITHM);
     }
 
     public static String toHexString(byte b[]) {
@@ -96,36 +95,39 @@ public class DigestServerAuthenticationHelper  {
         return toHexString(mdbytes);
     }
 
-    public void generateChallenge(HeaderFactory headerFactory, Response response, String realm  ) {
+    public void generateChallenge(HeaderFactory headerFactory, Response response, String realm) {
         try {
-            ProxyAuthenticateHeader proxyAuthenticate = headerFactory
-                    .createProxyAuthenticateHeader(DEFAULT_SCHEME);
-            proxyAuthenticate.setParameter("realm", realm);
-            proxyAuthenticate.setParameter("nonce", generateNonce());
-            proxyAuthenticate.setParameter("opaque", "");
-            proxyAuthenticate.setParameter("stale", "FALSE");
-            proxyAuthenticate.setParameter("algorithm", DEFAULT_ALGORITHM);
-            response.setHeader(proxyAuthenticate);
+            final WWWAuthenticateHeader wwwAuthenticateHeader = headerFactory
+                    .createWWWAuthenticateHeader(DEFAULT_SCHEME);
+            wwwAuthenticateHeader.setParameter("realm", realm);
+            wwwAuthenticateHeader.setParameter("nonce", generateNonce());
+            wwwAuthenticateHeader.setParameter("opaque", "");
+            wwwAuthenticateHeader.setParameter("stale", "FALSE");
+            wwwAuthenticateHeader.setParameter("algorithm", DEFAULT_ALGORITHM);
+            response.setHeader(wwwAuthenticateHeader);
         } catch (Exception ex) {
             InternalErrorHandler.handleException(ex);
         }
 
     }
+
     /**
      * Authenticate the inbound request.
      *
-     * @param request - the request to authenticate.
+     * @param request        - the request to authenticate.
      * @param hashedPassword -- the MD5 hashed string of username:realm:plaintext password.
-     *
      * @return true if authentication succeded and false otherwise.
      */
     public boolean doAuthenticateHashedPassword(Request request, String hashedPassword) {
-        ProxyAuthorizationHeader authHeader = (ProxyAuthorizationHeader) request.getHeader(ProxyAuthorizationHeader.NAME);
-        if ( authHeader == null ) return false;
+        AuthorizationHeader authHeader = getAuthorizationHeader(request);
+
+        if (authHeader == null) {
+            return false;
+        }
         String realm = authHeader.getRealm();
         String username = authHeader.getUsername();
 
-        if ( username == null || realm == null ) {
+        if (username == null || realm == null) {
             return false;
         }
 
@@ -135,11 +137,8 @@ public class DigestServerAuthenticationHelper  {
             return false;
         }
 
-
-
         String A2 = request.getMethod().toUpperCase() + ":" + uri.toString();
         String HA1 = hashedPassword;
-
 
         byte[] mdbytes = messageDigest.digest(A2.getBytes());
         String HA2 = toHexString(mdbytes);
@@ -153,8 +152,6 @@ public class DigestServerAuthenticationHelper  {
         mdbytes = messageDigest.digest(KD.getBytes());
         String mdString = toHexString(mdbytes);
         String response = authHeader.getResponse();
-
-
         return mdString.equals(response);
     }
 
@@ -162,35 +159,34 @@ public class DigestServerAuthenticationHelper  {
      * Authenticate the inbound request given plain text password.
      *
      * @param request - the request to authenticate.
-     * @param pass -- the plain text password.
-     *
+     * @param pass    -- the plain text password.
      * @return true if authentication succeded and false otherwise.
      */
     public boolean doAuthenticatePlainTextPassword(Request request, String pass) {
-        ProxyAuthorizationHeader authHeader = (ProxyAuthorizationHeader) request.getHeader(ProxyAuthorizationHeader.NAME);
+        AuthorizationHeader authHeader = getAuthorizationHeader(request);
 
-        if ( authHeader == null ) return false;
+        if (authHeader == null) {
+            return false;
+        }
+
         String realm = authHeader.getRealm();
         String username = authHeader.getUsername();
 
 
-        if ( username == null || realm == null ) {
+        if (username == null || realm == null) {
             return false;
         }
-
 
         String nonce = authHeader.getNonce();
         URI uri = authHeader.getURI();
         if (uri == null) {
-           return false;
+            return false;
         }
-
 
         String A1 = username + ":" + realm + ":" + pass;
         String A2 = request.getMethod().toUpperCase() + ":" + uri.toString();
         byte mdbytes[] = messageDigest.digest(A1.getBytes());
         String HA1 = toHexString(mdbytes);
-
 
         mdbytes = messageDigest.digest(A2.getBytes());
         String HA2 = toHexString(mdbytes);
@@ -205,7 +201,11 @@ public class DigestServerAuthenticationHelper  {
         String mdString = toHexString(mdbytes);
         String response = authHeader.getResponse();
         return mdString.equals(response);
-
     }
 
+    private AuthorizationHeader getAuthorizationHeader(Request request) {
+        return request.getHeader(AuthorizationHeader.NAME) != null
+                ? (AuthorizationHeader) request.getHeader(AuthorizationHeader.NAME)
+                : (ProxyAuthorizationHeader) request.getHeader(ProxyAuthorizationHeader.NAME);
+    }
 }

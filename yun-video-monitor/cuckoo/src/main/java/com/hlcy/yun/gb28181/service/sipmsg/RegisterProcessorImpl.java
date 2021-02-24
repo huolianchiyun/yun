@@ -31,14 +31,14 @@ public class RegisterProcessorImpl implements RegisterProcessor {
     }
 
     private DeviceInfo extractDeviceInfoFrom(Request request) {
-        ViaHeader viaHeader = (ViaHeader) request.getHeader(ViaHeader.NAME);
         FromHeader fromHeader = (FromHeader) request.getHeader(FromHeader.NAME);
         AddressImpl address = (AddressImpl) fromHeader.getAddress();
         SipUri uri = (SipUri) address.getURI();
         String deviceId = uri.getUser();
+        ViaHeader viaHeader = (ViaHeader) request.getHeader(ViaHeader.NAME);
         return new DeviceInfo().setDeviceId(deviceId)
-                .setIp(viaHeader.getReceived())
-                .setPort(viaHeader.getRPort())
-                .setTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
+                .setIp(viaHeader.getHost())
+                .setPort(viaHeader.getPort())
+                .setTransport(viaHeader.getTransport());
     }
 }

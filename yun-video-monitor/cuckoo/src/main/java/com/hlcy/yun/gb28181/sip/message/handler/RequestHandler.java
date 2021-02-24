@@ -22,6 +22,7 @@ public abstract class RequestHandler extends MessageHandler<RequestEvent> {
 
     protected String name;
 
+    @Override
     public abstract void handle(RequestEvent event);
 
     protected MessageContext getMessageContext(RequestEvent event) {

@@ -1,6 +1,7 @@
 package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
+import com.hlcy.yun.gb28181.service.params.player.DownloadParams;
 import com.hlcy.yun.gb28181.service.params.player.PlayParams;
 import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
@@ -80,10 +81,10 @@ public class PlayerController {
 
     @ApiOperation("历史视频下载")
     @PostMapping("/playback/download}")
-    public DeferredResult<ResponseEntity<ResponseData>> downloadHistoryVideo(@RequestBody PlaybackParams params) {
+    public DeferredResult<ResponseEntity<ResponseData>> downloadHistoryVideo(@RequestBody DownloadParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_PLAYBACK_DOWNLOAD + params.getChannelId()).getCallbackKey(), result);
-        player.playback(params);
+        player.downloadHistoryVideo(params);
         return result;
     }
 }

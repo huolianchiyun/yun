@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 import javax.sip.ClientTransaction;
 import javax.sip.ServerTransaction;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.REQUEST;
@@ -41,6 +43,7 @@ public class FlowContext implements MessageContext, Serializable {
     private Operation operation;
     private DeviceParams operationalParams;
     private boolean mediaPullStream;
+    private long downloadFileSize;
     private String ssrc;
 
     public FlowContext(Operation operation, DeviceParams operationalParams, boolean mediaPullStream) {
@@ -180,10 +183,10 @@ public class FlowContext implements MessageContext, Serializable {
     }
 
     public void clearSessionCache() {
-        if(CLIENT_SESSION_CACHE != null){
+        if (CLIENT_SESSION_CACHE != null) {
             CLIENT_SESSION_CACHE.clear();
         }
-        if(SERVER_SESSION_CACHE != null){
+        if (SERVER_SESSION_CACHE != null) {
             SERVER_SESSION_CACHE.clear();
         }
     }
@@ -216,5 +219,13 @@ public class FlowContext implements MessageContext, Serializable {
 
     public void setCurrentResponseProcessor(ResponseProcessor currentResponseProcessor) {
         this.currentResponseProcessor = currentResponseProcessor;
+    }
+
+    public long getDownloadFileSize() {
+        return downloadFileSize;
+    }
+
+    public void setDownloadFileSize(long downloadFileSize) {
+        this.downloadFileSize = downloadFileSize;
     }
 }

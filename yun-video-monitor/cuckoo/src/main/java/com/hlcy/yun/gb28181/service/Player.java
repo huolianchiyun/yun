@@ -1,5 +1,6 @@
 package com.hlcy.yun.gb28181.service;
 
+import com.hlcy.yun.gb28181.service.params.player.DownloadParams;
 import com.hlcy.yun.gb28181.service.params.player.PlayParams;
 import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
 
@@ -58,4 +59,9 @@ public interface Player {
      * @param ssrc media stream id
      */
     void playbackReplay(String ssrc);
+
+    /**
+     * 历史视频下载
+     */
+    void downloadHistoryVideo(DownloadParams params);
 }

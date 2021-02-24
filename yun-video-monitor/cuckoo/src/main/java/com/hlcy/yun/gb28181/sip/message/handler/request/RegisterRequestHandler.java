@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.sip.message.handler.request;
 import com.hlcy.yun.gb28181.sip.auth.DigestServerAuthHelper;
 import com.hlcy.yun.gb28181.sip.biz.RegisterProcessor;
 import com.hlcy.yun.gb28181.sip.message.handler.RequestHandler;
+import gov.nist.javax.sip.header.Authorization;
 import gov.nist.javax.sip.header.Expires;
 import lombok.extern.slf4j.Slf4j;
 import javax.sip.RequestEvent;
@@ -61,7 +62,7 @@ public class RegisterRequestHandler extends RequestHandler {
         boolean isPass = true;
         final Request request = event.getRequest();
         // 未携带授权头或者密码错误 均回复 401
-        if (request.getHeader(ProxyAuthorizationHeader.NAME) == null) {
+        if (request.getHeader(WWWAuthenticateHeader.NAME) == null && request.getHeader(Authorization.NAME) == null) {
             log.warn("Will reply 401 after not carrying authorization, request:\n{}", request);
             isPass = false;
         } else if (!DigestServerAuthHelper.authenticatePlainTextPassword(request)) {

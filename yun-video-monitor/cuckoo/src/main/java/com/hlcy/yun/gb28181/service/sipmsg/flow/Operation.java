@@ -1,12 +1,12 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow;
 
 public enum Operation {
-    PLAY("Play"), PLAYBACK("Playback"),
+    PLAY("Play"), PLAYBACK("Playback"), DOWNLOAD("Download"),
     RECORD("Record"), GUARD("Guard"), RESET_ALARM("ResetAlarm"), HOME_POSITION("HomePosition"), PRESET("Preset"),
     DEVICE_CONFIG("DeviceConfig"), CRUISE("Cruise"), AUXIL_SWITCH("AuxilSwitch"), FI("fi"), TELE_BOOT("TeleBoot"),
     IFRAME("Iframe"),
     CATALOG("Catalog"), DEVICE_INFO("DeviceInfo"), RECORD_INFO("RecordInfo"),
-    KEEPALIVE("Keepalive"), BROADCAST("Broadcast");
+    KEEPALIVE("Keepalive"), BROADCAST("Broadcast"), MEDIA_STATUS("MediaStatus");
 
     private String code;
 

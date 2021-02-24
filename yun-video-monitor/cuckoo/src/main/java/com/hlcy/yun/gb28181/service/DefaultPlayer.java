@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hlcy.yun.gb28181.client.MediaClient;
 import com.hlcy.yun.gb28181.bean.PlayResponse;
+import com.hlcy.yun.gb28181.service.params.player.DownloadParams;
 import com.hlcy.yun.gb28181.service.params.player.PlayParams;
 import com.hlcy.yun.gb28181.service.params.player.PlaybackParams;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
@@ -10,6 +11,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.DownloadSession;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.PlaybackSession;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 import com.hlcy.yun.gb28181.ssrc.SSRCManger;
@@ -217,5 +219,20 @@ public class DefaultPlayer implements Player {
                 + "Range: npt=now-";
         final Request infoRequest = SipRequestFactory.getInfoRequest(deviceTransaction, content.getBytes(StandardCharsets.UTF_8));
         flowContext.put(PlaybackSession.SIP_DEVICE_SESSION, sendRequest(infoRequest));
+    }
+
+    @Override
+    public void downloadHistoryVideo(DownloadParams params) {
+        Request inviteMedia = getInviteRequest(
+                createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
+                createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
+                params.getDeviceTransport());
+
+        final ClientTransaction clientTransaction = sendRequest(inviteMedia);
+
+        final FlowContext flowContext = new FlowContext(Operation.DOWNLOAD, params);
+        FlowContext.setProperties(properties);
+        flowContext.put(DownloadSession.SIP_MEDIA_SESSION_1, clientTransaction);
+        FlowContextCacheUtil.put(getCallId(inviteMedia), flowContext);
     }
 }

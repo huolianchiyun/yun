@@ -24,6 +24,7 @@ public abstract class ResponseHandler extends MessageHandler<ResponseEvent> {
 
     protected abstract void doHandle(ResponseEvent event);
 
+    @Override
     public void handle(ResponseEvent event) {
         if (!method.equals(getMethodFrom(event))) {
             this.next.handle(event);
