@@ -35,6 +35,9 @@ public class MediaStatusNotifyRequestProcessor extends MessageRequestProcessor {
         String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
         String notifyType = getTextOfChildTagFrom(rootElement, "NotifyType");
         if (HISTORY_MEDIA_FILE_SEND_END.equals(notifyType)) {
+            // 可以根据callId
+
+
             final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextByOperationAndChannelId(Operation.DOWNLOAD, deviceId);
             if (optional.isPresent()) {
                 ClientTransaction clientTransaction = null;

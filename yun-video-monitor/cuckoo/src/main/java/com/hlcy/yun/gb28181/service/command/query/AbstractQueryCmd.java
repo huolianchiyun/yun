@@ -21,6 +21,7 @@ public abstract class AbstractQueryCmd<T extends QueryParams> implements Command
 
     protected abstract String buildCmdXML(T t);
 
+    @Override
     public void execute(T t) {
         final String cmd = getCmdTemplate(t).replace(CMD, buildCmdXML(t)).replace(CMD_TYPE, t.getCmdType());
 

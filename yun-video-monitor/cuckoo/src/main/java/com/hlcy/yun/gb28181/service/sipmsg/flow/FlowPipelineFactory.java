@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.service.sipmsg.flow;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.MediaStatusNotifyRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.*;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.KeepaliveNotifyRequestProcessor;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.AlarmQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.DeviceInfoQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.RecordInfoQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.*;
@@ -47,6 +48,10 @@ public class FlowPipelineFactory {
         RECORD_INFO_PIPELINE.addLast(RECORD_INFO.code(), new RecordInfoQueryRequestProcessor());
         requestMap.put(RECORD_INFO, RECORD_INFO_PIPELINE);
 
+        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> ALARM_PIPELINE = new DefaultPipeline<>();
+        RECORD_INFO_PIPELINE.addLast(ALARM.code(), new AlarmQueryRequestProcessor());
+        requestMap.put(ALARM, ALARM_PIPELINE);
+
         // Notify
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();
         KEEPALIVE_PIPELINE.addLast(KEEPALIVE.code(), new KeepaliveNotifyRequestProcessor());
@@ -54,7 +59,7 @@ public class FlowPipelineFactory {
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> MEDIA_STATUS_PIPELINE = new DefaultPipeline<>();
         MEDIA_STATUS_PIPELINE.addLast(MEDIA_STATUS.code(), new MediaStatusNotifyRequestProcessor());
-        requestMap.put(MEDIA_STATUS, KEEPALIVE_PIPELINE);
+        requestMap.put(MEDIA_STATUS, MEDIA_STATUS_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> VOICE_BROADCAST_PIPELINE = new DefaultPipeline<>();
         VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.code(), new BroadcastNotifyRequestProcessor());
