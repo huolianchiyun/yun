@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class AlarmQueryParams extends QueryParams {
-    public AlarmQueryParams() {
+public class AlarmSubscribeParams extends QueryParams {
+    public AlarmSubscribeParams() {
         super("Alarm");
     }
 
@@ -28,11 +28,6 @@ public class AlarmQueryParams extends QueryParams {
      * 可以为直接组合如12为电话报警或设备报警
      */
     private String alarmMethod;
-
-    /**
-     * 报警类型
-     */
-    private String alarmType;
 
     /**
      * 报警发生开始时间(可选)

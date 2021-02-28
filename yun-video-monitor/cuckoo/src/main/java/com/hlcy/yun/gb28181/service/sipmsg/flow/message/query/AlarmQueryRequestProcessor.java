@@ -1,6 +1,5 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow.message.query;
 
-import com.hlcy.yun.gb28181.bean.DeviceInfo;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageRequestProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
@@ -22,10 +21,6 @@ public class AlarmQueryRequestProcessor extends MessageRequestProcessor {
         }
         Element rootElement = getRootElementFrom(event);
         String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
-        final DeviceInfo device = new DeviceInfo().setDeviceId(deviceId);
-
-        DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + deviceId, device);
+        DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + deviceId, "Subscribed successfully");
     }
-
-
 }

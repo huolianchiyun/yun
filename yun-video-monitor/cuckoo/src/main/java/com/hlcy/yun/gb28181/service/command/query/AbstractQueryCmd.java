@@ -23,7 +23,7 @@ public abstract class AbstractQueryCmd<T extends QueryParams> implements Command
 
     @Override
     public void execute(T t) {
-        final String cmd = getCmdTemplate(t).replace(CMD, buildCmdXML(t)).replace(CMD_TYPE, t.getCmdType());
+        final String cmd = getFinalCmd(t);
 
         Request request = SipRequestFactory.getMessageRequest(
                 createTo(t.getChannelId(), t.getDeviceIp(), t.getDevicePort()),
@@ -31,6 +31,10 @@ public abstract class AbstractQueryCmd<T extends QueryParams> implements Command
                 t.getDeviceTransport(),
                 cmd.getBytes(StandardCharsets.UTF_8));
         RequestSender.sendRequest(request);
+    }
+
+    protected String getFinalCmd(T t) {
+        return getCmdTemplate(t).replace(CMD, buildCmdXML(t)).replace(CMD_TYPE, t.getCmdType());
     }
 
     private String getCmdTemplate(T t) {

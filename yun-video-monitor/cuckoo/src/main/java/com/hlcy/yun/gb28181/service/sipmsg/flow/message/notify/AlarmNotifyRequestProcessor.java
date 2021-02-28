@@ -1,14 +1,18 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify;
 
-import com.hlcy.yun.gb28181.bean.DeviceInfo;
 import com.hlcy.yun.gb28181.notification.PublisherFactory;
 import com.hlcy.yun.gb28181.notification.event.AlarmEvent;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageRequestProcessor;
-import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 
 import javax.sip.RequestEvent;
+import javax.sip.header.ContentTypeHeader;
+import javax.sip.message.Response;
+import java.text.ParseException;
+
+import static com.hlcy.yun.gb28181.notification.PublisherFactory.getDeviceEventPublisher;
+import static com.hlcy.yun.gb28181.util.XmlUtil.getTextOfChildTagFrom;
 
 @Slf4j
 public class AlarmNotifyRequestProcessor extends MessageRequestProcessor {
@@ -19,13 +23,40 @@ public class AlarmNotifyRequestProcessor extends MessageRequestProcessor {
             log.debug("Receive a CmdType <Alarm> request, message: {}.", event.getRequest());
         }
         Element rootElement = getRootElementFrom(event);
-        String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
-        // TODO  设备告警后续看怎么处理，先遗留
-        DeviceInfo device = new DeviceInfo().setDeviceId(deviceId).setDeviceName(XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceName"))
-                .setManufacturer(XmlUtil.getTextOfChildTagFrom(rootElement, "Manufacturer"))
-                .setModel(XmlUtil.getTextOfChildTagFrom(rootElement, "Model"))
-                .setFirmware(XmlUtil.getTextOfChildTagFrom(rootElement, "Firmware"));
-        // 向管理中心发布设备告警事件
-        PublisherFactory.getDeviceEventPublisher().publishEvent(new AlarmEvent(device));
+
+        getDeviceEventPublisher().publishEvent(
+                new AlarmEvent(getTextOfChildTagFrom(rootElement, "DeviceID"))
+                        .setAlarmPriority(getTextOfChildTagFrom(rootElement, "AlarmPriority"))
+                        .setAlarmMethod(getTextOfChildTagFrom(rootElement, "AlarmMethod"))
+                        .setAlarmTime(getTextOfChildTagFrom(rootElement, "AlarmTime"))
+                        .setAlarmDescription(getTextOfChildTagFrom(rootElement, "AlarmDescription"))
+                        .setLongitude(getTextOfChildTagFrom(rootElement, "Longitude"))
+                        .setLatitude(getTextOfChildTagFrom(rootElement, "Latitude"))
+        );
+    }
+
+    @Override
+    protected void send200Response(RequestEvent event) {
+        Element rootElement = getRootElementFrom(event);
+        final String sn = getTextOfChildTagFrom(rootElement, "SN");
+        String deviceId = getTextOfChildTagFrom(rootElement, "DeviceID");
+        try {
+
+            final Response response = buildResponse(Response.OK, event.getRequest());
+            String body = new StringBuilder(200)
+                    .append("<?xml version=\"1.0\" ?>")
+                    .append("<Response>")
+                    .append("<CmdType>").append("Alarm").append("</CmdType>")
+                    .append("<SN>").append(sn).append("</SN>")
+                    .append("<DeviceID>").append(deviceId).append("</DeviceID>")
+                    .append("<Result>").append("OK").append("</Result>")
+                    .append("</Response>")
+                    .toString();
+
+            response.setContent(body, (ContentTypeHeader) response.getHeader(ContentTypeHeader.NAME));
+            sendResponse(event, response);
+        } catch (ParseException e) {
+            log.error("200 Responding to request event failed, cause: {}", e.getMessage());
+        }
     }
 }

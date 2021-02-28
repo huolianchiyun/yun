@@ -40,6 +40,11 @@ public final class SipRequestFactory {
         return createRequest(to, from, subject, viaBranch, CONTENT_TYPE, CONTENT_SUBTYPE_MANSCDP, Request.MESSAGE, transport, content);
     }
 
+    public static Request getSubscribeRequest(To to, From from, Transport transport, byte[] content) {
+        return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_MANSCDP, Request.SUBSCRIBE, transport, content);
+    }
+
+
     public static Request getInviteRequest(To to, From from, Transport transport) {
         return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_SDP, Request.INVITE, transport, EMPTY_CONTENT);
     }
@@ -101,6 +106,10 @@ public final class SipRequestFactory {
             log.error("Create a bye request exception, cause: {}", e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    public static Request getRequest(To to, From from, String method, Transport transport, byte[] content) {
+        return createRequest(to, from, null, null, CONTENT_TYPE, CONTENT_SUBTYPE_MANSCDP, method, transport, content);
     }
 
     private static boolean isDeserializeTransaction(Transaction transaction) {
