@@ -12,10 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-
 @Slf4j
 @Api(tags = "GB28181：设备查询 API")
 @RequiredArgsConstructor
@@ -51,7 +47,7 @@ public class QueryController {
         return result;
     }
 
-    @GetMapping("/recordInfo")
+    @GetMapping("/alarm")
     @ApiOperation("查询设备告警")
     public DeferredResult<ResponseEntity<ResponseData>> queryAlarm(AlarmQueryParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();

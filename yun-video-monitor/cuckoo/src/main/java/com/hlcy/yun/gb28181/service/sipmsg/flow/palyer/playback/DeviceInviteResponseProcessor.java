@@ -34,7 +34,8 @@ public class DeviceInviteResponseProcessor extends FlowResponseProcessor {
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);
 
         context.put(PlaybackSession.SIP_MEDIA_SESSION_2, clientTransaction);
-        FlowContextCacheUtil.setNewKey(getCallId(event.getResponse()), SipRequestFactory.getCallId(inviteRequest2media));
+        FlowContextCacheUtil.put(SipRequestFactory.getCallId(inviteRequest2media), context);
         FlowContextCacheUtil.putSerialize(context.getSsrc(), context);
+
     }
 }

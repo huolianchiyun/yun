@@ -48,9 +48,9 @@ public class FlowPipelineFactory {
         RECORD_INFO_PIPELINE.addLast(RECORD_INFO.code(), new RecordInfoQueryRequestProcessor());
         requestMap.put(RECORD_INFO, RECORD_INFO_PIPELINE);
 
-        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> ALARM_PIPELINE = new DefaultPipeline<>();
-        RECORD_INFO_PIPELINE.addLast(ALARM.code(), new AlarmQueryRequestProcessor());
-        requestMap.put(ALARM, ALARM_PIPELINE);
+        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> ALARM_QUERY_PIPELINE = new DefaultPipeline<>();
+        RECORD_INFO_PIPELINE.addLast(ALARM_QUERY.code(), new AlarmQueryRequestProcessor());
+        requestMap.put(ALARM_QUERY, ALARM_QUERY_PIPELINE);
 
         // Notify
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();
@@ -60,6 +60,12 @@ public class FlowPipelineFactory {
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> MEDIA_STATUS_PIPELINE = new DefaultPipeline<>();
         MEDIA_STATUS_PIPELINE.addLast(MEDIA_STATUS.code(), new MediaStatusNotifyRequestProcessor());
         requestMap.put(MEDIA_STATUS, MEDIA_STATUS_PIPELINE);
+
+        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> ALARM_NOTIFY_PIPELINE = new DefaultPipeline<>();
+        MEDIA_STATUS_PIPELINE.addLast(MEDIA_STATUS.code(), new MediaStatusNotifyRequestProcessor());
+        requestMap.put(MEDIA_STATUS, ALARM_NOTIFY_PIPELINE);
+
+
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> VOICE_BROADCAST_PIPELINE = new DefaultPipeline<>();
         VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.code(), new BroadcastNotifyRequestProcessor());

@@ -17,6 +17,6 @@ public class DeviceByeResponseProcessor extends FlowResponseProcessor {
         FlowContextCacheUtil.remove(getCallId(event.getResponse()));
         FlowContextCacheUtil.remove(context.getSsrc());
         context.clearSessionCache();
-        log.info("*** Playback SSRC: {} is closed successfully ***", context.getSsrc());
+        log.info("*** Download history video, SSRC: {} is closed successfully ***", context.getSsrc());
     }
 }

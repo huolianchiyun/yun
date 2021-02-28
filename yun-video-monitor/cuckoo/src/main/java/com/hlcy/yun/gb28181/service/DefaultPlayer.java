@@ -139,21 +139,26 @@ public class DefaultPlayer implements Player {
         final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextBySsrc(ssrc);
         if (optional.isPresent()) {
             final FlowContext context = optional.get();
-            if (Operation.PLAY == context.getOperation()) {
+            final Operation operation = context.getOperation();
+            if (Operation.PLAY == operation) {
                 clientTransaction = context.isFromDeserialization()
                         ? context.getClientTransaction(SIP_DEVICE_SESSION)
                         : context.getClientTransaction(SIP_MEDIA_SESSION_2);
-            } else if (Operation.PLAYBACK == context.getOperation()) {
+            } else if (Operation.PLAYBACK == operation) {
                 clientTransaction = context.isFromDeserialization()
                         ? context.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION)
                         : context.getClientTransaction(PlaybackSession.SIP_MEDIA_SESSION_2);
+            } else if (Operation.DOWNLOAD == operation) {
+                clientTransaction = context.isFromDeserialization()
+                        ? context.getClientTransaction(DownloadSession.SIP_DEVICE_SESSION)
+                        : context.getClientTransaction(DownloadSession.SIP_MEDIA_SESSION_2);
             }
             if (clientTransaction == null) {
-                log.warn("*** The clientTransaction of {} has been lost, SSRC: {}", context.getOperation(), ssrc);
+                log.warn("*** The clientTransaction of {} has been lost, SSRC: {}", operation, ssrc);
             }
             if (context.isFromDeserialization()) {
                 // 将当前响应处理器切换为 device by response
-                context.setCurrentResponseProcessor(getResponseFlowPipeline(context.getOperation()).get("DeviceByResponseProcessor"));
+                context.setCurrentResponseProcessor(getResponseFlowPipeline(operation).get("DeviceByResponseProcessor"));
             }
         } else {
             log.warn("*** The FlowContext has been lost when get clientTransaction, SSRC: {}", ssrc);

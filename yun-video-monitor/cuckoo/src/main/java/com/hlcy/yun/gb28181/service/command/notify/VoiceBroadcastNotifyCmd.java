@@ -32,6 +32,7 @@ public class VoiceBroadcastNotifyCmd extends AbstractNotifyCmd<VoiceBroadcastNot
                 + "<TargetID>" + voiceBroadcastNotifyParams.getChannelId() + "</TargetID>";  // 语音输出设备的设备编码
     }
 
+    @Override
     protected String getCmdTemplate(VoiceBroadcastNotifyParams params) {
         return new StringBuilder(200)
                 .append("<?xml version=\"1.0\" ?>")

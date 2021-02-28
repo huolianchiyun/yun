@@ -11,6 +11,9 @@ import javax.sip.message.Request;
 
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
 
+/**
+ * 处理设备主动f发 bye
+ */
 public class DeviceByeRequestProcessor extends FlowRequestProcessor {
 
     @Override
@@ -20,7 +23,9 @@ public class DeviceByeRequestProcessor extends FlowRequestProcessor {
         final ClientTransaction clientTransaction = context.getClientTransaction(VoiceSession.SIP_MEDIA_SESSION);
         final Request bye = SipRequestFactory.getByeRequest(clientTransaction);
         sendByeRequest(bye, clientTransaction);
-        FlowContextCacheUtil.remove(context.getSsrc());  // 清除以 VoiceBroadcastNotifyCmd.stop(ssrc) 方式关流预留的资源
+
+        // 清除以 VoiceBroadcastNotifyCmd.stop(ssrc) 方式关流预留的资源
+        FlowContextCacheUtil.remove(context.getSsrc());
         FlowContextCacheUtil.setNewKey(getCallId(event.getRequest()), SipRequestFactory.getCallId(bye));
     }
 }

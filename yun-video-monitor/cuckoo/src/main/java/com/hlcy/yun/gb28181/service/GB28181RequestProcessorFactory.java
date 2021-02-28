@@ -47,7 +47,7 @@ public class GB28181RequestProcessorFactory implements RequestProcessorFactory {
                     FlowContextCacheUtil.setNewKey(
                             BROADCAST.name() + sdp.getOrigin().getUsername(),
                             SipRequestFactory.getCallId(event.getRequest()));
-                    return FlowPipelineFactory.getRequestFlowPipeline(Operation.BROADCAST).get("invite");
+                    return FlowPipelineFactory.getRequestFlowPipeline(Operation.BROADCAST).get(Request.INVITE);
                 }
             } catch (SdpException e) {
                 e.printStackTrace();

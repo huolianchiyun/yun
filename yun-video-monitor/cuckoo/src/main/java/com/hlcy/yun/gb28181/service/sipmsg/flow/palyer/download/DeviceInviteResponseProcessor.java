@@ -6,19 +6,24 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.sdp.MediaDescription;
+import javax.sdp.SdpException;
 import javax.sdp.SdpParseException;
 import javax.sdp.SessionDescription;
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
+import java.util.Optional;
 
+@Slf4j
 public class DeviceInviteResponseProcessor extends FlowResponseProcessor {
 
     @Override
     protected void process(ResponseEvent event, FlowContext context) throws SdpParseException {
         SessionDescription deviceSdp = getSessionDescription(getMessageBodyByStr(event.getResponse()));
-        context.setDownloadFileSize(Long.parseLong(deviceSdp.getAttribute("filesize")));
+        context.setDownloadFileSize(getFileSize(deviceSdp));
 
         final ClientTransaction mediaTransaction = context.getClientTransaction(DownloadSession.SIP_MEDIA_SESSION_1);
         final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getMessageBodyByByteArr(event.getResponse()));
@@ -39,7 +44,24 @@ public class DeviceInviteResponseProcessor extends FlowResponseProcessor {
         final ClientTransaction clientTransaction = RequestSender.sendRequest(inviteRequest2media);
 
         context.put(DownloadSession.SIP_MEDIA_SESSION_2, clientTransaction);
-        FlowContextCacheUtil.setNewKey(getCallId(event.getResponse()), SipRequestFactory.getCallId(inviteRequest2media));
+        FlowContextCacheUtil.put(SipRequestFactory.getCallId(inviteRequest2media), context);
         FlowContextCacheUtil.putSerialize(context.getSsrc(), context);
+    }
+
+    private long getFileSize(SessionDescription deviceSdp) {
+        try {
+            final Optional first = deviceSdp.getMediaDescriptions(false).stream().findFirst();
+            if (first.isPresent()) {
+                final String fileSize = ((MediaDescription) first.get()).getAttribute("filesize");
+                if (fileSize != null && !fileSize.isEmpty()) {
+                    return Long.parseLong(fileSize);
+                } else {
+                    log.warn("*** 下载历史文件，获取 filesize 属性失败(属性将以0返回)， 获取的 filesize：'{}'", fileSize);
+                }
+            }
+        } catch (SdpException e) {
+            log.warn("*** 下载历史文件，获取 filesize 属性值失败(属性将以0返回)， 原因：{}", e.getMessage());
+        }
+        return 0L;
     }
 }

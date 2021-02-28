@@ -9,6 +9,8 @@ import javax.sip.SipFactory;
 import javax.sip.message.MessageFactory;
 import javax.sip.message.Response;
 import java.text.ParseException;
+import java.util.Optional;
+
 
 public class SDPParserTest {
 
@@ -39,7 +41,8 @@ public class SDPParserTest {
                 "t=0 0\r\n" +
                 "m=audio 12230 rtp/avp 100\r\n" +
                 "f=v/////a/1/8/1\r\n" +
-                "a=rtpmap:100 x-tia-p25-imbe/8000\r\n" +
+//                "a=rtpmap:100 x-tia-p25-imbe/8000\r\n" +
+//                "a=filesize:100\r\n" +
                 "y=010000000\r\n";
 
         Response sipResponse = null;
@@ -59,9 +62,27 @@ public class SDPParserTest {
         try {
             sd = sdpFactory.createSessionDescription(contentString);
             sd.setURI(uriField);
+            System.out.println("********************" + getFileSize(sd));
         } catch (SdpException e) {
             e.printStackTrace();
         }
         System.out.println("Parsed Content is :\n" + sd.toString());
+    }
+
+    private static long getFileSize(SessionDescription deviceSdp) {
+        try {
+            final Optional first = deviceSdp.getMediaDescriptions(false).stream().findFirst();
+            if (first.isPresent()) {
+                final String fileSize = ((MediaDescription) first.get()).getAttribute("filesize");
+                if(fileSize != null && !fileSize.isEmpty()){
+                    return Long.parseLong(fileSize);
+                }else {
+
+                }
+            }
+        } catch (SdpException e) {
+            e.printStackTrace();
+        }
+        return 0L;
     }
 }
