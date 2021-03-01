@@ -87,7 +87,8 @@ public class FlowContext implements MessageContext, Serializable {
         this.operation = operation;
         if (operation == Operation.KEEPALIVE) {
             this.currentRequestProcessor = FlowPipelineFactory.getRequestFlowPipeline(operation).first();
-        } else if (operation == Operation.PLAY || operation == Operation.PLAYBACK || operation == Operation.DOWNLOAD) {
+        } else if (operation == Operation.PLAY || operation == Operation.PLAYBACK
+                || operation == Operation.DOWNLOAD || operation == Operation.SUBSCRIBE) {
             this.currentResponseProcessor = FlowPipelineFactory.getResponseFlowPipeline(operation).first();
         } else if (operation == Operation.BROADCAST) {
             this.currentRequestProcessor = FlowPipelineFactory.getRequestFlowPipeline(operation).first();

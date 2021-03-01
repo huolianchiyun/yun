@@ -28,6 +28,7 @@ public class SipPipelineFactory {
         RESPONSE_PIPELINE.addLast("cancel", new CancelResponseHandler(Request.CANCEL, Request.CANCEL));
         RESPONSE_PIPELINE.addLast("bye", new ByeResponseHandler(Request.BYE, Request.BYE));
         RESPONSE_PIPELINE.addLast("message", new MessageResponseHandler(Request.MESSAGE, Request.MESSAGE));
+        RESPONSE_PIPELINE.addLast("subscribe", new SubscribeResponseHandler(Request.SUBSCRIBE, Request.SUBSCRIBE));
         // TODO 优化
         RESPONSE_PIPELINE.addLast("unsupported", new UnsupportedResponseHandler("unsupported", "unsupported"));
     }
