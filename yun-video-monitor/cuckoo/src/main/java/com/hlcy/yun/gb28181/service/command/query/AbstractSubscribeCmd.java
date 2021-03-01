@@ -4,7 +4,6 @@ import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.service.params.query.QueryParams;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
 
