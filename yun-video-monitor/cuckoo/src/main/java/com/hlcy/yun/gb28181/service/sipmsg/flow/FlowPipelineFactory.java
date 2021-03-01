@@ -7,6 +7,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.KeepaliveNotifyRe
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.AlarmQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.DeviceInfoQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.RecordInfoQueryRequestProcessor;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.message.subscribe.SubscribeResponseProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.*;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.CatalogQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.DeviceByeResponseProcessor;
@@ -114,6 +115,10 @@ public class FlowPipelineFactory {
         VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.DeviceByeResponseProcessor());  // "18-19"
         VOICE_BROADCAST_PIPELINE.addLast("20-21-22-23", new MediaByeResponseProcessor());
         responseMap.put(BROADCAST, VOICE_BROADCAST_PIPELINE);
+
+        DefaultPipeline<ResponseProcessor<FlowContext>, ResponseEvent> SUBSCRIBE_PIPELINE = new DefaultPipeline<>();
+        SUBSCRIBE_PIPELINE.addLast(SUBSCRIBE.code(), new SubscribeResponseProcessor());
+        responseMap.put(SUBSCRIBE, SUBSCRIBE_PIPELINE);
 
         RESPONSE_PIPELINE_CONTAINER = Collections.unmodifiableMap(responseMap);
     }

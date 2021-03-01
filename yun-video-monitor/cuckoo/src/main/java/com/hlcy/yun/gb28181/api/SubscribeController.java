@@ -3,6 +3,7 @@ package com.hlcy.yun.gb28181.api;
 import com.hlcy.yun.common.web.response.ResponseData;
 import com.hlcy.yun.gb28181.service.QueryOperator;
 import com.hlcy.yun.gb28181.service.params.query.AlarmQueryParams;
+import com.hlcy.yun.gb28181.service.params.query.AlarmSubscribeParams;
 import com.hlcy.yun.gb28181.service.params.query.QueryParams;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import io.swagger.annotations.Api;
@@ -24,10 +25,11 @@ public class SubscribeController {
     private final QueryOperator<QueryParams> operator;
 
     @GetMapping("/alarm")
-    @ApiOperation("查询设备告警")
-    public DeferredResult<ResponseEntity<ResponseData>> queryAlarm(AlarmQueryParams params) {
+    @ApiOperation("设备告警订阅")
+    public DeferredResult<ResponseEntity<ResponseData>> queryAlarm(AlarmSubscribeParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + params.getChannelId(), result);
+        params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + params.getChannelId());
+        DeferredResultHolder.put(params.getCallbackKey(), result);
         operator.operate(params);
         return result;
     }

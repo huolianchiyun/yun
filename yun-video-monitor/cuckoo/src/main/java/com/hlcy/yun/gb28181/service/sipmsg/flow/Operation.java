@@ -6,6 +6,7 @@ public enum Operation {
     DEVICE_CONFIG("DeviceConfig"), CRUISE("Cruise"), AUXIL_SWITCH("AuxilSwitch"), FI("fi"), TELE_BOOT("TeleBoot"),
     IFRAME("Iframe"),
     CATALOG("Catalog"), DEVICE_INFO("DeviceInfo"), RECORD_INFO("RecordInfo"), ALARM_QUERY("Alarm"),
+    SUBSCRIBE("Subscribe"),
     KEEPALIVE("Keepalive"), BROADCAST("Broadcast"), MEDIA_STATUS("MediaStatus"), ALARM_NOTIFY("Alarm");
 
     private String code;

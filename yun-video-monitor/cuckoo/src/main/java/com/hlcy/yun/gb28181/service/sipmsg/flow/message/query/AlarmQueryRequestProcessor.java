@@ -20,7 +20,7 @@ public class AlarmQueryRequestProcessor extends MessageRequestProcessor {
             log.debug("Receive a CmdType <Alarm> request, message: {}.", event.getRequest());
         }
         Element rootElement = getRootElementFrom(event);
-        String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
-        DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + deviceId, "Subscribed successfully");
+//        String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
+//        DeferredResultHolder.setDeferredResultForRequest(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + deviceId, "Subscribed successfully");
     }
 }

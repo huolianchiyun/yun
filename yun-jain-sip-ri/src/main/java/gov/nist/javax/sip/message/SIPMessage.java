@@ -595,6 +595,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @param sipHeader SIPHeader that replaces a header of the same type.
      */
+    @Override
     public void setHeader(Header sipHeader) {
         SIPHeader header = (SIPHeader) sipHeader;
         if (header == null)
@@ -796,6 +797,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @param headerName is the name of the header to remove.
      */
+    @Override
     public void removeHeader(String headerName) {
 
         if (headerName == null)
@@ -929,6 +931,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return header -- the first header of the given name.
      */
+    @Override
     public Header getHeader(String headerName) {
         return getHeaderLowerCase(SIPHeaderNamesCache.toLowerCase(headerName));
     }
@@ -1176,6 +1179,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return content-length header.
      */
+    @Override
     public ContentLengthHeader getContentLength() {
         return this.contentLengthHeader;
     }
@@ -1206,6 +1210,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return an array of bytes that is the message payload.
      */
+    @Override
     public byte[] getRawContent() {
         try {
             if ( this.messageContentBytes != null ) {
@@ -1249,6 +1254,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      * @param content -- content to set.
      * @param contentTypeHeader -- content type header corresponding to content.
      */
+    @Override
     public void setContent(Object content, ContentTypeHeader contentTypeHeader)
             throws ParseException {
         if (content == null)
@@ -1274,6 +1280,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return the content of the sip message.
      */
+    @Override
     public Object getContent() {
         if (this.messageContentObject != null)
             return messageContentObject;
@@ -1386,6 +1393,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
     /**
      * Remove the message content if it exists.
      */
+    @Override
     public void removeContent() {
         messageContent = null;
         messageContentBytes = null;
@@ -1402,6 +1410,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      * @param headerName is the name of the header to get.
      * @return a header or header list that contians the retrieved header.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public ListIterator<SIPHeader> getHeaders(String headerName) {
         if (headerName == null)
@@ -1538,6 +1547,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @param sipHeader -- sip header to add.
      */
+    @Override
     public void addHeader(Header sipHeader) {
         // Content length is never stored. Just computed.
         SIPHeader sh = (SIPHeader) sipHeader;
@@ -1588,6 +1598,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return a linked list containing unrecongnized headers.
      */
+    @Override
     public ListIterator<String> getUnrecognizedHeaders() {
         return this.getUnrecognizedHeadersList().listIterator();
     }
@@ -1598,6 +1609,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      * @return a list iterator to a list of header names. These are ordered in the same order as
      *         are present in the message.
      */
+    @Override
     public ListIterator<String> getHeaderNames() {
         Iterator<SIPHeader> li = this.headers.iterator();
         LinkedList<String> retval = new LinkedList<String>();
@@ -1643,6 +1655,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return the contentDisposition header
      */
+    @Override
     public ContentDispositionHeader getContentDisposition() {
         return (ContentDispositionHeader) getHeaderLowerCase(CONTENT_DISPOSITION_LOWERCASE);
     }
@@ -1655,6 +1668,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return the contentEncoding header.
      */
+    @Override
     public ContentEncodingHeader getContentEncoding() {
         return (ContentEncodingHeader) getHeaderLowerCase(CONTENT_ENCODING_LOWERCASE);
     }
@@ -1667,6 +1681,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return the content language header.
      */
+    @Override
     public ContentLanguageHeader getContentLanguage() {
         return (ContentLanguageHeader) getHeaderLowerCase(CONTENT_LANGUAGE_LOWERCASE);
     }
@@ -1679,6 +1694,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @return the expires header or null if one does not exist.
      */
+    @Override
     public ExpiresHeader getExpires() {
         return (ExpiresHeader) getHeaderLowerCase(EXPIRES_LOWERCASE);
     }
@@ -1692,6 +1708,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      * @param expiresHeader -- the expires header to set.
      */
 
+    @Override
     public void setExpires(ExpiresHeader expiresHeader) {
         this.setHeader(expiresHeader);
     }
@@ -1702,16 +1719,19 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      * @param contentDispositionHeader -- content disposition header.
      */
 
+    @Override
     public void setContentDisposition(ContentDispositionHeader contentDispositionHeader) {
         this.setHeader(contentDispositionHeader);
 
     }
 
+    @Override
     public void setContentEncoding(ContentEncodingHeader contentEncodingHeader) {
         this.setHeader(contentEncodingHeader);
 
     }
 
+    @Override
     public void setContentLanguage(ContentLanguageHeader contentLanguageHeader) {
         this.setHeader(contentLanguageHeader);
     }
@@ -1721,6 +1741,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @param contentLength -- content length header.
      */
+    @Override
     public void setContentLength(ContentLengthHeader contentLength) {
         try {
             this.contentLengthHeader.setContentLength(contentLength.getContentLength());
@@ -1747,6 +1768,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @see javax.sip.message.Message#addLast(javax.sip.header.Header)
      */
+    @Override
     public void addLast(Header header) throws SipException, NullPointerException {
         if (header == null)
             throw new NullPointerException("null arg!");
@@ -1764,6 +1786,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @see javax.sip.message.Message#addFirst(javax.sip.header.Header)
      */
+    @Override
     public void addFirst(Header header) throws SipException, NullPointerException {
 
         if (header == null)
@@ -1782,6 +1805,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @see javax.sip.message.Message#removeFirst(java.lang.String)
      */
+    @Override
     public void removeFirst(String headerName) throws NullPointerException {
         if (headerName == null)
             throw new NullPointerException("Null argument Provided!");
@@ -1794,6 +1818,7 @@ public abstract class SIPMessage extends MessageObject implements javax.sip.mess
      *
      * @see javax.sip.message.Message#removeLast(java.lang.String)
      */
+    @Override
     public void removeLast(String headerName) {
         if (headerName == null)
             throw new NullPointerException("Null argument Provided!");

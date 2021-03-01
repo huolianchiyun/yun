@@ -7,7 +7,9 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import javax.sip.RequestEvent;
+import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
+import javax.sip.message.Response;
 
 @Slf4j
 public final class MANSCDPXmlParser {
@@ -21,14 +23,21 @@ public final class MANSCDPXmlParser {
     }
 
     public static Element getRootElementFrom(Request request) {
+        return getRootElementFrom(request.getRawContent());
+    }
+
+    public static Element getRootElementFrom(Response response) {
+        return getRootElementFrom(response.getRawContent());
+    }
+
+    private static Element getRootElementFrom(byte[] content) {
         SAXReader reader = new SAXReader();
         reader.setEncoding("gbk");
         try {
-            return XmlUtil.getDocument(request.getRawContent()).getRootElement();
+            return XmlUtil.getDocument(content).getRootElement();
         } catch (DocumentException e) {
-            log.error("Parse a message request({}) XML-Content Exception, cause: {}.", request, e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(String.format("Parse a message request(%s) XML-Content Exception", request), e);
+            log.error("Parse XML-Content Exception, cause: {}.", e.getMessage());
+            throw new RuntimeException("Parse XML-Content Exception", e);
         }
     }
 
