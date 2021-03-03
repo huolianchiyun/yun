@@ -80,7 +80,7 @@ public class PlayerController {
     }
 
     @ApiOperation("历史视频下载")
-    @PostMapping("/playback/download}")
+    @PostMapping("/playback/download")
     public DeferredResult<ResponseEntity<ResponseData>> downloadHistoryVideo(@RequestBody DownloadParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
         DeferredResultHolder.put(params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_PLAYBACK_DOWNLOAD + params.getChannelId()).getCallbackKey(), result);

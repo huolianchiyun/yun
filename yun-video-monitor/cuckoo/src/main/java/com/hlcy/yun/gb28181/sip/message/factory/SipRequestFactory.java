@@ -96,16 +96,20 @@ public final class SipRequestFactory {
     }
 
     public static Request getByeRequest(Transaction transaction) {
-        if (isDeserializeTransaction(transaction)) {
-            return toByeRequest(transaction.getRequest());
-        }
-        final Dialog dialog = transaction.getDialog();
+        Request byeRequest;
         try {
-            return dialog.createRequest(Request.BYE);
-        } catch (SipException e) {
-            log.error("Create a bye request exception, cause: {}", e.getMessage());
+            if (isDeserializeTransaction(transaction)) {
+                byeRequest = toByeRequest(transaction.getRequest());
+            } else {
+                byeRequest = transaction.getDialog().createRequest(Request.BYE);
+            }
+            CSeqHeader cSeqHeader = (CSeqHeader) byeRequest.getHeader(CSeqHeader.NAME);
+            cSeqHeader.setSeqNumber(Integer.MAX_VALUE - 1);
+        } catch (SipException | InvalidArgumentException e) {
+            log.error("Create a bye byeRequest exception, cause: {}", e.getMessage());
             throw new RuntimeException(e);
         }
+        return byeRequest;
     }
 
     public static Request getRequest(To to, From from, String method, Transport transport, byte[] content) {

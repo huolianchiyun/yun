@@ -2,12 +2,10 @@ package com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify;
 
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContextCacheUtil;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowPipelineFactory;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.Operation;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.DownloadSession;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession;
-import com.hlcy.yun.gb28181.util.XmlUtil;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.PlaybackSession;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 
@@ -15,13 +13,10 @@ import javax.sip.ClientTransaction;
 import javax.sip.RequestEvent;
 import javax.sip.message.Request;
 
-import java.util.Optional;
-
 import static com.hlcy.yun.gb28181.service.sipmsg.flow.FlowPipelineFactory.getResponseFlowPipeline;
 import static com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.NotifyType.HISTORY_MEDIA_FILE_SEND_END;
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
 import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.getByeRequest;
-import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.getCallId;
 import static com.hlcy.yun.gb28181.util.XmlUtil.getTextOfChildTagFrom;
 
 @Slf4j
@@ -62,8 +57,8 @@ public class MediaStatusNotifyRequestProcessor extends MessageRequestProcessor {
         switch (context.getOperation()) {
             case PLAYBACK:
                 clientTransaction = context.isFromDeserialization()
-                        ? context.getClientTransaction(PlaySession.SIP_DEVICE_SESSION)
-                        : context.getClientTransaction(PlaySession.SIP_MEDIA_SESSION_2);
+                        ? context.getClientTransaction(PlaybackSession.SIP_DEVICE_SESSION)
+                        : context.getClientTransaction(PlaybackSession.SIP_MEDIA_SESSION_2);
                 break;
             case DOWNLOAD:
                 clientTransaction = context.isFromDeserialization()

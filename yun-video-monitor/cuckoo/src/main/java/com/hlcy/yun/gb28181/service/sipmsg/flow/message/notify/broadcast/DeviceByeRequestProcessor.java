@@ -12,7 +12,7 @@ import javax.sip.message.Request;
 import static com.hlcy.yun.gb28181.sip.biz.RequestSender.sendByeRequest;
 
 /**
- * 处理设备主动f发 bye
+ * 处理设备主动发 bye
  */
 public class DeviceByeRequestProcessor extends FlowRequestProcessor {
 
