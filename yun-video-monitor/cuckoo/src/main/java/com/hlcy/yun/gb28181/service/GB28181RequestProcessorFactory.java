@@ -17,16 +17,53 @@ import javax.sdp.SessionDescription;
 import javax.sip.RequestEvent;
 import javax.sip.message.Request;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.hlcy.yun.gb28181.service.sipmsg.flow.Operation.BROADCAST;
 
 public class GB28181RequestProcessorFactory implements RequestProcessorFactory {
+    private static final Map<String, RequestProcessorFactory> FACTORIES = new HashMap<>(2);
+
+    static {
+        FACTORIES.put(Request.INVITE, new InviteRequestFactory());
+        FACTORIES.put(Request.MESSAGE, new MessageRequestFactory());
+    }
 
     @Override
     public RequestProcessor getRequestProcessor(RequestEvent event) {
-        final String method = event.getRequest().getMethod();
-        // TODO 策略模式
+        final RequestProcessorFactory factory = FACTORIES.get(event.getRequest().getMethod());
+        return factory != null ? factory.getRequestProcessor(event) : null;
+    }
 
-        if (Request.MESSAGE.equals(method)) {
+    private static class InviteRequestFactory implements RequestProcessorFactory {
+
+        @Override
+        public RequestProcessor getRequestProcessor(RequestEvent event) {
+            try {
+                // get voice broadcast flow context
+                final SessionDescription sdp = getSessionDescription(new String(event.getRequest().getRawContent()));
+                if (sdp.getMediaDescriptions(false).toString().contains("audio")) {
+                    FlowContextCacheUtil.setNewKey(
+                            BROADCAST.name() + sdp.getOrigin().getUsername(),
+                            SipRequestFactory.getCallId(event.getRequest()));
+                    return FlowPipelineFactory.getRequestFlowPipeline(Operation.BROADCAST).get(Request.INVITE);
+                }
+            } catch (SdpException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private SessionDescription getSessionDescription(String body) throws SdpParseException {
+            return SdpFactory.getInstance().createSessionDescription(body);
+        }
+    }
+
+    private static class MessageRequestFactory implements RequestProcessorFactory {
+
+        @Override
+        public RequestProcessor getRequestProcessor(RequestEvent event) {
             final String cmdType = MANSCDPXmlParser.getCmdTypeFrom(event);
             final Operation operation = Operation.get(cmdType);
             if (operation != null) {
@@ -40,25 +77,7 @@ public class GB28181RequestProcessorFactory implements RequestProcessorFactory {
             if (flowContext != null) {
                 return flowContext.requestProcessor();
             }
-        } else if (Request.INVITE.equals(method)) {
-            //TODO 后续优化根据策略获取响应的 invite request processor
-            try {
-                // get voice broadcast flow context
-                final SessionDescription sdp = getSessionDescription(new String(event.getRequest().getRawContent()));
-                if (sdp.getMediaDescriptions(false).toString().contains("audio")) {
-                    FlowContextCacheUtil.setNewKey(
-                            BROADCAST.name() + sdp.getOrigin().getUsername(),
-                            SipRequestFactory.getCallId(event.getRequest()));
-                    return FlowPipelineFactory.getRequestFlowPipeline(Operation.BROADCAST).get(Request.INVITE);
-                }
-            } catch (SdpException e) {
-                e.printStackTrace();
-            }
+            return null;
         }
-        return null;
-    }
-
-    private SessionDescription getSessionDescription(String body) throws SdpParseException {
-        return SdpFactory.getInstance().createSessionDescription(body);
     }
 }
