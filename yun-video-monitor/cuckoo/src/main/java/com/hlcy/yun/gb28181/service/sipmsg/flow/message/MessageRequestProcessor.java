@@ -3,17 +3,9 @@ package com.hlcy.yun.gb28181.service.sipmsg.flow.message;
 import com.hlcy.yun.gb28181.service.sipmsg.MANSCDPXmlParser;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowContext;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowRequestProcessor;
-import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-
 import javax.sip.RequestEvent;
-import javax.sip.message.Request;
-import java.io.ByteArrayInputStream;
-import java.text.ParseException;
 
 @Slf4j
 public abstract class MessageRequestProcessor extends FlowRequestProcessor {

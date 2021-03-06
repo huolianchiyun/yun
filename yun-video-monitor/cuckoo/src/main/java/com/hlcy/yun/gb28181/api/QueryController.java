@@ -46,13 +46,4 @@ public class QueryController {
         operator.operate(params);
         return result;
     }
-
-    @GetMapping("/alarm")
-    @ApiOperation("查询设备告警")
-    public DeferredResult<ResponseEntity<ResponseData>> queryAlarm(AlarmQueryParams params) {
-        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + params.getChannelId(), result);
-        operator.operate(params);
-        return result;
-    }
 }

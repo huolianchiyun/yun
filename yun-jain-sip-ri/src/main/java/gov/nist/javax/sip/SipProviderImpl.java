@@ -61,16 +61,13 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Implementation of the JAIN-SIP provider interface.
  *
- * @version 1.2 $Revision: 1.89 $ $Date: 2010-12-02 22:04:19 $
- *
  * @author M. Ranganathan <br/>
- *
- *
+ * @version 1.2 $Revision: 1.89 $ $Date: 2010-12-02 22:04:19 $
  */
 
 public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.sip.SipProviderExt,
         SIPTransactionEventListener, SIPDialogEventListener {
-	private static StackLogger logger = CommonLogger.getLogger(SipProviderImpl.class);
+    private static StackLogger logger = CommonLogger.getLogger(SipProviderImpl.class);
     private SipListener sipListener;
 
     protected SipStackImpl sipStack;
@@ -79,11 +76,11 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * A set of listening points associated with the provider At most one LP per
      * transport
      */
-    private ConcurrentHashMap<String,ListeningPoint> listeningPoints;
+    private ConcurrentHashMap<String, ListeningPoint> listeningPoints;
 
     protected EventScanner eventScanner;
 
-    private boolean automaticDialogSupportEnabled ;
+    private boolean automaticDialogSupportEnabled;
 
     private boolean dialogErrorsAutomaticallyHandled = true;
 
@@ -97,9 +94,10 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      */
     protected void stop() {
         // Put an empty event in the queue and post ourselves a message.
-        if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG))
+        if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
             logger.logDebug("Exiting provider");
-        for (Iterator it = listeningPoints.values().iterator(); it.hasNext();) {
+        }
+        for (Iterator it = listeningPoints.values().iterator(); it.hasNext(); ) {
             ListeningPointImpl listeningPoint = (ListeningPointImpl) it.next();
             listeningPoint.removeSipProvider();
         }
@@ -112,9 +110,11 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#getListeningPoint(java.lang.String)
      */
+    @Override
     public ListeningPoint getListeningPoint(String transport) {
-        if (transport == null)
+        if (transport == null) {
             throw new NullPointerException("Null transport param");
+        }
         return (ListeningPoint) this.listeningPoints.get(transport
                 .toUpperCase());
     }
@@ -124,9 +124,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * already in the context of a separate thread, we dont need to enque the
      * event and signal another thread.
      *
-     * @param sipEvent
-     *            is the event to process.
-     *
+     * @param sipEvent is the event to process.
      */
 
     public void handleEvent(EventObject sipEvent, SIPTransaction transaction) {
@@ -138,10 +136,14 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
                             + sipEvent.getSource());
             if (sipEvent instanceof RequestEvent) {
                 Dialog dialog = ((RequestEvent) sipEvent).getDialog();
-                if ( logger.isLoggingEnabled(LogLevels.TRACE_DEBUG))  logger.logDebug("Dialog = " + dialog);
+                if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
+                    logger.logDebug("Dialog = " + dialog);
+                }
             } else if (sipEvent instanceof ResponseEvent) {
                 Dialog dialog = ((ResponseEvent) sipEvent).getDialog();
-                if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG) ) logger.logDebug("Dialog = " + dialog);
+                if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
+                    logger.logDebug("Dialog = " + dialog);
+                }
             }
             logger.logStackTrace();
         }
@@ -157,12 +159,14 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
         }
     }
 
-    /** Creates a new instance of SipProviderImpl */
+    /**
+     * Creates a new instance of SipProviderImpl
+     */
     protected SipProviderImpl(SipStackImpl sipStack) {
         this.eventScanner = sipStack.getEventScanner(); // for quick access.
         this.sipStack = sipStack;
         this.eventScanner.incrementRefcount();
-        this.listeningPoints = new ConcurrentHashMap<String,ListeningPoint>();
+        this.listeningPoints = new ConcurrentHashMap<String, ListeningPoint>();
         this.automaticDialogSupportEnabled = this.sipStack
                 .isAutomaticDialogSupportEnabled();
         this.dialogErrorsAutomaticallyHandled = this.sipStack.isAutomaticDialogErrorHandlingEnabled();
@@ -173,6 +177,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see java.lang.Object#clone()
      */
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
@@ -183,6 +188,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#addSipListener(javax.sip.SipListener)
      */
+    @Override
     public void addSipListener(SipListener sipListener)
             throws TooManyListenersException {
 
@@ -193,8 +199,9 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
                     "Stack already has a listener. Only one listener per stack allowed");
         }
 
-        if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG))
+        if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
             logger.logDebug("add SipListener " + sipListener);
+        }
         this.sipListener = sipListener;
 
     }
@@ -205,12 +212,14 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * @see javax.sip.SipProvider#getListeningPoint()
      */
 
+    @Override
     public ListeningPoint getListeningPoint() {
-        if (this.listeningPoints.size() > 0)
+        if (this.listeningPoints.size() > 0) {
             return (ListeningPoint) this.listeningPoints.values().iterator()
                     .next();
-        else
+        } else {
             return null;
+        }
     }
 
     /*
@@ -218,6 +227,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#getNewCallId()
      */
+    @Override
     public CallIdHeader getNewCallId() {
         String callId = Utils.getInstance().generateCallIdentifier(this.getListeningPoint()
                 .getIPAddress());
@@ -238,226 +248,240 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * @throws TransactionUnavailableException
      */
     protected SIPClientTransaction createClientTransaction(Request request, Hop hop)
-      throws TransactionUnavailableException {
-      if (request == null)
-        throw new NullPointerException("null request");
-      if (hop == null)
-        throw new NullPointerException("null hop");
-      if (!sipStack.isAlive())
-        throw new TransactionUnavailableException("Stack is stopped");
-
-      SIPRequest sipRequest = (SIPRequest) request;
-      if (sipRequest.getTransaction() != null)
-        throw new TransactionUnavailableException(
-                                                  "Transaction already assigned to request");
-      if ( sipRequest.getMethod().equals(Request.ACK)) {
-        throw new TransactionUnavailableException ("Cannot create client transaction for  " + Request.ACK);
-      }
-      // Be kind and assign a via header for this provider if the user is
-      // sloppy
-      if (sipRequest.getTopmostVia() == null) {
-        String transport = null;
-        transport = hop.getTransport();
-        if(transport == null) transport = "udp";
-        ListeningPointImpl lp = (ListeningPointImpl) this
-          .getListeningPoint(transport);
-        if(lp == null) {
-          // last resort, instead of failing try to route anywhere
-          lp = (ListeningPointImpl) this.getListeningPoints()[0];
+            throws TransactionUnavailableException {
+        if (request == null) {
+            throw new NullPointerException("null request");
         }
-        Via via = lp.getViaHeader();
-        sipRequest.setHeader(via);
-      }
-      // Give the request a quick check to see if all headers are assigned.
-      try {
-        sipRequest.checkHeaders();
-      } catch (ParseException ex) {
-        throw new TransactionUnavailableException(ex.getMessage(), ex);
-      }
-
-      /*
-       * User decided to give us his own via header branch. Lets see if it
-       * results in a clash. If so reject the request.
-       */
-      if (sipRequest.getTopmostVia().getBranch() != null
-        && sipRequest.getTopmostVia().getBranch().startsWith(
-                                                             SIPConstants.BRANCH_MAGIC_COOKIE)
-                                                             && sipStack.findTransaction((SIPRequest) sipRequest, false) != null) {
-        throw new TransactionUnavailableException(
-                                                  "Transaction already exists!");
-      }
-
-
-
-
-      if (sipRequest.getMethod().equalsIgnoreCase(Request.CANCEL)) {
-        SIPClientTransaction ct = (SIPClientTransaction) sipStack
-          .findCancelTransaction((SIPRequest) sipRequest, false);
-        if (ct != null) {
-          SIPClientTransaction retval = sipStack.createClientTransaction(sipRequest, ct.getMessageChannel());
-
-          ((SIPTransaction) retval).addEventListener(this);
-          sipStack.addTransaction( retval);
-          if (ct.getDialog() != null) {
-              retval.setDialog((SIPDialog) ct.getDialog(), sipRequest.getDialogId(false));
-
-          }
-          return retval;
+        if (hop == null) {
+            throw new NullPointerException("null hop");
+        }
+        if (!sipStack.isAlive()) {
+            throw new TransactionUnavailableException("Stack is stopped");
         }
 
-      }
-      if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG))
-        logger.logDebug(
-                        "could not find existing transaction for "
-                          //+ sipRequest.getFirstLine()
-        				  + sipRequest
-                          + " creating a new one ");
+        SIPRequest sipRequest = (SIPRequest) request;
+        if (sipRequest.getTransaction() != null) {
+            throw new TransactionUnavailableException(
+                    "Transaction already assigned to request");
+        }
+        if (sipRequest.getMethod().equals(Request.ACK)) {
+            throw new TransactionUnavailableException("Cannot create client transaction for  " + Request.ACK);
+        }
+        // Be kind and assign a via header for this provider if the user is
+        // sloppy
+        if (sipRequest.getTopmostVia() == null) {
+            String transport = null;
+            transport = hop.getTransport();
+            if (transport == null) {
+                transport = "udp";
+            }
+            ListeningPointImpl lp = (ListeningPointImpl) this
+                    .getListeningPoint(transport);
+            if (lp == null) {
+                // last resort, instead of failing try to route anywhere
+                lp = (ListeningPointImpl) this.getListeningPoints()[0];
+            }
+            Via via = lp.getViaHeader();
+            sipRequest.setHeader(via);
+        }
+        // Give the request a quick check to see if all headers are assigned.
+        try {
+            sipRequest.checkHeaders();
+        } catch (ParseException ex) {
+            throw new TransactionUnavailableException(ex.getMessage(), ex);
+        }
 
-      // Could not find a dialog or the route is not set in dialog.
+        /*
+         * User decided to give us his own via header branch. Lets see if it
+         * results in a clash. If so reject the request.
+         */
+        if (sipRequest.getTopmostVia().getBranch() != null
+                && sipRequest.getTopmostVia().getBranch().startsWith(
+                SIPConstants.BRANCH_MAGIC_COOKIE)
+                && sipStack.findTransaction((SIPRequest) sipRequest, false) != null) {
+            throw new TransactionUnavailableException(
+                    "Transaction already exists!");
+        }
 
-      String transport = hop.getTransport();
-      ListeningPointImpl listeningPoint = (ListeningPointImpl) this
-        .getListeningPoint(transport);
-      if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG))
-          logger.logDebug(
-                          "Got following Listenin point "
+
+        if (sipRequest.getMethod().equalsIgnoreCase(Request.CANCEL)) {
+            SIPClientTransaction ct = (SIPClientTransaction) sipStack
+                    .findCancelTransaction((SIPRequest) sipRequest, false);
+            if (ct != null) {
+                SIPClientTransaction retval = sipStack.createClientTransaction(sipRequest, ct.getMessageChannel());
+
+                ((SIPTransaction) retval).addEventListener(this);
+                sipStack.addTransaction(retval);
+                if (ct.getDialog() != null) {
+                    retval.setDialog((SIPDialog) ct.getDialog(), sipRequest.getDialogId(false));
+
+                }
+                return retval;
+            }
+
+        }
+        if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
+            logger.logDebug(
+                    "could not find existing transaction for "
                             //+ sipRequest.getFirstLine()
-          				  + listeningPoint
+                            + sipRequest
+                            + " creating a new one ");
+        }
+
+        // Could not find a dialog or the route is not set in dialog.
+
+        String transport = hop.getTransport();
+        ListeningPointImpl listeningPoint = (ListeningPointImpl) this
+                .getListeningPoint(transport);
+        if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
+            logger.logDebug(
+                    "Got following Listenin point "
+                            //+ sipRequest.getFirstLine()
+                            + listeningPoint
                             + " for transport " + transport);
-      // https://github.com/RestComm/jain-sip/issues/114
-      if(listeningPoint == null) {
-    	  listeningPoint = (ListeningPointImpl) this
-    		        .getListeningPoint(sipRequest.getTopmostVia().getTransport());
-    	  if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG))
-              logger.logDebug(
-                              "Listenig point was null using new one from Via header "
+        }
+        // https://github.com/RestComm/jain-sip/issues/114
+        if (listeningPoint == null) {
+            listeningPoint = (ListeningPointImpl) this
+                    .getListeningPoint(sipRequest.getTopmostVia().getTransport());
+            if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
+                logger.logDebug(
+                        "Listenig point was null using new one from Via header "
                                 //+ sipRequest.getFirstLine()
-              				  + listeningPoint
+                                + listeningPoint
                                 + " for transport " + sipRequest.getTopmostVia().getTransport());
-      }
-
-
-      String dialogId = sipRequest.getDialogId(false);
-      SIPDialog dialog = sipStack.getDialog(dialogId);
-      if (dialog != null && dialog.getState() == DialogState.TERMINATED) {
-
-        // throw new TransactionUnavailableException
-        // ("Found a terminated dialog -- possible re-use of old tag
-        // parameters");
-        sipStack.removeDialog(dialog);
-
-      }
-
-      // An out of dialog route was found. Assign this to the
-      // client transaction.
-
-      try {
-        // Set the brannch id before you ask for a tx.
-        // If the user has set his own branch Id and the
-        // branch id starts with a valid prefix, then take it.
-        // otherwise, generate one. If branch ID checking has
-        // been requested, set the branch ID.
-        String branchId = null;
-        if (sipRequest.getTopmostVia().getBranch() == null
-          || !sipRequest.getTopmostVia().getBranch().startsWith(
-                                                                SIPConstants.BRANCH_MAGIC_COOKIE)
-                                                                || sipStack.checkBranchId() ) {
-          branchId = Utils.getInstance().generateBranchId();
-
-          sipRequest.getTopmostVia().setBranch(branchId);
+            }
         }
-        Via topmostVia = sipRequest.getTopmostVia();
 
-        //set port and transport if user hasn't already done this.
-        if(topmostVia.getTransport() == null)
-          topmostVia.setTransport(transport);
 
-        if(topmostVia.getPort() == -1)
-          topmostVia.setPort(listeningPoint.getPort());
-        branchId = sipRequest.getTopmostVia().getBranch();
+        String dialogId = sipRequest.getDialogId(false);
+        SIPDialog dialog = sipStack.getDialog(dialogId);
+        if (dialog != null && dialog.getState() == DialogState.TERMINATED) {
 
-         MessageChannel messageChannel = sipStack
-            .createMessageChannel(sipRequest, listeningPoint
-                                .getMessageProcessor(), hop);
-         SIPClientTransaction ct = sipStack.createClientTransaction(sipRequest, messageChannel);
-        if (ct == null)
-          throw new TransactionUnavailableException("Cound not create tx");
-        ct.setNextHop(hop);
-        ct.setOriginalRequest(sipRequest);
-        ct.setBranch(branchId);
-        // if the stack supports dialogs then
-        if (SIPTransactionStack.isDialogCreated(sipRequest.getMethod())) {
-          // create a new dialog to contain this transaction
-          // provided this is necessary.
-          // This could be a re-invite
-          // in which case the dialog is re-used.
-          // (but noticed by Brad Templeton)
-          if (dialog != null)
-            ct.setDialog(dialog, sipRequest.getDialogId(false));
-          else if (this.isAutomaticDialogSupportEnabled()) {
-            SIPDialog sipDialog = sipStack.createDialog(ct);
-            ct.setDialog(sipDialog, sipRequest.getDialogId(false));
-          }
-        } else {
-          if (dialog != null) {
-            ct.setDialog(dialog, sipRequest.getDialogId(false));
-          }
+            // throw new TransactionUnavailableException
+            // ("Found a terminated dialog -- possible re-use of old tag
+            // parameters");
+            sipStack.removeDialog(dialog);
 
         }
 
-        // The provider is the event listener for all transactions.
-        ct.addEventListener(this);
-        return ct;
-      } catch (IOException ex) {
+        // An out of dialog route was found. Assign this to the
+        // client transaction.
 
-        throw new TransactionUnavailableException(
-                                                  "Could not resolve next hop or listening point unavailable! ",
-                                                  ex);
+        try {
+            // Set the brannch id before you ask for a tx.
+            // If the user has set his own branch Id and the
+            // branch id starts with a valid prefix, then take it.
+            // otherwise, generate one. If branch ID checking has
+            // been requested, set the branch ID.
+            String branchId = null;
+            if (sipRequest.getTopmostVia().getBranch() == null
+                    || !sipRequest.getTopmostVia().getBranch().startsWith(
+                    SIPConstants.BRANCH_MAGIC_COOKIE)
+                    || sipStack.checkBranchId()) {
+                branchId = Utils.getInstance().generateBranchId();
 
-      } catch (ParseException ex) {
-        InternalErrorHandler.handleException(ex);
-        throw new TransactionUnavailableException(
-                                                  "Unexpected Exception FIXME! ", ex);
-      } catch (InvalidArgumentException ex) {
-        InternalErrorHandler.handleException(ex);
-        throw new TransactionUnavailableException(
-                                                  "Unexpected Exception FIXME! ", ex);
-      }
+                sipRequest.getTopmostVia().setBranch(branchId);
+            }
+            Via topmostVia = sipRequest.getTopmostVia();
 
+            //set port and transport if user hasn't already done this.
+            if (topmostVia.getTransport() == null) {
+                topmostVia.setTransport(transport);
+            }
+
+            if (topmostVia.getPort() == -1) {
+                topmostVia.setPort(listeningPoint.getPort());
+            }
+            branchId = sipRequest.getTopmostVia().getBranch();
+
+            MessageChannel messageChannel = sipStack
+                    .createMessageChannel(sipRequest, listeningPoint
+                            .getMessageProcessor(), hop);
+            SIPClientTransaction ct = sipStack.createClientTransaction(sipRequest, messageChannel);
+            if (ct == null) {
+                throw new TransactionUnavailableException("Cound not create tx");
+            }
+            ct.setNextHop(hop);
+            ct.setOriginalRequest(sipRequest);
+            ct.setBranch(branchId);
+            // if the stack supports dialogs then
+            if (SIPTransactionStack.isDialogCreated(sipRequest.getMethod())) {
+                // create a new dialog to contain this transaction
+                // provided this is necessary.
+                // This could be a re-invite
+                // in which case the dialog is re-used.
+                // (but noticed by Brad Templeton)
+                if (dialog != null) {
+                    ct.setDialog(dialog, sipRequest.getDialogId(false));
+                } else if (this.isAutomaticDialogSupportEnabled()) {
+                    SIPDialog sipDialog = sipStack.createDialog(ct);
+                    ct.setDialog(sipDialog, sipRequest.getDialogId(false));
+                }
+            } else {
+                if (dialog != null) {
+                    ct.setDialog(dialog, sipRequest.getDialogId(false));
+                }
+
+            }
+
+            // The provider is the event listener for all transactions.
+            ct.addEventListener(this);
+            return ct;
+        } catch (IOException ex) {
+
+            throw new TransactionUnavailableException(
+                    "Could not resolve next hop or listening point unavailable! ",
+                    ex);
+
+        } catch (ParseException ex) {
+            InternalErrorHandler.handleException(ex);
+            throw new TransactionUnavailableException(
+                    "Unexpected Exception FIXME! ", ex);
+        } catch (InvalidArgumentException ex) {
+            InternalErrorHandler.handleException(ex);
+            throw new TransactionUnavailableException(
+                    "Unexpected Exception FIXME! ", ex);
+        }
     }
-    /*
+
+    /**
      * (non-Javadoc)
      *
      * @see javax.sip.SipProvider#getNewClientTransaction(javax.sip.message.Request)
      */
+    @Override
     public ClientTransaction getNewClientTransaction(Request request)
             throws TransactionUnavailableException {
-      Hop hop = null;
-      try {
-          hop = sipStack.getNextHop((SIPRequest) request);
-          if (hop == null)
-              throw new TransactionUnavailableException(
-                      "Cannot resolve next hop -- transaction unavailable");
-      } catch (SipException ex) {
-          throw new TransactionUnavailableException(
-                  "Cannot resolve next hop -- transaction unavailable", ex);
-      }
-      SIPClientTransaction newClientTransaction = createClientTransaction(request, hop);
-      sipStack.addTransaction(newClientTransaction);
-      return newClientTransaction;
+        Hop hop;
+        try {
+            hop = sipStack.getNextHop((SIPRequest) request);
+            if (hop == null) {
+                throw new TransactionUnavailableException(
+                        "Cannot resolve next hop -- transaction unavailable");
+            }
+        } catch (SipException ex) {
+            throw new TransactionUnavailableException(
+                    "Cannot resolve next hop -- transaction unavailable", ex);
+        }
+        SIPClientTransaction newClientTransaction = createClientTransaction(request, hop);
+        sipStack.addTransaction(newClientTransaction);
+        return newClientTransaction;
     }
 
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see javax.sip.SipProvider#getNewServerTransaction(javax.sip.message.Request)
      */
+    @Override
     public ServerTransaction getNewServerTransaction(Request request)
             throws TransactionAlreadyExistsException,
             TransactionUnavailableException {
 
-        if (!sipStack.isAlive())
+        if (!sipStack.isAlive()) {
             throw new TransactionUnavailableException("Stack is stopped");
+        }
         SIPServerTransaction transaction = null;
         SIPRequest sipRequest = (SIPRequest) request;
         try {
@@ -466,9 +490,10 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             throw new TransactionUnavailableException(ex.getMessage(), ex);
         }
 
-        if ( request.getMethod().equals(Request.ACK)) {
-            if ( logger.isLoggingEnabled())
+        if (request.getMethod().equals(Request.ACK)) {
+            if (logger.isLoggingEnabled()) {
                 logger.logError("Creating server transaction for ACK -- makes no sense!");
+            }
             throw new TransactionUnavailableException("Cannot create Server transaction for ACK ");
         }
         /*
@@ -481,33 +506,36 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             SIPClientTransaction ct = sipStack.findSubscribeTransaction(
                     sipRequest, (ListeningPointImpl) this.getListeningPoint());
             /* Issue 104 */
-            if (ct == null && ! sipStack.isDeliverUnsolicitedNotify()) {
+            if (ct == null && !sipStack.isDeliverUnsolicitedNotify()) {
                 throw new TransactionUnavailableException(
                         "Cannot find matching Subscription (and gov.nist.javax.sip.DELIVER_UNSOLICITED_NOTIFY not set)");
             }
         }
-        if ( !sipStack.acquireSem()) {
+        if (!sipStack.acquireSem()) {
             throw new TransactionUnavailableException(
-            "Transaction not available -- could not acquire stack lock");
+                    "Transaction not available -- could not acquire stack lock");
         }
         try {
             if (SIPTransactionStack.isDialogCreated(sipRequest.getMethod())) {
-                if (sipStack.findTransaction((SIPRequest) request, true) != null)
+                if (sipStack.findTransaction((SIPRequest) request, true) != null) {
                     throw new TransactionAlreadyExistsException(
-                    "server transaction already exists!");
+                            "server transaction already exists!");
+                }
 
                 transaction = (SIPServerTransaction) ((SIPRequest) request)
-                .getTransaction();
-                if (transaction == null)
+                        .getTransaction();
+                if (transaction == null) {
                     throw new TransactionUnavailableException(
-                    "Transaction not available");
-                if (transaction.getOriginalRequest() == null)
+                            "Transaction not available");
+                }
+                if (transaction.getOriginalRequest() == null) {
                     transaction.setOriginalRequest(sipRequest);
+                }
                 try {
                     sipStack.addTransaction(transaction);
                 } catch (IOException ex) {
                     throw new TransactionUnavailableException(
-                    "Error sending provisional response");
+                            "Error sending provisional response");
                 }
                 // So I can handle timeouts.
                 transaction.addEventListener(this);
@@ -540,22 +568,25 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
                      */
                     transaction = (SIPServerTransaction) sipStack.findTransaction(
                             (SIPRequest) request, true);
-                    if (transaction != null)
+                    if (transaction != null) {
                         throw new TransactionAlreadyExistsException(
-                        "Transaction exists! ");
+                                "Transaction exists! ");
+                    }
                     transaction = (SIPServerTransaction) ((SIPRequest) request)
-                    .getTransaction();
-                    if (transaction == null)
+                            .getTransaction();
+                    if (transaction == null) {
                         throw new TransactionUnavailableException(
-                        "Transaction not available!");
-                    if (transaction.getOriginalRequest() == null)
+                                "Transaction not available!");
+                    }
+                    if (transaction.getOriginalRequest() == null) {
                         transaction.setOriginalRequest(sipRequest);
+                    }
                     // Map the transaction.
                     try {
                         sipStack.addTransaction(transaction);
                     } catch (IOException ex) {
                         throw new TransactionUnavailableException(
-                        "Could not send back provisional response!");
+                                "Could not send back provisional response!");
                     }
 
                     // If there is a dialog already assigned then just update the
@@ -571,14 +602,16 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
                 } else {
                     transaction = (SIPServerTransaction) sipStack.findTransaction(
                             (SIPRequest) request, true);
-                    if (transaction != null)
-                        throw new TransactionAlreadyExistsException(
-                        "Transaction exists! ");
-                    transaction = (SIPServerTransaction) ((SIPRequest) request)
-                    .getTransaction();
                     if (transaction != null) {
-                        if (transaction.getOriginalRequest() == null)
+                        throw new TransactionAlreadyExistsException(
+                                "Transaction exists! ");
+                    }
+                    transaction = (SIPServerTransaction) ((SIPRequest) request)
+                            .getTransaction();
+                    if (transaction != null) {
+                        if (transaction.getOriginalRequest() == null) {
                             transaction.setOriginalRequest(sipRequest);
+                        }
                         // Map the transaction.
                         sipStack.mapTransaction(transaction);
 
@@ -598,11 +631,12 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
                         // tx does not exist so create the tx.
 
                         MessageChannel mc = (MessageChannel) sipRequest
-                        .getMessageChannel();
+                                .getMessageChannel();
                         transaction = sipStack.createServerTransaction(mc);
-                        if (transaction == null)
+                        if (transaction == null) {
                             throw new TransactionUnavailableException(
-                            "Transaction unavailable -- too many servrer transactions");
+                                    "Transaction unavailable -- too many servrer transactions");
+                        }
 
                         transaction.setOriginalRequest(sipRequest);
                         sipStack.mapTransaction(transaction);
@@ -630,20 +664,22 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
 
     }
 
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see javax.sip.SipProvider#getSipStack()
      */
+    @Override
     public SipStack getSipStack() {
         return (SipStack) this.sipStack;
     }
 
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see javax.sip.SipProvider#removeSipListener(javax.sip.SipListener)
      */
+    @Override
     public void removeSipListener(SipListener sipListener) {
         if (sipListener == this.getSipListener()) {
             this.sipListener = null;
@@ -651,24 +687,27 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
 
         boolean found = false;
 
-        for (Iterator<SipProviderImpl> it = sipStack.getSipProviders(); it.hasNext();) {
+        for (Iterator<SipProviderImpl> it = sipStack.getSipProviders(); it.hasNext(); ) {
             SipProviderImpl nextProvider = (SipProviderImpl) it.next();
-            if (nextProvider.getSipListener() != null)
+            if (nextProvider.getSipListener() != null) {
                 found = true;
+            }
         }
         if (!found) {
             sipStack.sipListener = null;
         }
     }
 
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see javax.sip.SipProvider#sendRequest(javax.sip.message.Request)
      */
+    @Override
     public void sendRequest(Request request) throws SipException {
-        if (!sipStack.isAlive())
+        if (!sipStack.isAlive()) {
             throw new SipException("Stack is stopped.");
+        }
 
         // mranga: added check to ensure we are not sending empty (keepalive)
         // message.
@@ -677,20 +716,23 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             Dialog dialog = sipStack.getDialog(((SIPRequest) request)
                     .getDialogId(false));
             if (dialog != null && dialog.getState() != null) {
-            	if (logger.isLoggingEnabled())
-            		logger.logWarning(
-                        "Dialog exists -- you may want to use Dialog.sendAck() "
-                                + dialog.getState());
+                if (logger.isLoggingEnabled()) {
+                    logger.logWarning(
+                            "Dialog exists -- you may want to use Dialog.sendAck() "
+                                    + dialog.getState());
+                }
             }
         }
         Hop hop = sipStack.getRouter((SIPRequest) request).getNextHop(request);
-        if (hop == null)
+        if (hop == null) {
             throw new SipException("could not determine next hop!");
+        }
         SIPRequest sipRequest = (SIPRequest) request;
         // Check if we have a valid via.
         // Null request is used to send default proxy keepalive messages.
-        if ((!sipRequest.isNullRequest()) && sipRequest.getTopmostVia() == null)
+        if ((!sipRequest.isNullRequest()) && sipRequest.getTopmostVia() == null) {
             throw new SipException("Invalid SipRequest -- no via header!");
+        }
 
         try {
             /*
@@ -714,9 +756,9 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             }
 
             if (messageChannel != null) {
-                messageChannel.sendMessage((SIPMessage) sipRequest,hop);
+                messageChannel.sendMessage((SIPMessage) sipRequest, hop);
             } else {
-                if ( logger.isLoggingEnabled(LogLevels.TRACE_DEBUG) ) {
+                if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
                     logger.logDebug("Could not create a message channel for " + hop.toString() + " listeningPoints = " + this.listeningPoints);
                 }
                 throw new SipException(
@@ -724,13 +766,13 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
                                 + hop.toString());
             }
         } catch (IOException ex) {
-        	// not needed as we throw the exception below and it pollutes the logs
+            // not needed as we throw the exception below and it pollutes the logs
 //            if (logger.isLoggingEnabled()) {
 //                logger.logException(ex);
 //            }
 
-        	if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG) ) {
-        		logger.logDebug("Could not create a message channel for " + hop.toString() + " listeningPoints = " + this.listeningPoints + " because of an IO issue " + ex.getMessage());
+            if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
+                logger.logDebug("Could not create a message channel for " + hop.toString() + " listeningPoints = " + this.listeningPoints + " because of an IO issue " + ex.getMessage());
             }
 
             throw new SipException(
@@ -739,10 +781,11 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
         } catch (ParseException ex1) {
             InternalErrorHandler.handleException(ex1);
         } finally {
-            if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG))
+            if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
                 logger.logDebug(
                         "done sending " + request.getMethod() + " to hop "
                                 + hop);
+            }
         }
     }
 
@@ -751,15 +794,18 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#sendResponse(javax.sip.message.Response)
      */
+    @Override
     public void sendResponse(Response response) throws SipException {
-        if (!sipStack.isAlive())
+        if (!sipStack.isAlive()) {
             throw new SipException("Stack is stopped");
+        }
         SIPResponse sipResponse = (SIPResponse) response;
         Via via = sipResponse.getTopmostVia();
-        if (via == null)
+        if (via == null) {
             throw new SipException("No via header in response!");
-        SIPServerTransaction st = (SIPServerTransaction) sipStack.findTransaction((SIPMessage)response, true);
-        if ( st != null   && st.getInternalState() != TransactionState._TERMINATED && this.isAutomaticDialogSupportEnabled()) {
+        }
+        SIPServerTransaction st = (SIPServerTransaction) sipStack.findTransaction((SIPMessage) response, true);
+        if (st != null && st.getInternalState() != TransactionState._TERMINATED && this.isAutomaticDialogSupportEnabled()) {
             throw new SipException("Transaction exists -- cannot send response statelessly");
         }
         String transport = via.getTransport();
@@ -769,25 +815,29 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
         // Via host.
         String host = via.getReceived();
 
-        if (host == null)
+        if (host == null) {
             host = via.getHost();
+        }
 
         // Symmetric nat support
         int port = via.getRPort();
         if (port == -1) {
             port = via.getPort();
             if (port == -1) {
-                if (transport.equalsIgnoreCase("TLS")||transport.equalsIgnoreCase("SCTP-TLS"))
+                if (transport.equalsIgnoreCase("TLS") || transport.equalsIgnoreCase("SCTP-TLS")) {
                     port = 5061;
-                else
+                } else {
                     port = 5060;
+                }
             }
         }
 
         // for correct management of IPv6 addresses.
-        if (host.indexOf(":") > 0)
-            if (host.indexOf("[") < 0)
+        if (host.indexOf(":") > 0) {
+            if (host.indexOf("[") < 0) {
                 host = "[" + host + "]";
+            }
+        }
 
         Hop hop = sipStack.getAddressResolver().resolveAddress(
                 new HopImpl(host, port, transport));
@@ -795,18 +845,19 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
         try {
             ListeningPointImpl listeningPoint = (ListeningPointImpl) this
                     .getListeningPoint(transport);
-            if (listeningPoint == null)
+            if (listeningPoint == null) {
                 throw new SipException(
                         "whoopsa daisy! no listening point found for transport "
                                 + transport);
+            }
             MessageChannel messageChannel = sipStack.createRawMessageChannel(
                     this.getListeningPoint(hop.getTransport()).getIPAddress(),
                     listeningPoint.port, hop);
             // Fix for https://github.com/RestComm/jain-sip/issues/133
             if (messageChannel != null) {
-            	messageChannel.sendMessage(sipResponse);
+                messageChannel.sendMessage(sipResponse);
             } else {
-                if ( logger.isLoggingEnabled(LogLevels.TRACE_DEBUG) ) {
+                if (logger.isLoggingEnabled(LogLevels.TRACE_DEBUG)) {
                     logger.logDebug("Could not create a message channel for " + hop.toString() + " listeningPoints = " + this.listeningPoints);
                 }
                 throw new SipException(
@@ -823,9 +874,11 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#setListeningPoint(javax.sip.ListeningPoint)
      */
+    @Override
     public synchronized void setListeningPoint(ListeningPoint listeningPoint) {
-        if (listeningPoint == null)
+        if (listeningPoint == null) {
             throw new NullPointerException("Null listening point");
+        }
         ListeningPointImpl lp = (ListeningPointImpl) listeningPoint;
         lp.sipProvider = this;
         String transport = lp.getTransport().toUpperCase();
@@ -843,19 +896,24 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * @see javax.sip.SipProvider#getNewDialog(javax.sip.Transaction)
      */
 
+    @Override
     public Dialog getNewDialog(Transaction transaction) throws SipException {
-        if (transaction == null)
+        if (transaction == null) {
             throw new NullPointerException("Null transaction!");
+        }
 
-        if (!sipStack.isAlive())
+        if (!sipStack.isAlive()) {
             throw new SipException("Stack is stopped.");
+        }
 
-        if (isAutomaticDialogSupportEnabled())
+        if (isAutomaticDialogSupportEnabled()) {
             throw new SipException(" Error - AUTOMATIC_DIALOG_SUPPORT is on");
+        }
 
-        if (!SIPTransactionStack.isDialogCreated(transaction.getRequest().getMethod()))
+        if (!SIPTransactionStack.isDialogCreated(transaction.getRequest().getMethod())) {
             throw new SipException("Dialog cannot be created for this method "
                     + transaction.getRequest().getMethod());
+        }
 
         SIPDialog dialog = null;
         SIPTransaction sipTransaction = (SIPTransaction) transaction;
@@ -864,9 +922,10 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             SIPServerTransaction st = (SIPServerTransaction) transaction;
             Response response = st.getLastResponse();
             if (response != null) {
-                if (response.getStatusCode() != 100)
+                if (response.getStatusCode() != 100) {
                     throw new SipException(
                             "Cannot set dialog after response has been sent");
+                }
             }
             SIPRequest sipRequest = (SIPRequest) transaction.getRequest();
             String dialogId = sipRequest.getDialogId(true);
@@ -918,9 +977,9 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * Invoked when an error has ocurred with a transaction. Propagate up to the
      * listeners.
      *
-     * @param transactionErrorEvent
-     *            Error event.
+     * @param transactionErrorEvent Error event.
      */
+    @Override
     public void transactionErrorEvent(
             SIPTransactionErrorEvent transactionErrorEvent) {
         SIPTransaction transaction = (SIPTransaction) transactionErrorEvent
@@ -943,7 +1002,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             } else {
                 SIPClientTransaction clientTx = (SIPClientTransaction) errorObject;
                 Hop hop = clientTx.getNextHop();
-                if ( sipStack.getRouter() instanceof RouterExt ) {
+                if (sipStack.getRouter() instanceof RouterExt) {
                     ((RouterExt) sipStack.getRouter()).transactionTimeout(hop);
                 }
                 ev = new TimeoutEvent(this, (ClientTransaction) errorObject,
@@ -963,7 +1022,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             } else {
                 SIPClientTransaction clientTx = (SIPClientTransaction) errorObject;
                 Hop hop = clientTx.getNextHop();
-                if ( sipStack.getRouter() instanceof RouterExt ) {
+                if (sipStack.getRouter() instanceof RouterExt) {
                     ((RouterExt) sipStack.getRouter()).transactionTimeout(hop);
                 }
 
@@ -980,9 +1039,10 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
             Object errorObject = transactionErrorEvent.getSource();
             Transaction tx = (Transaction) errorObject;
 
-            if (tx.getDialog() != null)
+            if (tx.getDialog() != null) {
                 InternalErrorHandler.handleException("Unexpected event !",
                         this.logger);
+            }
 
             Timeout timeout = Timeout.RETRANSMIT;
             TimeoutEvent ev = null;
@@ -1002,11 +1062,12 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * (non-Javadoc)
      * @see gov.nist.javax.sip.stack.SIPDialogEventListener#dialogErrorEvent(gov.nist.javax.sip.stack.SIPDialogErrorEvent)
      */
-    public  void dialogErrorEvent(SIPDialogErrorEvent dialogErrorEvent) {
+    @Override
+    public void dialogErrorEvent(SIPDialogErrorEvent dialogErrorEvent) {
         SIPDialog sipDialog = (SIPDialog) dialogErrorEvent.getSource();
         Reason reason = Reason.AckNotReceived;
         if (dialogErrorEvent.getErrorID() == SIPDialogErrorEvent.DIALOG_ACK_NOT_SENT_TIMEOUT) {
-        	reason= Reason.AckNotSent;
+            reason = Reason.AckNotSent;
         } else if (dialogErrorEvent.getErrorID() == SIPDialogErrorEvent.DIALOG_REINVITE_TIMEOUT) {
             reason = Reason.ReInviteTimeout;
         } else if (dialogErrorEvent.getErrorID() == SIPDialogErrorEvent.EARLY_STATE_TIMEOUT) {
@@ -1028,6 +1089,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#getListeningPoints()
      */
+    @Override
     public synchronized ListeningPoint[] getListeningPoints() {
 
         ListeningPoint[] retval = new ListeningPointImpl[this.listeningPoints
@@ -1041,19 +1103,22 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#addListeningPoint(javax.sip.ListeningPoint)
      */
+    @Override
     public synchronized void addListeningPoint(ListeningPoint listeningPoint)
             throws ObjectInUseException {
         ListeningPointImpl lp = (ListeningPointImpl) listeningPoint;
-        if (lp.sipProvider != null && lp.sipProvider != this)
+        if (lp.sipProvider != null && lp.sipProvider != this) {
             throw new ObjectInUseException(
                     "Listening point assigned to another provider");
+        }
         String transport = lp.getTransport().toUpperCase();
 
 
         if (this.listeningPoints.containsKey(transport)
-                && this.listeningPoints.get(transport) != listeningPoint)
+                && this.listeningPoints.get(transport) != listeningPoint) {
             throw new ObjectInUseException(
                     "Listening point already assigned for transport!");
+        }
 
         // This is for backwards compatibility.
         lp.sipProvider = this;
@@ -1067,11 +1132,13 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#removeListeningPoint(javax.sip.ListeningPoint)
      */
+    @Override
     public synchronized void removeListeningPoint(ListeningPoint listeningPoint)
             throws ObjectInUseException {
         ListeningPointImpl lp = (ListeningPointImpl) listeningPoint;
-        if (lp.messageProcessor.inUse())
+        if (lp.messageProcessor.inUse()) {
             throw new ObjectInUseException("Object is in use");
+        }
         this.listeningPoints.remove(lp.getTransport().toUpperCase());
 
     }
@@ -1082,7 +1149,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      */
     public synchronized void removeListeningPoints() {
         for (Iterator it = this.listeningPoints.values().iterator(); it
-                .hasNext();) {
+                .hasNext(); ) {
             ListeningPointImpl lp = (ListeningPointImpl) it.next();
             lp.messageProcessor.stop();
             it.remove();
@@ -1095,10 +1162,11 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      *
      * @see javax.sip.SipProvider#setAutomaticDialogSupportEnabled(boolean)
      */
+    @Override
     public void setAutomaticDialogSupportEnabled(
             boolean automaticDialogSupportEnabled) {
         this.automaticDialogSupportEnabled = automaticDialogSupportEnabled;
-        if ( this.automaticDialogSupportEnabled ) {
+        if (this.automaticDialogSupportEnabled) {
             this.dialogErrorsAutomaticallyHandled = true;
         }
     }
@@ -1114,6 +1182,7 @@ public class SipProviderImpl implements javax.sip.SipProvider, gov.nist.javax.si
      * (non-Javadoc)
      * @see gov.nist.javax.sip.SipProviderExt#setDialogErrorsAutomaticallyHandled()
      */
+    @Override
     public void setDialogErrorsAutomaticallyHandled() {
         this.dialogErrorsAutomaticallyHandled = true;
     }

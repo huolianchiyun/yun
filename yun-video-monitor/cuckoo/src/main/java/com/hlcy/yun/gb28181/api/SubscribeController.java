@@ -2,7 +2,6 @@ package com.hlcy.yun.gb28181.api;
 
 import com.hlcy.yun.common.web.response.ResponseData;
 import com.hlcy.yun.gb28181.service.QueryOperator;
-import com.hlcy.yun.gb28181.service.params.query.AlarmQueryParams;
 import com.hlcy.yun.gb28181.service.params.query.AlarmSubscribeParams;
 import com.hlcy.yun.gb28181.service.params.query.QueryParams;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;

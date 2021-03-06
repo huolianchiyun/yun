@@ -186,7 +186,7 @@ public interface Dialog extends Serializable {
      *
      * @return the address object of the local party.
      */
-    public Address getLocalParty();
+    Address getLocalParty();
 
     /**
      * Returns the Address identifying the remote party. This is the value of
@@ -198,7 +198,7 @@ public interface Dialog extends Serializable {
      *
      * @return the address object of the remote party.
      */
-    public Address getRemoteParty();
+    Address getRemoteParty();
 
     /**
      * Returns the Address identifying the remote target. This is the value of
@@ -210,7 +210,7 @@ public interface Dialog extends Serializable {
      *
      * @return the address object of the remote target.
      */
-    public Address getRemoteTarget();
+    Address getRemoteTarget();
 
     /**
      * Get the dialog identifier of this dialog. A dialog Id is associated with
@@ -231,7 +231,7 @@ public interface Dialog extends Serializable {
      *
      * @return the string identifier for this dialog.
      */
-    public String getDialogId();
+    String getDialogId();
 
     /**
      * Returns the Call-Id for this dialog. This is the value of the Call-Id
@@ -239,7 +239,7 @@ public interface Dialog extends Serializable {
      *
      * @return the Call-Id for this dialog
      */
-    public CallIdHeader getCallId();
+    CallIdHeader getCallId();
 
     /**
      * The local sequence number is used to order requests from this User Agent
@@ -263,7 +263,7 @@ public interface Dialog extends Serializable {
      * @return the integer value of the local sequence number, returns zero if
      *         not set.
      */
-    public int getLocalSequenceNumber();
+    int getLocalSequenceNumber();
 
     /**
      * The local sequence number is used to order requests from this User Agent
@@ -284,7 +284,7 @@ public interface Dialog extends Serializable {
      *         not set.
          * @since v1.2
      */
-    public long getLocalSeqNumber();
+    long getLocalSeqNumber();
 
     /**
      * The remote sequence number is used to order requests from its peer User
@@ -308,7 +308,7 @@ public interface Dialog extends Serializable {
      * @return the integer value of the remote sequence number, return zero if
      *         not set.
      */
-    public int getRemoteSequenceNumber();
+    int getRemoteSequenceNumber();
 
     /**
      * The remote sequence number is used to order requests from its peer User
@@ -331,7 +331,7 @@ public interface Dialog extends Serializable {
      *         not set.
          * @since v1.2
      */
-    public long getRemoteSeqNumber();
+    long getRemoteSeqNumber();
 
     /**
      * When acting as an User Agent Server the routeset MUST be set to the list
@@ -354,7 +354,7 @@ public interface Dialog extends Serializable {
      * @return an Iterator over a list of route headers to be used for
      *         forwarding.
      */
-    public Iterator getRouteSet();
+    Iterator getRouteSet();
 
     /**
      * Returns true if this Dialog is secure, for example if the request was sent over a
@@ -363,7 +363,7 @@ public interface Dialog extends Serializable {
      * @return <code>true</code> if this dialog was secure, and
      *         <code>false</code> otherwise.
      */
-    public boolean isSecure();
+    boolean isSecure();
 
     /**
      * Returns whether this Dialog is a server dialog, for example this side
@@ -372,7 +372,7 @@ public interface Dialog extends Serializable {
      * @return <code>true</code> if this is a server dialog and
      *         <code>false</code> if it is a client dialog.
      */
-    public boolean isServer();
+    boolean isServer();
 
     /**
      * This method may be used to increment the local sequence number of the
@@ -385,7 +385,7 @@ public interface Dialog extends Serializable {
      * {@link ClientTransaction#sendRequest()} method. When sending a request
      * using the Transaction the Dialog state is unaffected.
      */
-    public void incrementLocalSequenceNumber();
+    void incrementLocalSequenceNumber();
 
     /**
      * Creates a new Request message based on the dialog creating request. This
@@ -425,7 +425,7 @@ public interface Dialog extends Serializable {
      *             ACK or PRACK.
      *
      */
-    public Request createRequest(String method) throws SipException;
+    Request createRequest(String method) throws SipException;
 
     /**
      * Creates a new reliable provisional response based on an Invite request
@@ -455,7 +455,7 @@ public interface Dialog extends Serializable {
      *         ServerTransactin that created the Dialog.
      *
      */
-    public Response createReliableProvisionalResponse(int statusCode)
+    Response createReliableProvisionalResponse(int statusCode)
             throws InvalidArgumentException, SipException;
 
     /**
@@ -502,7 +502,7 @@ public interface Dialog extends Serializable {
      * @throws SipException
      *             if implementation cannot send the Request for any reason.
      */
-    public void sendRequest(ClientTransaction clientTransaction)
+    void sendRequest(ClientTransaction clientTransaction)
             throws TransactionDoesNotExistException, SipException;
 
     /**
@@ -529,7 +529,7 @@ public interface Dialog extends Serializable {
      *             if implementation cannot send the Request for any reason
      *             (e.g. because another reliable response is still pending).
      */
-    public void sendReliableProvisionalResponse(Response relResponse)
+    void sendReliableProvisionalResponse(Response relResponse)
             throws SipException;
 
     /**
@@ -572,7 +572,7 @@ public interface Dialog extends Serializable {
      *             equals null) or is terminated.
      * @since 1.2
      */
-    public Request createPrack(Response relResponse)
+    Request createPrack(Response relResponse)
             throws DialogDoesNotExistException, SipException;
 
     /**
@@ -592,7 +592,7 @@ public interface Dialog extends Serializable {
      *             example SUBSCRIBE)
      * @since 1.2
      */
-    public Request createAck(long cseq) throws InvalidArgumentException,
+    Request createAck(long cseq) throws InvalidArgumentException,
             SipException;
 
     /**
@@ -606,7 +606,7 @@ public interface Dialog extends Serializable {
      * @throws SipException
      *             if implementation cannot send the ACK Request for any reason
      */
-    public void sendAck(Request ackRequest) throws SipException;
+    void sendAck(Request ackRequest) throws SipException;
 
     /**
      * Returns the current DialogState of the dialog or null. A dialog that is
@@ -637,7 +637,7 @@ public interface Dialog extends Serializable {
      * @return a DialogState determining the current state of the dialog.
      * @see DialogState
      */
-    public DialogState getState();
+    DialogState getState();
 
     /**
      * This method will release all resources associated with this dialog that
@@ -648,7 +648,7 @@ public interface Dialog extends Serializable {
      * INIVTE.
          *
      */
-    public void delete();
+    void delete();
 
     /**
      * This method retrieves the transaction which resulted in the creation of
@@ -660,7 +660,7 @@ public interface Dialog extends Serializable {
          * the stack needs to keep track of.
      * @return the Transaction that created the Dialog.
      */
-    public Transaction getFirstTransaction();
+    Transaction getFirstTransaction();
 
     /**
      * Get the Local Tag of this Dialog. On the client side, this tag is
@@ -668,7 +668,7 @@ public interface Dialog extends Serializable {
      * headers for responses within the dialog. On the server side, this tag is
      * associated with outgoing To headers for responses within the dialog.
      */
-    public String getLocalTag();
+    String getLocalTag();
 
     /**
      * Gets the Remote Tag of this Dialog. On the client side, this tag is
@@ -676,7 +676,7 @@ public interface Dialog extends Serializable {
      * the server side, this tag is associated with incoming From headers for
      * requests within the dialog.
      */
-    public String getRemoteTag();
+    String getRemoteTag();
 
     /**
      * Sets application specific data to this dialog. This specification does
@@ -692,7 +692,7 @@ public interface Dialog extends Serializable {
      * @param applicationData
      *            the new object containing application specific data.
      */
-    public void setApplicationData(Object applicationData);
+    void setApplicationData(Object applicationData);
 
     /**
      * Gets the application specific data specific to this dialog. This
@@ -701,7 +701,7 @@ public interface Dialog extends Serializable {
      *
      * @return the object representation of the application specific data.
      */
-    public Object getApplicationData();
+    Object getApplicationData();
 
     /**
      * Terminate Dialog on BYE. If this flag is set to true then the stack will
@@ -723,6 +723,6 @@ public interface Dialog extends Serializable {
          * @since 1.2
      *
      */
-    public void terminateOnBye(boolean terminateFlag) throws SipException;
+    void terminateOnBye(boolean terminateFlag) throws SipException;
 
 }

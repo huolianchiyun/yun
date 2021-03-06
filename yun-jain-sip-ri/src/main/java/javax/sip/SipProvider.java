@@ -254,7 +254,7 @@ public interface SipProvider {
      * register with the SipProvider when another SipListener is already
      * registered with this SipProvider.
      */
-    public void addSipListener(SipListener sipListener)
+    void addSipListener(SipListener sipListener)
            throws TooManyListenersException;
 
     /**
@@ -263,7 +263,7 @@ public interface SipProvider {
      *
      * @param sipListener the SipListener to be removed from this SipProvider.
      */
-    public void removeSipListener(SipListener sipListener);
+    void removeSipListener(SipListener sipListener);
 
     /**
      * Returns the SipStack that created this SipProvider. A SipProvider
@@ -273,7 +273,7 @@ public interface SipProvider {
      * @see SipStack
      * @return the SipStack that created this SipProvider.
      */
-    public SipStack getSipStack();
+    SipStack getSipStack();
 
     /**
      * Returns the ListeningPoint of this SipProvider. A SipProvider has a
@@ -288,7 +288,7 @@ public interface SipProvider {
      * {@link SipProvider#getListeningPoints()}.
      *
      */
-    public ListeningPoint getListeningPoint();
+    ListeningPoint getListeningPoint();
 
     /**
      * Returns all the ListeningPoints of this SipProvider. A SipProvider may have
@@ -299,7 +299,7 @@ public interface SipProvider {
      * @return an array of ListeningPoints associated to this SipProvider.
      * @since 1.2
      */
-    public ListeningPoint[] getListeningPoints();
+    ListeningPoint[] getListeningPoints();
 
     /**
      * This method sets the ListeningPoint of the SipProvider.
@@ -312,7 +312,7 @@ public interface SipProvider {
      * has been replaced with {@link SipProvider#addListeningPoint(ListeningPoint)},
      * the same semantics apply to this method.
      */
-    public void setListeningPoint(ListeningPoint listeningPoint)
+    void setListeningPoint(ListeningPoint listeningPoint)
                                                    throws ObjectInUseException;
 
 
@@ -335,7 +335,7 @@ public interface SipProvider {
      *
      * @since 1.2
      */
-    public void addListeningPoint(ListeningPoint listeningPoint)
+    void addListeningPoint(ListeningPoint listeningPoint)
                                   throws ObjectInUseException,
                                          TransportAlreadySupportedException;
 
@@ -348,7 +348,7 @@ public interface SipProvider {
      * @since 1.2
      */
 
-    public ListeningPoint getListeningPoint(String transport);
+    ListeningPoint getListeningPoint(String transport);
 
     /**
      * Removes the specified ListeningPoint from this SipProvider. This method
@@ -362,7 +362,7 @@ public interface SipProvider {
      * is the last ListeningPoint associated with this SipProvider.
      * @since 1.2
      */
-    public void removeListeningPoint(ListeningPoint listeningPoint)
+    void removeListeningPoint(ListeningPoint listeningPoint)
                                                     throws ObjectInUseException;
 
 
@@ -372,7 +372,7 @@ public interface SipProvider {
      *
      * @return the new CallIdHeader unique within the SipProvider.
      */
-    public CallIdHeader getNewCallId();
+    CallIdHeader getNewCallId();
 
     /**
      * Before an application can send a new request it must first request
@@ -390,7 +390,7 @@ public interface SipProvider {
      * @see ClientTransaction
      *
      */
-    public ClientTransaction getNewClientTransaction(Request request)
+    ClientTransaction getNewClientTransaction(Request request)
                                         throws TransactionUnavailableException;
 
     /**
@@ -414,7 +414,7 @@ public interface SipProvider {
      *
 
      */
-    public ServerTransaction getNewServerTransaction(Request request)
+    ServerTransaction getNewServerTransaction(Request request)
                        throws TransactionAlreadyExistsException,
                        TransactionUnavailableException;
 
@@ -439,7 +439,7 @@ public interface SipProvider {
      * @throws SipException if the SipProvider cannot send the Request for any
      * reason.
      */
-    public void sendRequest(Request request) throws SipException;
+    void sendRequest(Request request) throws SipException;
 
     /**
      * Sends the Response statelessly, that is no transaction record is
@@ -469,7 +469,7 @@ public interface SipProvider {
      * reason.
      * @see Response
      */
-    public void sendResponse(Response response) throws SipException;
+    void sendResponse(Response response) throws SipException;
 
 
     /**
@@ -517,7 +517,7 @@ public interface SipProvider {
      *
      * @since 1.2
      */
-    public Dialog getNewDialog(Transaction transaction) throws SipException;
+    Dialog getNewDialog(Transaction transaction) throws SipException;
 
 
 /**
@@ -544,7 +544,7 @@ public interface SipProvider {
      * @since v1.2
      *
      */
-    public void setAutomaticDialogSupportEnabled(boolean flag);
+void setAutomaticDialogSupportEnabled(boolean flag);
 
 }
 

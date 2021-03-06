@@ -6,15 +6,19 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.FlowResponseProcessor;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.ClientTransaction;
 import javax.sip.ResponseEvent;
 import javax.sip.message.Request;
 
+@Slf4j
 public class DeviceInviteResponseProcessor extends FlowResponseProcessor {
 
     @Override
     protected void process(ResponseEvent event, FlowContext context) {
+        log.info("*** Play --> Device Invite response: \n{}", event.getResponse());
+
         final ClientTransaction mediaTransaction = context.getClientTransaction(PlaySession.SIP_MEDIA_SESSION_1);
         final Request ackRequest4Media = SipRequestFactory.getAckRequest(mediaTransaction, getMessageBodyByByteArr(event.getResponse()));
         RequestSender.sendAckRequest(ackRequest4Media, mediaTransaction);

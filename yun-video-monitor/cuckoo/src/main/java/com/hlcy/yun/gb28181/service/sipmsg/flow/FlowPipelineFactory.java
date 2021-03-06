@@ -4,7 +4,6 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.AlarmNotifyReques
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.MediaStatusNotifyRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.*;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.KeepaliveNotifyRequestProcessor;
-import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.AlarmQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.DeviceInfoQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.RecordInfoQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.subscribe.SubscribeResponseProcessor;
@@ -50,10 +49,6 @@ public class FlowPipelineFactory {
         RECORD_INFO_PIPELINE.addLast(RECORD_INFO.code(), new RecordInfoQueryRequestProcessor());
         requestMap.put(RECORD_INFO, RECORD_INFO_PIPELINE);
 
-        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> ALARM_QUERY_PIPELINE = new DefaultPipeline<>();
-        RECORD_INFO_PIPELINE.addLast(ALARM_QUERY.code(), new AlarmQueryRequestProcessor());
-        requestMap.put(ALARM_QUERY, ALARM_QUERY_PIPELINE);
-
         // Notify
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> KEEPALIVE_PIPELINE = new DefaultPipeline<>();
         KEEPALIVE_PIPELINE.addLast(KEEPALIVE.code(), new KeepaliveNotifyRequestProcessor());
@@ -64,14 +59,15 @@ public class FlowPipelineFactory {
         requestMap.put(MEDIA_STATUS, MEDIA_STATUS_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> ALARM_NOTIFY_PIPELINE = new DefaultPipeline<>();
-        KEEPALIVE_PIPELINE.addLast(ALARM_NOTIFY.code(), new AlarmNotifyRequestProcessor());
-        requestMap.put(ALARM_NOTIFY, ALARM_NOTIFY_PIPELINE);
+        KEEPALIVE_PIPELINE.addLast(ALARM.code(), new AlarmNotifyRequestProcessor());
+        requestMap.put(ALARM, ALARM_NOTIFY_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> VOICE_BROADCAST_PIPELINE = new DefaultPipeline<>();
         VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.code(), new BroadcastNotifyRequestProcessor());
         VOICE_BROADCAST_PIPELINE.addLast(Request.INVITE, new DeviceInviteRequestProcessor());
         VOICE_BROADCAST_PIPELINE.addLast(Request.ACK, new DeviceAckRequestProcessor());
-        VOICE_BROADCAST_PIPELINE.addLast(Request.BYE, new DeviceByeRequestProcessor());  // 支持设备主动发 bye
+        // 支持设备主动发 bye
+        VOICE_BROADCAST_PIPELINE.addLast(Request.BYE, new DeviceByeRequestProcessor());
         requestMap.put(BROADCAST, VOICE_BROADCAST_PIPELINE);
 
         REQUEST_PIPELINE_CONTAINER = Collections.unmodifiableMap(requestMap);
@@ -84,9 +80,11 @@ public class FlowPipelineFactory {
         PLAY_PIPELINE.addLast("3-4", new MediaInviteResponseProcessor1());
         PLAY_PIPELINE.addLast("5-6-7-8", new DeviceInviteResponseProcessor());
         PLAY_PIPELINE.addLast("9-10-11-12", new MediaInviteResponseProcessor2());
-        PLAY_PIPELINE.addLast(PLAY.name(), new MediaByeResponseProcessor1());  // "16-17"
+        // 16-17
+        PLAY_PIPELINE.addLast(PLAY.name(), new MediaByeResponseProcessor1());
         PLAY_PIPELINE.addLast("18-19", new MediaByeResponseProcessor2());
-        PLAY_PIPELINE.addLast("DeviceByResponseProcessor", new DeviceByeResponseProcessor());  // 20
+        // 20
+        PLAY_PIPELINE.addLast("DeviceByResponseProcessor", new DeviceByeResponseProcessor());
         responseMap.put(PLAY, PLAY_PIPELINE);
 
         // Playback
@@ -94,7 +92,8 @@ public class FlowPipelineFactory {
         PLAYBACK_PIPELINE.addLast("3-4", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaInviteResponseProcessor1());
         PLAYBACK_PIPELINE.addLast("5-6-7-8", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.DeviceInviteResponseProcessor());
         PLAYBACK_PIPELINE.addLast("9-10-11-12", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaInviteResponseProcessor2());
-        PLAYBACK_PIPELINE.addLast(PLAYBACK.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaByeResponseProcessor1());  // "24-25"
+        // 24-25
+        PLAYBACK_PIPELINE.addLast(PLAYBACK.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaByeResponseProcessor1());
         PLAYBACK_PIPELINE.addLast("26-27", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.MediaByeResponseProcessor2());
         PLAYBACK_PIPELINE.addLast("DeviceByResponseProcessor", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.playback.DeviceByeResponseProcessor());
         responseMap.put(PLAYBACK, PLAYBACK_PIPELINE);
@@ -104,7 +103,8 @@ public class FlowPipelineFactory {
         DOWNLOAD_PIPELINE.addLast("3-4", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.MediaInviteResponseProcessor1());
         DOWNLOAD_PIPELINE.addLast("5-6-7-8", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.DeviceInviteResponseProcessor());
         DOWNLOAD_PIPELINE.addLast("9-10-11-12", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.MediaInviteResponseProcessor2());
-        DOWNLOAD_PIPELINE.addLast(PLAYBACK.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.MediaByeResponseProcessor1());  // "24-25"
+        // 24-25
+        DOWNLOAD_PIPELINE.addLast(PLAYBACK.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.MediaByeResponseProcessor1());
         DOWNLOAD_PIPELINE.addLast("26-27", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.MediaByeResponseProcessor2());
         DOWNLOAD_PIPELINE.addLast("DeviceByResponseProcessor", new com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.download.DeviceByeResponseProcessor());
         responseMap.put(DOWNLOAD, DOWNLOAD_PIPELINE);
@@ -112,7 +112,8 @@ public class FlowPipelineFactory {
         // Broadcast
         DefaultPipeline<ResponseProcessor<FlowContext>, ResponseEvent> VOICE_BROADCAST_PIPELINE = new DefaultPipeline<>();
         VOICE_BROADCAST_PIPELINE.addLast("7-8-9-10-11-12-13-14", new MediaInviteResponseProcessor());
-        VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.DeviceByeResponseProcessor());  // "18-19"
+        // 18-19
+        VOICE_BROADCAST_PIPELINE.addLast(BROADCAST.name(), new com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.DeviceByeResponseProcessor());
         VOICE_BROADCAST_PIPELINE.addLast("20-21-22-23", new MediaByeResponseProcessor());
         responseMap.put(BROADCAST, VOICE_BROADCAST_PIPELINE);
 

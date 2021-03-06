@@ -1,13 +1,34 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow;
 
 public enum Operation {
-    PLAY("Play"), PLAYBACK("Playback"), DOWNLOAD("Download"),
+    /**
+     * Player operation
+     */
+    PLAY("Play"),
+    PLAYBACK("Playback"),
+    DOWNLOAD("Download"),
+
+    /**
+     * PTZ operate
+     */
     RECORD("Record"), GUARD("Guard"), RESET_ALARM("ResetAlarm"), HOME_POSITION("HomePosition"), PRESET("Preset"),
     DEVICE_CONFIG("DeviceConfig"), CRUISE("Cruise"), AUXIL_SWITCH("AuxilSwitch"), FI("fi"), TELE_BOOT("TeleBoot"),
     IFRAME("Iframe"),
-    CATALOG("Catalog"), DEVICE_INFO("DeviceInfo"), RECORD_INFO("RecordInfo"), ALARM_QUERY("Alarm"),
+
+    /**
+     * Query operate
+     */
+    CATALOG("Catalog"), DEVICE_INFO("DeviceInfo"), RECORD_INFO("RecordInfo"),
+
+    /**
+     * Subscribe
+     */
     SUBSCRIBE("Subscribe"),
-    KEEPALIVE("Keepalive"), BROADCAST("Broadcast"), MEDIA_STATUS("MediaStatus"), ALARM_NOTIFY("Alarm");
+
+    /**
+     * Notify operate
+     */
+    KEEPALIVE("Keepalive"), BROADCAST("Broadcast"), MEDIA_STATUS("MediaStatus"), ALARM("Alarm");
 
     private String code;
 
@@ -27,4 +48,5 @@ public enum Operation {
     public String code() {
         return code;
     }
+
 }

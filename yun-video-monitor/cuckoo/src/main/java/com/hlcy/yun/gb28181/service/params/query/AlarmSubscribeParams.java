@@ -30,6 +30,11 @@ public class AlarmSubscribeParams extends QueryParams {
     private int alarmMethod;
 
     /**
+     * 报警类型
+     */
+    private String alarmType;
+
+    /**
      * 报警发生开始时间(可选)
      */
     private LocalDateTime startAlarmTime;

@@ -43,7 +43,7 @@ public class DefaultPlayer implements Player {
     public void play(PlayParams params) {
         if (!params.isNewStream()) {
             // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
-            final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextByOperationAndChannelId(Operation.PLAY, params.getChannelId());
+            final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextByPlayParams(params);
             if (optional.isPresent() && StringUtils.hasText(optional.get().getSsrc())) {
                 final FlowContext flowContext = optional.get();
                 if (!flowContext.expire()) {
@@ -80,7 +80,8 @@ public class DefaultPlayer implements Player {
             // 是否让流媒体主动拉流
             final JSONObject response = mediaClient.mediaMakeDevicePushStream(ssrc, params.getDeviceIp());
             if (response.getIntValue("code") == 0) {
-                FlowContextCacheUtil.put(ssrc, new FlowContext(Operation.PLAY, params, true));
+                FlowContextCacheUtil.put(ssrc, new FlowContext(Operation.PLAY, params, ssrc, true));
+                log.error("*** 流媒体使设备推流成功，SSRC：{}， response：{}", ssrc, response);
                 DeferredResultHolder.setDeferredResultForRequest(
                         params.getCallbackKey(),
                         new PlayResponse(ssrc, properties.getMediaIp()));
@@ -126,7 +127,7 @@ public class DefaultPlayer implements Player {
 
     private boolean handleMediaMakeDevicePushStreamClose(String ssrc) {
         final Optional<FlowContext> contextOptional = FlowContextCacheUtil.findFlowContextBySsrc(ssrc);
-        if (contextOptional.isPresent() && contextOptional.get().isMediaPullStream()) {
+        if (contextOptional.isPresent() && contextOptional.get().isMediaMakeDevicePushStream()) {
             log.info("*** Media make device push stream close, ssrc:{} ***", ssrc);
             SSRCManger.releaseSSRC(ssrc);
             return true;

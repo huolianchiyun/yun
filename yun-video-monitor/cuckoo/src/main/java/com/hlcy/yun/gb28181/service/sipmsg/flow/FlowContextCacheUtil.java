@@ -6,6 +6,7 @@ import cn.hutool.cache.impl.TimedCache;
 import com.hlcy.yun.common.spring.SpringContextHolder;
 import com.hlcy.yun.common.spring.redis.RedisUtils;
 import com.hlcy.yun.gb28181.config.GB28181Properties;
+import com.hlcy.yun.gb28181.service.params.player.PlayParams;
 import com.hlcy.yun.gb28181.sip.biz.MessageContextCache;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
 import com.hlcy.yun.gb28181.ssrc.SSRCManger;
@@ -15,7 +16,6 @@ import org.springframework.util.StringUtils;
 import javax.sip.header.CallIdHeader;
 import javax.sip.message.Message;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,10 +59,10 @@ public final class FlowContextCacheUtil {
         redisUtils.hdel(KEY, key);
     }
 
-    public static Optional<FlowContext> findFlowContextByOperationAndChannelId(Operation operation, String channelId) {
+    public static Optional<FlowContext> findFlowContextByPlayParams(PlayParams params) {
         // 先不考虑，本地缓存找不到，再去redis获取，因为ssrc 对应不看时，流媒体回调stop释放ssrc，
         // 但极端情况有问题，设备通道已达最大值，且ssrc全存储redis，在获取通道，设备将响应繁忙。这也做的目的提升性能
-        return flowContextCache.findFlowContextByOperationAndChannelId(operation, channelId);
+        return flowContextCache.findFlowContextByPlayParams(params);
     }
 
     public static Optional<FlowContext> findFlowContextBySsrc(String ssrc) {
@@ -112,11 +112,13 @@ public final class FlowContextCacheUtil {
             return ((CallIdHeader) message.getHeader(CallIdHeader.NAME)).getCallId();
         }
 
-        Optional<FlowContext> findFlowContextByOperationAndChannelId(Operation operation, String channelId) {
+        Optional<FlowContext> findFlowContextByPlayParams(PlayParams params) {
             final Iterator<CacheObj<String, FlowContext>> cacheObjIterator = CONTEXT_CACHE.cacheObjIterator();
             while (cacheObjIterator.hasNext()) {
                 final FlowContext context = cacheObjIterator.next().getValue();
-                if (operation == context.getOperation() && context.getOperationalParams().getChannelId().equals(channelId)) {
+                if (params.getPlay() == context.getOperation()
+                        && context.getOperationalParams().getChannelId().equals(params.getChannelId())
+                        && !StringUtils.isEmpty(params.getFormat()) == context.isMediaMakeDevicePushStream()) {
                     return Optional.of(context);
                 }
             }

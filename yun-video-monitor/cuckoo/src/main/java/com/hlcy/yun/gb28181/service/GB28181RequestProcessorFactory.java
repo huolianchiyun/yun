@@ -24,6 +24,8 @@ public class GB28181RequestProcessorFactory implements RequestProcessorFactory {
     @Override
     public RequestProcessor getRequestProcessor(RequestEvent event) {
         final String method = event.getRequest().getMethod();
+        // TODO 策略模式
+
         if (Request.MESSAGE.equals(method)) {
             final String cmdType = MANSCDPXmlParser.getCmdTypeFrom(event);
             final Operation operation = Operation.get(cmdType);

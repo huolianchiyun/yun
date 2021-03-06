@@ -29,7 +29,7 @@ public class ByeRequestHandler extends RequestHandler {
             ack.handle(event);
         } else {
             log.warn("A bye request has no corresponding processor, the request will be ignored, request \n{}", event.getRequest());
-            // TODO 后续添加 cleanup flow context
+            // TODO 后续添加 cleanup flow context and 若是设备操作 将其情况考虑 setDefferResult, 目前发现海康设备繁忙 直接发bye 而非 486
         }
 
     }

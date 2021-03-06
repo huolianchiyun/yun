@@ -15,9 +15,7 @@ import lombok.NoArgsConstructor;
 import javax.sip.ClientTransaction;
 import javax.sip.ServerTransaction;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineType.REQUEST;
@@ -42,14 +40,15 @@ public class FlowContext implements MessageContext, Serializable {
 
     private Operation operation;
     private DeviceParams operationalParams;
-    private boolean mediaPullStream;
+    private boolean mediaMakeDevicePushStream;
     private long downloadFileSize;
     private String ssrc;
 
-    public FlowContext(Operation operation, DeviceParams operationalParams, boolean mediaPullStream) {
+    public FlowContext(Operation operation, DeviceParams operationalParams, String ssrc, boolean mediaMakeDevicePushStream) {
         this(operation);
+        this.ssrc = ssrc;
         this.operationalParams = operationalParams;
-        this.mediaPullStream = mediaPullStream;
+        this.mediaMakeDevicePushStream = mediaMakeDevicePushStream;
     }
 
     /**
@@ -155,8 +154,8 @@ public class FlowContext implements MessageContext, Serializable {
         this.ssrc = ssrc;
     }
 
-    public boolean isMediaPullStream() {
-        return mediaPullStream;
+    public boolean isMediaMakeDevicePushStream() {
+        return mediaMakeDevicePushStream;
     }
 
     public ClientTransaction getClientTransaction(Enum key) {

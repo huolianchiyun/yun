@@ -18,7 +18,7 @@ public abstract class ResponseProcessor<C extends MessageContext> extends Messag
     @Override
     public void handle(ResponseEvent event) {
         final int status = event.getResponse().getStatusCode();
-        if (!(status == Response.OK)) {
+        if (status != Response.OK) {
             log.warn("Receive a exception response, status：{}, message: \n{}", status, event.getResponse().getReasonPhrase());
             cleanupContextWhenClientResponseException(event);
             return;

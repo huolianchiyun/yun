@@ -35,7 +35,6 @@ public class QueryOperator<T extends QueryParams> implements InitializingBean {
         cmdFactory.put(CatalogQueryParams.class, new CatalogQueryCmd(properties));
         cmdFactory.put(DeviceInfoQueryParams.class, new DeviceInfoQueryCmd(properties));
         cmdFactory.put(RecordInfoQueryParams.class, new RecordInfoQueryCmd(properties));
-        cmdFactory.put(AlarmQueryParams.class, new AlarmQueryCmd(properties));
         cmdFactory.put(AlarmSubscribeParams.class, new AlarmSubscribeCmd(properties));
     }
 }

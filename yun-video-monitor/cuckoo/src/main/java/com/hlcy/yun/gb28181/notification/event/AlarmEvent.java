@@ -15,6 +15,8 @@ public class AlarmEvent extends AbstractDeviceEvent implements EventMap {
     private String alarmMethod;
     private String alarmTime;
     private String alarmDescription;
+    private String alarmType;
+    private String eventType;
     private String longitude;
     private String latitude;
 
@@ -25,12 +27,14 @@ public class AlarmEvent extends AbstractDeviceEvent implements EventMap {
 
     @Override
     public Map<String, String> toMap() {
-        final Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>(9);
         map.put("type", type);
         map.put("deviceId", deviceId);
         map.put("alarmPriority", alarmPriority);
         map.put("alarmMethod", alarmMethod);
         map.put("alarmTime", alarmTime);
+        map.put("alarmType", alarmType);
+        map.put("eventType", eventType);
         map.put("alarmDescription", alarmDescription);
         map.put("longitude", longitude);
         map.put("latitude", latitude);

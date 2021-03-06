@@ -1,7 +1,6 @@
 package com.hlcy.yun.gb28181.service.command.query;
 
 import com.hlcy.yun.gb28181.config.GB28181Properties;
-import com.hlcy.yun.gb28181.service.params.query.AlarmQueryParams;
 import com.hlcy.yun.gb28181.service.params.query.AlarmSubscribeParams;
 
 import java.time.LocalDateTime;
