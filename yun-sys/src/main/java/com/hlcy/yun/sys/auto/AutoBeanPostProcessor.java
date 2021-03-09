@@ -7,6 +7,7 @@ import java.util.Objects;
 
 @Slf4j
 public class AutoBeanPostProcessor implements BeanPostProcessor {
+    @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         if (bean instanceof MybatisProperties) {
             MybatisProperties properties = (MybatisProperties) bean;
@@ -16,11 +17,13 @@ public class AutoBeanPostProcessor implements BeanPostProcessor {
                 properties.setMapperLocations(new String[]{"classpath:mapper/**/*.xml"});
             }
         }
-        return bean;  // you can return any other object as well
+        // you can return any other object as well
+        return bean;
     }
 
+    @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        return bean;  // you can return any other object as well
+        // you can return any other object as well
+        return bean;
     }
-
 }

@@ -30,6 +30,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class TokenFilter extends GenericFilterBean {
     private static final String SEC_WEBSOCKET_PROTOCOL = "sec-websocket-protocol";
+    private static final String WEBSOCKET_PROTOCOL_REGEX = "^/wss?/.+";
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
     private final UserInfoCache userInfoCache;
@@ -69,7 +70,7 @@ public class TokenFilter extends GenericFilterBean {
     }
 
     private void handleSecWebsocketProtocol(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        if (httpServletRequest.getRequestURI().startsWith("/ws")) {
+        if (httpServletRequest.getRequestURI().matches(WEBSOCKET_PROTOCOL_REGEX)) {
             httpServletResponse.setHeader(SEC_WEBSOCKET_PROTOCOL, httpServletRequest.getHeader(SEC_WEBSOCKET_PROTOCOL));
         }
     }
@@ -87,7 +88,7 @@ public class TokenFilter extends GenericFilterBean {
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = null;
         try {
-            bearerToken = request.getRequestURI().startsWith("/ws")
+            bearerToken = request.getRequestURI().matches(WEBSOCKET_PROTOCOL_REGEX)
                     ? URLDecoder.decode(request.getHeader(SEC_WEBSOCKET_PROTOCOL), "UTF-8")
                     : request.getHeader(properties.getHeader());
         } catch (UnsupportedEncodingException e) {

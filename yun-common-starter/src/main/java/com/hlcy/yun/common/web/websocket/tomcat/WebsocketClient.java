@@ -36,7 +36,7 @@ public class WebsocketClient implements Sender, ApplicationListener<ApplicationS
     /**
      * 存放每个客户端对应的 WebSocket 对象。
      */
-    private static final Map<String, WebsocketClient> WEB_SOCKET_CLIENT_MAP = new ConcurrentHashMap<>(5);
+    private static final Map<String, WebsocketClient> WEB_SOCKET_CLIENT_MAP = new ConcurrentHashMap<>(25);
 
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -56,7 +56,9 @@ public class WebsocketClient implements Sender, ApplicationListener<ApplicationS
      */
     @Override
     public void sendMsg(String sid, SocketMsg socketMsg) {
-        if (WEB_SOCKET_CLIENT_MAP.isEmpty()) return;
+        if (WEB_SOCKET_CLIENT_MAP.isEmpty()) {
+            return;
+        }
         String message = JSONObject.toJSONString(socketMsg);
         log.info("推送消息到 {}，推送内容: {}", sid, message);
         final WebsocketClient client = WEB_SOCKET_CLIENT_MAP.get(sid);
@@ -105,8 +107,8 @@ public class WebsocketClient implements Sender, ApplicationListener<ApplicationS
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("收到来 {} 的信息: {}", sid, message);
         if (StringUtils.isNotBlank(message)) {
+            log.info("收到来 {} 的信息: {}", sid, message);
             publisher.publishEvent(new WebsocketReceiveEvent("Tomcat-Websocket").setMessage(message).setUid(sid));
         }
         //群发消息

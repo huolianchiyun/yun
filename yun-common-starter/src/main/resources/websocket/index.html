@@ -33,7 +33,7 @@
                 let ws = null
                 $('#connect').click(function () {
                     if (ws == null || ws.readyState != 1) {
-                        let token = encodeURI("Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiNzUwZDczYzdkZmI0ZjQ0YWVjMzAwNTRlZWU2ZTg3NiIsImF1dGgiOiJhbGwiLCJzdWIiOiJhZG1pbiJ9.SsWCYOlDzF2C8r8HX50X5vMTDpCOGMA3i_BNg5lanClJcU6ucydYwt7lCF4qon_b5sSaQJRDh9f-q2rgr81f_w")
+                        let token = encodeURI("Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1ZTJkODg2YjEzNmM0MDY2OTU1NzNiZDcwZWRlNGVhNCIsImF1dGgiOiJhbGwiLCJzdWIiOiJhZG1pbiJ9.mnynNLrlmbbMKa5RtNeRyKFSo61DjV5KPbcnC0J6KqkT7-z9B1RJYw7b0w-HNKjcD1_PoJSTce8rCFc7xDH-PA")
 
                         ws = new WebSocket($('#url').val(),[token]);
                         ws.onerror = function (e) {
@@ -53,12 +53,14 @@
                         }
 
                         $('#send').click(function () {
-                            var msg = $('#msg').val()
-                            $('#msg').val('')
-                            if (ws.send(msg)) {
-                                log('Message sent')
-                            } else {
-                                log('Message not sent')
+                            const $msg = $('#msg');
+                            const msg = $msg.val()
+                            $msg.val('')
+                            try{
+                                ws.send(msg)
+                                log('Message sent:' + msg)
+                            }catch (e) {
+                                log('Message not sent:' + msg)
                             }
                         })
 

@@ -1,8 +1,1 @@
-设备CRUD，设备树，打标签，设备功能 -- 伟茂
-设备编码生成 -- 吕欣
-fastdfs 对接 -- 鸿鸽
-分布布局CRUD  -- 晓康
-历史视频CURD  -- 王胜胜
-抓拍、录像CURD  -- 冯超
-执行计划、CURD -- 陈来斌
-告警CRUD --徐柯
+HTTPS SUPPORT: https://www.cnblogs.com/huanzi-qch/p/12133872.html
