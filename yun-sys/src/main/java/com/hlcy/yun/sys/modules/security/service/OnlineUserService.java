@@ -2,6 +2,7 @@ package com.hlcy.yun.sys.modules.security.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
+import com.hlcy.yun.sys.modules.rights.model.$do.DeptDO;
 import com.hlcy.yun.sys.modules.security.cache.UserInfoCache;
 import com.hlcy.yun.sys.modules.security.model.dto.MyUserDetails;
 import com.hlcy.yun.sys.modules.security.model.dto.OnlineUser;
@@ -42,8 +43,8 @@ public class OnlineUserService {
      * @param request       /
      */
     public void save(MyUserDetails myUserDetails, String token, HttpServletRequest request) {
-        GroupDO dept = myUserDetails.getUser().getDept();
-        String deptStr = dept != null ? dept.getGroupName() : Constants.EMPTY_STR;
+        DeptDO dept = myUserDetails.getUser().getDept();
+        String deptStr = dept != null ? dept.getDeptName() : Constants.EMPTY_STR;
         String ip = IPUtil.getIp(request);
         String browser = IPUtil.getBrowser(request);
         String address = IPUtil.getCityInfo(ip);

@@ -88,7 +88,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
     private Set<GroupDO> groups;
 
     @ApiModelProperty(hidden = true)
-    private GroupDO dept;
+    private DeptDO dept;
 
     public UserDO() {
     }
@@ -112,8 +112,12 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserDO other = (UserDO) o;
         return Objects.equals(id, other.id) || (Objects.equals(username, other.username) && Objects.equals(pwd, other.pwd));
     }
@@ -130,7 +134,7 @@ public class UserDO extends BaseDO implements ExcelSupport, Serializable {
         map.put("显示名", nickname);
         map.put("用户名", username);
         map.put("所属组", String.join(",", groups));
-        map.put("所属部门", dept == null ? "" : dept.getGroupName());
+        map.put("所属部门", dept == null ? "" : dept.getDeptName());
         map.put("手机号码", phone);
         map.put("邮箱", email);
         map.put("状态", status ? "已激活" : "未激活");

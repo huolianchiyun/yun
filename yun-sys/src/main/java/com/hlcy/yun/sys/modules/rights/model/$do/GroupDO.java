@@ -90,6 +90,7 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
         return oldPid;
     }
 
+    @Override
     public Long getPid() {
         if (null == pid) {
             pid = 0L;
@@ -114,8 +115,12 @@ public class GroupDO extends BaseDO implements Comparable<GroupDO>, CollectChild
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof GroupDO)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GroupDO)) {
+            return false;
+        }
         GroupDO other = (GroupDO) o;
         return groupCode.equals(other.groupCode) || id.equals(other.id);
     }

@@ -1,5 +1,6 @@
 package com.hlcy.yun.common.web.websocket.netty;
 
+import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.JSON;
 import com.hlcy.yun.common.spring.SpringContextHolder;
 import com.hlcy.yun.common.web.websocket.WebsocketConst;
@@ -10,6 +11,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedNioFile;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -77,10 +79,11 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
                 .header("Authorization", token)
                 .setConnectionTimeout(10000)
                 .execute();
-        if (response.getStatus() == 401) {
+        if (response.getStatus() == HttpStatus.HTTP_UNAUTHORIZED) {
             log.warn("*** websocket handshake failed, cause 401 No Authorization. ***");
             ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT).addListener(ChannelFutureListener.CLOSE);
-        } else if (response.getStatus() == 200 && JSON.parseObject(response.body()).getJSONObject("meta").getIntValue("status") == 200) {
+        } else if (response.getStatus() == HttpStatus.HTTP_OK
+                && JSON.parseObject(response.body()).getJSONObject("meta").getIntValue("status") == HttpStatus.HTTP_OK) {
             final ChannelPipeline pipeline = ctx.pipeline();
             pipeline.addLast(new WebSocketServerProtocolHandler(WebSocketServerProtocolConfig.newBuilder()
                     .websocketPath(WebsocketConst.WEBSOCKET_BASE_URL)

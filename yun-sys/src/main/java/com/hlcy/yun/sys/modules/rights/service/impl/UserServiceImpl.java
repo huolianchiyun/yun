@@ -8,7 +8,7 @@ import com.hlcy.yun.sys.modules.common.enums.CodeEnum;
 import com.hlcy.yun.sys.modules.rights.common.constant.RightsConstants;
 import com.hlcy.yun.sys.modules.rights.mapper.UserGroupMapper;
 import com.hlcy.yun.sys.modules.rights.mapper.UserMapper;
-import com.hlcy.yun.sys.modules.rights.model.$do.GroupDO;
+import com.hlcy.yun.sys.modules.rights.model.$do.DeptDO;
 import com.hlcy.yun.sys.modules.rights.model.$do.UserDO;
 import com.hlcy.yun.sys.modules.rights.model.$do.UserGroupDO;
 import com.hlcy.yun.sys.modules.rights.model.criteria.UserQueryCriteria;
@@ -222,11 +222,11 @@ class UserServiceImpl implements UserService {
             return;
         }
         // 部门权限校验：检查操作人所在部门是否高于或等于被操作用户所属部门，满足yes，不满足no
-        GroupDO dept = operatingUser.getDept();
-        if (Objects.nonNull(dept) && StringUtils.hasText(dept.getGroupCode())) {
+        DeptDO dept = operatingUser.getDept();
+        if (Objects.nonNull(dept) && StringUtils.hasText(dept.getDeptCode())) {
             Assert.isNull(currentUser.getDept(), "你不属于一个部门，没有操作权限！");
-            Assert.isTrue(currentUser.getUsername().equals(currentUser.getDept().getGroupMaster()), "你不是部门管者，没有操作权限！");
-            Assert.isTrue(dept.getGroupCode().startsWith(currentUser.getDept().getGroupCode()), "你只能操作你所属部门下的用户！");
+            Assert.isTrue(currentUser.getUsername().equals(currentUser.getDept().getDeptMaster()), "你不是部门管者，没有操作权限！");
+            Assert.isTrue(dept.getDeptCode().startsWith(currentUser.getDept().getDeptCode()), "你只能操作你所属部门下的用户！");
         }
     }
 

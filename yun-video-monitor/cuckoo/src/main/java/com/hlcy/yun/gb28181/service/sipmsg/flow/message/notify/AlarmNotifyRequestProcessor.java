@@ -1,19 +1,22 @@
 package com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify;
 
+import com.hlcy.yun.common.spring.SpringContextHolder;
+import com.hlcy.yun.gb28181.config.GB28181Properties;
 import com.hlcy.yun.gb28181.notification.event.AlarmEvent;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageRequestProcessor;
 import com.hlcy.yun.gb28181.sip.biz.RequestSender;
+import com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory;
+import com.hlcy.yun.gb28181.sip.message.factory.Transport;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 
 import javax.sip.RequestEvent;
-import javax.sip.SipException;
-import javax.sip.header.ContentTypeHeader;
+import javax.sip.header.ViaHeader;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-
 import static com.hlcy.yun.gb28181.notification.PublisherFactory.getDeviceEventPublisher;
+import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createFrom;
+import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.createTo;
 import static com.hlcy.yun.gb28181.util.XmlUtil.getChild;
 import static com.hlcy.yun.gb28181.util.XmlUtil.getTextOfChildTagFrom;
 
@@ -64,12 +67,14 @@ public class AlarmNotifyRequestProcessor extends MessageRequestProcessor {
                 .append("</Response>")
                 .toString();
 
-        try {
-            final Request request = event.getDialog().createRequest(Request.MESSAGE);
-            request.setContent(body.getBytes(StandardCharsets.UTF_8), (ContentTypeHeader) request.getHeader(ContentTypeHeader.NAME));
-            RequestSender.sendRequest(request);
-        } catch (SipException | ParseException e) {
-            e.printStackTrace();
-        }
+        final GB28181Properties properties = SpringContextHolder.getBean(GB28181Properties.class);
+        ViaHeader via = (ViaHeader) event.getRequest().getHeader(ViaHeader.NAME);
+        final Request request = SipRequestFactory.getMessageRequest(
+                createTo(deviceId, via.getHost(), via.getPort()),
+                createFrom(properties.getSipId(), properties.getSipIp(), properties.getSipPort()),
+                Transport.valueOf(via.getTransport()),
+                body.getBytes(StandardCharsets.UTF_8));
+
+        RequestSender.sendRequest(request);
     }
 }

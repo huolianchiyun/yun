@@ -33,7 +33,7 @@
                 let ws = null
                 $('#connect').click(function () {
                     if (ws == null || ws.readyState != 1) {
-                        let token = encodeURI("Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1ZTJkODg2YjEzNmM0MDY2OTU1NzNiZDcwZWRlNGVhNCIsImF1dGgiOiJhbGwiLCJzdWIiOiJhZG1pbiJ9.mnynNLrlmbbMKa5RtNeRyKFSo61DjV5KPbcnC0J6KqkT7-z9B1RJYw7b0w-HNKjcD1_PoJSTce8rCFc7xDH-PA")
+                        let token = encodeURI("Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxM2MwNjA3NDQ0YTE0NzFmYjZiODk4MGIxODk5YmUwOSIsImF1dGgiOiJhbGwiLCJzdWIiOiJhZG1pbiJ9.a_cynXLZRdfrTtKlfrCTwuuuKDiti6x6oXeiQgpBQb77AOwyc4igEg-TdKgUteFKGlJgj2kcc9P3XuvyKI_1sQ")
 
                         ws = new WebSocket($('#url').val(),[token]);
                         ws.onerror = function (e) {

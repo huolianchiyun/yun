@@ -59,7 +59,7 @@ public class FlowPipelineFactory {
         requestMap.put(MEDIA_STATUS, MEDIA_STATUS_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> ALARM_NOTIFY_PIPELINE = new DefaultPipeline<>();
-        KEEPALIVE_PIPELINE.addLast(ALARM.code(), new AlarmNotifyRequestProcessor());
+        ALARM_NOTIFY_PIPELINE.addLast(ALARM.code(), new AlarmNotifyRequestProcessor());
         requestMap.put(ALARM, ALARM_NOTIFY_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> VOICE_BROADCAST_PIPELINE = new DefaultPipeline<>();

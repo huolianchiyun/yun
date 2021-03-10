@@ -46,6 +46,12 @@ public class DeptDO extends BaseDO implements Comparable<DeptDO>, CollectChildre
     private String description;
 
     /**
+     * 部门主管
+     */
+    @ApiModelProperty(required = true)
+    private String deptMaster;
+
+    /**
      * 非表字段
      */
     @JsonIgnore
@@ -63,6 +69,7 @@ public class DeptDO extends BaseDO implements Comparable<DeptDO>, CollectChildre
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DeptDO> children;
 
+    @Override
     public LinkedHashMap<String, Object> toLinkedMap() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("部门 ID", id);
@@ -83,8 +90,12 @@ public class DeptDO extends BaseDO implements Comparable<DeptDO>, CollectChildre
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DeptDO)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DeptDO)) {
+            return false;
+        }
         DeptDO other = (DeptDO) o;
         return deptCode.equals(other.deptCode) || id.equals(other.id);
     }
