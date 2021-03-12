@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: devl
+    active: dev
   application:
     name: admin-center
   jackson:
