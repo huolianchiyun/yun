@@ -1,0 +1,63 @@
+生成服务器证书
+keytool -genkey -alias tomcat_https -keypass 123456 -keyalg RSA -keysize 1024 -validity 365 -keystore E:/ssl-keys/tomcat.keystore -storepass 123456
+
+
+生成客户端证书
+keytool -genkey -alias client -keypass 123456 -keyalg RSA -keysize 1024 -validity 365 -storetype PKCS12 -keystore E:/ssl-keys/client.p12 -storepass 123456
+
+把客户端证书导出为一个单独的CER文件
+keytool -export -alias client -keystore E:/ssl-keys/client.p12 -storetype PKCS12 -keypass 123456 -file E:/ssl-keys/client.cer
+
+将该文件导入到服务器的证书库，添加为一个信任证书：
+keytool -import -alias client -v -file E:/ssl-keys/client.cer -keystore E:/ssl-keys/tomcat.keystore -storepass 123456
+
+
+
+查看密钥库证书
+keytool -list -v -keystore E:/ssl-keys/tomcat.keystore
+
+删除目要库中某个证书条目
+keytool -delete -alias mykey -keystore E:/ssl-keys/tomcat.keystore
+
+
+把服务器证书导出为一个单独的CER文件
+keytool -keystore E:/ssl-keys/tomcat.keystore -export -alias tomcat_https -file E:/ssl-keys/tomcat_https.cer
+
+keytool -importkeystore -srckeystore E:/ssl-keys/tomcat.keystore -destkeystore E:/ssl-keys/tomcat.keystore -deststoretype pkcs12
+
+
+参考：https://www.jianshu.com/p/310a8a74dfc9
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+step1: 制作服务端密钥库
+# SAN：这里填写的是域名  IP：填写是IP    SAN和IP是解决谷歌浏览器证书无效的关键
+keytool -genkey -v -alias tomcat -keyalg RSA -keystore E:/ssl-keys/tomcat1.keystore -validity 36500 -ext SAN=dns:localhost,ip:127.0.0.1
+
+step2: 制作客户端密钥库
+keytool -genkey -v -alias mykey -keyalg RSA -storetype PKCS12 -keystore E:/ssl-keys/mykey.p12
+
+step3: 客户端证书导入服务端密钥库，由于不能直接将p12导入，需要先从客户端密钥库导出证书，再将导出的证书导入服务端密钥库
+keytool -export -alias mykey -keystore E:/ssl-keys/mykey.p12 -storetype PKCS12 -storepass 123456 -rfc -file E:/ssl-keys/mykey.cer
+keytool -import -v -file E:/ssl-keys/mykey.cer -keystore E:/ssl-keys/tomcat1.keystore
+
+step4: 出服务端密钥库证书
+keytool -keystore E:/ssl-keys/tomcat1.keystore -export -alias tomcat -file E:/ssl-keys/tomcat.cer
+
+
+https://blog.csdn.net/weixin_39171105/article/details/109054348
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
