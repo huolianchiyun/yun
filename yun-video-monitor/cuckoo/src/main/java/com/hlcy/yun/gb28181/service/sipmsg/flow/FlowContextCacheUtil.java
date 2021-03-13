@@ -15,9 +15,7 @@ import org.springframework.util.StringUtils;
 
 import javax.sip.header.CallIdHeader;
 import javax.sip.message.Message;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // TODO 考虑缓存中的垃圾清理
@@ -59,7 +57,7 @@ public final class FlowContextCacheUtil {
         redisUtils.hdel(KEY, key);
     }
 
-    public static Optional<FlowContext> findFlowContextByPlayParams(PlayParams params) {
+    public static List<FlowContext> findFlowContextByPlayParams(PlayParams params) {
         // 先不考虑，本地缓存找不到，再去redis获取，因为ssrc 对应不看时，流媒体回调stop释放ssrc，
         // 但极端情况有问题，设备通道已达最大值，且ssrc全存储redis，在获取通道，设备将响应繁忙。这也做的目的提升性能
         return flowContextCache.findFlowContextByPlayParams(params);
@@ -112,17 +110,16 @@ public final class FlowContextCacheUtil {
             return ((CallIdHeader) message.getHeader(CallIdHeader.NAME)).getCallId();
         }
 
-        Optional<FlowContext> findFlowContextByPlayParams(PlayParams params) {
-            final Iterator<CacheObj<String, FlowContext>> cacheObjIterator = CONTEXT_CACHE.cacheObjIterator();
-            while (cacheObjIterator.hasNext()) {
-                final FlowContext context = cacheObjIterator.next().getValue();
+        List<FlowContext> findFlowContextByPlayParams(PlayParams params) {
+            List<FlowContext> result = new ArrayList<>();
+            CONTEXT_CACHE.forEach(context -> {
                 if (params.getPlay() == context.getOperation()
                         && context.getOperationalParams().getChannelId().equals(params.getChannelId())
                         && !StringUtils.isEmpty(params.getFormat()) == context.isMediaMakeDevicePushStream()) {
-                    return Optional.of(context);
+                    result.add(context);
                 }
-            }
-            return Optional.empty();
+            });
+            return result;
         }
 
         Optional<FlowContext> findFlowContextBySsrc(String ssrc) {

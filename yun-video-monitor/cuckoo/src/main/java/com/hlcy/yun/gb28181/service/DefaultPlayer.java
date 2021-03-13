@@ -23,7 +23,9 @@ import org.springframework.util.StringUtils;
 import javax.sip.ClientTransaction;
 import javax.sip.message.Request;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.hlcy.yun.gb28181.service.sipmsg.flow.FlowPipelineFactory.getResponseFlowPipeline;
 import static com.hlcy.yun.gb28181.service.sipmsg.flow.palyer.play.PlaySession.*;
@@ -35,31 +37,40 @@ import static com.hlcy.yun.gb28181.sip.message.factory.SipRequestFactory.*;
 @Service
 @RequiredArgsConstructor
 public class DefaultPlayer implements Player {
+    private static final ExecutorService GC_SSRC_EXECUTOR = Executors.newSingleThreadExecutor();
+
     private final GB28181Properties properties;
 
     private final MediaClient mediaClient;
 
     @Override
     public void play(PlayParams params) {
-        if (!params.isNewStream()) {
-            // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
-            final Optional<FlowContext> optional = FlowContextCacheUtil.findFlowContextByPlayParams(params);
-            if (optional.isPresent() && StringUtils.hasText(optional.get().getSsrc())) {
-                final FlowContext flowContext = optional.get();
-                if (!flowContext.expire()) {
-                    if (mediaClient.isValidTestSsrc(flowContext.getSsrc())) {
-                        log.info("*** 设备:{}, 已经推流，返回之前的SSRC：{}", flowContext.getOperationalParams().getChannelId(), flowContext.getSsrc());
-                        DeferredResultHolder.setDeferredResultForRequest(
-                                params.getCallbackKey(),
-                                new PlayResponse(optional.get().getSsrc(), properties.getMediaIp()));
-                        return;
-                    } else {
-                        stop(flowContext.getSsrc());
-                    }
-                }
+        if (params.isNewStream() || !tryReturnAvailableSsrc(params)) {
+            makeDevicePushMediaStream(params);
+        }
+    }
+
+    private boolean tryReturnAvailableSsrc(PlayParams params) {
+        boolean result = false;
+        // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
+        final List<FlowContext> contexts = FlowContextCacheUtil.findFlowContextByPlayParams(params);
+        for (FlowContext context : contexts) {
+            final String ssrc = context.getSsrc();
+            if (StringUtils.hasText(ssrc) && !context.expire() && mediaClient.isValidSsrc(ssrc)) {
+                log.info("*** 设备:{}, 已经推流，返回之前的SSRC：{}", context.getOperationalParams().getChannelId(), ssrc);
+                DeferredResultHolder.setDeferredResultForRequest(
+                        params.getCallbackKey(),
+                        new PlayResponse(ssrc, properties.getMediaIp()));
+                result = true;
+            } else {
+                GC_SSRC_EXECUTOR.execute(() -> stop(ssrc));
             }
         }
+        return result;
+    }
 
+
+    private void makeDevicePushMediaStream(PlayParams params) {
         if (!handleMediaMakeDevicePushStream(params)) {
             Request inviteMedia = getInviteRequest(
                     createTo(properties.getMediaId(), properties.getMediaIp(), properties.getMediaVideoPort()),
