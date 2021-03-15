@@ -55,17 +55,19 @@ public class DefaultPlayer implements Player {
         final List<FlowContext> contexts = FlowContextCacheUtil.findFlowContextByPlayParams(params);
         for (FlowContext context : contexts) {
             final String ssrc = context.getSsrc();
-            if (!context.expire() && StringUtils.hasText(ssrc) && mediaClient.isValidSsrc(ssrc)) {
-                log.info("*** 设备:{}, 已经推流，返回之前的SSRC：{}", context.getOperationalParams().getChannelId(), ssrc);
-                DeferredResultHolder.setDeferredResultForRequest(
-                        params.getCallbackKey(),
-                        new PlayResponse(ssrc, properties.getMediaIp()));
-                success = true;
-            } else {
-                GC_SSRC_EXECUTOR.execute(() -> stop(ssrc));
+            if (!context.expire() && StringUtils.hasText(ssrc)) {
+                if (mediaClient.isValidSsrc(ssrc)) {
+                    log.info("*** 设备:{}, 已经推流，返回之前的SSRC：{}", context.getOperationalParams().getChannelId(), ssrc);
+                    DeferredResultHolder.setDeferredResultForRequest(
+                            params.getCallbackKey(),
+                            new PlayResponse(ssrc, properties.getMediaIp()));
+                    success = true;
+                } else {
+                    GC_SSRC_EXECUTOR.execute(() -> stop(ssrc));
+                }
             }
         }
-        if(!success){
+        if (!success) {
             log.warn("*** No previous available ssrc for device {}", params.getChannelId());
         }
         return success;
