@@ -51,7 +51,7 @@ public class DefaultPlayer implements Player {
     }
 
     private boolean tryReturnAvailableSsrc(PlayParams params) {
-        boolean result = false;
+        boolean success = false;
         // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
         final List<FlowContext> contexts = FlowContextCacheUtil.findFlowContextByPlayParams(params);
         for (FlowContext context : contexts) {
@@ -61,12 +61,15 @@ public class DefaultPlayer implements Player {
                 DeferredResultHolder.setDeferredResultForRequest(
                         params.getCallbackKey(),
                         new PlayResponse(ssrc, properties.getMediaIp()));
-                result = true;
+                success = true;
             } else {
                 GC_SSRC_EXECUTOR.execute(() -> stop(ssrc));
             }
         }
-        return result;
+        if(!success){
+            log.warn("*** No previous available ssrc for device {}", params.getChannelId());
+        }
+        return success;
     }
 
 
