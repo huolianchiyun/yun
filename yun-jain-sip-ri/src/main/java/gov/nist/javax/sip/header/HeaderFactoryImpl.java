@@ -1166,6 +1166,7 @@ public class HeaderFactoryImpl implements HeaderFactory , HeaderFactoryExt {
      * Header should not have the trailng crlf.
      * @throws ParseException
      */
+    @Override
     public Header createHeader(String headerText) throws ParseException {
         StringMsgParser smp = new StringMsgParser();
         SIPHeader sipHeader = smp.parseSIPHeader(headerText.trim());
@@ -1682,6 +1683,7 @@ public class HeaderFactoryImpl implements HeaderFactory , HeaderFactoryExt {
      * @throws ParseException
      */
 
+    @Override
     public ReferencesHeader createReferencesHeader(String callId, String rel) throws ParseException {
         ReferencesHeader retval = new References();
         retval.setCallId(callId);

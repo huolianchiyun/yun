@@ -1,5 +1,22 @@
 server:
-  port: 8081
+  # https默认端口：443
+  port: 8443
+  http-port: 8081
+  http-to-https: false
+  ssl:
+    enabled: true
+    # 指定证书
+    key-store: classpath:tomcat1.keystore
+    key-store-type: JKS
+    # 别名
+    key-alias: tomcat
+    # 密钥的密码
+    key-password: 123456
+    # 访问密钥库的密码
+    key-store-password: 123456
+
+logging:
+  config: classpath:logback-spring.xml
 
 spring:
   profiles:

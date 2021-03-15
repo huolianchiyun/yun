@@ -9,6 +9,8 @@ import javax.sip.RequestEvent;
 
 @Slf4j
 public abstract class MessageRequestProcessor extends FlowRequestProcessor {
+    protected static final String CLIENT_RESPONSE_REQUEST_RESULT_SUCCESS = "OK";
+    protected static final String CLIENT_RESPONSE_REQUEST_RESULT_ERROR = "ERROR";
 
     @Override
     protected void process(RequestEvent event, FlowContext context) {

@@ -18,7 +18,9 @@ public final class DeferredResultHolder {
 
     public static final String CALLBACK_CMD_QUERY_RECORD_INFO = "Callback_RecordInfo:";
 
-    public static final String CALLBACK_CMD_Query_ALARM = "Callback_Alarm:";
+    public static final String CALLBACK_CMD_QUERY_CONFIG_DOWNLOAD = "Callback_ConfigDownload:";
+
+    public static final String CALLBACK_CMD_QUERY_ALARM = "Callback_Alarm:";
 
     public static final String CALLBACK_CMD_GUARD = "Callback_Guard:";
 
@@ -47,7 +49,6 @@ public final class DeferredResultHolder {
     public static final String CALLBACK_CMD_PLAYBACK_DOWNLOAD = "Callback_Playback_download:";
 
     public static final String CALLBACK_CMD_VOICE = "Callback_Voice:";
-
 
     public static void put(String requestId, DeferredResult<ResponseEntity<ResponseData>> result) {
         REQUEST_DEFERRED_RESULT_CACHE.computeIfAbsent(requestId, k -> new ArrayList<>()).add(result);

@@ -6,7 +6,6 @@ import com.hlcy.yun.gb28181.sip.message.factory.SipMessageFactoryHelper;
 import com.hlcy.yun.gb28181.sip.message.factory.Transport;
 import com.hlcy.yun.gb28181.sip.message.SipPipelineFactory;
 import com.hlcy.yun.gb28181.sip.subscribe.SipEventNotifier;
-import com.hlcy.yun.gb28181.ssrc.SSRCManger;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
@@ -19,6 +18,8 @@ import java.util.TooManyListenersException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import static javax.sip.message.Response.*;
 
 @Slf4j
 public final class SipLayer implements SipListener {
@@ -97,9 +98,9 @@ public final class SipLayer implements SipListener {
     public void processResponse(ResponseEvent evt) {
         Response response = evt.getResponse();
         int status = response.getStatusCode();
-        if ((status >= 100) && (status < 200)) {
+        if ((status >= TRYING) && (status < OK)) {
             return;
-        } else if ((status >= 200) && (status < 500)) {
+        } else if ((status >= OK) && (status < SERVER_INTERNAL_ERROR)) {
             // process response
             SipPipelineFactory.getResponsePipeline().processMessage(evt);
             return;

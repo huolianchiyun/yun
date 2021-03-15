@@ -4,6 +4,7 @@ import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.AlarmNotifyReques
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.MediaStatusNotifyRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.broadcast.*;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.notify.KeepaliveNotifyRequestProcessor;
+import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.ConfigDownloadQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.DeviceInfoQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.query.RecordInfoQueryRequestProcessor;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.subscribe.SubscribeResponseProcessor;
@@ -40,6 +41,10 @@ public class FlowPipelineFactory {
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> CATALOG_PIPELINE = new DefaultPipeline<>();
         CATALOG_PIPELINE.addLast(CATALOG.code(), new CatalogQueryRequestProcessor());
         requestMap.put(CATALOG, CATALOG_PIPELINE);
+
+        DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> CONFIG_DOWNLOAD_PIPELINE = new DefaultPipeline<>();
+        CONFIG_DOWNLOAD_PIPELINE.addLast(CONFIG_DOWNLOAD.code(), new ConfigDownloadQueryRequestProcessor());
+        requestMap.put(CONFIG_DOWNLOAD, CONFIG_DOWNLOAD_PIPELINE);
 
         DefaultPipeline<RequestProcessor<FlowContext>, RequestEvent> DEVICE_INFO_PIPELINE = new DefaultPipeline<>();
         DEVICE_INFO_PIPELINE.addLast(DEVICE_INFO.code(), new DeviceInfoQueryRequestProcessor());

@@ -22,13 +22,13 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * Create a RequestLine from a String
      * @throws ParseException
      */
-    public SipRequestLine createRequestLine(String requestLine) throws ParseException;
+    SipRequestLine createRequestLine(String requestLine) throws ParseException;
 
 
     /**
      * Create a StatusLine from a String.
      */
-    public SipStatusLine createStatusLine(String statusLine) throws ParseException;
+    SipStatusLine createStatusLine(String statusLine) throws ParseException;
 
 
     /**
@@ -38,7 +38,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      *            address for the header.
      *
      */
-    public ReferredByHeader createReferredByHeader(Address address);
+    ReferredByHeader createReferredByHeader(Address address);
 
     /**
      *
@@ -52,15 +52,15 @@ public interface HeaderFactoryExt extends HeaderFactory {
      *            the fromTag to use.
      *
      */
-    public ReplacesHeader createReplacesHeader(String callId, String toTag,
-                                               String fromTag) throws ParseException;
+    ReplacesHeader createReplacesHeader(String callId, String toTag,
+                                        String fromTag) throws ParseException;
 
     /**
      * creates a P-Access-Network-Info header.
      *
      * @return newly created P-Access-Network-Info header
      */
-    public PAccessNetworkInfoHeader createPAccessNetworkInfoHeader();
+    PAccessNetworkInfoHeader createPAccessNetworkInfoHeader();
 
     /**
      * P-Asserted-Identity header
@@ -71,7 +71,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @throws ParseException
      * @throws NullPointerException
      */
-    public PAssertedIdentityHeader createPAssertedIdentityHeader(Address address)
+    PAssertedIdentityHeader createPAssertedIdentityHeader(Address address)
             throws NullPointerException, ParseException;
 
     /**
@@ -84,7 +84,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      *             if the supplied address is null
      * @throws ParseException
      */
-    public PAssociatedURIHeader createPAssociatedURIHeader(Address assocURI);
+    PAssociatedURIHeader createPAssociatedURIHeader(Address assocURI);
 
     /**
      * P-Called-Party-ID header
@@ -95,14 +95,14 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @throws NullPointerException
      * @throws ParseException
      */
-    public PCalledPartyIDHeader createPCalledPartyIDHeader(Address address);
+    PCalledPartyIDHeader createPCalledPartyIDHeader(Address address);
 
     /**
      * P-Charging-Function-Addresses header
      *
      * @return newly created P-Charging-Function-Addresses header
      */
-    public PChargingFunctionAddressesHeader createPChargingFunctionAddressesHeader();
+    PChargingFunctionAddressesHeader createPChargingFunctionAddressesHeader();
 
     /**
      * P-Charging-Vector header
@@ -113,7 +113,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @throws NullPointerException
      * @throws ParseException
      */
-    public PChargingVectorHeader createChargingVectorHeader(String icid) throws ParseException;
+    PChargingVectorHeader createChargingVectorHeader(String icid) throws ParseException;
 
      /**
      * P-Media-Authorization header
@@ -122,7 +122,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @throws InvalidArgumentException
      * @throws ParseException
      */
-    public PMediaAuthorizationHeader createPMediaAuthorizationHeader(String token)
+     PMediaAuthorizationHeader createPMediaAuthorizationHeader(String token)
         throws InvalidArgumentException, ParseException;
 
     /**
@@ -131,13 +131,13 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @return newly created P-Preferred-Identity header
      * @throws NullPointerException
      */
-    public PPreferredIdentityHeader createPPreferredIdentityHeader(Address address);
+    PPreferredIdentityHeader createPPreferredIdentityHeader(Address address);
 
     /**
      * P-Visited-Network-ID header
      * @return newly created P-Visited-Network-ID header
      */
-    public PVisitedNetworkIDHeader createPVisitedNetworkIDHeader();
+    PVisitedNetworkIDHeader createPVisitedNetworkIDHeader();
 
     /**
      * PATH header
@@ -146,7 +146,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @throws NullPointerException
      * @throws ParseException
      */
-    public PathHeader createPathHeader(Address address);
+    PathHeader createPathHeader(Address address);
 
     /**
      * Privacy header
@@ -154,7 +154,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @return newly created Privacy header
      * @throws NullPointerException
      */
-    public PrivacyHeader createPrivacyHeader(String privacyType);
+    PrivacyHeader createPrivacyHeader(String privacyType);
 
 
     /**
@@ -163,26 +163,26 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @return newly created Service-Route header
      * @throws NullPointerException
      */
-    public ServiceRouteHeader createServiceRouteHeader(Address address);
+    ServiceRouteHeader createServiceRouteHeader(Address address);
 
     /**
      * Security-Server header
      * @return newly created Security-Server header
      */
-    public SecurityServerHeader createSecurityServerHeader();
+    SecurityServerHeader createSecurityServerHeader();
 
     /**
      * Security-Client header
      * @return newly created Security-Client header
      */
-    public SecurityClientHeader createSecurityClientHeader();
+    SecurityClientHeader createSecurityClientHeader();
 
 
     /**
      * Security-Verify header
      * @return newly created Security-Verify header
      */
-    public SecurityVerifyHeader createSecurityVerifyHeader();
+    SecurityVerifyHeader createSecurityVerifyHeader();
 
 
     /**
@@ -194,7 +194,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @return the newly created SessionExpiresHeader object.
      *
      */
-    public SessionExpiresHeader createSessionExpiresHeader(int expires) throws InvalidArgumentException ;
+    SessionExpiresHeader createSessionExpiresHeader(int expires) throws InvalidArgumentException ;
 
     /**
      *
@@ -208,8 +208,8 @@ public interface HeaderFactoryExt extends HeaderFactory {
      *            the fromTag to use.
      *
      */
-    public JoinHeader createJoinHeader(String callId, String toTag,
-                                       String fromTag) throws ParseException;
+    JoinHeader createJoinHeader(String callId, String toTag,
+                                String fromTag) throws ParseException;
 
     /**
      * Create a P-User-Database header.
@@ -217,7 +217,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @return the newly created P-User-Database header
      * @param the database name, that may be an IP:port or a domain name.
      */
-    public PUserDatabaseHeader createPUserDatabaseHeader(String databaseName);
+    PUserDatabaseHeader createPUserDatabaseHeader(String databaseName);
 
 
     /**
@@ -226,7 +226,7 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @param address
      * @return The newly created P-Profile-Key header
      */
-    public PProfileKeyHeader createPProfileKeyHeader(Address address);
+    PProfileKeyHeader createPProfileKeyHeader(Address address);
 
     /**
      * Create a P-Served-User header.
@@ -234,21 +234,21 @@ public interface HeaderFactoryExt extends HeaderFactory {
      * @param address of the served user.
      * @return The newly created P-Served-User Header.
      */
-    public PServedUserHeader createPServedUserHeader(Address address);
+    PServedUserHeader createPServedUserHeader(Address address);
 
     /**
      * Create a P-Preferred-Service header.
      *
      * @return The newly created P-Preferred-Service Header.
      */
-    public PPreferredServiceHeader createPPreferredServiceHeader();
+    PPreferredServiceHeader createPPreferredServiceHeader();
 
     /**
      * Create an AssertedService Header
      *
      * @return The newly created P-Asserted-Service Header.
      */
-    public PAssertedServiceHeader createPAssertedServiceHeader();
+    PAssertedServiceHeader createPAssertedServiceHeader();
 
 
     /**
@@ -259,13 +259,13 @@ public interface HeaderFactoryExt extends HeaderFactory {
      *
      * @return the newly created References header.
      */
-    public ReferencesHeader createReferencesHeader(String callId, String rel) throws ParseException;
+    ReferencesHeader createReferencesHeader(String callId, String rel) throws ParseException;
 
     /**
      * Create a header from a string. The string is assumed to be in the
      * name:value format. The trailing CRLF (if any ) will be stripped
      * before parsing this. The header should be a singleton.
      */
-    public Header createHeader(String header) throws ParseException;
+    Header createHeader(String header) throws ParseException;
 
 }

@@ -46,4 +46,13 @@ public class QueryController {
         operator.operate(params);
         return result;
     }
+
+    @GetMapping("/configDownload")
+    @ApiOperation("查询设备配置")
+    public DeferredResult<ResponseEntity<ResponseData>> queryConfigDownload(ConfigDownloadQueryParams params) {
+        final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_QUERY_CONFIG_DOWNLOAD + params.getChannelId(), result);
+        operator.operate(params);
+        return result;
+    }
 }

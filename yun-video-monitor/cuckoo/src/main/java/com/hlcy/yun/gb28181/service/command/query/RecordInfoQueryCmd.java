@@ -13,7 +13,6 @@ public class RecordInfoQueryCmd extends AbstractQueryCmd<RecordInfoQueryParams> 
         super(properties);
     }
 
-
     @Override
     protected String buildCmdXML(RecordInfoQueryParams params) {
         final StringBuilder cmd = new StringBuilder(200)

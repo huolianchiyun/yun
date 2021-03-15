@@ -41,7 +41,7 @@ public class CruiseCmd extends AbstractControlCmd<CruiseControlParams> {
         }
 
         builder.append(String.format("%02X", bit6), 0, 2);
-        // 字节7  TODO time error
+        // 字节7
         final int bit7 = (CruiseControlParams.CruiseType.SET_CRUISE_SPEED == type || CruiseControlParams.CruiseType.SET_CRUISE_DURATION == type
                 ? params.getSpeedOrDuration() : 0x00) & 0xF0 >> 4;
 

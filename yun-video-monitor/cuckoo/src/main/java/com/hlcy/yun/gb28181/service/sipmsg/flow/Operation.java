@@ -18,7 +18,7 @@ public enum Operation {
     /**
      * Query operate
      */
-    CATALOG("Catalog"), DEVICE_INFO("DeviceInfo"), RECORD_INFO("RecordInfo"),
+    CATALOG("Catalog"), DEVICE_INFO("DeviceInfo"), RECORD_INFO("RecordInfo"), CONFIG_DOWNLOAD("ConfigDownload"),
 
     /**
      * Subscribe

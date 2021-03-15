@@ -27,7 +27,7 @@ public class SubscribeController {
     @ApiOperation("设备告警订阅")
     public DeferredResult<ResponseEntity<ResponseData>> queryAlarm(AlarmSubscribeParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_Query_ALARM + params.getChannelId());
+        params.setCallbackKey(DeferredResultHolder.CALLBACK_CMD_QUERY_ALARM + params.getChannelId());
         DeferredResultHolder.put(params.getCallbackKey(), result);
         operator.operate(params);
         return result;
