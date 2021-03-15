@@ -52,11 +52,10 @@ public class DefaultPlayer implements Player {
 
     private boolean tryReturnAvailableSsrc(PlayParams params) {
         boolean success = false;
-        // 检验该设备是否已经点播，若已点播，则返回已点播的 SSRC
         final List<FlowContext> contexts = FlowContextCacheUtil.findFlowContextByPlayParams(params);
         for (FlowContext context : contexts) {
             final String ssrc = context.getSsrc();
-            if (StringUtils.hasText(ssrc) && !context.expire() && mediaClient.isValidSsrc(ssrc)) {
+            if (!context.expire() && StringUtils.hasText(ssrc) && mediaClient.isValidSsrc(ssrc)) {
                 log.info("*** 设备:{}, 已经推流，返回之前的SSRC：{}", context.getOperationalParams().getChannelId(), ssrc);
                 DeferredResultHolder.setDeferredResultForRequest(
                         params.getCallbackKey(),
