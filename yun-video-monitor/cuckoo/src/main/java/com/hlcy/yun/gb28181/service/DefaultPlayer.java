@@ -73,7 +73,6 @@ public class DefaultPlayer implements Player {
         return success;
     }
 
-
     private void makeDevicePushMediaStream(PlayParams params) {
         if (!handleMediaMakeDevicePushStream(params)) {
             Request inviteMedia = getInviteRequest(
