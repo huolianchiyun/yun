@@ -51,7 +51,7 @@ public class QueryController {
     @ApiOperation("查询设备配置")
     public DeferredResult<ResponseEntity<ResponseData>> queryConfigDownload(ConfigDownloadQueryParams params) {
         final DeferredResult<ResponseEntity<ResponseData>> result = new DeferredResult<>();
-        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_QUERY_CONFIG_DOWNLOAD + params.getChannelId(), result);
+        DeferredResultHolder.put(DeferredResultHolder.CALLBACK_CMD_QUERY_CONFIG_DOWNLOAD + params.getConfigType() + params.getChannelId(), result);
         operator.operate(params);
         return result;
     }

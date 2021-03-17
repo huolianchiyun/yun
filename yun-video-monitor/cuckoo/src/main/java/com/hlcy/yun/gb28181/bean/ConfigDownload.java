@@ -1,6 +1,7 @@
 package com.hlcy.yun.gb28181.bean;
 
 
+import com.hlcy.yun.gb28181.service.params.query.ConfigDownloadQueryParams;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -15,12 +16,24 @@ public class ConfigDownload {
 
     private BasicParam basicParam;
 
-    private VideoParamOpt videoParamOp;
+    private VideoParamOpt videoParamOpt;
 
     private SVACEncodeConfig svacEncodeConfig;
 
     private SVACDecodeConfig svacDecodeConfig;
 
+    public ConfigDownloadQueryParams.ConfigType configType() {
+        if (basicParam != null) {
+            return ConfigDownloadQueryParams.ConfigType.BasicParam;
+        } else if (videoParamOpt != null) {
+            return ConfigDownloadQueryParams.ConfigType.VideoParamOpt;
+        } else if (svacEncodeConfig != null) {
+            return ConfigDownloadQueryParams.ConfigType.SVACEncodeConfig;
+        } else if (svacDecodeConfig != null) {
+            return ConfigDownloadQueryParams.ConfigType.SVACDecodeConfig;
+        }
+        return null;
+    }
 
     /**
      * 基本参数
@@ -28,7 +41,7 @@ public class ConfigDownload {
     @Getter
     @Setter
     @Accessors(chain = true)
-    public static class BasicParam{
+    public static class BasicParam {
 
         private String deviceName;
         /**
@@ -54,12 +67,12 @@ public class ConfigDownload {
         /**
          * 经度
          */
-        private double longitude;
+        private Double longitude;
 
         /**
          * 纬度
          */
-        private double latitude;
+        private Double latitude;
 
     }
 
@@ -84,7 +97,11 @@ public class ConfigDownload {
     @Getter
     @Setter
     @Accessors(chain = true)
-    public static class SVACEncodeConfig{
+    public static class SVACEncodeConfig {
+        private ROIParam roiParam;
+        private SVCParam svcParam;
+        private SurveillanceParam surveillanceParam;
+        private AudioParam audioParam;
 
         /**
          * 感兴趣区域参数
@@ -92,7 +109,7 @@ public class ConfigDownload {
         @Getter
         @Setter
         @Accessors(chain = true)
-        class ROIParam{
+        public static class ROIParam {
             /**
              * 感兴趣区域开关,取值0:关闭,1:打开
              */
@@ -122,11 +139,11 @@ public class ConfigDownload {
             @Getter
             @Setter
             @Accessors(chain = true)
-            class Item{
+            public static class Item {
                 /**
                  * 感兴趣区域编号,取值范围 1~16
                  */
-                 private int roiSeq;
+                private int roiSeq;
 
                 /**
                  * 感兴趣区域左上角坐标,参考 GB/T25724—2010的5.2.4.4.2定义,取值范围 0~19683
@@ -150,7 +167,7 @@ public class ConfigDownload {
         @Getter
         @Setter
         @Accessors(chain = true)
-        class SVCParam{
+        public static class SVCParam {
 
             /**
              * 空域编码方式,取值 0:基本层;1:1级增强(1个增强层);2:2级增强(2个增强层);3:3级增强(3个增强层)
@@ -180,7 +197,7 @@ public class ConfigDownload {
         @Getter
         @Setter
         @Accessors(chain = true)
-        class SurveillanceParam{
+        public static class SurveillanceParam {
 
             /**
              * 绝对时间信息开关,取值 0:关闭,1:打开
@@ -201,7 +218,7 @@ public class ConfigDownload {
         @Getter
         @Setter
         @Accessors(chain = true)
-        class AudioParam{
+        public static class AudioParam {
             /**
              * 声音识别特征参数开关,取值 0:关闭,1:打开
              */
@@ -212,12 +229,16 @@ public class ConfigDownload {
     @Getter
     @Setter
     @Accessors(chain = true)
-    public static  class SVACDecodeConfig{
+    public static class SVACDecodeConfig {
+
+        private SVCParam svcParam;
+
+        private SurveillanceParam surveillanceParam;
 
         @Getter
         @Setter
         @Accessors(chain = true)
-        class SVCParam{
+        public static class SVCParam {
             /**
              * 空域编码能力,取值 0:不支持; 1:1级增强(1个增强层); 2:2级增强(2个增强层); 3:3级增强(3个增强层)
              */
@@ -235,7 +256,7 @@ public class ConfigDownload {
         @Getter
         @Setter
         @Accessors(chain = true)
-        class SurveillanceParam{
+        public static class SurveillanceParam {
 
             /**
              * 绝对时间信息显示开关,取值 0:关闭, 1:打开
