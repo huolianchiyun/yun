@@ -112,13 +112,19 @@ public final class FlowContextCacheUtil {
 
         List<FlowContext> findFlowContextByPlayParams(PlayParams params) {
             List<FlowContext> result = new ArrayList<>();
-            CONTEXT_CACHE.forEach(context -> {
+            final Iterator<CacheObj<String, FlowContext>> cacheObjIterator = CONTEXT_CACHE.cacheObjIterator();
+            while (cacheObjIterator.hasNext()) {
+                final FlowContext context = cacheObjIterator.next().getValue();
+                if (context == null) {
+                    cacheObjIterator.remove();
+                    continue;
+                }
                 if (params.getPlay() == context.getOperation()
                         && context.getOperationalParams().getChannelId().equals(params.getChannelId())
                         && !StringUtils.isEmpty(params.getFormat()) == context.isMediaMakeDevicePushStream()) {
                     result.add(context);
                 }
-            });
+            }
             return result;
         }
 
