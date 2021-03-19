@@ -3,7 +3,6 @@ package com.hlcy.yun.gb28181.service.sipmsg.flow.message.query;
 import com.hlcy.yun.gb28181.bean.ConfigDownload;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageRequestProcessor;
-import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.util.StringUtils;
@@ -47,7 +46,7 @@ public class ConfigDownloadQueryRequestProcessor extends MessageRequestProcessor
 
     private ConfigDownload extractConfigDownloadFrom(Element rootElement) {
         final ConfigDownload configDownload = new ConfigDownload()
-                .setDeviceId(XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID"));
+                .setDeviceId(getTextOfChildTagFrom(rootElement, "DeviceID"));
 
         JUMP_END:
         {

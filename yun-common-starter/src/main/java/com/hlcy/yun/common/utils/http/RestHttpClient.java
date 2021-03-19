@@ -32,7 +32,13 @@ public final class RestHttpClient {
         return exchange(url, method, null, responseBodyType, requestBody);
     }
 
-    public static <T, A> T exchange(String url, HttpMethod method, Map<String, String> headMap, ParameterizedTypeReference<T> responseBodyType, A requestBody) {
+    private static <T, A> T exchange(String url, HttpMethod method, Map<String, String> headMap, ParameterizedTypeReference<T> responseBodyType, A requestBody) {
+        if (HttpMethod.POST.equals(method)) {
+            if (headMap == null || headMap.isEmpty()) {
+                headMap = Collections.singletonMap(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            }
+        }
+
         ResponseEntity<T> resultEntity = restTemplate.exchange(url, method, getHttpEntity(headMap, requestBody), responseBodyType);
         return resultEntity.getBody();
     }
@@ -51,11 +57,9 @@ public final class RestHttpClient {
 
     private static HttpHeaders genHttpHeaders(Map<String, String> headMap) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         if (MapUtils.isNotEmpty(headMap)) {
             for (Map.Entry<String, String> entry : headMap.entrySet()) {
-                if (entry.getKey().equalsIgnoreCase("Content-Type")) {
+                if (entry.getKey().equalsIgnoreCase(HttpHeaders.CONTENT_TYPE)) {
                     headers.setContentType(MediaType.valueOf(entry.getValue()));
                 } else {
                     headers.set(entry.getKey(), entry.getValue());
