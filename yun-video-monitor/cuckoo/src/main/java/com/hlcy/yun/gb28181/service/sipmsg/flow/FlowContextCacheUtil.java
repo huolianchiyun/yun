@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 // TODO 考虑缓存中的垃圾清理
 @Slf4j
 public final class FlowContextCacheUtil {
-    private static String KEY;
     private static volatile FlowContextCache flowContextCache;
     private static RedisUtils redisUtils;
+    private static String KEY;
 
     public static void init() {
         // 后续初始化预留

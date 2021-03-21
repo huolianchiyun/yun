@@ -2,9 +2,6 @@ package com.hlcy.yun.gb28181.sip.biz;
 
 import com.hlcy.yun.gb28181.sip.SipLayer;
 import com.hlcy.yun.gb28181.sip.message.factory.Transport;
-import gov.nist.javax.sip.SipStackImpl;
-import gov.nist.javax.sip.message.SIPRequest;
-import gov.nist.javax.sip.stack.SIPServerTransaction;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sip.*;
@@ -42,19 +39,11 @@ public final class ResponseSender {
     private static ServerTransaction getServerTransaction(RequestEvent event) {
         Request request = event.getRequest();
         final Transport transport = SipLayer.getTransport(((ViaHeader) request.getHeader(ViaHeader.NAME)).getTransport());
-        ServerTransaction serverTransaction = event.getServerTransaction();
-        if (serverTransaction == null) {
-            final SipProvider sipProvider = SipLayer.getSipProvider(transport);
-            SipStackImpl sipStack = (SipStackImpl) sipProvider.getSipStack();
-            serverTransaction = (SIPServerTransaction) sipStack.findTransaction((SIPRequest) request, true);
-            if (serverTransaction == null) {
-                try {
-                    serverTransaction = sipProvider.getNewServerTransaction(request);
-                } catch (TransactionAlreadyExistsException | TransactionUnavailableException e) {
-                    e.printStackTrace();
-                }
-            }
+        final SipProvider sipProvider = SipLayer.getSipProvider(transport);
+        try {
+            return sipProvider.getNewServerTransaction(request);
+        } catch (TransactionAlreadyExistsException | TransactionUnavailableException e) {
+            throw new RuntimeException(String.format("An exception occurred when getting a ServerTransaction for request: %s", request), e);
         }
-        return serverTransaction;
     }
 }

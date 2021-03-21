@@ -187,8 +187,7 @@ public final class SipLayer implements SipListener {
     private void initThreadPool() {
         int maximumPoolSize = Runtime.getRuntime().availableProcessors() * 10;
         LinkedBlockingQueue<Runnable> processQueue = new LinkedBlockingQueue<>(10000);
-        this.executor = new ThreadPoolExecutor(2, maximumPoolSize, 30L,
-                TimeUnit.SECONDS, processQueue, new ThreadPoolExecutor.CallerRunsPolicy());
+        this.executor = new ThreadPoolExecutor(2, maximumPoolSize, 30L, TimeUnit.SECONDS, processQueue, new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     public static Transport getTransport(String transport) {
