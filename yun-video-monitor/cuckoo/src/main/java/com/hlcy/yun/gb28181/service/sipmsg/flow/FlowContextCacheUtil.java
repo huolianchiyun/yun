@@ -114,9 +114,10 @@ public final class FlowContextCacheUtil {
             List<FlowContext> result = new ArrayList<>();
             final Iterator<CacheObj<String, FlowContext>> cacheObjIterator = CONTEXT_CACHE.cacheObjIterator();
             while (cacheObjIterator.hasNext()) {
-                final FlowContext context = cacheObjIterator.next().getValue();
+                final CacheObj<String, FlowContext> next = cacheObjIterator.next();
+                final FlowContext context = next.getValue();
                 if (context == null) {
-                    cacheObjIterator.remove();
+                    CONTEXT_CACHE.remove(next.getKey());
                     continue;
                 }
                 if (params.getPlay() == context.getOperation()
