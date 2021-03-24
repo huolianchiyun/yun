@@ -43,7 +43,7 @@ public class MediaInviteResponseProcessor1 extends FlowResponseProcessor {
         final String ssrc = getSSRC(context);
         sessionDescription.setSSRC(new SSRCField(ssrc));
         final URIField uriField = new URIField();
-        uriField.setURI(playbackParams.getChannelId() + ":" + playbackParams.getPlaybackType());
+        uriField.setURI(playbackParams.getChannelId());
         sessionDescription.setURI(uriField);
 
         GB28181Properties properties = context.getProperties();

@@ -27,6 +27,11 @@ public class RecordItem implements Comparable<RecordItem> {
 
     private String recorderId;
 
+    /**
+     * 录像文件大小，单位：byte
+     */
+    private int fileSize;
+
     @Override
     public int compareTo(RecordItem o) {
         return startTime.compareTo(o.getStartTime());

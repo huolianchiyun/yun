@@ -6,7 +6,6 @@ import com.hlcy.yun.gb28181.bean.RecordInfo;
 import com.hlcy.yun.gb28181.bean.RecordItem;
 import com.hlcy.yun.gb28181.service.sipmsg.callback.DeferredResultHolder;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageRequestProcessor;
-import com.hlcy.yun.gb28181.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 
@@ -15,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.hlcy.yun.gb28181.util.XmlUtil.getOrDefaultTextOf;
 import static com.hlcy.yun.gb28181.util.XmlUtil.getTextOfChildTagFrom;
 
 /**
@@ -80,8 +80,9 @@ public class RecordInfoQueryRequestProcessor extends MessageRequestProcessor {
                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                             .setEndTime(LocalDateTime.parse(getTextOfChildTagFrom(recordItem, "EndTime"))
                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                            .setSecrecy(Integer.parseInt(XmlUtil.getOrDefaultTextOf(recordItem.element("Secrecy"), "0")))
+                            .setSecrecy(Integer.parseInt(getOrDefaultTextOf(recordItem.element("Secrecy"), "0")))
                             .setType(getTextOfChildTagFrom(recordItem, "Type"))
+                            .setFileSize(Integer.parseInt(getOrDefaultTextOf(recordItem.element("FileSize"), "-1")))
                             .setRecorderId(getTextOfChildTagFrom(recordItem, "RecorderID")));
                 }
                 recordInfo.setRecordList(recordList);
