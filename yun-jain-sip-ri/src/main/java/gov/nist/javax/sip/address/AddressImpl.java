@@ -80,23 +80,26 @@ public final class AddressImpl
      * Dont care about the display name.
      */
 
+    @Override
     public boolean match(Object other) {
         // TODO -- add the matcher;
-        if (other == null)
+        if (other == null) {
             return true;
-        if (!(other instanceof Address))
+        }
+        if (!(other instanceof Address)) {
             return false;
-        else {
+        } else {
             AddressImpl that = (AddressImpl) other;
-            if (that.getMatcher() != null)
+            if (that.getMatcher() != null) {
                 return that.getMatcher().match(this.encode());
-            else if (that.displayName != null && this.displayName == null)
+            } else if (that.displayName != null && this.displayName == null) {
                 return false;
-            else if (that.displayName == null)
+            } else if (that.displayName == null) {
                 return address.match(that.address);
-            else
+            } else {
                 return displayName.equalsIgnoreCase(that.displayName)
                     && address.match(that.address);
+            }
         }
 
     }
@@ -105,8 +108,9 @@ public final class AddressImpl
      *@return host:port in a HostPort structure.
      */
     public HostPort getHostPort() {
-        if (!(address instanceof SipUri))
+        if (!(address instanceof SipUri)) {
             throw new RuntimeException("address is not a SipUri");
+        }
         SipUri uri = (SipUri) address;
         return uri.getHostPort();
     }
@@ -118,8 +122,9 @@ public final class AddressImpl
      *
      */
     public int getPort() {
-        if (!(address instanceof SipUri))
+        if (!(address instanceof SipUri)) {
             throw new RuntimeException("address is not a SipUri");
+        }
         SipUri uri = (SipUri) address;
         return uri.getHostPort().getPort();
     }
@@ -134,8 +139,9 @@ public final class AddressImpl
         if (address instanceof SipUri) {
             SipUri uri = (SipUri) address;
             return uri.getUserAtHostPort();
-        } else
+        } else {
             return address.toString();
+        }
     }
 
     /** Get the host name from the address.
@@ -143,8 +149,9 @@ public final class AddressImpl
      *@return the host name.
      */
     public String getHost() {
-        if (!(address instanceof SipUri))
+        if (!(address instanceof SipUri)) {
             throw new RuntimeException("address is not a SipUri");
+        }
         SipUri uri = (SipUri) address;
         return uri.getHostPort().getHost().getHostname();
     }
@@ -154,8 +161,9 @@ public final class AddressImpl
      *@param parameterName is the name of the parameter to remove.
      */
     public void removeParameter(String parameterName) {
-        if (!(address instanceof SipUri))
+        if (!(address instanceof SipUri)) {
             throw new RuntimeException("address is not a SipUri");
+        }
         SipUri uri = (SipUri) address;
         uri.removeParameter(parameterName);
     }
@@ -164,10 +172,12 @@ public final class AddressImpl
      * Encode the address as a string and return it.
      * @return String canonical encoded version of this address.
      */
+    @Override
     public String encode() {
         return encode(new StringBuilder()).toString();
     }
 
+    @Override
     public StringBuilder encode(StringBuilder buffer) {
         if (this.addressType == WILD_CARD) {
             buffer.append('*');
@@ -180,11 +190,13 @@ public final class AddressImpl
                         .append(SP);
             }
             if (address != null) {
-                if (addressType == NAME_ADDR || displayName != null)
+                if (addressType == NAME_ADDR || displayName != null) {
                     buffer.append(LESS_THAN);
+                }
                 address.encode(buffer);
-                if (addressType == NAME_ADDR || displayName != null)
+                if (addressType == NAME_ADDR || displayName != null) {
                     buffer.append(GREATER_THAN);
+                }
             }
         }
         return buffer;
@@ -219,6 +231,7 @@ public final class AddressImpl
      * @return String
      *
      */
+    @Override
     public String getDisplayName() {
         return displayName;
     }
@@ -229,6 +242,7 @@ public final class AddressImpl
      * @param displayName String to set
      *
      */
+    @Override
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
         this.addressType = NAME_ADDR;
@@ -240,7 +254,7 @@ public final class AddressImpl
      * @param address SipUri to set
      *
      */
-    public void setAddess(URI address) {
+    public void setAddress(URI address) {
         this.address = (GenericURI) address;
     }
 
@@ -248,6 +262,7 @@ public final class AddressImpl
      * hashCode impelmentation
      *
      */
+    @Override
     public int hashCode() {
         return this.address.hashCode();
     }
@@ -260,9 +275,12 @@ public final class AddressImpl
      * @return boolean
      *
      */
+    @Override
     public boolean equals(Object other) {
 
-        if (this==other) return true;
+        if (this==other) {
+            return true;
+        }
 
         if (other instanceof Address) {
             final Address o = (Address) other;
@@ -301,6 +319,7 @@ public final class AddressImpl
      *
      * @return address parmater of the Address object
      */
+    @Override
     public URI getURI() {
         return this.address;
     }
@@ -310,6 +329,7 @@ public final class AddressImpl
      *
      * @return true if this name address is a wildcard, false otherwise.
      */
+    @Override
     public boolean isWildcard() {
         return this.addressType == WILD_CARD;
     }
@@ -319,6 +339,7 @@ public final class AddressImpl
      *
      * @param address - the new URI address value of this NameAddress.
      */
+    @Override
     public void setURI(URI address) {
         this.address = (GenericURI) address;
     }
@@ -340,11 +361,13 @@ public final class AddressImpl
         ((SipUri)this.address).setUser("*");
     }
 
+    @Override
     public Object clone() {
-        AddressImpl retval = (AddressImpl) super.clone();
-        if (this.address != null)
-            retval.address = (GenericURI) this.address.clone();
-        return retval;
+        AddressImpl retVal = (AddressImpl) super.clone();
+        if (this.address != null) {
+            retVal.address = (GenericURI) this.address.clone();
+        }
+        return retVal;
     }
 
 }

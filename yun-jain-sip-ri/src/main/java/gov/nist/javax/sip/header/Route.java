@@ -72,6 +72,7 @@ public class Route
      *
      *@return the hashcode of the encoded address.
      */
+    @Override
     public int hashCode() {
         return this.address.getHostPort().encode().toLowerCase().hashCode();
     }
@@ -87,6 +88,7 @@ public class Route
         return encodeBody(new StringBuilder()).toString();
     }
 
+    @Override
     protected StringBuilder encodeBody(StringBuilder buffer) {
         boolean addrFlag = address.getAddressType() == AddressImpl.NAME_ADDR;
         if (!addrFlag) {
@@ -103,6 +105,7 @@ public class Route
         return buffer;
     }
 
+    @Override
     public boolean equals(Object other) {
         return (other instanceof RouteHeader) && super.equals(other);
     }
