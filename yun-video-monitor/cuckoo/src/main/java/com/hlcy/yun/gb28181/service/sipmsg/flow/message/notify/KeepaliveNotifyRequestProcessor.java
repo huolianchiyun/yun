@@ -4,6 +4,7 @@ import com.hlcy.yun.gb28181.notification.PublisherFactory;
 import com.hlcy.yun.gb28181.notification.event.KeepaliveEvent;
 import com.hlcy.yun.gb28181.service.sipmsg.flow.message.MessageRequestProcessor;
 import com.hlcy.yun.gb28181.util.XmlUtil;
+import gov.nist.javax.sip.RequestEventExt;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 
@@ -18,7 +19,10 @@ public class KeepaliveNotifyRequestProcessor extends MessageRequestProcessor {
             log.debug("Receive a CmdType <KeepAlive> request: {}.", event.getRequest());
         }
         Element rootElement = getRootElementFrom(event);
+
         String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
-        PublisherFactory.getDeviceEventPublisher().publishEvent(new KeepaliveEvent(deviceId));
+        PublisherFactory.getDeviceEventPublisher()
+                .publishEvent(new KeepaliveEvent(deviceId)
+                        .setDevicePort(((RequestEventExt) event).getRemotePort()));
     }
 }
