@@ -21,9 +21,12 @@ public class RegisterProcessorImpl implements RegisterProcessor {
     @Override
     public void register(RequestEvent event) {
         final DeviceInfo device = extractDeviceInfoFrom(event.getRequest());
-        device.setPort(((RequestEventExt) event).getRemotePort());
         log.info("Register request, deviceId: {}.", device.getDeviceId());
-        PublisherFactory.getDeviceEventPublisher().publishEvent(new RegisterEvent(device));
+        RequestEventExt eventExt = (RequestEventExt) event;
+        PublisherFactory.getDeviceEventPublisher()
+                .publishEvent(new RegisterEvent(device
+                        .setProxyIp(eventExt.getRemoteIpAddress())
+                        .setPort(eventExt.getRemotePort())));
     }
 
     @Override

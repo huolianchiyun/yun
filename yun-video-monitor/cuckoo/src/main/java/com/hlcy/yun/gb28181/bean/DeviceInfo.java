@@ -24,6 +24,8 @@ public class DeviceInfo {
      */
     private String ip;
 
+    private String proxyIp;
+
     /**
      * 设备联网端口
      */

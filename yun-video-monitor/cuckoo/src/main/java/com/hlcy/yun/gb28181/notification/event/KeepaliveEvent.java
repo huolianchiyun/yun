@@ -14,6 +14,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class KeepaliveEvent extends AbstractDeviceEvent implements EventMap {
     private int devicePort;
+    private String proxyIp;
 
     public KeepaliveEvent(String deviceId) {
         this.deviceId = deviceId;

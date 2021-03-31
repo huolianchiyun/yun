@@ -10,7 +10,10 @@ import com.hlcy.yun.gb28181.sip.javax.DeserializeClientTransaction;
 import com.hlcy.yun.gb28181.sip.message.MessageHandler;
 import com.hlcy.yun.gb28181.sip.message.Pipeline;
 import com.hlcy.yun.gb28181.sip.message.handler.MessageContext;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.sip.ClientTransaction;
 import javax.sip.ServerTransaction;
@@ -24,8 +27,8 @@ import static com.hlcy.yun.gb28181.sip.message.handler.MessageContext.PipelineTy
 @NoArgsConstructor
 public class FlowContext implements MessageContext, Serializable {
     private static final long serialVersionUID = 1L;
-    private boolean fromDeserialization;
     private static GB28181Properties properties;
+    private boolean fromDeserialization;
 
     /**
      * context cleanup state
@@ -41,6 +44,7 @@ public class FlowContext implements MessageContext, Serializable {
     private Operation operation;
     private DeviceParams operationalParams;
     private boolean mediaMakeDevicePushStream;
+    private StreamMediaInfo streamMediaInfo;
     private long downloadFileSize;
     private String ssrc;
 
@@ -183,9 +187,7 @@ public class FlowContext implements MessageContext, Serializable {
     }
 
     public void clearSessionCache() {
-        if (CLIENT_SESSION_CACHE != null) {
-            CLIENT_SESSION_CACHE.clear();
-        }
+        CLIENT_SESSION_CACHE.clear();
         if (SERVER_SESSION_CACHE != null) {
             SERVER_SESSION_CACHE.clear();
         }
@@ -227,5 +229,15 @@ public class FlowContext implements MessageContext, Serializable {
 
     public void setDownloadFileSize(long downloadFileSize) {
         this.downloadFileSize = downloadFileSize;
+    }
+
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    private static class StreamMediaInfo {
+        private String ip;
+        private String domainName;
+        private int port;
+        private int ports;
     }
 }

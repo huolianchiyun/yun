@@ -21,8 +21,10 @@ public class KeepaliveNotifyRequestProcessor extends MessageRequestProcessor {
         Element rootElement = getRootElementFrom(event);
 
         String deviceId = XmlUtil.getTextOfChildTagFrom(rootElement, "DeviceID");
+        RequestEventExt eventExt = (RequestEventExt) event;
         PublisherFactory.getDeviceEventPublisher()
                 .publishEvent(new KeepaliveEvent(deviceId)
-                        .setDevicePort(((RequestEventExt) event).getRemotePort()));
+                        .setProxyIp(eventExt.getRemoteIpAddress())
+                        .setDevicePort(eventExt.getRemotePort()));
     }
 }
