@@ -11,16 +11,21 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 public class KeepaliveEvent extends AbstractDeviceEvent implements EventMap {
+    private String proxyIp;
+    private int devicePort;
 
     public KeepaliveEvent(String deviceId) {
         this.deviceId = deviceId;
         this.type = "keepalive";
     }
 
+    @Override
     public Map<String, String> toMap() {
-        final Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>(4);
         map.put("type", type);
         map.put("deviceId", deviceId);
+        map.put("proxyIp", proxyIp);
+        map.put("devicePort", String.valueOf(devicePort));
         return map;
     }
 

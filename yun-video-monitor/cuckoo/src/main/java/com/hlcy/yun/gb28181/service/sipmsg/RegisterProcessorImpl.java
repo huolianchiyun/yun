@@ -5,12 +5,11 @@ import com.hlcy.yun.gb28181.notification.PublisherFactory;
 import com.hlcy.yun.gb28181.notification.event.LogoutEvent;
 import com.hlcy.yun.gb28181.notification.event.RegisterEvent;
 import com.hlcy.yun.gb28181.sip.biz.RegisterProcessor;
-import gov.nist.javax.sip.RequestEventExt;
 import gov.nist.javax.sip.address.AddressImpl;
 import gov.nist.javax.sip.address.SipUri;
+import gov.nist.javax.sip.message.SIPRequest;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.sip.RequestEvent;
 import javax.sip.header.FromHeader;
 import javax.sip.header.ViaHeader;
 import javax.sip.message.Request;
@@ -19,14 +18,11 @@ import javax.sip.message.Request;
 public class RegisterProcessorImpl implements RegisterProcessor {
 
     @Override
-    public void register(RequestEvent event) {
-        final DeviceInfo device = extractDeviceInfoFrom(event.getRequest());
+    public void register(Request request) {
+        final DeviceInfo device = extractDeviceInfoFrom(request);
         log.info("Register request, deviceId: {}.", device.getDeviceId());
-        RequestEventExt eventExt = (RequestEventExt) event;
         PublisherFactory.getDeviceEventPublisher()
-                .publishEvent(new RegisterEvent(device
-                        .setProxyIp(eventExt.getRemoteIpAddress())
-                        .setPort(eventExt.getRemotePort())));
+                .publishEvent(new RegisterEvent(device));
     }
 
     @Override
@@ -42,8 +38,12 @@ public class RegisterProcessorImpl implements RegisterProcessor {
         SipUri uri = (SipUri) address.getURI();
         String deviceId = uri.getUser();
         ViaHeader viaHeader = (ViaHeader) request.getHeader(ViaHeader.NAME);
-        return new DeviceInfo().setDeviceId(deviceId)
+        SIPRequest sipRequest = (SIPRequest) request;
+        return new DeviceInfo()
+                .setDeviceId(deviceId)
                 .setIp(viaHeader.getHost())
+                .setProxyIp(sipRequest.getRemoteAddress().getHostAddress())
+                .setPort(sipRequest.getPeerPacketSourcePort())
                 .setTransport(viaHeader.getTransport());
     }
 }

@@ -18,8 +18,9 @@ public class RegisterEvent extends AbstractDeviceEvent implements EventMap {
         this.type = "register";
     }
 
+    @Override
     public Map<String, String> toMap() {
-        final Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>(3);
         map.put("type", type);
         map.put("deviceId", deviceId);
         map.put("device", JSON.toJSONString(device));

@@ -17,6 +17,7 @@ public class LogoutEvent  extends AbstractDeviceEvent implements EventMap {
         this.deviceId = deviceId;
     }
 
+    @Override
     public Map<String, String> toMap() {
         final Map<String, String> map = new HashMap<>();
         map.put("type", type);

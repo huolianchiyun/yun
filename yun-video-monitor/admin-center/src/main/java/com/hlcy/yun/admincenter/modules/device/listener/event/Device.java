@@ -24,6 +24,8 @@ public class Device {
      */
     private String ip;
 
+    private String proxyIp;
+
     /**
      * 设备联网端口
      */
@@ -103,18 +105,15 @@ public class Device {
         return this;
     }
 
-
     public Device setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
         return this;
     }
 
-
     public Device setModel(String model) {
         this.model = model;
         return this;
     }
-
 
     public Device setFirmware(String firmware) {
         this.firmware = firmware;

@@ -20,6 +20,7 @@ public class DeviceEvent extends AbstractDeviceEvent implements EventMap {
     }
 
 
+    @Override
     public Map<String, String> toMap() {
         final Map<String, String> map = new HashMap<>();
         map.put("type", type);

@@ -164,10 +164,11 @@ public class SIPRequest extends SIPMessage implements Request, RequestExt {
      */
     public static String getCannonicalName(String method) {
 
-        if (nameTable.containsKey(method))
+        if (nameTable.containsKey(method)) {
             return (String) nameTable.get(method);
-        else
+        } else {
             return method;
+        }
     }
 
     /**
@@ -205,13 +206,15 @@ public class SIPRequest extends SIPMessage implements Request, RequestExt {
      * @return a string which can be used to examine the message contents.
      *
      */
+    @Override
     public String debugDump() {
         String superstring = super.debugDump();
         stringRepresentation = "";
         sprint(SIPRequest.class.getName());
         sprint("{");
-        if (requestLine != null)
+        if (requestLine != null) {
             sprint(requestLine.debugDump());
+        }
         sprint(superstring);
         sprint("}");
         return stringRepresentation;
@@ -248,12 +251,14 @@ public class SIPRequest extends SIPMessage implements Request, RequestExt {
             throw new ParseException(prefix + MaxForwardsHeader.NAME, 0);
         }
 
-        if (getTopmostVia() == null)
+        if (getTopmostVia() == null) {
             throw new ParseException("No via header in request! ", 0);
+        }
 
         if (getMethod().equals(Request.NOTIFY)) {
-            if (getHeader(SubscriptionStateHeader.NAME) == null)
+            if (getHeader(SubscriptionStateHeader.NAME) == null) {
                 throw new ParseException(prefix + SubscriptionStateHeader.NAME, 0);
+            }
 
             //https://github.com/RestComm/jain-sip/issues/74
             //Event header mandatory just for in-dialog NOTIFY
@@ -269,8 +274,9 @@ public class SIPRequest extends SIPMessage implements Request, RequestExt {
              * single Event header field in PUBLISH requests. The value of this header field
              * indicates the event package for which this request is publishing event state.
              */
-            if (getHeader(EventHeader.NAME) == null)
+            if (getHeader(EventHeader.NAME) == null) {
                 throw new ParseException(prefix + EventHeader.NAME, 0);
+            }
         }
 
         /*
@@ -290,8 +296,9 @@ public class SIPRequest extends SIPMessage implements Request, RequestExt {
                 // Make sure this is not a target refresh. If this is a target
                 // refresh its ok not to have a contact header. Otherwise
                 // contact header is mandatory.
-                if (this.getToTag() == null)
+                if (this.getToTag() == null) {
                     throw new ParseException(prefix + ContactHeader.NAME, 0);
+                }
             }
 
             /*
@@ -354,15 +361,18 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
     protected void setDefaults() {
         // The request line may be unparseable (set to null by the
         // exception handler.
-        if (requestLine == null)
+        if (requestLine == null) {
             return;
+        }
         String method = requestLine.getMethod();
         // The requestLine may be malformed!
-        if (method == null)
+        if (method == null) {
             return;
+        }
         GenericURI u = requestLine.getUri();
-        if (u == null)
+        if (u == null) {
             return;
+        }
         if (method.compareTo(Request.REGISTER) == 0 || method.compareTo(Request.INVITE) == 0) {
             if (u instanceof SipUri) {
                 SipUri sipUri = (SipUri) u;
@@ -394,11 +404,13 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      *
      * @return the requestURI if it exists.
      */
+    @Override
     public URI getRequestURI() {
-        if (this.requestLine == null)
+        if (this.requestLine == null) {
             return null;
-        else
+        } else {
             return (URI) this.requestLine.getUri();
+        }
     }
 
     /**
@@ -410,6 +422,7 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      *
      * @param uri the new Request URI of this request message
      */
+    @Override
     public void setRequestURI(URI uri) {
         if ( uri == null ) {
             throw new NullPointerException("Null request URI");
@@ -427,9 +440,11 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      * @param method is the method to set.
      * @throws IllegalArgumentException if the method is null
      */
+    @Override
     public void setMethod(String method) {
-        if (method == null)
+        if (method == null) {
             throw new IllegalArgumentException("null method");
+        }
         if (this.requestLine == null) {
             this.requestLine = new RequestLine();
         }
@@ -455,11 +470,13 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      * @return the method from the request line if the method exits and null if the request line
      *         or the method does not exist.
      */
+    @Override
     public String getMethod() {
-        if (requestLine == null)
+        if (requestLine == null) {
             return null;
-        else
+        } else {
             return requestLine.getMethod();
+        }
     }
 
     /**
@@ -468,6 +485,7 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      * @return an encoded String containing the encoded SIP Message.
      */
 
+    @Override
     public String encode() {
         String retval;
         if (requestLine != null) {
@@ -484,6 +502,7 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
     /**
      * Encode only the headers and not the content.
      */
+    @Override
     public StringBuilder encodeMessage(StringBuilder retval) {
         if (requestLine != null) {
             this.setRequestLineDefaults();
@@ -491,8 +510,9 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
             encodeSIPHeaders(retval);
         } else if (this.isNullRequest()) {
             retval.append("\r\n\r\n");
-        } else
+        } else {
             retval = encodeSIPHeaders(retval);
+        }
         return retval;
 
     }
@@ -500,6 +520,7 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
     /**
      * ALias for encode above.
      */
+    @Override
     public String toString() {
         return this.encode();
     }
@@ -511,13 +532,15 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      * @return a deep copy of this object.
      */
 
+    @Override
     public Object clone() {
         SIPRequest retval = (SIPRequest) super.clone();
         // Do not copy over the tx pointer -- this is only for internal
         // tracking.
         retval.transactionPointer = null;
-        if (this.requestLine != null)
+        if (this.requestLine != null) {
             retval.requestLine = (RequestLine) this.requestLine.clone();
+        }
 
         return retval;
     }
@@ -527,9 +550,11 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      *
      * @param other object to compare ourselves with.
      */
+    @Override
     public boolean equals(Object other) {
-        if (!this.getClass().equals(other.getClass()))
+        if (!this.getClass().equals(other.getClass())) {
             return false;
+        }
         SIPRequest that = (SIPRequest) other;
         return requestLine.equals(that.requestLine) && super.equals(other);
     }
@@ -540,6 +565,7 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      *
      * @return a linked list containing the request line and headers encoded as strings.
      */
+    @Override
     public LinkedList getMessageAsEncodedStrings() {
         LinkedList retval = super.getMessageAsEncodedStrings();
         if (requestLine != null) {
@@ -558,19 +584,22 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      * @param matchObj object to match ourselves with (null matches wildcard)
      *
      */
+    @Override
     public boolean match(Object matchObj) {
-        if (matchObj == null)
+        if (matchObj == null) {
             return true;
-        else if (!matchObj.getClass().equals(this.getClass()))
+        } else if (!matchObj.getClass().equals(this.getClass())) {
             return false;
-        else if (matchObj == this)
+        } else if (matchObj == this) {
             return true;
+        }
         SIPRequest that = (SIPRequest) matchObj;
         RequestLine rline = that.requestLine;
-        if (this.requestLine == null && rline != null)
+        if (this.requestLine == null && rline != null) {
             return false;
-        else if (this.requestLine == rline)
+        } else if (this.requestLine == rline) {
             return super.match(matchObj);
+        }
         return requestLine.match(that.requestLine) && super.match(matchObj);
 
     }
@@ -582,6 +611,7 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      * @return a byte array containing the SIPRequest encoded as a byte array.
      */
 
+    @Override
     public byte[] encodeAsBytes(String transport) {
         if (this.isNullRequest()) {
             // Encoding a null message for keepalive.
@@ -655,10 +685,11 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
         } catch (ParseException ex) {
             throw new IllegalArgumentException("Bad code " + statusCode);
         }
-        if (reasonPhrase != null)
+        if (reasonPhrase != null) {
             newResponse.setReasonPhrase(reasonPhrase);
-        else
+        } else {
             newResponse.setReasonPhrase(SIPResponse.getReasonPhrase(statusCode));
+        }
 
 //        headerIterator = getHeaders();
 //        while (headerIterator.hasNext()) {
@@ -720,7 +751,9 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
     	// Only for 1xx-2xx, not for 100 or errors
     	if ( code>100 && code<300 ) {
     		return isDialogCreating( this.getMethod() ) && getToTag() == null;
-    	} else return false;
+    	} else {
+            return false;
+        }
     }
 
     /**
@@ -740,8 +773,9 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
         // A CANCEL request SHOULD NOT be sent to cancel a request other than
         // INVITE
 
-        if (!this.getMethod().equals(Request.INVITE))
+        if (!this.getMethod().equals(Request.INVITE)) {
             throw new SipException("Attempt to create CANCEL for " + this.getMethod());
+        }
 
         /*
          * The following procedures are used to construct a CANCEL request. The Request-URI,
@@ -922,10 +956,11 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      */
     public int getViaPort() {
         Via via = (Via) this.getViaHeaders().getFirst();
-        if (via.hasPort())
+        if (via.hasPort()) {
             return via.getPort();
-        else
+        } else {
             return 5060;
+        }
     }
 
     /**
@@ -933,11 +968,13 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      *
      * @return a string containing the encoded request line.
      */
+    @Override
     public String getFirstLine() {
-        if (requestLine == null)
+        if (requestLine == null) {
             return null;
-        else
+        } else {
             return this.requestLine.encode();
+        }
     }
 
     /**
@@ -945,9 +982,11 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      *
      * @param sipVersion the sip version to set.
      */
+    @Override
     public void setSIPVersion(String sipVersion) throws ParseException {
-        if (sipVersion == null || !sipVersion.equalsIgnoreCase("SIP/2.0"))
+        if (sipVersion == null || !sipVersion.equalsIgnoreCase("SIP/2.0")) {
             throw new ParseException("sipVersion", 0);
+        }
         this.requestLine.setSipVersion(sipVersion);
     }
 
@@ -956,6 +995,7 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
      *
      * @return the SIP version from the request line.
      */
+    @Override
     public String getSIPVersion() {
         return this.requestLine.getSipVersion();
     }
@@ -1023,8 +1063,9 @@ Caused by: java.text.ParseException: Scheme for contact should be sips:sip:proxy
         if (fromTag != null) {
             return new StringBuilder().append(requestUri).append(":").append(fromTag).append(":").append(cseq).append(":")
                     .append(callId).toString();
-        } else
+        } else {
             return null;
+        }
 
     }
 

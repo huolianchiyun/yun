@@ -36,7 +36,7 @@ public class RegisterRequestHandler extends RequestHandler {
                 return;
             }
             // 注册处理
-            registerProcessor.register(event);
+            registerProcessor.register(request);
         }
     }
 

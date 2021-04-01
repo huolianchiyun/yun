@@ -23,10 +23,10 @@ public class DefaultMessageRequestProcessor extends MessageRequestProcessor {
             if (context != null) {
                 String result = getTextOfChildTagFrom(rootElement, "Result");
                 final String callbackKey = context.getOperationalParams().getCallbackKey();
-                if ("Error".equalsIgnoreCase(result)) {
+                if (CLIENT_RESPONSE_REQUEST_RESULT_ERROR.equalsIgnoreCase(result)) {
                     DeferredResultHolder.setErrorDeferredResultForRequest(callbackKey, getTextOfChildTagFrom(rootElement, "Reason"));
                 } else {
-                    DeferredResultHolder.setDeferredResultForRequest(callbackKey, "ok");
+                    DeferredResultHolder.setDeferredResultForRequest(callbackKey, "Ok");
                 }
             }
         }
