@@ -133,15 +133,17 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         if (file.exists()) {
             return file;
         }
-        OutputStream os = new FileOutputStream(file);
+
         int bytesRead;
         int len = 8192;
         byte[] buffer = new byte[len];
-        while ((bytesRead = ins.read(buffer, 0, len)) != -1) {
-            os.write(buffer, 0, bytesRead);
+        try (OutputStream os = new FileOutputStream(file)) {
+            while ((bytesRead = ins.read(buffer, 0, len)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+        } finally {
+            ins.close();
         }
-        os.close();
-        ins.close();
         return file;
     }
 

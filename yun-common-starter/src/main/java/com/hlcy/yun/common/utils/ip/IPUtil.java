@@ -12,18 +12,21 @@ import eu.bitwalker.useragentutils.UserAgent;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
+import org.lionsoul.ip2region.test.TestSearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class IPUtil {
     private static final Logger log = LoggerFactory.getLogger(StringUtils.class);
     private static boolean ipLocal = false;
-    private static File file = null;
+    private static File file;
     private static DbConfig config;
     private static final String UNKNOWN = "unknown";
 
@@ -45,7 +48,6 @@ public class IPUtil {
             }
         });
     }
-
 
     /**
      * 获取ip地址
@@ -99,10 +101,14 @@ public class IPUtil {
 
     /**
      * 根据ip获取详细地址
+     *
+     * @see TestSearcher
      */
     public static String getLocalCityInfo(String ip) {
+        DbSearcher dbSearcher = null;
         try {
-            DataBlock dataBlock = new DbSearcher(config, file.getPath()).binarySearch(ip);
+            dbSearcher = new DbSearcher(config, file.getPath());
+            DataBlock dataBlock = dbSearcher.binarySearch(ip);
             String region = dataBlock.getRegion();
             String address = region.replace("0|", "");
             char symbol = '|';
@@ -112,6 +118,13 @@ public class IPUtil {
             return address.equals(OSConstant.REGION) ? "内网IP" : address;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        } finally {
+            if (dbSearcher != null) {
+                try {
+                    dbSearcher.close();
+                } catch (IOException ignore) {
+                }
+            }
         }
         return "";
     }
@@ -121,7 +134,6 @@ public class IPUtil {
         Browser browser = userAgent.getBrowser();
         return browser.getName();
     }
-
 
     /**
      * 获取当前机器的IP
